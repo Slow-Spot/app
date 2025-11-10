@@ -1,0 +1,130 @@
+Świetnie — wchodzimy w **Etap 7: Opieka powdrożeniowa i rozwój (Post-Launch Roadmap)**.
+To moment, w którym aplikacja **zaczyna żyć** — zbierasz dane, obserwujesz zachowania użytkowników, wprowadzasz poprawki i planujesz dalsze iteracje. Celem nie jest szybkie rozbudowywanie funkcji, tylko **utrzymanie spokoju, jakości i kulturowej spójności** przy rosnącej bazie użytkowników.
+
+---
+
+## 🌿 **ETAP 7 – Opieka powdrożeniowa i rozwój**
+
+### 🎯 Cel
+
+* Utrzymać doskonałe UX i wydajność przy minimalnych kosztach.
+* Systematycznie rozwijać treści, języki i audio, nie psując prostoty.
+* Wykorzystać dane z beta i pierwszych miesięcy do podejmowania świadomych decyzji produktowych.
+
+---
+
+## 1️⃣ Podstawowe filary utrzymania
+
+| Obszar                        | Cel                                         | Narzędzie / Proces                                                                                    |
+| ----------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Monitorowanie stabilności** | wykrywać crashe, błędy, spadki performance  | Sentry + Expo Crashlytics + Supabase logs                                                             |
+| **Feedback użytkowników**     | gromadzić opinie o głosie, języku, cytatach | Wbudowany mini-formularz po sesji (ocena + komentarz)                                                 |
+| **Aktualizacja treści**       | utrzymać świeżość cytatów i medytacji       | zdalne pliki JSON / CDN bez aktualizacji aplikacji                                                    |
+| **Bezpieczeństwo**            | utrzymać 0 danych osobowych                 | regularny audyt: brak zbierania ID, brak cookies                                                      |
+| **Wydajność**                 | utrzymać < 3 s do startu audio              | automatyczne testy E2E (Detox) + Lighthouse Mobile                                                    |
+| **Marketing**                 | organiczny wzrost bez spamu                 | newsletter z cytatem tygodnia + media społecznościowe w stylu zen (statyczne obrazy, brak presji CTA) |
+
+---
+
+## 2️⃣ Roadmapa pierwszych 6 miesięcy (utrzymanie i rozwój)
+
+| Okres                                  | Zakres działań                                                                                                 | Efekt                        |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| **Miesiąc 1 – stabilizacja**           | Zbieranie danych telemetrycznych, poprawki UX, balans audio, usuwanie błędów, walidacja feedbacku kulturowego. | Pierwszy stabilny build 1.1  |
+| **Miesiąc 2 – nowe języki**            | Dodanie 🇩🇪 niemieckiego i 🇫🇷 francuskiego (pełna lokalizacja UI + głosy).                                  | Poszerzenie rynków EU        |
+| **Miesiąc 3 – nowe ścieżki medytacji** | Rozszerzenie „Progresywnej nauki” o Poziom 2 („Obserwacja ciała”).                                             | Utrzymanie zaangażowania     |
+| **Miesiąc 4 – analityka świadoma**     | Dodanie panelu Supabase Insights (anonimowe dane: czas sesji, język, kultura).                                 | Dane do decyzji produktowych |
+| **Miesiąc 5 – dźwięk i audio**         | Nowe ambienty (deszcz, wiatr, cisza górska), poprawa miksu dźwięków, test binaural option.                     | Udoskonalenie immersji       |
+| **Miesiąc 6 – ekspansja**              | Release na kolejne rynki (Ameryka Łacińska, Indie), lokalne kampanie PR + testy partnerstw.                    | Wzrost liczby pobrań 2–3×    |
+
+---
+
+## 3️⃣ System feedbacku i priorytetyzacji
+
+1. **Źródła feedbacku**
+
+   * Mini-ankieta w aplikacji po 3 sesjach: „Co Ci się podobało / Co przeszkadzało?”
+   * E-maile z landing page.
+   * App Store / Play Store reviews (monitoring raz w tygodniu).
+
+2. **Kategoryzacja**
+
+   * 🟢 Quick fix – literówki, balans audio, bugi UX → natychmiast.
+   * 🟡 Usability – np. prośby o regulację ambientu, większe fonty → w następnym sprincie.
+   * 🔵 Strategiczne – nowe języki, tryby tematyczne, integracje → plan kwartał II.
+
+3. **Proces**
+
+   * Feedback → GitHub Issues → triage co tydzień.
+   * Retrospekcja raz w miesiącu (krótka: co poprawiło UX, co irytuje użytkowników).
+
+---
+
+## 4️⃣ Model rozwoju treści
+
+| Typ treści               | Częstotliwość   | Sposób dystrybucji                                     |
+| ------------------------ | --------------- | ------------------------------------------------------ |
+| **Nowe cytaty**          | co 2 tyg.       | JSON remote (Supabase Storage)                         |
+| **Nowe medytacje**       | co miesiąc      | aktualizacja audio przez CDN, nie wymaga nowego builda |
+| **Nowe języki**          | co 2–3 miesiące | lokalizacja pliku JSON + lektorzy native               |
+| **Nowe motywy wizualne** | co kwartał      | aktualizacja motywów w UI (theme pack)                 |
+
+> Dzięki rozdzieleniu danych od builda, użytkownik nie musi aktualizować aplikacji, by dostać nową treść – wystarczy synchro JSON/CDN.
+
+---
+
+## 5️⃣ Analityka i metryki ciągłe
+
+| Metryka                         | Cel / znaczenie                     | Cel docelowy (6 miesięcy) |
+| ------------------------------- | ----------------------------------- | ------------------------- |
+| **Czas do pierwszej medytacji** | Jak szybko użytkownik zaczyna sesję | < 60 s                    |
+| **Retention 7-dniowa**          | ilu użytkowników wraca po tygodniu  | ≥ 35 %                    |
+| **Średnia długość sesji**       | ile trwa pojedyncza medytacja       | 5 – 8 min                 |
+| **Crash rate**                  | stabilność                          | < 0,5 %                   |
+| **Średnia ocena w sklepie**     | reputacja                           | ≥ 4,7 ★                   |
+
+---
+
+## 6️⃣ Zespół utrzymania / proces operacyjny light
+
+| Rola                        | Zakres                              | Częstotliwość          |
+| --------------------------- | ----------------------------------- | ---------------------- |
+| **Product Owner / Founder** | priorytetyzacja, roadmapa, feedback | tygodniowo             |
+| **Dev Ops / Mobile Lead**   | buildy, monitoring, crashe          | codziennie / as-needed |
+| **Audio Editor**            | mastering nowych nagrań             | co miesiąc             |
+| **Localization Lead**       | tłumaczenia, kontrola kulturowa     | przy każdym release    |
+| **UX Researcher**           | testy A/B, retencja                 | kwartalnie             |
+
+---
+
+## 7️⃣ Kierunki dalszego rozwoju (po 6 miesiącach)
+
+1. **Tryb „Nocny Sen”** — medytacje usypiające, ambient długi (30–60 min).
+2. **Integracja z systemem OS** — widget „Jedno dotknięcie – 5 min spokoju”.
+3. **AI Voice Tuning** — dynamiczne dopasowanie głosu lektora do języka użytkownika.
+4. **Tryb „Cisza Bez Ekranu”** — audio-only z głosem i gestami.
+5. **„Global Journeys”** — ścieżki medytacyjne inspirowane różnymi kulturami.
+
+---
+
+## 8️⃣ Cykliczna retrospekcja produktowa
+
+Co 3 miesiące zespół (nawet 1-2 osoby) odpowiada sobie na 5 pytań:
+
+1. Czy aplikacja pozostaje prosta?
+2. Czy nowi użytkownicy nadal rozumieją, jak zacząć?
+3. Czy języki i kultury są autentycznie odczuwalne?
+4. Czy wzrost nie psuje jakości dźwięku i UX?
+5. Czy dalej spełniamy pierwotny cel: **„dotknij – oddychaj – spokój”**?
+
+---
+
+## 9️⃣ Zasada końcowa
+
+> **Nie skaluj hałasu. Skaluj ciszę.**
+
+Rozwój aplikacji do medytacji nie polega na dodawaniu funkcji, lecz na usuwaniu rozproszeń z kolejnych warstw doświadczenia.
+
+---
+
+Czy chcesz, żebym na tej bazie przygotował teraz **pełną roadmapę techniczno-biznesową (na 6 miesięcy z podziałem na sprinty, zadania i metryki sukcesu)** — gotową do wrzucenia do Jiry / Notion / ClickUp?

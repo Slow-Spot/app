@@ -1,0 +1,58 @@
+Developer: # Projekt: Unikatowa Aplikacja do Medytacji
+
+## Cel
+Stworzenie innowacyjnej, wieloplatformowej aplikacji do medytacji, silnie personalizowanej pod użytkownika, z naciskiem na prostotę, przyjazność obsługi oraz przewagę nad konkurencją (np. Headspace). Aplikacja musi być w pełni wielojęzyczna i wspierać różne kultury, zarówno w treści, jak i interfejsie użytkownika.
+
+Begin with a concise checklist (3-7 głównych etapów), obejmujący analizę wymagań, badanie konkurencji, projekt funkcjonalny, wybór nazwy, implementację, testy oraz przygotowanie do publikacji. Checklist should be conceptual, not implementation-level.
+
+## Kluczowe Funkcje:
+- **Personalizacja doświadczeń:**
+  - Progresywna nauka medytacji: prowadzenie użytkownika krok po kroku, instrukcje, praktyczne przykłady, wyjaśnienia poziomów medytacji z możliwością śledzenia postępów.
+  - Medytacje inspirowane różnymi kulturami i nurtami, z uwzględnieniem wielojęzyczności (zarówno teksty, instrukcje, jak i audio/dźwięki muszą być dostępne w kilku językach).
+  - Dopasowane, niepowtarzające się cytaty i mądre sentencje wyświetlane przed/po sesji, z tłumaczeniami odpowiednimi do wybranego języka użytkownika.
+  - Różne typy medytacji: prowadzona głosem, dzwonek co określony czas jako sygnał bez ekranu, podpowiedzi dźwiękowe lub głosowe zachęcające do skupienia, dostępne w różnych językach.
+- **Brak logowania:** brak mechanizmu logowania na start; pełny nacisk na UX.
+- **Przystępny, prosty interfejs:** maksymalna czytelność, prowadzenie użytkownika przez całą medytację, z lokalizacją na wiele języków.
+- **Baza cytatów:** zarządzanie kolekcją cytatów i odpowiednie ich podstawianie (w różnych wersjach językowych), by się nie powtarzały użytkownikom.
+
+## Inspiracja konkurencją i poprawa UX:
+- Przeanalizować opinie o aplikacjach takich jak Headspace i inne (App Store, Google Play, fora, recenzje), wypisać błędy i niedociągnięcia (np. przekombinowane płatności, za dużo rozpraszaczy, trudna nawigacja), a następnie wyeliminować je projektując prosty, przyjemny flow bez nadmiernych komplikacji. Po zakończeniu tego etapu, potwierdź eliminację najważniejszych problemów i przejdź do kolejnych zadań.
+
+## Nazwa:
+- Wymyślić chwytliwą, krótką, łatwą do zapamiętania nazwę (np. "BreatheFlow", "CalmMe", "Zenify", itp. - do dalszego generowania pomysłów).
+
+## Stack techniczny i architektura:
+- **Expo.dev/React Native**: zapewni wieloplatformowość na iOS i Androida, szybkie testowanie oraz wydajny development.
+- **Strona www + landing page:** promowanie aplikacji oraz prezentacja funkcji, rekrutacja beta testerów. Można rozważyć Next.js do szybkiego wdrożenia i łatwej integracji.
+- **Warstwy aplikacji:**
+  - Frontend: UI/UX (mobilne + web), obsługa audio, głosowe komendy, system cytatów oraz pełna obsługa wielu języków (lokalizacja UI/UX, treści i audio).
+  - Backend: serwowanie cytatów/treści (w różnych językach), analityka, statystyki sesji, obsługa treści medytacyjnych z różnych kultur.
+  - Bazy danych: efektywne zarządzanie cytatami i treścią medytacyjną, w tym wersjami językowymi.
+  - DevOps: hosting (np. Vercel/Netlify dla frontendu, tani backend np. Firebase lub Supabase); monitorowanie i automatyzacja deploymentów.
+- **Niezawodność i bezpieczeństwo:**
+  - Minimalizacja punktów awarii
+  - Brak wrażliwych danych/danych osobowych
+  - Kompatybilność z wytycznymi Google/Apple dla publikacji
+
+## Publikacja i zgodność sklepów:
+- Projektować i kodować dla zgodności ze wszystkimi restrykcjami App Store i Google Play (m.in. brak kontrowersyjnych treści, zgodność z RODO, regulamin, polityka prywatności).
+- Dbaj o pełną lokalizację na rynki globalne, dostosuj politykę prywatności i regulaminy do języków i kultur użytkowników.
+
+## Etapy prac:
+1. Badanie konkurencji i rynku (zbiórka opinii, analiza mocnych/słabych stron, analiza potrzeb wielojęzyczności i wsparcia kulturowego)
+2. Projekt funkcjonalny (mockupy, user flow z opcją wielojęzyczności)
+3. Wybór nazwy i branding (testowanie pod kątem różnych języków i kultur)
+4. Implementacja MVP (Expo.dev – mobilna, Next.js – web/landing), od początku z lokalizacją
+5. Testy z użytkownikami i poprawki UX (z testerami różnych języków/kultur)
+6. Przygotowanie do publikacji (sklepy, strona, wielojęzyczne materiały)
+7. Opieka powdrożeniowa, monitoring, dalszy rozwój (rozwijanie wersji językowych, tłumaczenia, audiodeskrypcje)
+
+Po każdym większym etapie projektu, zapewnij krótką walidację i podejmij decyzję o dalszych krokach lub korektach, jeśli wymagane. Zweryfikuj, czy aspekty wielojęzyczności i wsparcia dla różnych kultur są na satysfakcjonującym poziomie.
+
+## Uwagi dodatkowe:
+- Aplikacja powinna umożliwiać naukę medytacji praktycznie "bez ekranu" – nacisk na audio, komendy głosowe, z zapewnieniem wsparcia językowego.
+- Minimalizowanie kosztów serwerowych i prostota utrzymania.
+- Bardzo ważne: aplikacja MUSI być w pełni wielojęzyczna, aby wspierać użytkowników z różnych kultur – dotyczy to zarówno interfejsu, treści, jak i audio/komend głosowych.
+
+# Podsumowanie
+Celem jest stworzenie wybitnej jakościowo aplikacji do medytacji, przewyższającej UX i prostotą konkurencję, w pełni personalizowanej oraz przemyślanej architektonicznie, gotowej do wejścia na wszystkie duże platformy. Obowiązkowym elementem jest wsparcie dla wielu języków i kultur użytkowników. Proszę o analizę oraz rozwinięcie powyższych punktów przy rozpoczęciu pracy nad projektem. W razie konieczności wyjaśnienia niejasności lub napotkania ograniczeń, postaraj się rozwiązać pierwszy zestaw zadań autonomicznie i zgłoś, jeśli napotkasz krytyczne przeszkody.

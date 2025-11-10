@@ -1,0 +1,54 @@
+Oto zwięzła **checklista koncepcyjna (7 etapów)**, stanowiąca fundament dla rozpoczęcia projektu aplikacji do medytacji:
+
+---
+
+### 🧭 **Checklist Etapów Projektu „Unikatowa Aplikacja do Medytacji”**
+
+1. **Analiza rynku i konkurencji**
+
+   * Zbadaj kluczowe aplikacje (Headspace, Calm, Insight Timer, Meditopia itp.).
+   * Sporządź mapę błędów UX, opinii użytkowników i niezaadresowanych potrzeb.
+   * Określ niszę, czyli co nas wyróżni (np. *minimalizm, brak logowania, pełna wielojęzyczność, kultura dźwięku*).
+
+2. **Projekt koncepcyjny i funkcjonalny**
+
+   * Zdefiniuj *user journey* od pierwszego uruchomienia do codziennego użycia.
+   * Opracuj makiety i schematy UI/UX (mobile-first).
+   * Zaplanuj architekturę treści (medytacje, dźwięki, cytaty, ścieżki nauki, języki).
+
+3. **Naming i tożsamość marki**
+
+   * Wygeneruj krótką listę nazw globalnie zrozumiałych (test A/B na grupach kulturowych).
+   * Opracuj identyfikację wizualną: logo, kolorystykę, ton komunikacji.
+   * Sprawdź dostępność domeny i kont w App Store / Google Play.
+
+4. **Architektura techniczna i wybór stacku**
+
+   * Zdefiniuj granice między frontendem (Expo/React Native, Next.js) a backendem (Supabase/Firebase).
+   * Opracuj model danych dla cytatów, treści audio i lokalizacji.
+   * Ustal strategię lokalizacji (i18n, zarządzanie tłumaczeniami, fallback językowy).
+
+5. **Implementacja MVP**
+
+   * Zaimplementuj kluczowe flow: wybór języka → wybór medytacji → sesja audio → cytat końcowy.
+   * Zapewnij tryb *offline-first* (cache treści, cytaty, sesje audio).
+   * Uruchom automatyczny pipeline CI/CD do testów na Android/iOS/Web.
+
+6. **Testy i walidacja UX**
+
+   * Przeprowadź testy z użytkownikami z różnych kultur i języków.
+   * Zbierz feedback dotyczący języka, tonacji głosu, łatwości nawigacji i spójności kulturowej.
+   * Wprowadź poprawki eliminujące rozpraszacze i punkty frustracji.
+
+7. **Publikacja i rozwój**
+
+   * Przygotuj materiały promocyjne (grafiki, landing page, opisy w językach docelowych).
+   * Upewnij się, że aplikacja spełnia wymagania App Store i Google Play (RODO, regulaminy).
+   * Uruchom monitoring jakości (crashe, czasy sesji, retencja) oraz roadmapę iteracyjnych aktualizacji.
+
+---
+
+Chcesz, żebym teraz rozwinął **etap 1 (analiza rynku i konkurencji)** — np. zebrał konkretne wnioski z opinii o Headspace, Calm i Insight Timer (UX, błędy, przewagi, rekomendacje dla Twojej wersji)?
+Mogę też równolegle przygotować **mini-brief namingowy** z 10 propozycjami nazw globalnych i testem kulturowym.
+
+Który kierunek wybieramy jako następny krok?

@@ -1,0 +1,51 @@
+{
+  "app": {
+    "name": "Slow Spot",
+    "tagline": "Find your moment of peace"
+  },
+  "home": {
+    "welcome": "Welcome",
+    "dailyQuote": "Daily Quote",
+    "startMeditation": "Start Meditation",
+    "exploreSessions": "Explore Sessions"
+  },
+  "meditation": {
+    "title": "Meditation",
+    "duration": "Duration",
+    "level": "Level",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "expert": "Expert",
+    "master": "Master",
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "finish": "Finish",
+    "minutes": "{{count}} min",
+    "seconds": "{{count}} sec"
+  },
+  "quotes": {
+    "title": "Inspirational Quotes",
+    "author": "by {{author}}",
+    "next": "Next Quote",
+    "previous": "Previous Quote",
+    "random": "Random Quote"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "notifications": "Notifications",
+    "reminderTime": "Reminder Time",
+    "about": "About"
+  },
+  "navigation": {
+    "home": "Home",
+    "meditate": "Meditate",
+    "quotes": "Quotes",
+    "settings": "Settings"
+  }
+}

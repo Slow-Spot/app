@@ -1,0 +1,116 @@
+Świetnie. Skoro **Etap 1 (analiza konkurencji)** mamy zamknięty — możemy przejść do **Etapu 2: Projekt koncepcyjny i funkcjonalny**.
+To tutaj kształtuje się **istota aplikacji** – jej logika, emocjonalny flow i minimalizm użytkowy.
+
+---
+
+## 🧩 **ETAP 2 – Projekt koncepcyjny i funkcjonalny**
+
+### 🎯 Cel etapu
+
+Zdefiniować dokładny **user journey**, funkcje MVP, architekturę treści i makiety, które umożliwią błyskawiczne wejście w stan medytacji bez logowania i bez rozproszeń, z pełną obsługą wielu języków.
+
+---
+
+### 1️⃣ User Journey (minimalny, spokojny flow)
+
+| Faza                              | Co się dzieje                                                 | Zasada UX                          | Uzasadnienie psychologiczne                                                     |
+| --------------------------------- | ------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------- |
+| **Start / pierwsze uruchomienie** | Wybór języka → krótkie powitanie → „Rozpocznij medytację”.    | *Zero kognitywnego szumu.*         | Mózg w stresie nie przetwarza złożonych decyzji — minimalizm redukuje napięcie. |
+| **Sesja główna**                  | Dźwięk oddechu → głos lektora → pauzy → sygnał końcowy.       | *Audio-first, ekran zbędny.*       | Zmysł słuchu angażuje się w rytm – zwiększa skuteczność medytacji.              |
+| **Po sesji**                      | Pojawia się cytat + delikatna animacja.                       | *Reward bez bodźców dopaminowych.* | Cytat działa jak kotwica refleksji, nie jak „punkt”.                            |
+| **Kolejne dni**                   | Sugestia kontynuacji ścieżki (np. „Dzień 2: oddech i ciało”). | *Subtelna progresja.*              | Mózg lubi ciągłość; daje poczucie struktury, nie presji.                        |
+
+---
+
+### 2️⃣ Architektura funkcjonalna (MVP)
+
+| Warstwa                   | Opis                                                                                                   | Priorytet |
+| ------------------------- | ------------------------------------------------------------------------------------------------------ | --------- |
+| **UI/UX mobilny**         | Interfejs minimalistyczny, ciemne i jasne motywy, jeden przycisk „Start”, tryb offline, wsparcie i18n. | 🟢 Wysoki |
+| **Audio Engine**          | Obsługa warstw audio (voice + ambient + chime), regulacja głośności per warstwa.                       | 🟢 Wysoki |
+| **System cytatów**        | Baza cytatów z wielojęzycznymi wersjami, brak powtórzeń, logika dopasowania (pora dnia, język).        | 🟢 Wysoki |
+| **Ścieżki nauki**         | Poziomy: Początkujący → Świadomość → Cisza → Wgląd → Transcendencja.                                   | 🟡 Średni |
+| **Lokalizacja audio**     | Osobne ścieżki dla języków (np. PL, EN, ES, HI), natywni lektorzy.                                     | 🟡 Średni |
+| **Statystyka / Progress** | Minimalny — liczba dni ciągłości, czas łącznie. Bez gamifikacji.                                       | 🟡 Średni |
+| **Offline cache**         | Pobieranie sesji, cytatów, audio. Tryb autonomiczny.                                                   | 🟢 Wysoki |
+
+---
+
+### 3️⃣ Architektura treści (content model)
+
+```
+MeditationSession
+ ├─ id
+ ├─ title (per language)
+ ├─ level (1–5)
+ ├─ durationMinutes
+ ├─ audioFiles: { voiceUrl, ambientUrl, chimeUrl }
+ ├─ cultureTag (zen, sufism, christianity, mindfulness)
+ ├─ quoteAfterId
+ └─ translations: [ { languageCode, title, description } ]
+```
+
+```
+Quote
+ ├─ id
+ ├─ text
+ ├─ author
+ ├─ languageCode
+ ├─ cultureTag
+ ├─ category (focus, compassion, silence)
+ ├─ lastShownTimestamp
+```
+
+---
+
+### 4️⃣ Makieta logiczna (flow ekranów MVP)
+
+1. **Welcome Screen**
+    – wybór języka, przycisk „Start”
+2. **Session Screen**
+    – kontrola audio (Play/Pause), dźwięk oddechu, czas trwania / progress bar, przycisk „Zakończ”
+3. **Quote Screen**
+    – cytat + autor, przycisk „Kontynuuj jutro”
+4. **Settings (Screen opcjonalny)**
+    – wybór języka, motywu, trybu audio
+5. **Offline Management**
+    – lista pobranych sesji, informacja o miejscu na urządzeniu
+
+---
+
+### 5️⃣ Zasady UX i estetyki
+
+* **Zero decyzji → zero frustracji** – „dotknij i zacznij”.
+* **Ton wizualny**: matowe barwy ziemi, duże marginesy, brak tekstów wielkimi literami.
+* **Typografia**: czytelna, miękka, duży interline.
+* **Ikony**: tylko funkcjonalne – np. Play/Pause, dzwonek, język.
+* **Animacje**: powolne, subtelne (oddech, fala, puls).
+* **Dźwięk vs cisza**: wbuduj mikro pauzy w audio, żeby użytkownik poczuł „ciszę jako element doświadczenia”.
+
+---
+
+### 6️⃣ Techniczny szkic komponentów (Expo / React Native)
+
+* `App.tsx` – główny nawigator (Stack Navigation)
+* `WelcomeScreen.tsx` – wybór języka / start
+* `MeditationSessionScreen.tsx` – logika audio (Expo AV)
+* `QuoteScreen.tsx` – wyświetlanie cytatu + tłumaczenie
+* `i18n.ts` – lokalizacje tekstów
+* `AudioService.ts` – zarządzanie audio (głos, ambient)
+* `OfflineCache.ts` – pobieranie i przechowywanie treści
+* `Theme.ts` – motywy jasny/ciemny, kolory kulturowe
+
+---
+
+### 7️⃣ Walidacja etapu 2
+
+Po stworzeniu makiet / prototypu (Figma lub Expo Go) → zrób:
+
+1. Testy z użytkownikami z 3 różnych kultur (PL, EN, ES) – czy flow jest czytelny.
+2. Pomiar czasów: od uruchomienia do pierwszego dźwięku ≤ 3 s.
+3. Test rozumienia cytatów – czy nie są oderwane kulturowo.
+4. Upewnij się, że każdy tekst jest w plikach lokalizacyjnych, żadnych twardych stringów.
+
+---
+
+Czy chcesz, abym teraz przygotował **Etap 3 – Naming i branding** (lista 10 globalnych nazw + test kulturowy i znaczeniowy), czy najpierw rozwinąć projekt interfejsu i makietę dla Etapu 2 (Figma / schemat nawigacji)?

@@ -1,0 +1,164 @@
+Świetnie — przechodzimy do **Etapu 4: Implementacja MVP**.
+To moment, w którym idea staje się działającym, lekkim i w pełni wielojęzycznym produktem.
+Poniżej masz kompleksowy plan — architekturę, strukturę katalogów, kluczowe komponenty i zasady kodowania, tak by MVP było gotowe do uruchomienia w ciągu kilku tygodni.
+
+---
+
+## ⚙️ **ETAP 4 – Implementacja MVP (Expo + Next.js + Supabase)**
+
+### 🎯 Cel
+
+Stworzyć działającą aplikację mobilną (Expo/React Native) z prostym backendem (Supabase lub Firebase),
+która pozwala:
+
+* wybrać język,
+* rozpocząć medytację (audio + ambient + dzwonek),
+* wyświetlić cytat po sesji,
+* działać w trybie offline,
+* uruchomić landing page (Next.js).
+
+---
+
+## 1️⃣ Architektura systemu
+
+```
+/airea
+ ├── mobile/               # Expo (React Native)
+ │    ├── src/
+ │    │    ├── screens/    # Welcome, Meditation, Quote, Settings
+ │    │    ├── components/ # Player, QuoteCard, LanguageSelector
+ │    │    ├── services/   # AudioService, QuoteService, i18nService
+ │    │    ├── data/       # quotes.json, sessions.json (offline cache)
+ │    │    └── utils/
+ │    └── app.json         # Konfiguracja Expo
+ │
+ ├── web/                  # Next.js Landing Page
+ │    ├── pages/
+ │    ├── components/
+ │    ├── public/
+ │    └── next.config.js
+ │
+ ├── backend/              # Supabase / Functions
+ │    ├── api/
+ │    │    ├── quotes/
+ │    │    └── sessions/
+ │    └── database/
+ │         ├── schema.sql
+ │         └── seed/
+ │
+ └── docker/               # lokalne kontenery i CI/CD
+```
+
+---
+
+## 2️⃣ Techniczny Stack
+
+| Warstwa             | Technologia                            | Uzasadnienie                                             |
+| ------------------- | -------------------------------------- | -------------------------------------------------------- |
+| **Frontend Mobile** | **Expo.dev + React Native**            | wieloplatformowość, szybkie testy, łatwe audio (Expo AV) |
+| **Backend**         | **Supabase** (lub Firebase)            | gotowe API, auth optional, JSON storage, CDN dla audio   |
+| **Web Landing**     | **Next.js 14 / React 18**              | szybki SSR, SEO, minimalne zasoby                        |
+| **Baza Danych**     | **PostgreSQL (Supabase)**              | proste relacje cytatów i sesji                           |
+| **CI/CD**           | **GitHub Actions / Vercel / Expo EAS** | automatyczne buildy i publikacja                         |
+| **Monitoring**      | **Sentry / Expo Crashlytics**          | błędy runtime i performance                              |
+| **Języki**          | i18next / react-intl                   | pełna lokalizacja UI + tekstów + audio                   |
+
+---
+
+## 3️⃣ Kluczowe komponenty (frontend mobile)
+
+| Komponent                   | Rola                         | Szczegóły                                                        |
+| --------------------------- | ---------------------------- | ---------------------------------------------------------------- |
+| **LanguageSelector**        | Wybór języka                 | zapis do AsyncStorage + inicjalizacja i18n                       |
+| **MeditationSessionScreen** | Serce aplikacji              | odtwarzanie głosu, ambientu, dzwonków; pause/resume; tryb ciemny |
+| **AudioService**            | Obsługa dźwięku (Expo AV)    | preload, regulacja głośności warstw, offline cache               |
+| **QuoteScreen**             | Wyświetlenie cytatu po sesji | wybór cytatu z lokalnej bazy wg języka + pora dnia               |
+| **OfflineCache**            | Bufor danych JSON/audio      | mechanizm zapisu plików w lokalnym systemie                      |
+| **ProgressTracker**         | Zlicza sesje / dni           | prosty licznik streaków bez presji                               |
+| **ThemeManager**            | Motywy kulturowe             | kolorystyka, czcionka, ambient per kultura                       |
+
+---
+
+## 4️⃣ Modele danych (Supabase / lokalny JSON)
+
+### `MeditationSession`
+
+```json
+{
+  "id": "zen_001",
+  "title": { "en": "Breath Awareness", "pl": "Świadomość oddechu" },
+  "duration": 300,
+  "voice": { "en": "zen001_en.mp3", "pl": "zen001_pl.mp3" },
+  "ambient": "soft_breeze.mp3",
+  "culture": "zen",
+  "level": 1
+}
+```
+
+### `Quote`
+
+```json
+{
+  "id": "q001",
+  "text": {
+    "en": "Peace comes when you stop chasing it.",
+    "pl": "Spokój przychodzi, gdy przestajesz go gonić."
+  },
+  "author": "Unknown",
+  "culture": "universal"
+}
+```
+
+---
+
+## 5️⃣ Logika Audio & UX flow
+
+1. **Start** – Ekran Welcome → przycisk „Begin”.
+2. **AudioService.play(session)** – ładuje głos + ambient równolegle.
+3. **Timer** – odlicza długość sesji; na końcu uruchamia dzwonek (chime).
+4. **QuoteService** – pobiera random cytat dla języka, sprawdza czy nie powtórzony.
+5. **Wyświetlenie cytatu** + przycisk „Zakończ / Kontynuuj jutro”.
+
+> 💡 Użytkownik może **zamknąć ekran** – audio gra w tle, co daje „medytację bez ekranu”.
+
+---
+
+## 6️⃣ Kluczowe zasady UX w implementacji
+
+* **Brak logowania:** żadnych danych osobowych → 100 % zgodność RODO.
+* **Offline-first:** dane JSON + audio w cache, backend tylko do aktualizacji.
+* **Minimalizm:** zero onboardingów, zero karuzel.
+* **Instant load:** < 3 s do startu audio.
+* **Cisza = funkcja:** UI nie powinien emitować żadnych powiadomień.
+* **Touch zones:** duże przyciski, bez scrolli podczas sesji.
+* **Gesty:** swipe down → pauza, swipe up → zakończ sesję.
+
+---
+
+## 7️⃣ DevOps / CI / Publikacja
+
+| Zadanie            | Narzędzie                      | Opis                               |
+| ------------------ | ------------------------------ | ---------------------------------- |
+| **Build mobile**   | Expo EAS                       | `eas build --platform all`         |
+| **Web deploy**     | Vercel / Netlify               | automatyczny deploy z Git main     |
+| **Backend deploy** | Supabase                       | auto migracje SQL z GitHub Actions |
+| **Monitoring**     | Sentry                         | błędy JS, czasy ładowania, crashe  |
+| **Versioning**     | Semantic Release               | automatyczne wersjonowanie         |
+| **Testing**        | Jest / Testing Library / Detox | testy jednostkowe + end-to-end     |
+
+---
+
+## 8️⃣ Walidacja MVP
+
+Po uruchomieniu:
+
+* Sprawdź, czy aplikacja startuje w < 3 sekundy.
+* Użytkownik może rozpocząć pierwszą sesję bez rejestracji.
+* Cytaty nie powtarzają się 2× z rzędu.
+* Tryb offline działa (po rozłączeniu sieci).
+* Aplikacja nie pobiera więcej niż 50 MB na instalację.
+* Audio ma zbalansowany mix (voice:ambient ≈ 70:30).
+
+---
+
+Chcesz, żebym teraz przeszedł do **Etapu 5: Testy i walidacja UX** (plan testów z użytkownikami z różnych kultur, checklisty i metryki efektywności)?

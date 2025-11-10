@@ -1,0 +1,168 @@
+# Slow Spot - Meditation & Mindfulness App
+
+**Unikatowa aplikacja do medytacji z naciskiem na prostotę, wielojęzyczność i prywatność.**
+
+## 🎯 O Projekcie
+
+Slow Spot to wieloplatformowa aplikacja do medytacji, która wyróżnia się:
+- **Brakiem logowania** - pełna prywatność użytkownika (GDPR compliant)
+- **Offline-first** - działanie bez internetu
+- **Wielojęzycznością** - pełne wsparcie dla 6 języków (PL, EN, ES, DE, FR, HI)
+- **Audio-first experience** - medytacja "bez ekranu"
+- **Minimalistycznym UX** - zero rozproszeń
+- **Niskimi kosztami** - $6/miesiąc dla MVP
+
+## 📁 Struktura Projektu
+
+```
+slow-spot-app/
+├── mobile/          # Expo/React Native app (iOS + Android)
+├── web/             # Next.js landing page
+├── backend/         # .NET Core 8 REST API
+├── architecture/    # Pełna dokumentacja architektury
+└── README.md        # Ten plik
+```
+
+## 🚀 Technologie
+
+### Frontend Mobile
+- **Framework:** Expo SDK 50 + React Native
+- **UI Library:** Tamagui (performance-focused)
+- **Audio:** Expo AV
+- **i18n:** react-i18next
+- **Storage:** SQLite (offline-first)
+
+### Frontend Web
+- **Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS
+- **Hosting:** Vercel
+
+### Backend
+- **Framework:** .NET Core 8 (Minimal APIs)
+- **Database:** PostgreSQL 15
+- **Cache:** Redis 7
+- **Hosting:** Railway
+
+### Infrastructure
+- **CDN:** Cloudflare R2 + CDN (audio delivery)
+- **Monitoring:** Sentry + PostHog
+- **CI/CD:** GitHub Actions
+
+## 📋 Wymagania
+
+- **Node.js:** >= 20.0.0
+- **.NET SDK:** >= 8.0
+- **Docker:** >= 24.0 (dla lokalnej bazy danych)
+- **Expo CLI:** Latest
+
+## 🏗️ Instalacja i Uruchomienie
+
+### 1. Backend API
+
+```bash
+cd backend
+dotnet restore
+dotnet run
+# API dostępne na: http://localhost:5000
+```
+
+### 2. Mobile App
+
+```bash
+cd mobile
+npm install
+npx expo start
+# Skanuj QR code w Expo Go
+```
+
+### 3. Landing Page
+
+```bash
+cd web
+npm install
+npm run dev
+# Otwórz: http://localhost:3000
+```
+
+## 📖 Dokumentacja
+
+Pełna dokumentacja architektury znajduje się w folderze `/architecture`:
+
+- **[README.md](./architecture/README.md)** - Przegląd architektury
+- **[ADR-001](./architecture/ADR-001-system-architecture.md)** - Szczegółowa architektura systemu
+- **[Cost Analysis](./architecture/cost-analysis.md)** - Analiza kosztów
+- **[Security Plan](./architecture/security-plan.md)** - Plan bezpieczeństwa
+- **[Deployment](./architecture/deployment-strategy.md)** - Strategia wdrożenia
+
+## 🎯 MVP Roadmap (6 tygodni)
+
+- [x] Week 1: Infrastructure setup
+- [x] Week 2: Backend foundation
+- [ ] Week 3-4: Mobile app core
+- [ ] Week 5: Integration & polish
+- [ ] Week 6: Testing & soft launch
+
+## 🌍 Języki
+
+- 🇵🇱 Polski (pl)
+- 🇬🇧 English (en)
+- 🇪🇸 Español (es)
+- 🇩🇪 Deutsch (de)
+- 🇫🇷 Français (fr)
+- 🇮🇳 हिन्दी (hi)
+
+## 💰 Koszty (Projekcje)
+
+| Etap | Użytkownicy | Koszt/miesiąc |
+|------|-------------|---------------|
+| MVP | 1,000 | $6 |
+| Growth | 10,000 | $103 |
+| Scale | 100,000 | $763 |
+
+**92% taniej niż Azure dla MVP!**
+
+## 🔐 Bezpieczeństwo
+
+- ✅ Brak danych osobowych (GDPR compliant)
+- ✅ OWASP Top 10 zmitigowane
+- ✅ Device ID hashowane (SHA256)
+- ✅ TLS 1.3 wszędzie
+- ✅ Rate limiting (100 req/min)
+
+## 🧪 Testy
+
+```bash
+# Backend
+cd backend
+dotnet test
+
+# Mobile
+cd mobile
+npm run test
+
+# Web
+cd web
+npm run test
+```
+
+## 📝 Licencja
+
+Copyright © 2025 ITEON
+All rights reserved.
+
+## 👥 Zespół
+
+- **Tech Lead:** [Your Name]
+- **Backend:** .NET Core
+- **Mobile:** React Native/Expo
+- **Web:** Next.js
+
+## 📞 Kontakt
+
+- **Email:** tech@slowspot.app
+- **GitHub:** [Repository URL]
+- **Slack:** #slow-spot-dev
+
+---
+
+**Ostatnia aktualizacja:** 2025-11-08

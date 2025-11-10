@@ -1,0 +1,51 @@
+{
+  "app": {
+    "name": "Slow Spot",
+    "tagline": "Znajdź swoją chwilę spokoju"
+  },
+  "home": {
+    "welcome": "Witaj",
+    "dailyQuote": "Dzienny Cytat",
+    "startMeditation": "Rozpocznij Medytację",
+    "exploreSessions": "Przeglądaj Sesje"
+  },
+  "meditation": {
+    "title": "Medytacja",
+    "duration": "Czas trwania",
+    "level": "Poziom",
+    "beginner": "Początkujący",
+    "intermediate": "Średniozaawansowany",
+    "advanced": "Zaawansowany",
+    "expert": "Ekspert",
+    "master": "Mistrz",
+    "start": "Start",
+    "pause": "Pauza",
+    "resume": "Wznów",
+    "finish": "Zakończ",
+    "minutes": "{{count}} min",
+    "seconds": "{{count}} sek"
+  },
+  "quotes": {
+    "title": "Inspirujące Cytaty",
+    "author": "autor: {{author}}",
+    "next": "Następny Cytat",
+    "previous": "Poprzedni Cytat",
+    "random": "Losowy Cytat"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "language": "Język",
+    "theme": "Motyw",
+    "light": "Jasny",
+    "dark": "Ciemny",
+    "notifications": "Powiadomienia",
+    "reminderTime": "Czas Przypomnienia",
+    "about": "O Aplikacji"
+  },
+  "navigation": {
+    "home": "Główna",
+    "meditate": "Medytacja",
+    "quotes": "Cytaty",
+    "settings": "Ustawienia"
+  }
+}

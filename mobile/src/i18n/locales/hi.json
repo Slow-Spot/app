@@ -1,0 +1,51 @@
+{
+  "app": {
+    "name": "Slow Spot",
+    "tagline": "अपनी शांति का क्षण खोजें"
+  },
+  "home": {
+    "welcome": "स्वागत है",
+    "dailyQuote": "आज का उद्धरण",
+    "startMeditation": "ध्यान शुरू करें",
+    "exploreSessions": "सत्र खोजें"
+  },
+  "meditation": {
+    "title": "ध्यान",
+    "duration": "अवधि",
+    "level": "स्तर",
+    "beginner": "शुरुआती",
+    "intermediate": "मध्यवर्ती",
+    "advanced": "उन्नत",
+    "expert": "विशेषज्ञ",
+    "master": "गुरु",
+    "start": "शुरू करें",
+    "pause": "रोकें",
+    "resume": "फिर से शुरू करें",
+    "finish": "समाप्त करें",
+    "minutes": "{{count}} मिनट",
+    "seconds": "{{count}} सेकंड"
+  },
+  "quotes": {
+    "title": "प्रेरक उद्धरण",
+    "author": "द्वारा {{author}}",
+    "next": "अगला उद्धरण",
+    "previous": "पिछला उद्धरण",
+    "random": "यादृच्छिक उद्धरण"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "language": "भाषा",
+    "theme": "थीम",
+    "light": "हल्का",
+    "dark": "गहरा",
+    "notifications": "सूचनाएं",
+    "reminderTime": "अनुस्मारक समय",
+    "about": "के बारे में"
+  },
+  "navigation": {
+    "home": "होम",
+    "meditate": "ध्यान करें",
+    "quotes": "उद्धरण",
+    "settings": "सेटिंग्स"
+  }
+}
