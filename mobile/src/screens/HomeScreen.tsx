@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { YStack, H2, Button, Spinner, ScrollView } from 'tamagui';
+import { YStack, XStack, H2, H3, Text, Button, Spinner, ScrollView, Card } from 'tamagui';
 import { useTranslation } from 'react-i18next';
 import { QuoteCard } from '../components/QuoteCard';
 import { api, Quote } from '../services/api';
+import { getUniqueRandomQuote } from '../services/quoteHistory';
+import { getProgressStats, ProgressStats } from '../services/progressTracker';
 
 interface HomeScreenProps {
   onNavigateToMeditation: () => void;
@@ -16,16 +18,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const { t, i18n } = useTranslation();
   const [dailyQuote, setDailyQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<ProgressStats | null>(null);
 
   useEffect(() => {
     loadDailyQuote();
+    loadProgress();
   }, [i18n.language]);
+
+  const loadProgress = async () => {
+    try {
+      const progressStats = await getProgressStats();
+      setStats(progressStats);
+    } catch (error) {
+      console.error('Failed to load progress stats:', error);
+    }
+  };
 
   const loadDailyQuote = async () => {
     try {
       setLoading(true);
-      const quote = await api.quotes.getRandom(i18n.language);
-      setDailyQuote(quote);
+      // Use unique random quote to prevent repetition
+      const allQuotes = await api.quotes.getAll(i18n.language);
+      if (allQuotes.length > 0) {
+        const quote = await getUniqueRandomQuote(allQuotes, i18n.language);
+        setDailyQuote(quote);
+      }
     } catch (error) {
       console.error('Failed to load daily quote:', error);
     } finally {
@@ -45,6 +62,43 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {t('app.tagline')}
           </H2>
         </YStack>
+
+        {/* Progress Stats */}
+        {stats && stats.totalSessions > 0 && (
+          <Card padding="$4" backgroundColor="$backgroundHover" borderRadius="$4">
+            <YStack gap="$3">
+              <H3 size="$6" fontWeight="500" color="$color">
+                {t('home.progress') || 'Your Progress'}
+              </H3>
+              <XStack gap="$4" justifyContent="space-around">
+                <YStack alignItems="center" gap="$1">
+                  <Text fontSize={32} fontWeight="700" color="$primary">
+                    {stats.currentStreak}
+                  </Text>
+                  <Text fontSize="$3" color="$placeholderColor">
+                    🔥 {t('home.dayStreak') || 'day streak'}
+                  </Text>
+                </YStack>
+                <YStack alignItems="center" gap="$1">
+                  <Text fontSize={32} fontWeight="700" color="$primary">
+                    {stats.totalMinutes}
+                  </Text>
+                  <Text fontSize="$3" color="$placeholderColor">
+                    ⏱️ {t('home.totalMinutes') || 'total min'}
+                  </Text>
+                </YStack>
+                <YStack alignItems="center" gap="$1">
+                  <Text fontSize={32} fontWeight="700" color="$primary">
+                    {stats.totalSessions}
+                  </Text>
+                  <Text fontSize="$3" color="$placeholderColor">
+                    ✅ {t('home.sessions') || 'sessions'}
+                  </Text>
+                </YStack>
+              </XStack>
+            </YStack>
+          </Card>
+        )}
 
         {/* Daily Quote */}
         <YStack gap="$3">

@@ -14,6 +14,7 @@ type Screen = 'home' | 'meditation' | 'quotes' | 'settings';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
+  const [isDark, setIsDark] = useState(false);
 
   const renderScreen = () => {
     switch (currentScreen) {
@@ -29,7 +30,7 @@ export default function App() {
       case 'quotes':
         return <QuotesScreen />;
       case 'settings':
-        return <SettingsScreen />;
+        return <SettingsScreen isDark={isDark} onToggleDark={() => setIsDark(!isDark)} />;
       default:
         return null;
     }
@@ -37,11 +38,11 @@ export default function App() {
 
   return (
     <TamaguiProvider config={config}>
-      <Theme name="light">
+      <Theme name={isDark ? 'dark' : 'light'}>
         <SafeAreaView style={styles.container}>
           <StatusBar style="auto" />
 
-          <YStack flex={1} backgroundColor="$background">
+          <YStack flex={1} background="$background">
             {/* Main Content */}
             <YStack flex={1}>{renderScreen()}</YStack>
 
@@ -49,7 +50,7 @@ export default function App() {
             <XStack
               borderTopWidth={1}
               borderColor="$borderColor"
-              backgroundColor="$background"
+              background="$background"
               paddingVertical="$3"
               paddingHorizontal="$4"
               gap="$2"
@@ -57,7 +58,7 @@ export default function App() {
               <Button
                 flex={1}
                 size="$4"
-                backgroundColor={
+                background={
                   currentScreen === 'home' ? '$primary' : '$backgroundPress'
                 }
                 color={currentScreen === 'home' ? '$background' : '$color'}
@@ -69,7 +70,7 @@ export default function App() {
               <Button
                 flex={1}
                 size="$4"
-                backgroundColor={
+                background={
                   currentScreen === 'meditation' ? '$primary' : '$backgroundPress'
                 }
                 color={currentScreen === 'meditation' ? '$background' : '$color'}
@@ -81,7 +82,7 @@ export default function App() {
               <Button
                 flex={1}
                 size="$4"
-                backgroundColor={
+                background={
                   currentScreen === 'quotes' ? '$primary' : '$backgroundPress'
                 }
                 color={currentScreen === 'quotes' ? '$background' : '$color'}
@@ -93,7 +94,7 @@ export default function App() {
               <Button
                 flex={1}
                 size="$4"
-                backgroundColor={
+                background={
                   currentScreen === 'settings' ? '$primary' : '$backgroundPress'
                 }
                 color={currentScreen === 'settings' ? '$background' : '$color'}

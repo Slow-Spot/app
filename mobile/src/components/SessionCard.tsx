@@ -31,9 +31,9 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
       hoverStyle={{ scale: 0.925 }}
       pressStyle={{ scale: 0.875 }}
       padding="$4"
-      backgroundColor="$background"
+      background="$background"
       borderColor="$borderColor"
-      borderRadius="$lg"
+      borderRadius="$4"
       onPress={onPress}
     >
       <Card.Header padded>
@@ -50,21 +50,21 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
       </Card.Header>
 
       <Card.Footer padded>
-        <XStack justifyContent="space-between" alignItems="center" width="100%">
+        <XStack jc="space-between" ai="center" width="100%">
           <YStack gap="$1">
-            <XStack gap="$2" alignItems="center">
-              <Text size="$2" color="$secondary">
+            <XStack gap="$2" ai="center">
+              <Text fontSize="$2" color="$color">
                 {t('meditation.duration')}:
               </Text>
-              <Text size="$3" fontWeight="600" color="$color">
+              <Text fontSize="$3" fontWeight="600" color="$color">
                 {formatDuration(session.durationSeconds)}
               </Text>
             </XStack>
-            <XStack gap="$2" alignItems="center">
-              <Text size="$2" color="$secondary">
+            <XStack gap="$2" ai="center">
+              <Text fontSize="$2" color="$color">
                 {t('meditation.level')}:
               </Text>
-              <Text size="$3" fontWeight="600" color="$color">
+              <Text fontSize="$3" fontWeight="600" color="$color">
                 {t(`meditation.${getLevelLabel(session.level)}`)}
               </Text>
             </XStack>
@@ -73,7 +73,7 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
           <Button
             size="$3"
             theme="active"
-            backgroundColor="$primary"
+            background="$primary"
             color="$background"
             borderRadius="$round"
             paddingHorizontal="$4"

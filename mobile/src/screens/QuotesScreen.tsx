@@ -3,6 +3,7 @@ import { YStack, XStack, H2, Button, ScrollView, Spinner } from 'tamagui';
 import { useTranslation } from 'react-i18next';
 import { QuoteCard } from '../components/QuoteCard';
 import { api, Quote } from '../services/api';
+import { getUniqueRandomQuote, markQuoteAsShown } from '../services/quoteHistory';
 
 export const QuotesScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -29,20 +30,44 @@ export const QuotesScreen: React.FC = () => {
 
   const loadRandomQuote = async () => {
     try {
-      const quote = await api.quotes.getRandom(i18n.language);
-      setQuotes([quote]);
-      setCurrentIndex(0);
+      // Use unique random quote to prevent repetition
+      const allQuotes = await api.quotes.getAll(i18n.language);
+      if (allQuotes.length === 0) return;
+
+      const quote = await getUniqueRandomQuote(allQuotes, i18n.language);
+
+      // Update the current quote display
+      const quoteIndex = quotes.findIndex(q => q.id === quote.id);
+      if (quoteIndex >= 0) {
+        setCurrentIndex(quoteIndex);
+      } else {
+        // Quote not in current list, reload all quotes
+        setQuotes(allQuotes);
+        setCurrentIndex(allQuotes.findIndex(q => q.id === quote.id));
+      }
     } catch (error) {
       console.error('Failed to load random quote:', error);
     }
   };
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % quotes.length);
+  const handleNext = async () => {
+    const nextIndex = (currentIndex + 1) % quotes.length;
+    setCurrentIndex(nextIndex);
+
+    // Mark the new quote as shown
+    if (quotes[nextIndex]) {
+      await markQuoteAsShown(i18n.language, quotes[nextIndex].id);
+    }
   };
 
-  const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + quotes.length) % quotes.length);
+  const handlePrevious = async () => {
+    const prevIndex = (currentIndex - 1 + quotes.length) % quotes.length;
+    setCurrentIndex(prevIndex);
+
+    // Mark the new quote as shown
+    if (quotes[prevIndex]) {
+      await markQuoteAsShown(i18n.language, quotes[prevIndex].id);
+    }
   };
 
   return (

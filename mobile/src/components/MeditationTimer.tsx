@@ -43,9 +43,9 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const progress = ((totalSeconds - remainingSeconds) / totalSeconds) * 100;
 
   return (
-    <YStack gap="$6" alignItems="center" justifyContent="center" flex={1} padding="$6">
+    <YStack gap="$6" ai="center" jc="center" flex={1} padding="$6">
       {/* Circular Progress */}
-      <YStack alignItems="center" justifyContent="center" position="relative">
+      <YStack ai="center" jc="center" position="relative">
         <Circle size={280} borderWidth={8} borderColor="$borderColor" />
 
         <Circle
@@ -62,13 +62,13 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
         <YStack
           position="absolute"
-          alignItems="center"
-          justifyContent="center"
+          ai="center"
+          jc="center"
         >
           <Text fontSize={72} fontWeight="300" color="$color">
             {formatTime(remainingSeconds)}
           </Text>
-          <Text fontSize={16} color="$placeholderColor" marginTop="$2">
+          <Text fontSize={16} color="$placeholderColor" mt="$2">
             {t('meditation.minutes', { count: Math.ceil(remainingSeconds / 60) })}
           </Text>
         </YStack>
@@ -76,14 +76,14 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
       {/* Progress Bar */}
       <Progress size="$2" value={progress} width="80%">
-        <Progress.Indicator animation="bouncy" backgroundColor="$primary" />
+        <Progress.Indicator animation="bouncy" background="$primary" />
       </Progress>
 
       {/* Controls */}
-      <XStack gap="$4" justifyContent="center" width="100%">
+      <XStack gap="$4" jc="center" width="100%">
         <Button
           size="$5"
-          backgroundColor="$backgroundPress"
+          background="$backgroundPress"
           color="$color"
           borderRadius="$round"
           flex={1}
@@ -95,7 +95,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
         <Button
           size="$5"
-          backgroundColor="$primary"
+          background="$primary"
           color="$background"
           borderRadius="$round"
           flex={1}

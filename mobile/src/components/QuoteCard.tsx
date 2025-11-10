@@ -17,20 +17,20 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
       hoverStyle={{ scale: 0.925 }}
       pressStyle={{ scale: 0.875 }}
       padding="$4"
-      backgroundColor="$background"
+      background="$background"
       borderColor="$borderColor"
-      borderRadius="$lg"
+      borderRadius="$4"
     >
       <Card.Header padded>
-        <YStack gap="$2">
-          <H3 size="$7" fontWeight="300" color="$color" textAlign="center">
+        <YStack gap="$2" ai="center">
+          <H3 size="$7" fontWeight="300" color="$color" ta="center">
             "{quote.text}"
           </H3>
           {quote.author && (
             <Paragraph
               size="$3"
               color="$placeholderColor"
-              textAlign="center"
+              ta="center"
               fontStyle="italic"
             >
               — {quote.author}
@@ -41,14 +41,14 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
 
       {(quote.category || quote.cultureTag) && (
         <Card.Footer padded>
-          <YStack gap="$1">
+          <YStack gap="$1" ai="center">
             {quote.category && (
-              <Text size="$2" color="$secondary" textAlign="center">
+              <Text fontSize="$2" color="$color" ta="center">
                 {quote.category}
               </Text>
             )}
             {quote.cultureTag && (
-              <Text size="$2" color="$placeholderColor" textAlign="center">
+              <Text fontSize="$2" color="$placeholderColor" ta="center">
                 {quote.cultureTag}
               </Text>
             )}

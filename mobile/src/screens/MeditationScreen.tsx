@@ -5,6 +5,7 @@ import { SessionCard } from '../components/SessionCard';
 import { MeditationTimer } from '../components/MeditationTimer';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
+import { saveSessionCompletion } from '../services/progressTracker';
 
 export const MeditationScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -62,6 +63,16 @@ export const MeditationScreen: React.FC = () => {
 
   const handleComplete = async () => {
     try {
+      // Save session completion for progress tracking
+      if (selectedSession) {
+        await saveSessionCompletion(
+          selectedSession.id,
+          selectedSession.title,
+          selectedSession.durationSeconds,
+          selectedSession.languageCode
+        );
+      }
+
       // Play ending chime
       if (selectedSession?.chimeUrl) {
         await audioEngine.play('chime');
