@@ -1,0 +1,89 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+
+jobs:
+  deploy-backend:
+    name: Deploy Backend to Railway
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Railway
+        run: |
+          echo "Railway deployment would go here"
+          echo "Configure Railway CLI and deploy backend"
+        # Uncomment when Railway is set up:
+        # - name: Install Railway CLI
+        #   run: npm install -g @railway/cli
+        #
+        # - name: Deploy
+        #   run: railway up
+        #   env:
+        #     RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+  build-mobile-production:
+    name: Build Mobile App (Production)
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        working-directory: ./mobile
+        run: npm ci
+
+      - name: Build iOS
+        working-directory: ./mobile
+        run: |
+          echo "EAS Build iOS would go here"
+          # npx eas-cli build --platform ios --non-interactive
+        # env:
+        #   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build Android
+        working-directory: ./mobile
+        run: |
+          echo "EAS Build Android would go here"
+          # npx eas-cli build --platform android --non-interactive
+        # env:
+        #   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+  deploy-web:
+    name: Deploy Web Landing to Vercel
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        run: |
+          echo "Vercel deployment would go here"
+          echo "Configure Vercel CLI and deploy web"
+        # Uncomment when Vercel is set up:
+        # - name: Install Vercel CLI
+        #   run: npm install -g vercel
+        #
+        # - name: Deploy
+        #   run: vercel --prod
+        #   env:
+        #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

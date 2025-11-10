@@ -50,9 +50,9 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
       </Card.Header>
 
       <Card.Footer padded>
-        <XStack jc="space-between" ai="center" width="100%">
+        <XStack justifyContent="space-between" alignItems="center" width="100%">
           <YStack gap="$1">
-            <XStack gap="$2" ai="center">
+            <XStack gap="$2" alignItems="center">
               <Text fontSize="$2" color="$color">
                 {t('meditation.duration')}:
               </Text>
@@ -60,7 +60,7 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
                 {formatDuration(session.durationSeconds)}
               </Text>
             </XStack>
-            <XStack gap="$2" ai="center">
+            <XStack gap="$2" alignItems="center">
               <Text fontSize="$2" color="$color">
                 {t('meditation.level')}:
               </Text>
@@ -72,11 +72,10 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
 
           <Button
             size="$3"
-            theme="active"
             background="$primary"
             color="$background"
-            borderRadius="$round"
-            paddingHorizontal="$4"
+            br="$round"
+            px="$4"
           >
             {t('meditation.start')}
           </Button>

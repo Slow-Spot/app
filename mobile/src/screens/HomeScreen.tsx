@@ -52,9 +52,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <ScrollView>
-      <YStack flex={1} padding="$6" gap="$6" backgroundColor="$background">
+      <YStack flex={1} p="$6" gap="$6" background="$background">
         {/* Welcome */}
-        <YStack gap="$2" alignItems="center" paddingTop="$8">
+        <YStack gap="$2" alignItems="center" pt="$8">
           <H2 size="$9" fontWeight="300" color="$color">
             {t('app.name')}
           </H2>
@@ -65,7 +65,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* Progress Stats */}
         {stats && stats.totalSessions > 0 && (
-          <Card padding="$4" backgroundColor="$backgroundHover" borderRadius="$4">
+          <Card p="$4" background="$backgroundHover" br="$4">
             <YStack gap="$3">
               <H3 size="$6" fontWeight="500" color="$color">
                 {t('home.progress') || 'Your Progress'}
