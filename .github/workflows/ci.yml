@@ -81,24 +81,21 @@ jobs:
 
       - name: Restore dependencies
         run: |
+          echo "📦 Restoring dependencies..."
           dotnet restore SlowSpot.Api/SlowSpot.Api.csproj
           dotnet restore SlowSpot.Api.Tests/SlowSpot.Api.Tests.csproj
 
       - name: Build
         run: |
+          echo "🔨 Building projects..."
           dotnet build SlowSpot.Api/SlowSpot.Api.csproj --no-restore --configuration Release
           dotnet build SlowSpot.Api.Tests/SlowSpot.Api.Tests.csproj --no-restore --configuration Release
 
       - name: Test
         run: |
           echo "🧪 Running backend tests..."
-          if [ -f "SlowSpot.Api.Tests/SlowSpot.Api.Tests.csproj" ]; then
-            dotnet test SlowSpot.Api.Tests/SlowSpot.Api.Tests.csproj --no-build --configuration Release --verbosity normal
-            echo "✅ All backend tests passed!"
-          else
-            echo "::warning::Backend test project not found"
-            exit 0
-          fi
+          dotnet test SlowSpot.Api.Tests/SlowSpot.Api.Tests.csproj --no-build --configuration Release --verbosity normal
+          echo "✅ All backend tests passed!"
 
   # Mobile App TypeScript & Lint
   mobile-lint:
