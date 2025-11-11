@@ -23,7 +23,13 @@
     "resume": "Fortsetzen",
     "finish": "Beenden",
     "minutes": "{{count}} Min",
-    "seconds": "{{count}} Sek"
+    "seconds": "{{count}} Sek",
+    "takeDeepBreath": "Atme tief ein",
+    "imReady": "Ich bin bereit",
+    "wellDone": "Gut gemacht!",
+    "completedSession": "Du hast deine Meditationssitzung abgeschlossen",
+    "session": "Sitzung",
+    "continue": "Weiter"
   },
   "quotes": {
     "title": "Inspirierende Zitate",

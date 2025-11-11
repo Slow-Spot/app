@@ -1,7 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, useColorScheme, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MeditationSession } from '../services/api';
+import { GradientCard } from './GradientCard';
+import { getGradientForLevel } from '../theme/gradients';
+import theme from '../theme';
 
 interface SessionCardProps {
   session: MeditationSession;
@@ -33,179 +36,119 @@ const formatDuration = (seconds: number): string => {
 
 export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) => {
   const { t } = useTranslation();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const gradient = getGradientForLevel(getLevelLabel(session.level));
 
   return (
-    <TouchableOpacity
-      style={[styles.card, isDark ? styles.darkCard : styles.lightCard]}
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
+    <GradientCard gradient={gradient} onPress={onPress} style={styles.card}>
       {/* Card Header */}
       <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <Text style={[styles.title, isDark ? styles.darkText : styles.lightText]}>
-            {session.title}
-          </Text>
-          {session.description && (
-            <Text style={[styles.description, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
-              {session.description}
-            </Text>
-          )}
+        <Text style={styles.title}>{session.title}</Text>
+        {session.description && (
+          <Text style={styles.description}>{session.description}</Text>
+        )}
 
-          {/* Guidance for beginners */}
-          {session.level === 1 && (
-            <View style={[styles.guidanceBox, isDark ? styles.darkGuidanceBox : styles.lightGuidanceBox]}>
-              <Text style={[styles.guidanceText, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
-                {getGuidanceText(session.level, t)}
-              </Text>
-            </View>
-          )}
+        {/* Guidance for beginners */}
+        {session.level === 1 && (
+          <View style={styles.guidanceBox}>
+            <Text style={styles.guidanceText}>{getGuidanceText(session.level, t)}</Text>
+          </View>
+        )}
 
-          {/* Minimal guidance for intermediate+ */}
-          {session.level > 1 && (
-            <Text style={[styles.minimalGuidance, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
-              {getGuidanceText(session.level, t)}
-            </Text>
-          )}
-        </View>
+        {/* Minimal guidance for intermediate+ */}
+        {session.level > 1 && (
+          <Text style={styles.minimalGuidance}>{getGuidanceText(session.level, t)}</Text>
+        )}
       </View>
 
       {/* Card Footer */}
       <View style={styles.footer}>
-        <View style={styles.footerContent}>
-          <View style={styles.detailsContainer}>
-            <View style={styles.detailRow}>
-              <Text style={[styles.label, isDark ? styles.darkText : styles.lightText]}>
-                {t('meditation.duration')}:
-              </Text>
-              <Text style={[styles.value, isDark ? styles.darkText : styles.lightText]}>
-                {formatDuration(session.durationSeconds)}
-              </Text>
-            </View>
-            <View style={styles.detailRow}>
-              <Text style={[styles.label, isDark ? styles.darkText : styles.lightText]}>
-                {t('meditation.level')}:
-              </Text>
-              <Text style={[styles.value, isDark ? styles.darkText : styles.lightText]}>
-                {t(`meditation.${getLevelLabel(session.level)}`)}
-              </Text>
-            </View>
+        <View style={styles.detailsContainer}>
+          <View style={styles.detailRow}>
+            <Text style={styles.label}>{t('meditation.duration')}:</Text>
+            <Text style={styles.value}>{formatDuration(session.durationSeconds)}</Text>
           </View>
-
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>
-              {t('meditation.start')}
-            </Text>
+          <View style={styles.detailRow}>
+            <Text style={styles.label}>{t('meditation.level')}:</Text>
+            <Text style={styles.value}>{t(`meditation.${getLevelLabel(session.level)}`)}</Text>
           </View>
         </View>
+
+        <View style={styles.startBadge}>
+          <Text style={styles.startBadgeText}>▶ {t('meditation.start')}</Text>
+        </View>
       </View>
-    </TouchableOpacity>
+    </GradientCard>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  lightCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E5E5E5',
-  },
-  darkCard: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    marginBottom: theme.spacing.md,
   },
   header: {
-    padding: 16,
-  },
-  headerContent: {
-    gap: 8,
+    marginBottom: theme.spacing.md,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '500',
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.xs,
   },
   description: {
-    fontSize: 14,
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.sm,
   },
-  lightText: {
-    color: '#000000',
+  guidanceBox: {
+    marginTop: theme.spacing.md,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
-  darkText: {
-    color: '#FFFFFF',
+  guidanceText: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.primary,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.sm,
   },
-  lightPlaceholder: {
-    color: '#8E8E93',
-  },
-  darkPlaceholder: {
-    color: '#8E8E93',
+  minimalGuidance: {
+    marginTop: theme.spacing.sm,
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    fontStyle: 'italic',
   },
   footer: {
-    padding: 16,
-    paddingTop: 0,
-  },
-  footerContent: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginTop: theme.spacing.sm,
   },
   detailsContainer: {
-    gap: 4,
+    gap: theme.spacing.xs,
   },
   detailRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: theme.spacing.xs,
   },
   label: {
-    fontSize: 12,
+    fontSize: theme.typography.fontSizes.xs,
+    color: theme.colors.text.secondary,
+    fontWeight: theme.typography.fontWeights.medium,
   },
   value: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.primary,
+    fontWeight: theme.typography.fontWeights.semiBold,
   },
-  button: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+  startBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
   },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  guidanceBox: {
-    marginTop: 12,
-    padding: 12,
-    borderRadius: 8,
-  },
-  lightGuidanceBox: {
-    backgroundColor: '#F9F9F9',
-  },
-  darkGuidanceBox: {
-    backgroundColor: '#1C1C1E',
-  },
-  guidanceText: {
-    fontSize: 13,
-    lineHeight: 20,
-  },
-  minimalGuidance: {
-    marginTop: 8,
-    fontSize: 13,
-    fontStyle: 'italic',
+  startBadgeText: {
+    color: theme.colors.text.primary,
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: theme.typography.fontWeights.semiBold,
   },
 });

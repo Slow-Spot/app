@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, useColorScheme, Animated, Easing } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Easing } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Svg, { Circle } from 'react-native-svg';
+import theme from '../theme';
 
 interface MeditationTimerProps {
   totalSeconds: number;
@@ -16,9 +17,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 }) => {
   const { t } = useTranslation();
   const [remainingSeconds, setRemainingSeconds] = useState(totalSeconds);
-  const [isRunning, setIsRunning] = useState(false);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const [isRunning, setIsRunning] = useState(true); // Auto-start enabled
 
   // Breathing animation: 4 seconds inhale, 4 seconds exhale
   const breathingScale = useRef(new Animated.Value(0.85)).current;
@@ -119,14 +118,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             },
           ]}
         >
-          <View
-            style={[
-              styles.breathingCircleInner,
-              {
-                backgroundColor: isDark ? 'rgba(10, 132, 255, 0.2)' : 'rgba(0, 122, 255, 0.2)',
-              },
-            ]}
-          />
+          <View style={styles.breathingCircleInner} />
         </Animated.View>
 
         <Svg width={size} height={size} style={styles.svg}>
@@ -135,7 +127,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke={isDark ? '#3A3A3C' : '#E5E5E5'}
+            stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth={strokeWidth}
             fill="none"
           />
@@ -145,7 +137,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke={isDark ? '#0A84FF' : '#007AFF'}
+            stroke={theme.colors.accent.blue[500]}
             strokeWidth={strokeWidth}
             fill="none"
             strokeDasharray={circumference}
@@ -158,21 +150,20 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
         {/* Timer Display */}
         <View style={styles.timerOverlay}>
-          <Text style={[styles.timeText, isDark ? styles.darkText : styles.lightText]}>
+          <Text style={styles.timeText}>
             {formatTime(remainingSeconds)}
           </Text>
-          <Text style={[styles.minutesText, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
+          <Text style={styles.minutesText}>
             {t('meditation.minutes', { count: Math.ceil(remainingSeconds / 60) })}
           </Text>
         </View>
       </View>
 
       {/* Progress Bar */}
-      <View style={[styles.progressBar, isDark ? styles.darkProgressBg : styles.lightProgressBg]}>
+      <View style={styles.progressBar}>
         <View
           style={[
             styles.progressIndicator,
-            isDark ? styles.darkProgress : styles.lightProgress,
             { width: `${progress}%` }
           ]}
         />
@@ -181,20 +172,25 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       {/* Controls */}
       <View style={styles.controls}>
         <TouchableOpacity
-          style={[styles.button, styles.secondaryButton, isDark ? styles.darkSecondaryButton : styles.lightSecondaryButton]}
+          style={[styles.button, styles.secondaryButton]}
           onPress={onCancel}
         >
-          <Text style={[styles.buttonText, isDark ? styles.darkText : styles.lightText]}>
+          <Text style={styles.buttonText}>
             {t('meditation.finish')}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.button, styles.primaryButton, isDark ? styles.darkPrimaryButton : styles.lightPrimaryButton]}
-          onPress={() => setIsRunning(!isRunning)}
+          style={[styles.button, styles.primaryButton]}
+          onPress={() => {
+            setIsRunning(!isRunning);
+          }}
         >
           <Text style={styles.primaryButtonText}>
-            {isRunning ? t('meditation.pause') : t('meditation.resume')}
+            {isRunning
+              ? t('meditation.pause')
+              : t('meditation.resume')
+            }
           </Text>
         </TouchableOpacity>
       </View>
@@ -205,10 +201,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    padding: theme.spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 48,
+    gap: theme.spacing.xxxl,
   },
   circleContainer: {
     position: 'relative',
@@ -228,6 +224,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 140,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   svg: {
     transform: [{ rotate: '0deg' }],
@@ -239,86 +236,55 @@ const styles = StyleSheet.create({
   },
   timeText: {
     fontSize: 72,
-    fontWeight: '300',
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.inverse,
   },
   minutesText: {
-    fontSize: 16,
-    marginTop: 8,
-  },
-  lightText: {
-    color: '#000000',
-  },
-  darkText: {
-    color: '#FFFFFF',
-  },
-  lightPlaceholder: {
-    color: '#8E8E93',
-  },
-  darkPlaceholder: {
-    color: '#8E8E93',
+    fontSize: theme.typography.fontSizes.md,
+    marginTop: theme.spacing.sm,
+    color: 'rgba(255, 255, 255, 0.8)',
   },
   progressBar: {
     width: '80%',
     height: 8,
-    borderRadius: 4,
+    borderRadius: theme.borderRadius.sm,
     overflow: 'hidden',
-  },
-  lightProgressBg: {
-    backgroundColor: '#E5E5E5',
-  },
-  darkProgressBg: {
-    backgroundColor: '#3A3A3C',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
   progressIndicator: {
     height: '100%',
-    borderRadius: 4,
-  },
-  lightProgress: {
-    backgroundColor: '#007AFF',
-  },
-  darkProgress: {
-    backgroundColor: '#0A84FF',
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.colors.accent.blue[500],
   },
   controls: {
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'center',
-    gap: 16,
+    gap: theme.spacing.md,
   },
   button: {
     flex: 1,
     maxWidth: 150,
-    padding: 16,
-    borderRadius: 12,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
     alignItems: 'center',
   },
   primaryButton: {
-    // Primary button specific styles
-  },
-  lightPrimaryButton: {
-    backgroundColor: '#007AFF',
-  },
-  darkPrimaryButton: {
-    backgroundColor: '#0A84FF',
+    backgroundColor: theme.colors.accent.blue[500],
   },
   secondaryButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderWidth: 1,
-  },
-  lightSecondaryButton: {
-    backgroundColor: '#F2F2F7',
-    borderColor: '#E5E5E5',
-  },
-  darkSecondaryButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '500',
+    color: theme.colors.text.inverse,
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.semiBold,
   },
   buttonText: {
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.inverse,
   },
 });

@@ -9,6 +9,10 @@ import {
   StyleSheet,
   useColorScheme,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export const LANGUAGE_STORAGE_KEY = 'user_language_preference';
+export const THEME_STORAGE_KEY = 'user_theme_preference';
 
 const LANGUAGES = [
   { code: 'en', name: 'English' },
@@ -29,8 +33,13 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ isDark, onToggle
   const systemColorScheme = useColorScheme();
   const isDarkMode = systemColorScheme === 'dark';
 
-  const handleLanguageChange = (languageCode: string) => {
-    i18n.changeLanguage(languageCode);
+  const handleLanguageChange = async (languageCode: string) => {
+    try {
+      await i18n.changeLanguage(languageCode);
+      await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, languageCode);
+    } catch (error) {
+      console.error('Failed to save language preference:', error);
+    }
   };
 
   const styles = createStyles(isDarkMode);

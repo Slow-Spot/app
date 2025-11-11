@@ -1,19 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import './src/i18n';
 
 import { HomeScreen } from './src/screens/HomeScreen';
 import { MeditationScreen } from './src/screens/MeditationScreen';
 import { QuotesScreen } from './src/screens/QuotesScreen';
-import { SettingsScreen } from './src/screens/SettingsScreen';
+import { SettingsScreen, THEME_STORAGE_KEY } from './src/screens/SettingsScreen';
 
 type Screen = 'home' | 'meditation' | 'quotes' | 'settings';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [isDark, setIsDark] = useState(false);
+
+  // Load saved theme preference on mount
+  useEffect(() => {
+    const loadThemePreference = async () => {
+      try {
+        const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+        if (savedTheme !== null) {
+          setIsDark(JSON.parse(savedTheme));
+        }
+      } catch (error) {
+        console.error('Failed to load theme preference:', error);
+      }
+    };
+
+    loadThemePreference();
+  }, []);
+
+  const handleToggleDark = async () => {
+    try {
+      const newValue = !isDark;
+      setIsDark(newValue);
+      await AsyncStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(newValue));
+    } catch (error) {
+      console.error('Failed to save theme preference:', error);
+    }
+  };
 
   const renderScreen = () => {
     switch (currentScreen) {
@@ -29,7 +56,7 @@ export default function App() {
       case 'quotes':
         return <QuotesScreen />;
       case 'settings':
-        return <SettingsScreen isDark={isDark} onToggleDark={() => setIsDark(!isDark)} />;
+        return <SettingsScreen isDark={isDark} onToggleDark={handleToggleDark} />;
       default:
         return null;
     }

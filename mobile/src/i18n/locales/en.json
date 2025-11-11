@@ -7,13 +7,19 @@
     "welcome": "Welcome",
     "dailyQuote": "Daily Quote",
     "startMeditation": "Start Meditation",
-    "exploreSessions": "Explore Sessions"
+    "exploreSessions": "Explore Sessions",
+    "progress": "Your Progress",
+    "dayStreak": "day streak",
+    "totalMinutes": "total min",
+    "sessions": "sessions"
   },
   "meditation": {
     "title": "Meditation",
+    "subtitle": "Choose your practice",
     "duration": "Duration",
     "level": "Level",
     "beginner": "Beginner",
+    "beginnerGuidance": "Guided meditation for beginners",
     "intermediate": "Intermediate",
     "advanced": "Advanced",
     "expert": "Expert",
@@ -23,7 +29,13 @@
     "resume": "Resume",
     "finish": "Finish",
     "minutes": "{{count}} min",
-    "seconds": "{{count}} sec"
+    "seconds": "{{count}} sec",
+    "takeDeepBreath": "Take a deep breath",
+    "imReady": "I'm Ready",
+    "wellDone": "Well Done!",
+    "completedSession": "You completed your meditation session",
+    "session": "Session",
+    "continue": "Continue"
   },
   "quotes": {
     "title": "Inspirational Quotes",

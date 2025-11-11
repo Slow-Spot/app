@@ -23,7 +23,13 @@
     "resume": "Reprendre",
     "finish": "Terminer",
     "minutes": "{{count}} min",
-    "seconds": "{{count}} sec"
+    "seconds": "{{count}} sec",
+    "takeDeepBreath": "Prenez une grande respiration",
+    "imReady": "Je suis prêt",
+    "wellDone": "Bien joué !",
+    "completedSession": "Vous avez terminé votre session de méditation",
+    "session": "Session",
+    "continue": "Continuer"
   },
   "quotes": {
     "title": "Citations Inspirantes",

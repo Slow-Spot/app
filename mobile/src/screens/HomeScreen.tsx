@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { QuoteCard } from '../components/QuoteCard';
+import { GradientBackground } from '../components/GradientBackground';
+import { GradientCard } from '../components/GradientCard';
+import { GradientButton } from '../components/GradientButton';
 import { api, Quote } from '../services/api';
 import { getUniqueRandomQuote } from '../services/quoteHistory';
 import { getProgressStats, ProgressStats } from '../services/progressTracker';
+import theme, { gradients } from '../theme';
 
 interface HomeScreenProps {
   onNavigateToMeditation: () => void;
@@ -19,8 +23,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [dailyQuote, setDailyQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<ProgressStats | null>(null);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
 
   useEffect(() => {
     loadDailyQuote();
@@ -53,83 +55,79 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   return (
-    <ScrollView style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
-      <View style={styles.content}>
-        {/* Welcome */}
-        <View style={styles.welcomeContainer}>
-          <Text style={[styles.title, isDark ? styles.darkText : styles.lightText]}>
-            {t('app.name')}
-          </Text>
-          <Text style={[styles.tagline, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
-            {t('app.tagline')}
-          </Text>
+    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Welcome Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>{t('app.name')}</Text>
+          <Text style={styles.tagline}>{t('app.tagline')}</Text>
         </View>
 
         {/* Progress Stats */}
         {stats && stats.totalSessions > 0 && (
-          <View style={[styles.card, isDark ? styles.darkCard : styles.lightCard]}>
-            <Text style={[styles.cardTitle, isDark ? styles.darkText : styles.lightText]}>
+          <GradientCard
+            gradient={gradients.card.lightCard}
+            style={styles.progressCard}
+          >
+            <Text style={styles.progressTitle}>
               {t('home.progress') || 'Your Progress'}
             </Text>
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
                 <Text style={styles.statValue}>{stats.currentStreak}</Text>
-                <Text style={[styles.statLabel, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
+                <Text style={styles.statLabel}>
                   🔥 {t('home.dayStreak') || 'day streak'}
                 </Text>
               </View>
               <View style={styles.statItem}>
                 <Text style={styles.statValue}>{stats.totalMinutes}</Text>
-                <Text style={[styles.statLabel, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
+                <Text style={styles.statLabel}>
                   ⏱️ {t('home.totalMinutes') || 'total min'}
                 </Text>
               </View>
               <View style={styles.statItem}>
                 <Text style={styles.statValue}>{stats.totalSessions}</Text>
-                <Text style={[styles.statLabel, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
+                <Text style={styles.statLabel}>
                   ✅ {t('home.sessions') || 'sessions'}
                 </Text>
               </View>
             </View>
-          </View>
+          </GradientCard>
         )}
 
-        {/* Daily Quote */}
+        {/* Daily Quote Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, isDark ? styles.darkText : styles.lightText]}>
-            {t('home.dailyQuote')}
-          </Text>
+          <Text style={styles.sectionTitle}>{t('home.dailyQuote')}</Text>
           {loading ? (
             <View style={styles.loader}>
-              <ActivityIndicator size="large" color={isDark ? '#0A84FF' : '#007AFF'} />
+              <ActivityIndicator size="large" color={theme.colors.accent.blue[500]} />
             </View>
           ) : dailyQuote ? (
             <QuoteCard quote={dailyQuote} />
           ) : null}
         </View>
 
-        {/* Actions */}
+        {/* Action Buttons */}
         <View style={styles.actions}>
-          <TouchableOpacity
-            style={[styles.primaryButton, isDark ? styles.darkPrimaryButton : styles.lightPrimaryButton]}
+          <GradientButton
+            title={t('home.startMeditation')}
+            gradient={gradients.button.primary}
             onPress={onNavigateToMeditation}
-          >
-            <Text style={styles.primaryButtonText}>
-              {t('home.startMeditation')}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.secondaryButton, isDark ? styles.darkSecondaryButton : styles.lightSecondaryButton]}
+            size="lg"
+          />
+          <GradientButton
+            title={t('home.exploreSessions')}
+            gradient={gradients.button.secondary}
             onPress={onNavigateToQuotes}
-          >
-            <Text style={[styles.secondaryButtonText, isDark ? styles.darkText : styles.lightText]}>
-              {t('home.exploreSessions')}
-            </Text>
-          </TouchableOpacity>
+            size="md"
+          />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </GradientBackground>
   );
 };
 
@@ -137,120 +135,71 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  lightBg: {
-    backgroundColor: '#FFFFFF',
+  scrollView: {
+    flex: 1,
   },
-  darkBg: {
-    backgroundColor: '#1A1A1A',
+  scrollContent: {
+    padding: theme.layout.screenPadding,
+    paddingBottom: theme.spacing.xxxl,
   },
-  content: {
-    padding: 24,
-    gap: 24,
-  },
-  welcomeContainer: {
-    paddingTop: 32,
+  header: {
     alignItems: 'center',
-    gap: 8,
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.xxl,
   },
   title: {
-    fontSize: 32,
-    fontWeight: '300',
+    fontSize: theme.typography.fontSizes.hero,
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.xs,
   },
   tagline: {
-    fontSize: 18,
-    fontWeight: '300',
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.regular,
+    color: theme.colors.text.secondary,
   },
-  lightText: {
-    color: '#000000',
+  progressCard: {
+    marginBottom: theme.spacing.lg,
   },
-  darkText: {
-    color: '#FFFFFF',
-  },
-  lightPlaceholder: {
-    color: '#8E8E93',
-  },
-  darkPlaceholder: {
-    color: '#8E8E93',
-  },
-  card: {
-    padding: 16,
-    borderRadius: 12,
-    gap: 12,
-  },
-  lightCard: {
-    backgroundColor: '#F2F2F7',
-  },
-  darkCard: {
-    backgroundColor: '#2C2C2E',
-  },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: '500',
+  progressTitle: {
+    fontSize: theme.typography.fontSizes.xxl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.md,
   },
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    gap: 16,
   },
   statItem: {
     alignItems: 'center',
-    gap: 4,
   },
   statValue: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#007AFF',
+    fontSize: theme.typography.fontSizes.xxxl,
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.accent.blue[600],
+    marginBottom: theme.spacing.xs,
   },
   statLabel: {
-    fontSize: 14,
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    textAlign: 'center',
   },
   section: {
-    gap: 12,
+    marginBottom: theme.spacing.lg,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: '400',
+    fontSize: theme.typography.fontSizes.xxl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.md,
   },
   loader: {
-    padding: 32,
+    paddingVertical: theme.spacing.xl,
     alignItems: 'center',
   },
   actions: {
-    gap: 16,
-    marginTop: 16,
-  },
-  primaryButton: {
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  lightPrimaryButton: {
-    backgroundColor: '#007AFF',
-  },
-  darkPrimaryButton: {
-    backgroundColor: '#0A84FF',
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  secondaryButton: {
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    borderWidth: 1,
-  },
-  lightSecondaryButton: {
-    backgroundColor: '#F2F2F7',
-    borderColor: '#E5E5E5',
-  },
-  darkSecondaryButton: {
-    backgroundColor: '#2C2C2E',
-    borderColor: '#3A3A3C',
-  },
-  secondaryButtonText: {
-    fontSize: 18,
-    fontWeight: '500',
+    marginTop: theme.spacing.lg,
+    gap: theme.spacing.md,
   },
 });

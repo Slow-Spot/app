@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, useColorScheme, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { GradientBackground } from './GradientBackground';
+import { GradientButton } from './GradientButton';
 import { api, Quote } from '../services/api';
+import theme, { gradients } from '../theme';
 
 interface PreparationScreenProps {
   onReady: () => void;
@@ -9,8 +12,6 @@ interface PreparationScreenProps {
 
 export const PreparationScreen: React.FC<PreparationScreenProps> = ({ onReady }) => {
   const { t, i18n } = useTranslation();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
   const [quote, setQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,11 +33,11 @@ export const PreparationScreen: React.FC<PreparationScreenProps> = ({ onReady })
   };
 
   return (
-    <View style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
+    <GradientBackground gradient={gradients.screen.preparation} style={styles.container}>
       <View style={styles.content}>
         {/* Breathing prompt */}
         <View style={styles.breathingSection}>
-          <Text style={[styles.breathingText, isDark ? styles.darkText : styles.lightText]}>
+          <Text style={styles.breathingText}>
             {t('meditation.takeDeepBreath') || 'Take a deep breath'}
           </Text>
         </View>
@@ -44,14 +45,14 @@ export const PreparationScreen: React.FC<PreparationScreenProps> = ({ onReady })
         {/* Quote section */}
         <View style={styles.quoteSection}>
           {loading ? (
-            <ActivityIndicator size="large" color={isDark ? '#0A84FF' : '#007AFF'} />
+            <ActivityIndicator size="large" color={theme.colors.accent.lavender[500]} />
           ) : quote ? (
             <>
-              <Text style={[styles.quoteText, isDark ? styles.darkText : styles.lightText]}>
+              <Text style={styles.quoteText}>
                 "{quote.text}"
               </Text>
               {quote.author && (
-                <Text style={[styles.authorText, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
+                <Text style={styles.authorText}>
                   — {quote.author}
                 </Text>
               )}
@@ -60,17 +61,14 @@ export const PreparationScreen: React.FC<PreparationScreenProps> = ({ onReady })
         </View>
 
         {/* Ready button */}
-        <TouchableOpacity
-          style={[styles.button, isDark ? styles.darkButton : styles.lightButton]}
+        <GradientButton
+          title={t('meditation.imReady') || "I'm Ready"}
+          gradient={gradients.button.primary}
           onPress={onReady}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.buttonText}>
-            {t('meditation.imReady') || "I'm Ready"}
-          </Text>
-        </TouchableOpacity>
+          size="lg"
+        />
       </View>
-    </View>
+    </GradientBackground>
   );
 };
 
@@ -78,15 +76,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  lightBg: {
-    backgroundColor: '#FFFFFF',
-  },
-  darkBg: {
-    backgroundColor: '#1A1A1A',
-  },
   content: {
     flex: 1,
-    padding: 32,
+    padding: theme.spacing.xl,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -96,56 +88,40 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   breathingText: {
-    fontSize: 28,
-    fontWeight: '300',
+    fontSize: theme.typography.fontSizes.xxxl,
+    fontWeight: theme.typography.fontWeights.medium,
     textAlign: 'center',
+    color: theme.colors.neutral.white,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   quoteSection: {
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 32,
-    gap: 16,
+    paddingVertical: theme.spacing.xl,
+    gap: theme.spacing.md,
   },
   quoteText: {
-    fontSize: 22,
-    fontWeight: '400',
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.medium,
     textAlign: 'center',
-    lineHeight: 36,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.xl,
+    color: theme.colors.neutral.white,
+    textShadowColor: 'rgba(0, 0, 0, 0.15)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   authorText: {
-    fontSize: 16,
+    fontSize: theme.typography.fontSizes.md,
     fontStyle: 'italic',
+    fontWeight: theme.typography.fontWeights.medium,
     textAlign: 'center',
-  },
-  lightText: {
-    color: '#000000',
-  },
-  darkText: {
-    color: '#FFFFFF',
-  },
-  lightPlaceholder: {
-    color: '#8E8E93',
-  },
-  darkPlaceholder: {
-    color: '#8E8E93',
-  },
-  button: {
-    width: '100%',
-    paddingVertical: 18,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  lightButton: {
-    backgroundColor: '#007AFF',
-  },
-  darkButton: {
-    backgroundColor: '#0A84FF',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '500',
+    color: theme.colors.neutral.white,
+    opacity: 0.9,
+    textShadowColor: 'rgba(0, 0, 0, 0.15)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });

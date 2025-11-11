@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, ScrollView, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SessionCard } from '../components/SessionCard';
 import { MeditationTimer } from '../components/MeditationTimer';
+import { PreparationScreen } from '../components/PreparationScreen';
+import { CelebrationScreen } from '../components/CelebrationScreen';
+import { GradientBackground } from '../components/GradientBackground';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
+import theme, { gradients } from '../theme';
+
+type FlowState = 'list' | 'preparation' | 'meditation' | 'celebration';
 
 export const MeditationScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [sessions, setSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | null>(null);
-  const [isActive, setIsActive] = useState(false);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const [flowState, setFlowState] = useState<FlowState>('list');
 
   useEffect(() => {
     loadSessions();
@@ -32,30 +36,36 @@ export const MeditationScreen: React.FC = () => {
     }
   };
 
-  const handleStartSession = async (session: MeditationSession) => {
+  const handleStartSession = (session: MeditationSession) => {
     setSelectedSession(session);
-    setIsActive(true);
+    setFlowState('preparation');
+  };
+
+  const handleReadyToStart = async () => {
+    if (!selectedSession) return;
+
+    setFlowState('meditation');
 
     try {
       // Load audio tracks if available
-      if (session.voiceUrl) {
-        await audioEngine.loadTrack('voice', session.voiceUrl, 0.8);
+      if (selectedSession.voiceUrl) {
+        await audioEngine.loadTrack('voice', selectedSession.voiceUrl, 0.8);
       }
-      if (session.ambientUrl) {
-        await audioEngine.loadTrack('ambient', session.ambientUrl, 0.4);
+      if (selectedSession.ambientUrl) {
+        await audioEngine.loadTrack('ambient', selectedSession.ambientUrl, 0.4);
       }
-      if (session.chimeUrl) {
-        await audioEngine.loadTrack('chime', session.chimeUrl, 0.6);
+      if (selectedSession.chimeUrl) {
+        await audioEngine.loadTrack('chime', selectedSession.chimeUrl, 0.6);
       }
 
       // Start with chime, then fade in ambient
-      if (session.chimeUrl) {
+      if (selectedSession.chimeUrl) {
         await audioEngine.play('chime');
       }
-      if (session.ambientUrl) {
+      if (selectedSession.ambientUrl) {
         await audioEngine.fadeIn('ambient', 3000);
       }
-      if (session.voiceUrl) {
+      if (selectedSession.voiceUrl) {
         setTimeout(() => audioEngine.play('voice'), 5000);
       }
     } catch (error) {
@@ -84,11 +94,9 @@ export const MeditationScreen: React.FC = () => {
       await audioEngine.fadeOut('voice', 2000);
       await audioEngine.fadeOut('ambient', 3000);
 
-      // Cleanup
-      setTimeout(async () => {
-        await audioEngine.cleanup();
-        setIsActive(false);
-        setSelectedSession(null);
+      // Move to celebration screen
+      setTimeout(() => {
+        setFlowState('celebration');
       }, 3000);
     } catch (error) {
       console.error('Failed to complete session:', error);
@@ -99,55 +107,82 @@ export const MeditationScreen: React.FC = () => {
     try {
       await audioEngine.stopAll();
       await audioEngine.cleanup();
-      setIsActive(false);
+      setFlowState('list');
       setSelectedSession(null);
     } catch (error) {
       console.error('Failed to cancel session:', error);
     }
   };
 
-  if (isActive && selectedSession) {
+  const handleCelebrationContinue = async () => {
+    try {
+      await audioEngine.cleanup();
+      setFlowState('list');
+      setSelectedSession(null);
+    } catch (error) {
+      console.error('Failed to cleanup after celebration:', error);
+    }
+  };
+
+  // Show preparation screen
+  if (flowState === 'preparation' && selectedSession) {
+    return <PreparationScreen onReady={handleReadyToStart} />;
+  }
+
+  // Show meditation timer
+  if (flowState === 'meditation' && selectedSession) {
     return (
-      <View style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
+      <GradientBackground gradient={gradients.screen.timer} style={styles.container}>
         <MeditationTimer
           totalSeconds={selectedSession.durationSeconds}
           onComplete={handleComplete}
           onCancel={handleCancel}
         />
-      </View>
+      </GradientBackground>
     );
   }
 
+  // Show celebration screen
+  if (flowState === 'celebration' && selectedSession) {
+    return (
+      <CelebrationScreen
+        durationMinutes={Math.ceil(selectedSession.durationSeconds / 60)}
+        sessionTitle={selectedSession.title}
+        onContinue={handleCelebrationContinue}
+      />
+    );
+  }
+
+  // Default: show session list
   return (
-    <View style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
+    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.content}>
-          <Text style={[styles.title, isDark ? styles.darkText : styles.lightText]}>
-            {t('meditation.title')}
-          </Text>
-
-          {loading ? (
-            <View style={styles.loader}>
-              <ActivityIndicator size="large" color={isDark ? '#0A84FF' : '#007AFF'} />
-            </View>
-          ) : (
-            <View style={styles.sessionsList}>
-              {sessions.map((session) => (
-                <SessionCard
-                  key={session.id}
-                  session={session}
-                  onPress={() => handleStartSession(session)}
-                />
-              ))}
-            </View>
-          )}
+        <View style={styles.header}>
+          <Text style={styles.title}>{t('meditation.title')}</Text>
+          <Text style={styles.subtitle}>{t('meditation.subtitle')}</Text>
         </View>
+
+        {loading ? (
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color={theme.colors.accent.blue[500]} />
+          </View>
+        ) : (
+          <View style={styles.sessionsList}>
+            {sessions.map((session) => (
+              <SessionCard
+                key={session.id}
+                session={session}
+                onPress={() => handleStartSession(session)}
+              />
+            ))}
+          </View>
+        )}
       </ScrollView>
-    </View>
+    </GradientBackground>
   );
 };
 
@@ -155,39 +190,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  lightBg: {
-    backgroundColor: '#FFFFFF',
-  },
-  darkBg: {
-    backgroundColor: '#1A1A1A',
-  },
   scrollView: {
-    flex: 1,
+    // Removed flex: 1 to allow proper scrolling
   },
   scrollContent: {
+    padding: theme.layout.screenPadding,
+    paddingBottom: theme.spacing.xxxl,
     flexGrow: 1,
-    paddingBottom: 24,
   },
-  content: {
-    padding: 24,
-    gap: 24,
+  header: {
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.xxl,
   },
   title: {
-    fontSize: 32,
-    fontWeight: '400',
-    paddingTop: 16,
+    fontSize: theme.typography.fontSizes.hero,
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.xs,
   },
-  lightText: {
-    color: '#000000',
-  },
-  darkText: {
-    color: '#FFFFFF',
+  subtitle: {
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.regular,
+    color: theme.colors.text.secondary,
   },
   loader: {
-    padding: 32,
+    paddingVertical: theme.spacing.xxl,
     alignItems: 'center',
   },
   sessionsList: {
-    gap: 16,
+    gap: theme.spacing.md,
   },
 });
