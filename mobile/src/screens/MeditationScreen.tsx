@@ -106,7 +106,7 @@ export const MeditationScreen: React.FC = () => {
 
   if (isActive && selectedSession) {
     return (
-      <YStack flex={1} backgroundColor="$background">
+      <YStack flex={1} background="$background">
         <MeditationTimer
           totalSeconds={selectedSession.durationSeconds}
           onComplete={handleComplete}
@@ -118,13 +118,13 @@ export const MeditationScreen: React.FC = () => {
 
   return (
     <ScrollView>
-      <YStack flex={1} padding="$6" gap="$6" backgroundColor="$background">
-        <H2 size="$8" fontWeight="400" color="$color" paddingTop="$4">
+      <YStack flex={1} p="$6" gap="$6" background="$background">
+        <H2 size="$8" fontWeight="400" color="$color" pt="$4">
           {t('meditation.title')}
         </H2>
 
         {loading ? (
-          <YStack alignItems="center" padding="$8">
+          <YStack ai="center" p="$8">
             <Spinner size="large" color="$primary" />
           </YStack>
         ) : (

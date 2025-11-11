@@ -54,7 +54,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     <ScrollView>
       <YStack flex={1} p="$6" gap="$6" background="$background">
         {/* Welcome */}
-        <YStack gap="$2" alignItems="center" pt="$8">
+        <YStack gap="$2" ai="center" pt="$8">
           <H2 size="$9" fontWeight="300" color="$color">
             {t('app.name')}
           </H2>
@@ -65,13 +65,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* Progress Stats */}
         {stats && stats.totalSessions > 0 && (
-          <Card p="$4" background="$backgroundHover" br="$4">
+          <Card p="$4" background="$backgroundHover" borderRadius="$4">
             <YStack gap="$3">
               <H3 size="$6" fontWeight="500" color="$color">
                 {t('home.progress') || 'Your Progress'}
               </H3>
-              <XStack gap="$4" justifyContent="space-around">
-                <YStack alignItems="center" gap="$1">
+              <XStack gap="$4" jc="space-around">
+                <YStack ai="center" gap="$1">
                   <Text fontSize={32} fontWeight="700" color="$primary">
                     {stats.currentStreak}
                   </Text>
@@ -79,7 +79,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     🔥 {t('home.dayStreak') || 'day streak'}
                   </Text>
                 </YStack>
-                <YStack alignItems="center" gap="$1">
+                <YStack ai="center" gap="$1">
                   <Text fontSize={32} fontWeight="700" color="$primary">
                     {stats.totalMinutes}
                   </Text>
@@ -87,7 +87,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     ⏱️ {t('home.totalMinutes') || 'total min'}
                   </Text>
                 </YStack>
-                <YStack alignItems="center" gap="$1">
+                <YStack ai="center" gap="$1">
                   <Text fontSize={32} fontWeight="700" color="$primary">
                     {stats.totalSessions}
                   </Text>
@@ -106,7 +106,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {t('home.dailyQuote')}
           </H2>
           {loading ? (
-            <YStack alignItems="center" padding="$8">
+            <YStack ai="center" p="$8">
               <Spinner size="large" color="$primary" />
             </YStack>
           ) : dailyQuote ? (
@@ -115,10 +115,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </YStack>
 
         {/* Actions */}
-        <YStack gap="$4" marginTop="$4">
+        <YStack gap="$4" mt="$4">
           <Button
             size="$5"
-            backgroundColor="$primary"
+            background="$primary"
             color="$background"
             borderRadius="$lg"
             fontSize="$6"
@@ -130,7 +130,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           <Button
             size="$5"
-            backgroundColor="$backgroundPress"
+            background="$backgroundPress"
             color="$color"
             borderRadius="$lg"
             fontSize="$6"

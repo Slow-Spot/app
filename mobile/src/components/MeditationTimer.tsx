@@ -43,9 +43,9 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const progress = ((totalSeconds - remainingSeconds) / totalSeconds) * 100;
 
   return (
-    <YStack gap="$6" alignItems="center" justifyContent="center" flex={1} p="$6">
+    <YStack gap="$6" ai="center" jc="center" flex={1} p="$6">
       {/* Circular Progress */}
-      <YStack alignItems="center" justifyContent="center" position="relative">
+      <YStack ai="center" jc="center" position="relative">
         <Circle size={280} borderWidth={8} borderColor="$borderColor" />
 
         <Circle
@@ -62,8 +62,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
         <YStack
           position="absolute"
-          alignItems="center"
-          justifyContent="center"
+          ai="center"
+          jc="center"
         >
           <Text fontSize={72} fontWeight="300" color="$color">
             {formatTime(remainingSeconds)}
@@ -80,12 +80,12 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       </Progress>
 
       {/* Controls */}
-      <XStack gap="$4" justifyContent="center" width="100%">
+      <XStack gap="$4" jc="center" width="100%">
         <Button
           size="$5"
           background="$backgroundPress"
           color="$color"
-          br="$round"
+          borderRadius="$round"
           flex={1}
           maxWidth={150}
           onPress={onCancel}
@@ -97,7 +97,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           size="$5"
           background="$primary"
           color="$background"
-          br="$round"
+          borderRadius="$round"
           flex={1}
           maxWidth={150}
           onPress={() => setIsRunning(!isRunning)}

@@ -30,7 +30,7 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
       scale={0.9}
       hoverStyle={{ scale: 0.925 }}
       pressStyle={{ scale: 0.875 }}
-      padding="$4"
+      p="$4"
       background="$background"
       borderColor="$borderColor"
       borderRadius="$4"
@@ -50,9 +50,9 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
       </Card.Header>
 
       <Card.Footer padded>
-        <XStack justifyContent="space-between" alignItems="center" width="100%">
+        <XStack jc="space-between" ai="center" width="100%">
           <YStack gap="$1">
-            <XStack gap="$2" alignItems="center">
+            <XStack gap="$2" ai="center">
               <Text fontSize="$2" color="$color">
                 {t('meditation.duration')}:
               </Text>
@@ -60,7 +60,7 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
                 {formatDuration(session.durationSeconds)}
               </Text>
             </XStack>
-            <XStack gap="$2" alignItems="center">
+            <XStack gap="$2" ai="center">
               <Text fontSize="$2" color="$color">
                 {t('meditation.level')}:
               </Text>
@@ -74,7 +74,7 @@ export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) =>
             size="$3"
             background="$primary"
             color="$background"
-            br="$round"
+            borderRadius="$round"
             px="$4"
           >
             {t('meditation.start')}
