@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { YStack, H2, ScrollView, Spinner } from 'tamagui';
+import { View, Text, ActivityIndicator, ScrollView, StyleSheet, useColorScheme } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SessionCard } from '../components/SessionCard';
 import { MeditationTimer } from '../components/MeditationTimer';
@@ -13,6 +13,8 @@ export const MeditationScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | null>(null);
   const [isActive, setIsActive] = useState(false);
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
   useEffect(() => {
     loadSessions();
@@ -106,29 +108,29 @@ export const MeditationScreen: React.FC = () => {
 
   if (isActive && selectedSession) {
     return (
-      <YStack flex={1} background="$background">
+      <View style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
         <MeditationTimer
           totalSeconds={selectedSession.durationSeconds}
           onComplete={handleComplete}
           onCancel={handleCancel}
         />
-      </YStack>
+      </View>
     );
   }
 
   return (
-    <ScrollView>
-      <YStack flex={1} p="$6" gap="$6" background="$background">
-        <H2 size="$8" fontWeight="400" color="$color" pt="$4">
+    <ScrollView style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
+      <View style={styles.content}>
+        <Text style={[styles.title, isDark ? styles.darkText : styles.lightText]}>
           {t('meditation.title')}
-        </H2>
+        </Text>
 
         {loading ? (
-          <YStack p="$8" style={{ alignItems: 'center' }}>
-            <Spinner size="large" color={"$primary" as any} />
-          </YStack>
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color={isDark ? '#0A84FF' : '#007AFF'} />
+          </View>
         ) : (
-          <YStack gap="$4">
+          <View style={styles.sessionsList}>
             {sessions.map((session) => (
               <SessionCard
                 key={session.id}
@@ -136,9 +138,43 @@ export const MeditationScreen: React.FC = () => {
                 onPress={() => handleStartSession(session)}
               />
             ))}
-          </YStack>
+          </View>
         )}
-      </YStack>
+      </View>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  lightBg: {
+    backgroundColor: '#FFFFFF',
+  },
+  darkBg: {
+    backgroundColor: '#1A1A1A',
+  },
+  content: {
+    padding: 24,
+    gap: 24,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '400',
+    paddingTop: 16,
+  },
+  lightText: {
+    color: '#000000',
+  },
+  darkText: {
+    color: '#FFFFFF',
+  },
+  loader: {
+    padding: 32,
+    alignItems: 'center',
+  },
+  sessionsList: {
+    gap: 16,
+  },
+});

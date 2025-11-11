@@ -27,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2b3ebb2e-60e7-4355-922a-db729c41792d"
+      }
+    },
+    "owner": "leszekszpunar"
   }
 }

@@ -20,12 +20,8 @@
       }
     },
     "production": {
-      "ios": {
-        "bundleIdentifier": "com.slowspot.app"
-      },
       "android": {
-        "buildType": "apk",
-        "packageName": "com.slowspot.app"
+        "buildType": "apk"
       }
     }
   },

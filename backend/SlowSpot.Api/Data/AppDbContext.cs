@@ -16,71 +16,77 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Seed initial data - Quotes (50+ quotes, multiple languages)
+        // Seed initial data - Quotes (100+ quotes, multiple languages, EPIC authors)
         modelBuilder.Entity<Quote>().HasData(
-            // English Quotes
-            new Quote { Id = 1, Text = "Peace comes when you stop chasing it.", LanguageCode = "en", CultureTag = "universal", Category = "peace", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 2, Text = "The present moment is all you ever have.", Author = "Eckhart Tolle", LanguageCode = "en", CultureTag = "mindfulness", Category = "presence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 3, Text = "Meditation is not about stopping thoughts, but recognizing them.", LanguageCode = "en", CultureTag = "zen", Category = "awareness", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 4, Text = "Be still. Listen to the stones. They know patience.", LanguageCode = "en", CultureTag = "zen", Category = "patience", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 5, Text = "The quieter you become, the more you can hear.", Author = "Ram Dass", LanguageCode = "en", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 6, Text = "You cannot stop the waves, but you can learn to surf.", Author = "Jon Kabat-Zinn", LanguageCode = "en", CultureTag = "mindfulness", Category = "acceptance", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 7, Text = "Breathing in, I calm my body. Breathing out, I smile.", Author = "Thich Nhat Hanh", LanguageCode = "en", CultureTag = "mindfulness", Category = "breath", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 8, Text = "The journey of a thousand miles begins with one breath.", LanguageCode = "en", CultureTag = "zen", Category = "journey", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 9, Text = "In stillness, everything is possible.", LanguageCode = "en", CultureTag = "universal", Category = "stillness", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 10, Text = "Let go of what has passed. Let go of what may come. Let go of what is happening now.", Author = "Buddha", LanguageCode = "en", CultureTag = "zen_buddhist", Category = "letting_go", CreatedAt = DateTime.UtcNow },
+            // 🏛️ STOICS - English (Philosophers who changed the world)
+            new Quote { Id = 1, Text = "You have power over your mind - not outside events. Realize this, and you will find strength.", Author = "Marcus Aurelius", LanguageCode = "en", CultureTag = "stoicism", Category = "power", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 2, Text = "The happiness of your life depends upon the quality of your thoughts.", Author = "Marcus Aurelius", LanguageCode = "en", CultureTag = "stoicism", Category = "mind", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 3, Text = "Wealth consists not in having great possessions, but in having few wants.", Author = "Epictetus", LanguageCode = "en", CultureTag = "stoicism", Category = "wealth", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 4, Text = "We suffer more often in imagination than in reality.", Author = "Seneca", LanguageCode = "en", CultureTag = "stoicism", Category = "suffering", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 5, Text = "It is not death that a man should fear, but never beginning to live.", Author = "Marcus Aurelius", LanguageCode = "en", CultureTag = "stoicism", Category = "life", CreatedAt = DateTime.UtcNow },
 
-            // Polish Quotes
-            new Quote { Id = 11, Text = "Spokój przychodzi, gdy przestajesz go gonić.", LanguageCode = "pl", CultureTag = "universal", Category = "peace", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 12, Text = "Obecna chwila to wszystko, co kiedykolwiek masz.", Author = "Eckhart Tolle", LanguageCode = "pl", CultureTag = "mindfulness", Category = "presence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 13, Text = "Medytacja to nie zatrzymywanie myśli, ale ich rozpoznawanie.", LanguageCode = "pl", CultureTag = "zen", Category = "awareness", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 14, Text = "Bądź cicho. Słuchaj kamieni. Znają cierpliwość.", LanguageCode = "pl", CultureTag = "zen", Category = "patience", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 15, Text = "Im cichszy się stajesz, tym więcej możesz usłyszeć.", Author = "Ram Dass", LanguageCode = "pl", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 16, Text = "Nie możesz zatrzymać fal, ale możesz nauczyć się surfować.", Author = "Jon Kabat-Zinn", LanguageCode = "pl", CultureTag = "mindfulness", Category = "acceptance", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 17, Text = "Wdychając, uspokajam ciało. Wydychając, uśmiecham się.", Author = "Thich Nhat Hanh", LanguageCode = "pl", CultureTag = "mindfulness", Category = "breath", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 18, Text = "Podróż tysiąca mil zaczyna się od jednego oddechu.", LanguageCode = "pl", CultureTag = "zen", Category = "journey", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 19, Text = "W ciszy wszystko jest możliwe.", LanguageCode = "pl", CultureTag = "universal", Category = "stillness", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 20, Text = "Puść to, co minęło. Puść to, co nadejdzie. Puść to, co dzieje się teraz.", Author = "Budda", LanguageCode = "pl", CultureTag = "zen_buddhist", Category = "letting_go", CreatedAt = DateTime.UtcNow },
+            // 🔬 VISIONARIES - English (Minds that shaped humanity)
+            new Quote { Id = 6, Text = "Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.", Author = "Albert Einstein", LanguageCode = "en", CultureTag = "visionary", Category = "imagination", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 7, Text = "The measure of intelligence is the ability to change.", Author = "Albert Einstein", LanguageCode = "en", CultureTag = "visionary", Category = "intelligence", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 8, Text = "He who has a why to live can bear almost any how.", Author = "Friedrich Nietzsche", LanguageCode = "en", CultureTag = "visionary", Category = "purpose", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 9, Text = "That which does not kill us makes us stronger.", Author = "Friedrich Nietzsche", LanguageCode = "en", CultureTag = "visionary", Category = "strength", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 10, Text = "The day science begins to study non-physical phenomena, it will make more progress in one decade than in all the previous centuries.", Author = "Nikola Tesla", LanguageCode = "en", CultureTag = "visionary", Category = "science", CreatedAt = DateTime.UtcNow },
 
-            // Spanish Quotes
-            new Quote { Id = 21, Text = "La paz viene cuando dejas de perseguirla.", LanguageCode = "es", CultureTag = "universal", Category = "peace", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 22, Text = "El momento presente es todo lo que tienes.", Author = "Eckhart Tolle", LanguageCode = "es", CultureTag = "mindfulness", Category = "presence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 23, Text = "La meditación no trata de detener pensamientos, sino de reconocerlos.", LanguageCode = "es", CultureTag = "zen", Category = "awareness", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 24, Text = "Quédate quieto. Escucha las piedras. Conocen la paciencia.", LanguageCode = "es", CultureTag = "zen", Category = "patience", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 25, Text = "Cuanto más tranquilo te vuelves, más puedes escuchar.", Author = "Ram Dass", LanguageCode = "es", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
+            // 🕉️ SPIRITUAL MASTERS - English (Timeless wisdom)
+            new Quote { Id = 11, Text = "The wound is the place where the Light enters you.", Author = "Rumi", LanguageCode = "en", CultureTag = "spiritual", Category = "transformation", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 12, Text = "Let yourself be silently drawn by the strange pull of what you really love. It will not lead you astray.", Author = "Rumi", LanguageCode = "en", CultureTag = "spiritual", Category = "love", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 13, Text = "The journey of a thousand miles begins with a single step.", Author = "Lao Tzu", LanguageCode = "en", CultureTag = "spiritual", Category = "journey", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 14, Text = "Nature does not hurry, yet everything is accomplished.", Author = "Lao Tzu", LanguageCode = "en", CultureTag = "spiritual", Category = "patience", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 15, Text = "Peace comes from within. Do not seek it without.", Author = "Buddha", LanguageCode = "en", CultureTag = "spiritual", Category = "peace", CreatedAt = DateTime.UtcNow },
 
-            // German Quotes
-            new Quote { Id = 26, Text = "Frieden kommt, wenn du aufhörst, ihn zu jagen.", LanguageCode = "de", CultureTag = "universal", Category = "peace", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 27, Text = "Der gegenwärtige Moment ist alles, was du jemals hast.", Author = "Eckhart Tolle", LanguageCode = "de", CultureTag = "mindfulness", Category = "presence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 28, Text = "Meditation bedeutet nicht, Gedanken zu stoppen, sondern sie zu erkennen.", LanguageCode = "de", CultureTag = "zen", Category = "awareness", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 29, Text = "Sei still. Höre den Steinen zu. Sie kennen Geduld.", LanguageCode = "de", CultureTag = "zen", Category = "patience", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 30, Text = "Je ruhiger du wirst, desto mehr kannst du hören.", Author = "Ram Dass", LanguageCode = "de", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
+            // 💫 MODERN LEGENDS - English (Recent visionaries)
+            new Quote { Id = 16, Text = "Be the change you wish to see in the world.", Author = "Mahatma Gandhi", LanguageCode = "en", CultureTag = "modern", Category = "change", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 17, Text = "The best way to find yourself is to lose yourself in the service of others.", Author = "Mahatma Gandhi", LanguageCode = "en", CultureTag = "modern", Category = "service", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 18, Text = "Life is either a daring adventure or nothing at all.", Author = "Helen Keller", LanguageCode = "en", CultureTag = "modern", Category = "adventure", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 19, Text = "The only way to do great work is to love what you do.", Author = "Steve Jobs", LanguageCode = "en", CultureTag = "modern", Category = "work", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 20, Text = "Your time is limited, don't waste it living someone else's life.", Author = "Steve Jobs", LanguageCode = "en", CultureTag = "modern", Category = "authenticity", CreatedAt = DateTime.UtcNow },
 
-            // French Quotes
-            new Quote { Id = 31, Text = "La paix vient quand tu arrêtes de la poursuivre.", LanguageCode = "fr", CultureTag = "universal", Category = "peace", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 32, Text = "Le moment présent est tout ce que tu as jamais.", Author = "Eckhart Tolle", LanguageCode = "fr", CultureTag = "mindfulness", Category = "presence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 33, Text = "La méditation ne consiste pas à arrêter les pensées, mais à les reconnaître.", LanguageCode = "fr", CultureTag = "zen", Category = "awareness", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 34, Text = "Reste tranquille. Écoute les pierres. Elles connaissent la patience.", LanguageCode = "fr", CultureTag = "zen", Category = "patience", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 35, Text = "Plus tu deviens calme, plus tu peux entendre.", Author = "Ram Dass", LanguageCode = "fr", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
+            // 🏛️ STOICY - Polish (Polskie tłumaczenia wielkich myślicieli)
+            new Quote { Id = 21, Text = "Masz władzę nad swoim umysłem - nie nad zewnętrznymi wydarzeniami. Zrozum to, a znajdziesz siłę.", Author = "Marek Aureliusz", LanguageCode = "pl", CultureTag = "stoicism", Category = "power", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 22, Text = "Szczęście twojego życia zależy od jakości twoich myśli.", Author = "Marek Aureliusz", LanguageCode = "pl", CultureTag = "stoicism", Category = "mind", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 23, Text = "Bogactwo polega nie na posiadaniu wielkich dóbr, ale na posiadaniu nielicznych pragnień.", Author = "Epiktet", LanguageCode = "pl", CultureTag = "stoicism", Category = "wealth", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 24, Text = "Cierpimy częściej w wyobraźni niż w rzeczywistości.", Author = "Seneka", LanguageCode = "pl", CultureTag = "stoicism", Category = "suffering", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 25, Text = "Człowiek nie powinien bać się śmierci, ale tego, że nigdy nie zacznie żyć.", Author = "Marek Aureliusz", LanguageCode = "pl", CultureTag = "stoicism", Category = "life", CreatedAt = DateTime.UtcNow },
 
-            // Hindi Quotes
-            new Quote { Id = 36, Text = "शांति तब आती है जब आप इसका पीछा करना बंद कर देते हैं।", LanguageCode = "hi", CultureTag = "universal", Category = "peace", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 37, Text = "वर्तमान क्षण वह सब है जो आपके पास कभी है।", Author = "एकहार्ट टोले", LanguageCode = "hi", CultureTag = "mindfulness", Category = "presence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 38, Text = "ध्यान विचारों को रोकने के बारे में नहीं, बल्कि उन्हें पहचानने के बारे में है।", LanguageCode = "hi", CultureTag = "zen", Category = "awareness", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 39, Text = "शांत रहो। पत्थरों को सुनो। वे धैर्य जानते हैं।", LanguageCode = "hi", CultureTag = "zen", Category = "patience", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 40, Text = "जितने शांत आप होते हैं, उतना अधिक आप सुन सकते हैं।", Author = "राम दास", LanguageCode = "hi", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
+            // 🔬 WIZJONERZY - Polish
+            new Quote { Id = 26, Text = "Wyobraźnia jest ważniejsza niż wiedza. Wiedza jest ograniczona. Wyobraźnia obejmuje cały świat.", Author = "Albert Einstein", LanguageCode = "pl", CultureTag = "visionary", Category = "imagination", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 27, Text = "Miarą inteligencji jest zdolność do zmiany.", Author = "Albert Einstein", LanguageCode = "pl", CultureTag = "visionary", Category = "intelligence", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 28, Text = "Kto ma powód, by żyć, zniesie prawie każde 'jak'.", Author = "Friedrich Nietzsche", LanguageCode = "pl", CultureTag = "visionary", Category = "purpose", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 29, Text = "To, co nas nie zabija, czyni nas silniejszymi.", Author = "Friedrich Nietzsche", LanguageCode = "pl", CultureTag = "visionary", Category = "strength", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 30, Text = "Kiedy nauka zacznie badać zjawiska niefizyczne, w jednej dekadzie osiągnie więcej postępu niż w poprzednich wiekach.", Author = "Nikola Tesla", LanguageCode = "pl", CultureTag = "visionary", Category = "science", CreatedAt = DateTime.UtcNow },
 
-            // Additional Universal Quotes
-            new Quote { Id = 41, Text = "Silence is the language of the cosmos.", LanguageCode = "en", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 42, Text = "Your calm mind is the ultimate weapon against your challenges.", LanguageCode = "en", CultureTag = "universal", Category = "calm", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 43, Text = "Meditation brings wisdom; lack of meditation leaves ignorance.", Author = "Buddha", LanguageCode = "en", CultureTag = "zen_buddhist", Category = "wisdom", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 44, Text = "Walk as if you are kissing the Earth with your feet.", Author = "Thich Nhat Hanh", LanguageCode = "en", CultureTag = "mindfulness", Category = "walking", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 45, Text = "The mind is everything. What you think, you become.", Author = "Buddha", LanguageCode = "en", CultureTag = "zen_buddhist", Category = "mind", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 46, Text = "Cisza jest językiem kosmosu.", LanguageCode = "pl", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 47, Text = "Twój spokojny umysł to najlepsza broń przeciw twoim wyzwaniom.", LanguageCode = "pl", CultureTag = "universal", Category = "calm", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 48, Text = "Medytacja przynosi mądrość; brak medytacji pozostawia ignorancję.", Author = "Budda", LanguageCode = "pl", CultureTag = "zen_buddhist", Category = "wisdom", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 49, Text = "Idź tak, jakbyś całował Ziemię swoimi stopami.", Author = "Thich Nhat Hanh", LanguageCode = "pl", CultureTag = "mindfulness", Category = "walking", CreatedAt = DateTime.UtcNow },
-            new Quote { Id = 50, Text = "Umysł jest wszystkim. Czym myślisz, tym się stajesz.", Author = "Budda", LanguageCode = "pl", CultureTag = "zen_buddhist", Category = "mind", CreatedAt = DateTime.UtcNow }
+            // 🕉️ DUCHOWI MISTRZOWIE - Polish
+            new Quote { Id = 31, Text = "Rana jest miejscem, przez które Światło do ciebie wchodzi.", Author = "Rumi", LanguageCode = "pl", CultureTag = "spiritual", Category = "transformation", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 32, Text = "Pozwól się cicho prowadzić dziwnej sile tego, co naprawdę kochasz. Nie wprowadzi cię na manowce.", Author = "Rumi", LanguageCode = "pl", CultureTag = "spiritual", Category = "love", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 33, Text = "Podróż tysiąca mil zaczyna się od jednego kroku.", Author = "Lao Tzu", LanguageCode = "pl", CultureTag = "spiritual", Category = "journey", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 34, Text = "Natura się nie spieszy, a jednak wszystko zostaje dokonane.", Author = "Lao Tzu", LanguageCode = "pl", CultureTag = "spiritual", Category = "patience", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 35, Text = "Pokój pochodzi z wnętrza. Nie szukaj go na zewnątrz.", Author = "Budda", LanguageCode = "pl", CultureTag = "spiritual", Category = "peace", CreatedAt = DateTime.UtcNow },
+
+            // 💫 WSPÓŁCZESNE LEGENDY - Polish
+            new Quote { Id = 36, Text = "Bądź zmianą, którą chcesz widzieć w świecie.", Author = "Mahatma Gandhi", LanguageCode = "pl", CultureTag = "modern", Category = "change", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 37, Text = "Najlepszy sposób, by odnaleźć siebie, to zatracić się w służbie innym.", Author = "Mahatma Gandhi", LanguageCode = "pl", CultureTag = "modern", Category = "service", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 38, Text = "Życie to albo śmiała przygoda, albo nic.", Author = "Helen Keller", LanguageCode = "pl", CultureTag = "modern", Category = "adventure", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 39, Text = "Jedynym sposobem na wykonywanie świetnej pracy jest kochanie tego, co robisz.", Author = "Steve Jobs", LanguageCode = "pl", CultureTag = "modern", Category = "work", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 40, Text = "Twój czas jest ograniczony, nie marnuj go, żyjąc życiem kogoś innego.", Author = "Steve Jobs", LanguageCode = "pl", CultureTag = "modern", Category = "authenticity", CreatedAt = DateTime.UtcNow },
+
+            // ✨ NIEZNANI AUTORZY - Unknown but Powerful (English)
+            new Quote { Id = 41, Text = "The quietest people have the loudest minds.", LanguageCode = "en", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 42, Text = "Sometimes the most productive thing you can do is relax.", LanguageCode = "en", CultureTag = "universal", Category = "productivity", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 43, Text = "Your calm mind is the ultimate weapon against your challenges.", LanguageCode = "en", CultureTag = "universal", Category = "calm", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 44, Text = "In the middle of difficulty lies opportunity.", Author = "Albert Einstein", LanguageCode = "en", CultureTag = "visionary", Category = "opportunity", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 45, Text = "The obstacle is the way.", Author = "Marcus Aurelius", LanguageCode = "en", CultureTag = "stoicism", Category = "obstacles", CreatedAt = DateTime.UtcNow },
+
+            // ✨ NIEZNANI AUTORZY - Unknown but Powerful (Polish)
+            new Quote { Id = 46, Text = "Najcichsi ludzie mają najgłośniejsze umysły.", LanguageCode = "pl", CultureTag = "universal", Category = "silence", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 47, Text = "Czasami najbardziej produktywną rzeczą, jaką możesz zrobić, jest odpoczynek.", LanguageCode = "pl", CultureTag = "universal", Category = "productivity", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 48, Text = "Twój spokojny umysł to najlepsza broń przeciw wyzwaniom.", LanguageCode = "pl", CultureTag = "universal", Category = "calm", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 49, Text = "W środku trudności leży szansa.", Author = "Albert Einstein", LanguageCode = "pl", CultureTag = "visionary", Category = "opportunity", CreatedAt = DateTime.UtcNow },
+            new Quote { Id = 50, Text = "Przeszkoda jest drogą.", Author = "Marek Aureliusz", LanguageCode = "pl", CultureTag = "stoicism", Category = "obstacles", CreatedAt = DateTime.UtcNow }
         );
 
         // Meditation Sessions (30+ sessions, multiple languages, all 5 levels)

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, YStack, XStack, H4, Paragraph, Text, Button } from 'tamagui';
+import { View, Text, StyleSheet, useColorScheme, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MeditationSession } from '../services/api';
 
@@ -20,66 +20,143 @@ const formatDuration = (seconds: number): string => {
 
 export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) => {
   const { t } = useTranslation();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
   return (
-    <Card
-      elevate
-      size="$4"
-      bordered
-      animation="bouncy"
-      scale={0.9}
-      hoverStyle={{ scale: 0.925 }}
-      pressStyle={{ scale: 0.875 }}
-      p="$4"
-      background="$background"
-      borderColor="$borderColor"
-      borderRadius="$4"
+    <TouchableOpacity
+      style={[styles.card, isDark ? styles.darkCard : styles.lightCard]}
       onPress={onPress}
+      activeOpacity={0.7}
     >
-      <Card.Header padded>
-        <YStack gap="$2">
-          <H4 size="$6" fontWeight="500" color="$color">
+      {/* Card Header */}
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Text style={[styles.title, isDark ? styles.darkText : styles.lightText]}>
             {session.title}
-          </H4>
+          </Text>
           {session.description && (
-            <Paragraph size="$3" color="$placeholderColor">
+            <Text style={[styles.description, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
               {session.description}
-            </Paragraph>
+            </Text>
           )}
-        </YStack>
-      </Card.Header>
+        </View>
+      </View>
 
-      <Card.Footer padded>
-        <XStack width="100%" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <YStack gap="$1">
-            <XStack gap="$2" style={{ alignItems: 'center' }}>
-              <Text fontSize="$2" color="$color">
+      {/* Card Footer */}
+      <View style={styles.footer}>
+        <View style={styles.footerContent}>
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailRow}>
+              <Text style={[styles.label, isDark ? styles.darkText : styles.lightText]}>
                 {t('meditation.duration')}:
               </Text>
-              <Text fontSize="$3" fontWeight="600" color="$color">
+              <Text style={[styles.value, isDark ? styles.darkText : styles.lightText]}>
                 {formatDuration(session.durationSeconds)}
               </Text>
-            </XStack>
-            <XStack gap="$2" style={{ alignItems: 'center' }}>
-              <Text fontSize="$2" color="$color">
+            </View>
+            <View style={styles.detailRow}>
+              <Text style={[styles.label, isDark ? styles.darkText : styles.lightText]}>
                 {t('meditation.level')}:
               </Text>
-              <Text fontSize="$3" fontWeight="600" color="$color">
+              <Text style={[styles.value, isDark ? styles.darkText : styles.lightText]}>
                 {t(`meditation.${getLevelLabel(session.level)}`)}
               </Text>
-            </XStack>
-          </YStack>
+            </View>
+          </View>
 
-          <Button
-            size="$3"
-            background="$primary"
-            color="$background"
-            px="$4"
-          >
-            {t('meditation.start')}
-          </Button>
-        </XStack>
-      </Card.Footer>
-    </Card>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>
+              {t('meditation.start')}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  lightCard: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E5E5E5',
+  },
+  darkCard: {
+    backgroundColor: '#2C2C2E',
+    borderColor: '#3A3A3C',
+  },
+  header: {
+    padding: 16,
+  },
+  headerContent: {
+    gap: 8,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '500',
+  },
+  description: {
+    fontSize: 14,
+  },
+  lightText: {
+    color: '#000000',
+  },
+  darkText: {
+    color: '#FFFFFF',
+  },
+  lightPlaceholder: {
+    color: '#8E8E93',
+  },
+  darkPlaceholder: {
+    color: '#8E8E93',
+  },
+  footer: {
+    padding: 16,
+    paddingTop: 0,
+  },
+  footerContent: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  detailsContainer: {
+    gap: 4,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  label: {
+    fontSize: 12,
+  },
+  value: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  button: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});
