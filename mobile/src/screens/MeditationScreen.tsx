@@ -16,11 +16,14 @@ import { ChimePoint } from '../types/customSession';
 import { CustomSessionConfig } from './CustomSessionBuilderScreen';
 import theme, { gradients } from '../theme';
 import * as Haptics from 'expo-haptics';
+import { ActiveMeditationState } from '../../App';
 
 type FlowState = 'list' | 'instructions' | 'meditation' | 'celebration';
 
 interface MeditationScreenProps {
   onEditSession?: (sessionId: string, sessionConfig: CustomSessionConfig) => void;
+  activeMeditationState: ActiveMeditationState | null;
+  onMeditationStateChange: (state: ActiveMeditationState | null) => void;
 }
 
 // Helper function to generate chime points from custom session config
@@ -46,7 +49,11 @@ const getChimePointsFromSession = (session: MeditationSession): ChimePoint[] => 
   return chimePoints;
 };
 
-export const MeditationScreen: React.FC<MeditationScreenProps> = ({ onEditSession }) => {
+export const MeditationScreen: React.FC<MeditationScreenProps> = ({
+  onEditSession,
+  activeMeditationState,
+  onMeditationStateChange
+}) => {
   const { t, i18n } = useTranslation();
   const [sessions, setSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +65,19 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({ onEditSessio
   useEffect(() => {
     loadSessions();
   }, [i18n.language]);
+
+  // Cleanup audio when component unmounts or user navigates away
+  useEffect(() => {
+    return () => {
+      // Stop and cleanup audio to prevent background playback
+      audioEngine.stopAll().catch((error) => {
+        console.error('Failed to stop audio on unmount:', error);
+      });
+      audioEngine.cleanup().catch((error) => {
+        console.error('Failed to cleanup audio on unmount:', error);
+      });
+    };
+  }, []);
 
   const loadSessions = async () => {
     try {
@@ -174,6 +194,14 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({ onEditSessio
 
     if (!selectedSession) return;
 
+    // Set active meditation state to prevent accidental navigation
+    onMeditationStateChange({
+      session: selectedSession,
+      flowState: 'meditation',
+      userIntention: intention,
+      startedAt: Date.now(),
+    });
+
     try {
       // Load audio tracks if available - with graceful error handling
       if (selectedSession.voiceUrl) {
@@ -240,6 +268,8 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({ onEditSessio
     try {
       await audioEngine.stopAll();
       await audioEngine.cleanup();
+      // Clear active meditation state
+      onMeditationStateChange(null);
       setFlowState('list');
       setSelectedSession(null);
     } catch (error) {
@@ -261,6 +291,8 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({ onEditSessio
       }
 
       await audioEngine.cleanup();
+      // Clear active meditation state
+      onMeditationStateChange(null);
       setFlowState('list');
       setSelectedSession(null);
       setUserIntention('');

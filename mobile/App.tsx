@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, TouchableOpacity, Platform, useColorScheme } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Platform, useColorScheme, Alert } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,14 +14,24 @@ import { QuotesScreen } from './src/screens/QuotesScreen';
 import { SettingsScreen, THEME_STORAGE_KEY, ThemeMode } from './src/screens/SettingsScreen';
 import { CustomSessionBuilderScreen, CustomSessionConfig } from './src/screens/CustomSessionBuilderScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
+import { MeditationSession } from './src/services/api';
 
 type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile';
+
+// Meditation session state for persistence across navigation
+export interface ActiveMeditationState {
+  session: MeditationSession;
+  flowState: 'instructions' | 'meditation' | 'celebration';
+  userIntention?: string;
+  startedAt: number; // timestamp
+}
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [themeMode, setThemeMode] = useState<ThemeMode>('system');
   const [editSessionId, setEditSessionId] = useState<string | undefined>();
   const [editSessionConfig, setEditSessionConfig] = useState<CustomSessionConfig | undefined>();
+  const [activeMeditationState, setActiveMeditationState] = useState<ActiveMeditationState | null>(null);
   const systemColorScheme = useColorScheme();
 
   // Calculate actual dark mode based on theme mode and system preference
@@ -56,6 +66,31 @@ export default function App() {
   };
 
   const handleNavigate = (screen: Screen) => {
+    // Prevent navigation away from active meditation without confirmation
+    if (activeMeditationState && currentScreen === 'meditation' && screen !== 'meditation') {
+      Alert.alert(
+        'Active Meditation',
+        'You have an active meditation session. Do you want to exit and end the session?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+            onPress: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning),
+          },
+          {
+            text: 'Exit',
+            style: 'destructive',
+            onPress: () => {
+              setActiveMeditationState(null);
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setCurrentScreen(screen);
+            },
+          },
+        ]
+      );
+      return;
+    }
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCurrentScreen(screen);
   };
@@ -90,7 +125,13 @@ export default function App() {
           />
         );
       case 'meditation':
-        return <MeditationScreen onEditSession={handleEditSession} />;
+        return (
+          <MeditationScreen
+            onEditSession={handleEditSession}
+            activeMeditationState={activeMeditationState}
+            onMeditationStateChange={setActiveMeditationState}
+          />
+        );
       case 'quotes':
         return <QuotesScreen />;
       case 'settings':
