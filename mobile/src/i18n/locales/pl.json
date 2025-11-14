@@ -41,7 +41,11 @@
     "completedSession": "Ukończyłeś sesję medytacji",
     "session": "Sesja",
     "continue": "Kontynuuj",
-    "howDoYouFeel": "Jak się czujesz?"
+    "howDoYouFeel": "Jak się czujesz?",
+    "focusOnBreath": "Skup się na oddechu",
+    "breatheIn": "Wdech",
+    "breatheOut": "Wydech",
+    "inProgress": "W Trakcie"
   },
   "instructions": {
     "timeOfDay": {

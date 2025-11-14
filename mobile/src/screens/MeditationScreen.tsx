@@ -12,10 +12,34 @@ import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
 import { getInstructionForSession } from '../data/instructions';
 import { getAllCustomSessions, deleteCustomSession, SavedCustomSession } from '../services/customSessionStorage';
+import { ChimePoint } from '../types/customSession';
 import theme, { gradients } from '../theme';
 import * as Haptics from 'expo-haptics';
 
 type FlowState = 'list' | 'instructions' | 'meditation' | 'celebration';
+
+// Helper function to generate chime points from custom session config
+const getChimePointsFromSession = (session: MeditationSession): ChimePoint[] => {
+  const customSession = session as SavedCustomSession;
+
+  // Check if it's a custom session with interval bells enabled
+  if (!customSession.isCustom || !customSession.config?.intervalBellEnabled) {
+    return [];
+  }
+
+  const { intervalBellMinutes, durationMinutes } = customSession.config;
+  const chimePoints: ChimePoint[] = [];
+
+  // Generate chime points at each interval
+  for (let minutes = intervalBellMinutes; minutes < durationMinutes; minutes += intervalBellMinutes) {
+    chimePoints.push({
+      timeInSeconds: minutes * 60,
+      label: `${minutes} min`,
+    });
+  }
+
+  return chimePoints;
+};
 
 export const MeditationScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -300,12 +324,15 @@ export const MeditationScreen: React.FC = () => {
 
   // Show meditation timer
   if (flowState === 'meditation' && selectedSession) {
+    const chimePoints = getChimePointsFromSession(selectedSession);
+
     return (
       <GradientBackground gradient={gradients.screen.timer} style={styles.container}>
         <MeditationTimer
           totalSeconds={selectedSession.durationSeconds}
           onComplete={handleComplete}
           onCancel={handleCancel}
+          chimePoints={chimePoints}
         />
       </GradientBackground>
     );

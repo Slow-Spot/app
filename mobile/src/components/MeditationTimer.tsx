@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     top: theme.spacing.lg,
     right: theme.spacing.lg,
     padding: theme.spacing.sm,
-    borderRadius: theme.borderRadius.full,
+    borderRadius: theme.borderRadius.round,
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     zIndex: 10,
   },
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxWidth: 150,
     padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.full,
+    borderRadius: theme.borderRadius.round,
     alignItems: 'center',
   },
   primaryButton: {

@@ -196,6 +196,12 @@ export const buttonGradients = {
     start: { x: 0, y: 0 },
     end: { x: 1, y: 0 },
   },
+  // Disabled button - gray
+  disabled: {
+    colors: [neutralColors.gray[200], neutralColors.gray[300]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
 };
 
 /**

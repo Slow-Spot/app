@@ -20,28 +20,28 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
     physicalSetup: [
       {
         order: 1,
-        icon: '🪑',
+        icon: 'chair',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 2,
-        icon: '🧘',
+        icon: 'spa',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 3,
-        icon: '🙏',
+        icon: 'praying-hands',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: true,
       },
       {
         order: 4,
-        icon: '👀',
+        icon: 'eye',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: true,
@@ -90,21 +90,21 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
     physicalSetup: [
       {
         order: 1,
-        icon: '🛏️',
+        icon: 'bed',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 2,
-        icon: '🦶',
+        icon: 'walking',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 3,
-        icon: '🌡️',
+        icon: 'thermometer',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: true,
@@ -148,14 +148,14 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
     physicalSetup: [
       {
         order: 1,
-        icon: '🧘',
+        icon: 'spa',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 2,
-        icon: '⚓',
+        icon: 'anchor',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
@@ -204,14 +204,14 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
     physicalSetup: [
       {
         order: 1,
-        icon: '❤️',
+        icon: 'heart',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 2,
-        icon: '😊',
+        icon: 'smile',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: true,
@@ -260,14 +260,14 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
     physicalSetup: [
       {
         order: 1,
-        icon: '🌊',
+        icon: 'water',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 2,
-        icon: '👁️',
+        icon: 'eye',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: true,
@@ -316,14 +316,14 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
     physicalSetup: [
       {
         order: 1,
-        icon: '🪷',
+        icon: 'spa',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 2,
-        icon: '⛰️',
+        icon: 'mountain',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
@@ -377,21 +377,21 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
     physicalSetup: [
       {
         order: 1,
-        icon: '🧘‍♂️',
+        icon: 'spa',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 2,
-        icon: '👁️',
+        icon: 'eye',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,
       },
       {
         order: 3,
-        icon: '🎯',
+        icon: 'bullseye',
         title: '', // Fetched from translations
         description: '', // Fetched from translations
         isOptional: false,

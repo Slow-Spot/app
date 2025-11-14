@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Animated, TextInput } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
@@ -20,6 +20,46 @@ import { GradientBackground } from './GradientBackground';
 import { GradientCard } from './GradientCard';
 import { GradientButton } from './GradientButton';
 import theme, { gradients } from '../theme';
+
+// ══════════════════════════════════════════════════════════════
+// Icon Mapping Helper
+// ══════════════════════════════════════════════════════════════
+
+interface IconProps {
+  name: string;
+  size?: number;
+  color?: string;
+}
+
+const Icon: React.FC<IconProps> = ({ name, size = 24, color = theme.colors.accent.blue[600] }) => {
+  const iconMap: Record<string, string> = {
+    // Physical setup icons
+    chair: 'chair',
+    spa: 'spa',
+    'praying-hands': 'praying-hands',
+    eye: 'eye',
+    bed: 'bed',
+    walking: 'walking',
+    thermometer: 'thermometer-half',
+    anchor: 'anchor',
+    heart: 'heart',
+    smile: 'smile',
+    water: 'water',
+    mountain: 'mountain',
+    bullseye: 'bullseye',
+    // UI icons
+    sunrise: 'sun',
+    target: 'bullseye',
+    lightbulb: 'lightbulb',
+    clipboard: 'clipboard-list',
+    wind: 'wind',
+    sparkles: 'star',
+  };
+
+  const fontAwesomeName = iconMap[name] || 'question-circle';
+
+  return <FontAwesome5 name={fontAwesomeName} size={size} color={color} solid />;
+};
 
 // ══════════════════════════════════════════════════════════════
 // Main Component
@@ -161,7 +201,7 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
       {/* Time of Day Insight */}
       <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.iconLarge}>🌅</Text>
+          <Icon name="sunrise" size={32} />
           <Text style={styles.cardTitle}>{timeGreeting}</Text>
         </View>
         <Text style={styles.cardDescription}>
@@ -174,7 +214,7 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
       {/* Mental Preparation */}
       <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.iconLarge}>🎯</Text>
+          <Icon name="target" size={32} />
           <Text style={styles.cardTitle}>
             {t('instructions.preparation.focusToday') || 'Your Focus Today'}
           </Text>
@@ -187,7 +227,7 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
       {/* Common Challenges */}
       <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.iconLarge}>💡</Text>
+          <Icon name="lightbulb" size={32} />
           <Text style={styles.cardTitle}>
             {t('instructions.preparation.remember') || 'Remember'}
           </Text>
@@ -252,7 +292,7 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
     <View style={styles.stepContainer}>
       <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.iconLarge}>📋</Text>
+          <Icon name="clipboard" size={32} />
           <Text style={styles.cardTitle}>
             {t('instructions.preparation.physicalSetup') || 'Physical Setup'}
           </Text>
@@ -347,7 +387,7 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
     <View style={styles.stepContainer}>
       <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.iconLarge}>🌬️</Text>
+          <Icon name="wind" size={32} />
           <Text style={styles.cardTitle}>
             {t('instructions.preparation.breathingExercise') || 'Quick Breathing Exercise'}
           </Text>
@@ -422,7 +462,7 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
     <View style={styles.stepContainer}>
       <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.iconLarge}>🎯</Text>
+          <Icon name="target" size={32} />
           <Text style={styles.cardTitle}>
             {t('instructions.preparation.setIntention') || 'Set Your Intention'}
           </Text>
@@ -450,7 +490,7 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
       {/* Session Tips */}
       <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.iconLarge}>✨</Text>
+          <Icon name="sparkles" size={32} />
           <Text style={styles.cardTitle}>
             {t('instructions.preparation.duringSession') || 'During Your Session'}
           </Text>
@@ -502,7 +542,7 @@ const ChecklistItemCard: React.FC<{
       >
         <View style={styles.checklistContent}>
           <View style={styles.checklistLeft}>
-            <Text style={styles.iconMedium}>{icon}</Text>
+            <Icon name={icon} size={24} color={isCompleted ? theme.colors.neutral.white : theme.colors.accent.blue[600]} />
             <View style={styles.checklistText}>
               <View style={styles.checklistTitleRow}>
                 <Text style={[styles.checklistTitle, isCompleted && styles.checklistTitleCompleted]}>

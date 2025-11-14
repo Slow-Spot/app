@@ -78,9 +78,13 @@ export const api = {
     getAll: async (lang?: string): Promise<Quote[]> => {
       // Return mock data if enabled
       if (USE_MOCK_DATA) {
-        return Promise.resolve(
-          lang ? MOCK_QUOTES.filter((q) => q.languageCode === lang) : MOCK_QUOTES
-        );
+        let filtered = lang ? MOCK_QUOTES.filter((q) => q.languageCode === lang) : MOCK_QUOTES;
+        // Fallback to English if no quotes found for requested language
+        if (lang && filtered.length === 0) {
+          console.log(`[API] No quotes found for language '${lang}', falling back to English`);
+          filtered = MOCK_QUOTES.filter((q) => q.languageCode === 'en');
+        }
+        return Promise.resolve(filtered);
       }
 
       const url = lang
