@@ -9,9 +9,10 @@ import colors from './colors';
 import gradients from './gradients';
 
 /**
- * Spacing scale - 4px base unit
+ * Spacing scale - 2px base unit
  */
 export const spacing = {
+  xxs: 2,
   xs: 4,
   sm: 8,
   md: 16,
@@ -19,6 +20,7 @@ export const spacing = {
   xl: 32,
   xxl: 48,
   xxxl: 64,
+  xxxxl: 80,
 };
 
 /**
@@ -234,6 +236,18 @@ export const opacity = {
   muted: 0.6,
   subtle: 0.7,
   normal: 1,
+  // Glass morphism & transparency values
+  glass15: 0.15,
+  glass20: 0.2,
+  glass25: 0.25,
+  glass30: 0.3,
+  glass40: 0.4,
+  glass50: 0.5,
+  glass60: 0.6,
+  glass70: 0.7,
+  glass80: 0.8,
+  glass85: 0.85,
+  glass90: 0.9,
 };
 
 /**

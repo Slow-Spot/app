@@ -81,9 +81,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               {/* Streak Stat */}
               <View style={styles.statCard}>
                 <LinearGradient
-                  colors={['#FF6B6B', '#FF8E53']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
+                  colors={gradients.session.streak.colors}
+                  start={gradients.session.streak.start}
+                  end={gradients.session.streak.end}
                   style={styles.statGradient}
                 >
                   <View style={styles.statIconContainer}>
@@ -103,9 +103,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               {/* Time Stat */}
               <View style={styles.statCard}>
                 <LinearGradient
-                  colors={['#4E54C8', '#8F94FB']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
+                  colors={gradients.session.duration.colors}
+                  start={gradients.session.duration.start}
+                  end={gradients.session.duration.end}
                   style={styles.statGradient}
                 >
                   <View style={styles.statIconContainer}>
@@ -125,9 +125,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               {/* Sessions Stat */}
               <View style={styles.statCard}>
                 <LinearGradient
-                  colors={['#11998E', '#38EF7D']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
+                  colors={gradients.session.completions.colors}
+                  start={gradients.session.completions.start}
+                  end={gradients.session.completions.end}
                   style={styles.statGradient}
                 >
                   <View style={styles.statIconContainer}>

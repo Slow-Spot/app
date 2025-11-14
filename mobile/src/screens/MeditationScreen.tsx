@@ -246,9 +246,15 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   const handleComplete = async () => {
     try {
-      // Play ending chime
+      // Play ending chime with haptic feedback
       if (selectedSession?.chimeUrl) {
         await audioEngine.play('chime');
+        // Strong haptic feedback to signal session completion
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } else {
+        // If no chime sound, still provide haptic feedback as fallback
+        // This is crucial for silent/vibration-only mode (e.g., in metro/crowded places)
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
 
       // Fade out all tracks

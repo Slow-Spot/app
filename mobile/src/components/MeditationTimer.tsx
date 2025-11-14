@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Audio } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -139,6 +140,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
   // Play chime at designated time
   const playChime = async () => {
+    // Always provide haptic feedback for interval bells (works in silent mode too)
+    // This is crucial for meditation in crowded places like metro
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
     if (audioEnabled && chimeSound.current) {
       try {
         const status = await chimeSound.current.getStatusAsync();
@@ -254,7 +259,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="rgba(255, 255, 255, 0.2)"
+            stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth={strokeWidth}
             fill="none"
           />
@@ -416,7 +421,9 @@ const styles = StyleSheet.create({
     right: theme.spacing.lg,
     padding: theme.spacing.sm,
     borderRadius: theme.borderRadius.round,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     zIndex: 10,
   },
   breathingGuidance: {
@@ -426,8 +433,8 @@ const styles = StyleSheet.create({
   },
   instructionText: {
     fontSize: theme.typography.fontSizes.sm,
-    color: 'rgba(255, 255, 255, 0.6)',
-    fontWeight: theme.typography.fontWeights.regular,
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontWeight: theme.typography.fontWeights.medium,
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
@@ -455,7 +462,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 140,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   svg: {
     transform: [{ rotate: '0deg' }],
@@ -473,7 +482,7 @@ const styles = StyleSheet.create({
   minutesText: {
     fontSize: theme.typography.fontSizes.sm,
     marginTop: theme.spacing.xs,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: 'rgba(255, 255, 255, 0.85)',
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
@@ -487,7 +496,7 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: theme.borderRadius.sm,
     overflow: 'visible',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
   progressIndicator: {
     height: '100%',
@@ -511,9 +520,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.accent.mint[500],
   },
   secondaryButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   primaryButtonText: {
     color: theme.colors.text.primary,
@@ -572,7 +581,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.xs,
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: theme.borderRadius.md,
     marginBottom: theme.spacing.xs,
   },

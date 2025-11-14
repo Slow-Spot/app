@@ -283,6 +283,30 @@ export const shimmerGradients = {
 };
 
 /**
+ * Session statistics gradients - For HomeScreen stat cards
+ */
+export const sessionGradients = {
+  // Streak counter - warm rose gradient
+  streak: {
+    colors: [accentColors.rose[500], accentColors.rose[600]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Duration/time counter - calm lavender gradient
+  duration: {
+    colors: [accentColors.lavender[500], accentColors.lavender[600]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Sessions completed - refreshing mint gradient
+  completions: {
+    colors: [accentColors.mint[500], accentColors.mint[600]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+};
+
+/**
  * Helper function to get gradient based on meditation level
  */
 export const getGradientForLevel = (level: string): GradientDefinition => {
@@ -305,6 +329,7 @@ export const gradients = {
   button: buttonGradients,
   overlay: overlayGradients,
   shimmer: shimmerGradients,
+  session: sessionGradients,
   getGradientForLevel,
 };
 
