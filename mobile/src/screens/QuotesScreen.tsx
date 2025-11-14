@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { QuoteCard } from '../components/QuoteCard';
 import { api, Quote } from '../services/api';
 import { getUniqueRandomQuote, markQuoteAsShown } from '../services/quoteHistory';
+import { GradientBackground } from '../components/GradientBackground';
+import theme, { gradients } from '../theme';
 
 export const QuotesScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -73,15 +75,22 @@ export const QuotesScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={[styles.container, isDark ? styles.darkBg : styles.lightBg]}>
-      <View style={styles.content}>
-        <Text style={[styles.title, isDark ? styles.darkText : styles.lightText]}>
+    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.title}>
           {t('quotes.title')}
         </Text>
 
         {loading ? (
           <View style={styles.loader}>
-            <ActivityIndicator size="large" color={isDark ? '#0A84FF' : '#007AFF'} />
+            <ActivityIndicator
+              size="large"
+              color={isDark ? theme.colors.accent.blue[500] : theme.colors.accent.blue[600]}
+            />
           </View>
         ) : quotes.length > 0 ? (
           <>
@@ -92,19 +101,18 @@ export const QuotesScreen: React.FC = () => {
               <TouchableOpacity
                 style={[
                   styles.navButton,
-                  isDark ? styles.darkNavButton : styles.lightNavButton,
                   quotes.length <= 1 && styles.disabledButton
                 ]}
                 onPress={handlePrevious}
                 disabled={quotes.length <= 1}
               >
-                <Text style={[styles.navButtonText, isDark ? styles.darkText : styles.lightText]}>
+                <Text style={styles.navButtonText}>
                   {t('quotes.previous')}
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.randomButton, isDark ? styles.darkPrimaryButton : styles.lightPrimaryButton]}
+                style={styles.randomButton}
                 onPress={loadRandomQuote}
               >
                 <Text style={styles.primaryButtonText}>
@@ -115,21 +123,20 @@ export const QuotesScreen: React.FC = () => {
               <TouchableOpacity
                 style={[
                   styles.navButton,
-                  isDark ? styles.darkNavButton : styles.lightNavButton,
                   quotes.length <= 1 && styles.disabledButton
                 ]}
                 onPress={handleNext}
                 disabled={quotes.length <= 1}
               >
-                <Text style={[styles.navButtonText, isDark ? styles.darkText : styles.lightText]}>
+                <Text style={styles.navButtonText}>
                   {t('quotes.next')}
                 </Text>
               </TouchableOpacity>
             </View>
           </>
         ) : null}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </GradientBackground>
   );
 };
 
@@ -137,73 +144,56 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  lightBg: {
-    backgroundColor: '#FFFFFF',
-  },
-  darkBg: {
-    backgroundColor: '#1A1A1A',
-  },
-  content: {
+  scrollView: {
     flex: 1,
-    padding: 24,
-    gap: 24,
+  },
+  scrollContent: {
+    padding: theme.layout.screenPadding,
+    gap: theme.spacing.lg,
+    paddingBottom: theme.spacing.xxxl,
   },
   title: {
-    fontSize: 32,
-    fontWeight: '400',
-    paddingTop: 16,
-  },
-  lightText: {
-    color: '#000000',
-  },
-  darkText: {
-    color: '#FFFFFF',
+    fontSize: theme.typography.fontSizes.hero,
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.primary,
+    paddingTop: theme.spacing.md,
   },
   loader: {
-    padding: 32,
+    padding: theme.spacing.xl,
     alignItems: 'center',
   },
   navigation: {
     flexDirection: 'row',
-    gap: 12,
+    gap: theme.spacing.md,
     justifyContent: 'center',
   },
   navButton: {
     flex: 1,
     width: 120,
-    padding: 16,
-    borderRadius: 12,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
     alignItems: 'center',
-  },
-  lightNavButton: {
-    backgroundColor: '#F2F2F7',
-  },
-  darkNavButton: {
-    backgroundColor: '#2C2C2E',
+    backgroundColor: theme.colors.background.tertiary,
   },
   navButtonText: {
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.medium,
+    color: theme.colors.text.primary,
   },
   randomButton: {
     flex: 1,
     width: 120,
-    padding: 16,
-    borderRadius: 12,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
     alignItems: 'center',
-  },
-  lightPrimaryButton: {
-    backgroundColor: '#007AFF',
-  },
-  darkPrimaryButton: {
-    backgroundColor: '#0A84FF',
+    backgroundColor: theme.colors.accent.blue[600],
   },
   primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '500',
+    color: theme.colors.neutral.white,
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.medium,
   },
   disabledButton: {
-    opacity: 0.5,
+    opacity: theme.opacity.disabled,
   },
 });

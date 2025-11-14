@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, FlatList, StyleSheet, Alert, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 import { SessionCard } from '../components/SessionCard';
-import { SessionFilters, FilterOptions } from '../components/SessionFilters';
 import { MeditationTimer } from '../components/MeditationTimer';
 import { PreSessionInstructions } from '../components/PreSessionInstructions';
 import { CelebrationScreen } from '../components/CelebrationScreen';
@@ -11,36 +11,88 @@ import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
 import { getInstructionForSession } from '../data/instructions';
-import { userPreferences } from '../services/userPreferences';
+import { getAllCustomSessions, deleteCustomSession, SavedCustomSession } from '../services/customSessionStorage';
+import { ChimePoint } from '../types/customSession';
+import { CustomSessionConfig } from './CustomSessionBuilderScreen';
 import theme, { gradients } from '../theme';
+import * as Haptics from 'expo-haptics';
+import { ActiveMeditationState } from '../../App';
 
 type FlowState = 'list' | 'instructions' | 'meditation' | 'celebration';
 
-export const MeditationScreen: React.FC = () => {
+interface MeditationScreenProps {
+  onEditSession?: (sessionId: string, sessionConfig: CustomSessionConfig) => void;
+  activeMeditationState: ActiveMeditationState | null;
+  onMeditationStateChange: (state: ActiveMeditationState | null) => void;
+}
+
+// Helper function to generate chime points from custom session config
+const getChimePointsFromSession = (session: MeditationSession): ChimePoint[] => {
+  const customSession = session as SavedCustomSession;
+
+  // Check if it's a custom session with interval bells enabled
+  if (!customSession.isCustom || !customSession.config?.intervalBellEnabled) {
+    return [];
+  }
+
+  const { intervalBellMinutes, durationMinutes } = customSession.config;
+  const chimePoints: ChimePoint[] = [];
+
+  // Generate chime points at each interval
+  for (let minutes = intervalBellMinutes; minutes < durationMinutes; minutes += intervalBellMinutes) {
+    chimePoints.push({
+      timeInSeconds: minutes * 60,
+      label: `${minutes} min`,
+    });
+  }
+
+  return chimePoints;
+};
+
+export const MeditationScreen: React.FC<MeditationScreenProps> = ({
+  onEditSession,
+  activeMeditationState,
+  onMeditationStateChange
+}) => {
   const { t, i18n } = useTranslation();
-  const [allSessions, setAllSessions] = useState<MeditationSession[]>([]);
-  const [filteredSessions, setFilteredSessions] = useState<MeditationSession[]>([]);
+  const [sessions, setSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | null>(null);
   const [flowState, setFlowState] = useState<FlowState>('list');
   const [userIntention, setUserIntention] = useState('');
-  const [filters, setFilters] = useState<FilterOptions>({
-    category: 'all',
-  });
+  const [sessionMood, setSessionMood] = useState<1 | 2 | 3 | 4 | 5 | undefined>();
 
   useEffect(() => {
     loadSessions();
   }, [i18n.language]);
 
+  // Cleanup audio when component unmounts or user navigates away
   useEffect(() => {
-    applyFilters();
-  }, [allSessions, filters]);
+    return () => {
+      // Stop and cleanup audio to prevent background playback
+      audioEngine.stopAll().catch((error) => {
+        console.error('Failed to stop audio on unmount:', error);
+      });
+      audioEngine.cleanup().catch((error) => {
+        console.error('Failed to cleanup audio on unmount:', error);
+      });
+    };
+  }, []);
 
   const loadSessions = async () => {
     try {
       setLoading(true);
-      const data = await api.sessions.getAll(i18n.language);
-      setAllSessions(data);
+
+      // Load preset sessions from API
+      const presetSessions = await api.sessions.getAll(i18n.language);
+
+      // Load custom sessions from storage
+      const customSessions = await getAllCustomSessions();
+
+      // Combine sessions: custom first, then preset
+      const allSessions = [...customSessions, ...presetSessions];
+
+      setSessions(allSessions);
     } catch (error) {
       console.error('Failed to load sessions:', error);
     } finally {
@@ -48,56 +100,92 @@ export const MeditationScreen: React.FC = () => {
     }
   };
 
-  const applyFilters = () => {
-    let filtered = [...allSessions];
-
-    // Filter by category
-    if (filters.category !== 'all') {
-      if (filters.category === 'traditional') {
-        filtered = filtered.filter((s) => s.cultureTag === 'traditional');
-      } else if (filters.category === 'occasion') {
-        if (filters.occasion) {
-          filtered = filtered.filter((s) => s.cultureTag === `occasion_${filters.occasion}`);
-        } else {
-          filtered = filtered.filter((s) => s.cultureTag?.startsWith('occasion_'));
-        }
-      } else if (filters.category === 'cultural') {
-        if (filters.culture) {
-          filtered = filtered.filter((s) => s.cultureTag === filters.culture);
-        } else {
-          filtered = filtered.filter(
-            (s) =>
-              s.cultureTag &&
-              !s.cultureTag.startsWith('occasion_') &&
-              s.cultureTag !== 'traditional'
-          );
-        }
-      }
-    }
-
-    // Filter by level
-    if (filters.level) {
-      filtered = filtered.filter((s) => s.level === filters.level);
-    }
-
-    setFilteredSessions(filtered);
-  };
-
-  const handleFiltersChange = (newFilters: FilterOptions) => {
-    setFilters(newFilters);
-  };
-
   const handleStartSession = async (session: MeditationSession) => {
     setSelectedSession(session);
+    setFlowState('instructions');
+  };
 
-    // Check if user wants to skip instructions
-    const shouldSkip = await userPreferences.shouldSkipInstructions();
-    if (shouldSkip) {
-      setFlowState('meditation');
-      await handleInstructionsComplete('');
-    } else {
-      setFlowState('instructions');
+  const handleLongPressSession = (session: MeditationSession) => {
+    // Check if it's a custom session
+    const customSession = session as SavedCustomSession;
+    if (!customSession.isCustom) {
+      return; // Only handle custom sessions
     }
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+    Alert.alert(
+      customSession.title,
+      t('custom.sessionOptions') || 'What would you like to do?',
+      [
+        {
+          text: t('custom.editSession') || 'Edit',
+          onPress: () => handleEditSession(customSession),
+        },
+        {
+          text: t('custom.deleteSession') || 'Delete',
+          onPress: () => handleDeleteSession(customSession),
+          style: 'destructive',
+        },
+        {
+          text: t('common.cancel') || 'Cancel',
+          style: 'cancel',
+        },
+      ]
+    );
+  };
+
+  const handleEditSession = (session: SavedCustomSession) => {
+    if (!onEditSession) {
+      console.warn('onEditSession prop not provided');
+      return;
+    }
+
+    // Convert SavedCustomSession to CustomSessionConfig
+    const config: CustomSessionConfig = {
+      durationMinutes: session.durationMinutes,
+      ambientSound: session.ambientSound,
+      intervalBellEnabled: session.intervalBellEnabled,
+      intervalBellMinutes: session.intervalBellMinutes,
+      wakeUpChimeEnabled: session.wakeUpChimeEnabled,
+      voiceGuidanceEnabled: session.voiceGuidanceEnabled,
+      name: session.title,
+    };
+
+    onEditSession(session.id, config);
+  };
+
+  const handleDeleteSession = async (session: SavedCustomSession) => {
+    Alert.alert(
+      t('custom.deleteConfirmTitle') || 'Delete Session',
+      t('custom.deleteConfirmMessage') || `Are you sure you want to delete "${session.title}"?`,
+      [
+        {
+          text: t('common.cancel') || 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: t('custom.delete') || 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteCustomSession(session.id);
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              // Reload sessions
+              await loadSessions();
+            } catch (error) {
+              console.error('Error deleting session:', error);
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              Alert.alert(
+                t('custom.deleteError') || 'Error',
+                t('custom.deleteFailed') || 'Failed to delete session. Please try again.',
+                [{ text: t('common.ok') || 'OK' }]
+              );
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleInstructionsComplete = async (intention: string) => {
@@ -106,15 +194,31 @@ export const MeditationScreen: React.FC = () => {
 
     if (!selectedSession) return;
 
+    // Set active meditation state to prevent accidental navigation
+    onMeditationStateChange({
+      session: selectedSession,
+      flowState: 'meditation',
+      userIntention: intention,
+      startedAt: Date.now(),
+    });
+
     try {
-      // Load audio tracks if available
+      // Load audio tracks if available - with graceful error handling
       if (selectedSession.voiceUrl) {
+        console.log('Loading voice track:', selectedSession.voiceUrl);
         await audioEngine.loadTrack('voice', selectedSession.voiceUrl, 0.8);
       }
-      if (selectedSession.ambientUrl) {
+
+      // Only load ambient if URL is provided and not 'silence'
+      if (selectedSession.ambientUrl && selectedSession.ambientUrl !== 'silence') {
+        console.log('Loading ambient track:', selectedSession.ambientUrl);
         await audioEngine.loadTrack('ambient', selectedSession.ambientUrl, 0.4);
+      } else {
+        console.log('Skipping ambient track (silence mode or no URL)');
       }
+
       if (selectedSession.chimeUrl) {
+        console.log('Loading chime track:', selectedSession.chimeUrl);
         await audioEngine.loadTrack('chime', selectedSession.chimeUrl, 0.6);
       }
 
@@ -122,14 +226,16 @@ export const MeditationScreen: React.FC = () => {
       if (selectedSession.chimeUrl) {
         await audioEngine.play('chime');
       }
-      if (selectedSession.ambientUrl) {
-        await audioEngine.fadeIn('ambient', 3000);
+      if (selectedSession.ambientUrl && selectedSession.ambientUrl !== 'silence') {
+        await audioEngine.fadeIn('ambient', 3000, 0.4);
       }
       if (selectedSession.voiceUrl) {
         setTimeout(() => audioEngine.play('voice'), 5000);
       }
     } catch (error) {
       console.error('Failed to start audio:', error);
+      console.warn('Session will continue in silent mode');
+      // Don't prevent session from starting - just log the error
     }
   };
 
@@ -140,16 +246,6 @@ export const MeditationScreen: React.FC = () => {
 
   const handleComplete = async () => {
     try {
-      // Save session completion for progress tracking
-      if (selectedSession) {
-        await saveSessionCompletion(
-          selectedSession.id,
-          selectedSession.title,
-          selectedSession.durationSeconds,
-          selectedSession.languageCode
-        );
-      }
-
       // Play ending chime
       if (selectedSession?.chimeUrl) {
         await audioEngine.play('chime');
@@ -172,6 +268,8 @@ export const MeditationScreen: React.FC = () => {
     try {
       await audioEngine.stopAll();
       await audioEngine.cleanup();
+      // Clear active meditation state
+      onMeditationStateChange(null);
       setFlowState('list');
       setSelectedSession(null);
     } catch (error) {
@@ -179,38 +277,68 @@ export const MeditationScreen: React.FC = () => {
     }
   };
 
-  const handleCelebrationContinue = async () => {
+  const handleCelebrationContinue = async (mood?: 1 | 2 | 3 | 4 | 5) => {
     try {
+      // Save session completion with mood for progress tracking
+      if (selectedSession) {
+        await saveSessionCompletion(
+          selectedSession.id,
+          selectedSession.title,
+          selectedSession.durationSeconds,
+          selectedSession.languageCode,
+          mood
+        );
+      }
+
       await audioEngine.cleanup();
+      // Clear active meditation state
+      onMeditationStateChange(null);
       setFlowState('list');
       setSelectedSession(null);
       setUserIntention('');
+      setSessionMood(undefined);
     } catch (error) {
       console.error('Failed to cleanup after celebration:', error);
     }
   };
 
-  // ✨ FlatList optimization - Memoized render functions
+  // FlatList optimization - Memoized render functions
   const renderItem = useCallback(
-    ({ item }: { item: MeditationSession }) => (
-      <SessionCard session={item} onPress={() => handleStartSession(item)} />
-    ),
+    ({ item }: { item: MeditationSession }) => {
+      const customSession = item as SavedCustomSession;
+      return (
+        <SessionCard
+          session={item}
+          onPress={() => handleStartSession(item)}
+          onLongPress={customSession.isCustom ? () => handleLongPressSession(item) : undefined}
+          isCustom={customSession.isCustom || false}
+        />
+      );
+    },
     []
   );
 
-  const keyExtractor = useCallback((item: MeditationSession) => item.id, []);
+  const keyExtractor = useCallback((item: MeditationSession) => item.id.toString(), []);
 
   const renderListHeader = useCallback(
-    () => (
-      <>
+    () => {
+      const customCount = sessions.filter((s) => (s as SavedCustomSession).isCustom).length;
+      return (
         <View style={styles.header}>
           <Text style={styles.title}>{t('meditation.title')}</Text>
           <Text style={styles.subtitle}>{t('meditation.subtitle')}</Text>
+          {customCount > 0 && (
+            <View style={styles.customBadge}>
+              <Ionicons name="star" size={16} color={theme.colors.accent.blue[600]} />
+              <Text style={styles.customBadgeText}>
+                {customCount} {customCount === 1 ? t('custom.customSession') || 'custom session' : t('custom.customSessions') || 'custom sessions'}
+              </Text>
+            </View>
+          )}
         </View>
-        <SessionFilters filters={filters} onFiltersChange={handleFiltersChange} />
-      </>
-    ),
-    [t, filters]
+      );
+    },
+    [t, sessions]
   );
 
   const renderListEmpty = useCallback(
@@ -242,12 +370,15 @@ export const MeditationScreen: React.FC = () => {
 
   // Show meditation timer
   if (flowState === 'meditation' && selectedSession) {
+    const chimePoints = getChimePointsFromSession(selectedSession);
+
     return (
       <GradientBackground gradient={gradients.screen.timer} style={styles.container}>
         <MeditationTimer
           totalSeconds={selectedSession.durationSeconds}
           onComplete={handleComplete}
           onCancel={handleCancel}
+          chimePoints={chimePoints}
         />
       </GradientBackground>
     );
@@ -268,7 +399,7 @@ export const MeditationScreen: React.FC = () => {
   return (
     <GradientBackground gradient={gradients.screen.home} style={styles.container}>
       <FlatList
-        data={loading ? [] : filteredSessions}
+        data={loading ? [] : sessions}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={renderListHeader}
@@ -308,6 +439,17 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes.lg,
     fontWeight: theme.typography.fontWeights.regular,
     color: theme.colors.text.secondary,
+  },
+  customBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: theme.spacing.sm,
+    gap: theme.spacing.xs,
+  },
+  customBadgeText: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.accent.blue[600],
+    fontWeight: theme.typography.fontWeights.medium,
   },
   loader: {
     paddingVertical: theme.spacing.xxl,

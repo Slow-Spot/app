@@ -5,10 +5,13 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Switch,
   StyleSheet,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GradientBackground } from '../components/GradientBackground';
+import { GradientCard } from '../components/GradientCard';
+import theme, { gradients } from '../theme';
 
 export const LANGUAGE_STORAGE_KEY = 'user_language_preference';
 export const THEME_STORAGE_KEY = 'user_theme_preference';
@@ -28,9 +31,15 @@ interface SettingsScreenProps {
   isDark: boolean;
   themeMode: ThemeMode;
   onThemeChange: (mode: ThemeMode) => void;
+  onNavigateToProfile?: () => void;
 }
 
-export const SettingsScreen: React.FC<SettingsScreenProps> = ({ isDark, themeMode, onThemeChange }) => {
+export const SettingsScreen: React.FC<SettingsScreenProps> = ({
+  isDark,
+  themeMode,
+  onThemeChange,
+  onNavigateToProfile
+}) => {
   const { t, i18n } = useTranslation();
 
   const handleLanguageChange = async (languageCode: string) => {
@@ -42,17 +51,52 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ isDark, themeMod
     }
   };
 
-  const styles = createStyles(isDark);
-
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.container}>
+    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>
           {t('settings.title')}
         </Text>
 
+        {/* Profile Navigation */}
+        {onNavigateToProfile && (
+          <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
+            <TouchableOpacity
+              style={styles.profileButton}
+              onPress={onNavigateToProfile}
+              accessibilityLabel={t('settings.viewProfile') || 'View Profile'}
+              accessibilityRole="button"
+            >
+              <View style={styles.profileButtonContent}>
+                <Ionicons
+                  name="person-circle"
+                  size={32}
+                  color={theme.colors.accent.blue[600]}
+                />
+                <View style={styles.profileButtonText}>
+                  <Text style={styles.profileButtonTitle}>
+                    {t('settings.viewProfile') || 'View Profile'}
+                  </Text>
+                  <Text style={styles.profileButtonSubtitle}>
+                    {t('settings.viewProfileDescription') || 'See your progress and statistics'}
+                  </Text>
+                </View>
+              </View>
+              <Ionicons
+                name="chevron-forward"
+                size={24}
+                color={theme.colors.text.tertiary}
+              />
+            </TouchableOpacity>
+          </GradientCard>
+        )}
+
         {/* Language Selection */}
-        <View style={styles.section}>
+        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
           <Text style={styles.sectionTitle}>
             {t('settings.language')}
           </Text>
@@ -77,10 +121,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ isDark, themeMod
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </GradientCard>
 
         {/* Theme Selection */}
-        <View style={styles.section}>
+        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
           <Text style={styles.sectionTitle}>
             {t('settings.theme')}
           </Text>
@@ -134,10 +178,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ isDark, themeMod
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </GradientCard>
 
         {/* About Section */}
-        <View style={[styles.section, styles.aboutSection]}>
+        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
           <Text style={styles.sectionTitle}>
             {t('settings.about')}
           </Text>
@@ -152,106 +196,138 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ isDark, themeMod
               Version 1.0.0
             </Text>
           </View>
-        </View>
-      </View>
-    </ScrollView>
+        </GradientCard>
+      </ScrollView>
+    </GradientBackground>
   );
 };
 
-const createStyles = (isDarkMode: boolean) =>
-  StyleSheet.create({
-    scrollView: {
-      flex: 1,
-      backgroundColor: isDarkMode ? '#1A1A1A' : '#FFFFFF',
-    },
-    container: {
-      flex: 1,
-      padding: 24,
-      gap: 24,
-    },
-    title: {
-      fontSize: 32,
-      fontWeight: '400',
-      color: isDarkMode ? '#FFFFFF' : '#000000',
-      paddingTop: 16,
-      marginBottom: 8,
-    },
-    section: {
-      gap: 12,
-    },
-    sectionTitle: {
-      fontSize: 20,
-      fontWeight: '500',
-      color: isDarkMode ? '#FFFFFF' : '#000000',
-    },
-    languageButtons: {
-      gap: 8,
-    },
-    languageButton: {
-      padding: 16,
-      backgroundColor: isDarkMode ? '#2C2C2E' : '#F2F2F7',
-      borderWidth: 1,
-      borderColor: isDarkMode ? '#3A3A3C' : '#E5E5EA',
-      borderRadius: 8,
-      justifyContent: 'flex-start',
-    },
-    languageButtonActive: {
-      backgroundColor: '#007AFF',
-      borderColor: '#007AFF',
-    },
-    languageButtonText: {
-      fontSize: 16,
-      color: isDarkMode ? '#FFFFFF' : '#000000',
-    },
-    languageButtonTextActive: {
-      color: '#FFFFFF',
-    },
-    themeButtons: {
-      gap: 8,
-    },
-    themeButton: {
-      padding: 16,
-      backgroundColor: isDarkMode ? '#2C2C2E' : '#F2F2F7',
-      borderWidth: 1,
-      borderColor: isDarkMode ? '#3A3A3C' : '#E5E5EA',
-      borderRadius: 8,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    themeButtonActive: {
-      backgroundColor: '#007AFF',
-      borderColor: '#007AFF',
-    },
-    themeButtonText: {
-      fontSize: 16,
-      color: isDarkMode ? '#FFFFFF' : '#000000',
-    },
-    themeButtonTextActive: {
-      color: '#FFFFFF',
-    },
-    aboutSection: {
-      marginTop: 24,
-    },
-    aboutContainer: {
-      padding: 16,
-      backgroundColor: isDarkMode ? '#2C2C2E' : '#F2F2F7',
-      gap: 8,
-      borderWidth: 1,
-      borderColor: isDarkMode ? '#3A3A3C' : '#E5E5EA',
-      borderRadius: 8,
-    },
-    appName: {
-      fontSize: 16,
-      fontWeight: '600',
-      color: isDarkMode ? '#FFFFFF' : '#000000',
-    },
-    appTagline: {
-      fontSize: 14,
-      color: isDarkMode ? '#8E8E93' : '#8E8E93',
-    },
-    appVersion: {
-      fontSize: 12,
-      color: isDarkMode ? '#8E8E93' : '#8E8E93',
-      marginTop: 8,
-    },
-  });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: theme.layout.screenPadding,
+    gap: theme.spacing.lg,
+    paddingBottom: theme.spacing.xxxl,
+  },
+  title: {
+    fontSize: theme.typography.fontSizes.hero,
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.primary,
+    paddingTop: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
+  },
+  section: {
+    padding: theme.spacing.lg,
+  },
+  sectionTitle: {
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.md,
+  },
+  languageButtons: {
+    gap: theme.spacing.sm,
+  },
+  languageButton: {
+    padding: theme.spacing.md,
+    backgroundColor: theme.colors.background.tertiary,
+    borderWidth: 1,
+    borderColor: theme.colors.border.light,
+    borderRadius: theme.borderRadius.md,
+    justifyContent: 'flex-start',
+  },
+  languageButtonActive: {
+    backgroundColor: theme.colors.accent.blue[600],
+    borderColor: theme.colors.accent.blue[600],
+  },
+  languageButtonText: {
+    fontSize: theme.typography.fontSizes.md,
+    color: theme.colors.text.primary,
+    fontWeight: theme.typography.fontWeights.regular,
+  },
+  languageButtonTextActive: {
+    color: theme.colors.neutral.white,
+    fontWeight: theme.typography.fontWeights.semiBold,
+  },
+  themeButtons: {
+    gap: theme.spacing.sm,
+  },
+  themeButton: {
+    padding: theme.spacing.md,
+    backgroundColor: theme.colors.background.tertiary,
+    borderWidth: 1,
+    borderColor: theme.colors.border.light,
+    borderRadius: theme.borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  themeButtonActive: {
+    backgroundColor: theme.colors.accent.blue[600],
+    borderColor: theme.colors.accent.blue[600],
+  },
+  themeButtonText: {
+    fontSize: theme.typography.fontSizes.md,
+    color: theme.colors.text.primary,
+    fontWeight: theme.typography.fontWeights.regular,
+  },
+  themeButtonTextActive: {
+    color: theme.colors.neutral.white,
+    fontWeight: theme.typography.fontWeights.semiBold,
+  },
+  aboutContainer: {
+    padding: theme.spacing.md,
+    backgroundColor: theme.colors.background.tertiary,
+    gap: theme.spacing.sm,
+    borderWidth: 1,
+    borderColor: theme.colors.border.light,
+    borderRadius: theme.borderRadius.md,
+  },
+  appName: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+  },
+  appTagline: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+  },
+  appVersion: {
+    fontSize: theme.typography.fontSizes.xs,
+    color: theme.colors.text.tertiary,
+    marginTop: theme.spacing.sm,
+  },
+  profileButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing.md,
+    backgroundColor: theme.colors.background.tertiary,
+    borderWidth: 1,
+    borderColor: theme.colors.border.light,
+    borderRadius: theme.borderRadius.md,
+  },
+  profileButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.md,
+    flex: 1,
+  },
+  profileButtonText: {
+    flex: 1,
+    gap: theme.spacing.xs,
+  },
+  profileButtonTitle: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+  },
+  profileButtonSubtitle: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+  },
+});

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { QuoteCard } from '../components/QuoteCard';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
-import { GradientButton } from '../components/GradientButton';
+import { FeatureTile } from '../components/FeatureTile';
 import { api, Quote } from '../services/api';
 import { getUniqueRandomQuote } from '../services/quoteHistory';
 import { getProgressStats, ProgressStats } from '../services/progressTracker';
@@ -14,11 +15,13 @@ import theme, { gradients } from '../theme';
 interface HomeScreenProps {
   onNavigateToMeditation: () => void;
   onNavigateToQuotes: () => void;
+  onNavigateToCustom?: () => void; // New: Navigate to custom session builder
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToMeditation,
   onNavigateToQuotes,
+  onNavigateToCustom,
 }) => {
   const { t, i18n } = useTranslation();
   const [dailyQuote, setDailyQuote] = useState<Quote | null>(null);
@@ -70,52 +73,78 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* Progress Stats */}
         {stats && stats.totalSessions > 0 && (
-          <GradientCard
-            gradient={gradients.card.lightCard}
-            style={styles.progressCard}
-          >
+          <View style={styles.progressSection}>
             <Text style={styles.progressTitle}>
               {t('home.progress') || 'Your Progress'}
             </Text>
             <View style={styles.statsRow}>
-              <View style={styles.statItem}>
-                <Ionicons
-                  name="flame"
-                  size={32}
-                  color={theme.colors.semantic.warning.default}
-                  style={styles.statIcon}
-                />
-                <Text style={styles.statValue}>{stats.currentStreak}</Text>
-                <Text style={styles.statLabel}>
-                  {t('home.dayStreak') || 'day streak'}
-                </Text>
+              {/* Streak Stat */}
+              <View style={styles.statCard}>
+                <LinearGradient
+                  colors={['#FF6B6B', '#FF8E53']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.statGradient}
+                >
+                  <View style={styles.statIconContainer}>
+                    <Ionicons
+                      name="flame"
+                      size={24}
+                      color={theme.colors.neutral.white}
+                    />
+                  </View>
+                  <Text style={styles.statValue}>{stats.currentStreak}</Text>
+                  <Text style={styles.statLabel}>
+                    {t('home.dayStreak') || 'day streak'}
+                  </Text>
+                </LinearGradient>
               </View>
-              <View style={styles.statItem}>
-                <Ionicons
-                  name="time-outline"
-                  size={32}
-                  color={theme.colors.accent.blue[500]}
-                  style={styles.statIcon}
-                />
-                <Text style={styles.statValue}>{stats.totalMinutes}</Text>
-                <Text style={styles.statLabel}>
-                  {t('home.totalMinutes') || 'total min'}
-                </Text>
+
+              {/* Time Stat */}
+              <View style={styles.statCard}>
+                <LinearGradient
+                  colors={['#4E54C8', '#8F94FB']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.statGradient}
+                >
+                  <View style={styles.statIconContainer}>
+                    <Ionicons
+                      name="time-outline"
+                      size={24}
+                      color={theme.colors.neutral.white}
+                    />
+                  </View>
+                  <Text style={styles.statValue}>{stats.totalMinutes}</Text>
+                  <Text style={styles.statLabel}>
+                    {t('home.totalMinutes') || 'total min'}
+                  </Text>
+                </LinearGradient>
               </View>
-              <View style={styles.statItem}>
-                <Ionicons
-                  name="checkmark-circle"
-                  size={32}
-                  color={theme.colors.semantic.success.default}
-                  style={styles.statIcon}
-                />
-                <Text style={styles.statValue}>{stats.totalSessions}</Text>
-                <Text style={styles.statLabel}>
-                  {t('home.sessions') || 'sessions'}
-                </Text>
+
+              {/* Sessions Stat */}
+              <View style={styles.statCard}>
+                <LinearGradient
+                  colors={['#11998E', '#38EF7D']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.statGradient}
+                >
+                  <View style={styles.statIconContainer}>
+                    <Ionicons
+                      name="checkmark-circle-outline"
+                      size={24}
+                      color={theme.colors.neutral.white}
+                    />
+                  </View>
+                  <Text style={styles.statValue}>{stats.totalSessions}</Text>
+                  <Text style={styles.statLabel}>
+                    {t('home.sessions') || 'sessions'}
+                  </Text>
+                </LinearGradient>
               </View>
             </View>
-          </GradientCard>
+          </View>
         )}
 
         {/* Daily Quote Section */}
@@ -130,19 +159,30 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           ) : null}
         </View>
 
-        {/* Action Buttons */}
-        <View style={styles.actions}>
-          <GradientButton
-            title={t('home.startMeditation')}
-            gradient={gradients.button.primary}
+        {/* Feature Tiles */}
+        <View style={styles.tilesContainer}>
+          <Text style={styles.sectionTitle}>
+            {t('home.exploreFeatures') || 'Explore Features'}
+          </Text>
+
+          {onNavigateToCustom && (
+            <FeatureTile
+              title={t('home.customSessions') || 'Custom Sessions'}
+              description={t('home.customSessionsDesc') || 'Create your own personalized meditation sessions'}
+              icon="create-outline"
+              gradient={gradients.card.purpleCard}
+              onPress={onNavigateToCustom}
+              style={styles.tile}
+            />
+          )}
+
+          <FeatureTile
+            title={t('home.sessionCatalog') || 'Session Catalog'}
+            description={t('home.sessionCatalogDesc') || 'Browse our curated collection of guided meditations'}
+            icon="library-outline"
+            gradient={gradients.card.blueCard}
             onPress={onNavigateToMeditation}
-            size="lg"
-          />
-          <GradientButton
-            title={t('home.exploreSessions')}
-            gradient={gradients.button.secondary}
-            onPress={onNavigateToQuotes}
-            size="md"
+            style={styles.tile}
           />
         </View>
       </ScrollView>
@@ -163,65 +203,84 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.xxl,
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
   },
   title: {
-    fontSize: theme.typography.fontSizes.hero,
+    fontSize: theme.typography.fontSizes.xxxl,
     fontWeight: theme.typography.fontWeights.light,
     color: theme.colors.text.primary,
-    marginBottom: theme.spacing.xs,
+    marginBottom: theme.spacing.xxs,
   },
   tagline: {
-    fontSize: theme.typography.fontSizes.lg,
+    fontSize: theme.typography.fontSizes.sm,
     fontWeight: theme.typography.fontWeights.regular,
     color: theme.colors.text.secondary,
   },
-  progressCard: {
+  progressSection: {
     marginBottom: theme.spacing.lg,
   },
   progressTitle: {
-    fontSize: theme.typography.fontSizes.xxl,
+    fontSize: theme.typography.fontSizes.lg,
     fontWeight: theme.typography.fontWeights.semiBold,
     color: theme.colors.text.primary,
     marginBottom: theme.spacing.md,
   },
   statsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    gap: theme.spacing.sm,
+    justifyContent: 'space-between',
   },
-  statItem: {
+  statCard: {
+    flex: 1,
+    borderRadius: theme.borderRadius.xl,
+    overflow: 'hidden',
+    ...theme.shadows.lg,
+  },
+  statGradient: {
+    padding: theme.spacing.md,
     alignItems: 'center',
+    minHeight: 110,
+    justifyContent: 'center',
   },
-  statIcon: {
-    marginBottom: theme.spacing.xs,
+  statIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.sm,
   },
   statValue: {
     fontSize: theme.typography.fontSizes.xxxl,
     fontWeight: theme.typography.fontWeights.bold,
-    color: theme.colors.accent.blue[600],
-    marginBottom: theme.spacing.xs,
+    color: theme.colors.neutral.white,
+    marginBottom: theme.spacing.xxs,
   },
   statLabel: {
-    fontSize: theme.typography.fontSizes.sm,
-    color: theme.colors.text.secondary,
+    fontSize: theme.typography.fontSizes.xs,
+    color: theme.colors.neutral.white,
     textAlign: 'center',
+    opacity: 0.9,
   },
   section: {
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
   },
   sectionTitle: {
-    fontSize: theme.typography.fontSizes.xxl,
+    fontSize: theme.typography.fontSizes.lg,
     fontWeight: theme.typography.fontWeights.semiBold,
     color: theme.colors.text.primary,
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
   },
   loader: {
     paddingVertical: theme.spacing.xl,
     alignItems: 'center',
   },
-  actions: {
-    marginTop: theme.spacing.lg,
-    gap: theme.spacing.md,
+  tilesContainer: {
+    marginTop: theme.spacing.sm,
+  },
+  tile: {
+    marginBottom: theme.spacing.sm,
   },
 });

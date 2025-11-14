@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, View, TouchableOpacity, Platform, useColorScheme } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Platform, useColorScheme, Alert } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,12 +12,26 @@ import { HomeScreen } from './src/screens/HomeScreen';
 import { MeditationScreen } from './src/screens/MeditationScreen';
 import { QuotesScreen } from './src/screens/QuotesScreen';
 import { SettingsScreen, THEME_STORAGE_KEY, ThemeMode } from './src/screens/SettingsScreen';
+import { CustomSessionBuilderScreen, CustomSessionConfig } from './src/screens/CustomSessionBuilderScreen';
+import { ProfileScreen } from './src/screens/ProfileScreen';
+import { MeditationSession } from './src/services/api';
 
-type Screen = 'home' | 'meditation' | 'quotes' | 'settings';
+type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile';
+
+// Meditation session state for persistence across navigation
+export interface ActiveMeditationState {
+  session: MeditationSession;
+  flowState: 'instructions' | 'meditation' | 'celebration';
+  userIntention?: string;
+  startedAt: number; // timestamp
+}
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [themeMode, setThemeMode] = useState<ThemeMode>('system');
+  const [editSessionId, setEditSessionId] = useState<string | undefined>();
+  const [editSessionConfig, setEditSessionConfig] = useState<CustomSessionConfig | undefined>();
+  const [activeMeditationState, setActiveMeditationState] = useState<ActiveMeditationState | null>(null);
   const systemColorScheme = useColorScheme();
 
   // Calculate actual dark mode based on theme mode and system preference
@@ -51,8 +66,52 @@ export default function App() {
   };
 
   const handleNavigate = (screen: Screen) => {
+    // Prevent navigation away from active meditation without confirmation
+    if (activeMeditationState && currentScreen === 'meditation' && screen !== 'meditation') {
+      Alert.alert(
+        'Active Meditation',
+        'You have an active meditation session. Do you want to exit and end the session?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+            onPress: () => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning),
+          },
+          {
+            text: 'Exit',
+            style: 'destructive',
+            onPress: () => {
+              setActiveMeditationState(null);
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setCurrentScreen(screen);
+            },
+          },
+        ]
+      );
+      return;
+    }
+
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setCurrentScreen(screen);
+  };
+
+  const handleStartCustomSession = (config: CustomSessionConfig) => {
+    // TODO: Implement custom session playback with the configured settings
+    // For now, just navigate to meditation screen
+    console.log('Starting custom session with config:', config);
+    setCurrentScreen('meditation');
+  };
+
+  const handleEditSession = (sessionId: string, sessionConfig: CustomSessionConfig) => {
+    setEditSessionId(sessionId);
+    setEditSessionConfig(sessionConfig);
+    setCurrentScreen('custom');
+  };
+
+  const handleBackFromCustomBuilder = () => {
+    setEditSessionId(undefined);
+    setEditSessionConfig(undefined);
+    setCurrentScreen('home');
   };
 
   const renderScreen = () => {
@@ -62,24 +121,50 @@ export default function App() {
           <HomeScreen
             onNavigateToMeditation={() => setCurrentScreen('meditation')}
             onNavigateToQuotes={() => setCurrentScreen('quotes')}
+            onNavigateToCustom={() => setCurrentScreen('custom')}
           />
         );
       case 'meditation':
-        return <MeditationScreen />;
+        return (
+          <MeditationScreen
+            onEditSession={handleEditSession}
+            activeMeditationState={activeMeditationState}
+            onMeditationStateChange={setActiveMeditationState}
+          />
+        );
       case 'quotes':
         return <QuotesScreen />;
       case 'settings':
-        return <SettingsScreen isDark={isDark} themeMode={themeMode} onThemeChange={handleThemeChange} />;
+        return (
+          <SettingsScreen
+            isDark={isDark}
+            themeMode={themeMode}
+            onThemeChange={handleThemeChange}
+            onNavigateToProfile={() => setCurrentScreen('profile')}
+          />
+        );
+      case 'profile':
+        return <ProfileScreen onNavigateToCustom={() => setCurrentScreen('custom')} />;
+      case 'custom':
+        return (
+          <CustomSessionBuilderScreen
+            onStartSession={handleStartCustomSession}
+            onBack={handleBackFromCustomBuilder}
+            editSessionId={editSessionId}
+            initialConfig={editSessionConfig}
+          />
+        );
       default:
         return null;
     }
   };
 
   return (
-    <SafeAreaView style={[styles.container, isDark ? styles.darkContainer : styles.lightContainer]}>
-      <StatusBar style={isDark ? 'light' : 'dark'} />
+    <SafeAreaProvider>
+      <SafeAreaView style={[styles.container, isDark ? styles.darkContainer : styles.lightContainer]}>
+        <StatusBar style={isDark ? 'light' : 'dark'} />
 
-      <View style={styles.mainContent}>
+        <View style={styles.mainContent}>
         {/* Main Content */}
         <View style={styles.screenContainer}>{renderScreen()}</View>
 
@@ -182,6 +267,7 @@ export default function App() {
         </BlurView>
       </View>
     </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

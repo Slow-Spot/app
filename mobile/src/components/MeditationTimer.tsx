@@ -34,33 +34,43 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const [isRunning, setIsRunning] = useState(true); // Auto-start enabled
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'exhale'>('inhale');
+  const [adjustableChimes, setAdjustableChimes] = useState<ChimePoint[]>(chimePoints);
+  const [showChimeControls, setShowChimeControls] = useState(false);
   const playedChimes = useRef<Set<number>>(new Set());
   const chimeSound = useRef<Audio.Sound | null>(null);
 
-  // ✨ Reanimated 4 - Smooth 60fps breathing animation
+  // Reanimated 4 - Smooth 60fps breathing animation
   // 4 seconds inhale, 4 seconds exhale
   const breathingScale = useSharedValue(0.85);
   const breathingOpacity = useSharedValue(0.3);
 
-  // Load chime sound
+  // Load chime sound on mount
   useEffect(() => {
-    const loadSound = async () => {
+    let isMounted = true;
+
+    const loadChimeSound = async () => {
       try {
         const { sound } = await Audio.Sound.createAsync(
-          require('../../assets/sounds/meditation-bell.mp3')
+          require('../../assets/sounds/meditation-bell.mp3'),
+          { shouldPlay: false }
         );
-        chimeSound.current = sound;
-        console.log('Meditation bell sound loaded successfully');
+        if (isMounted) {
+          chimeSound.current = sound;
+          console.log('Chime sound loaded successfully');
+        }
       } catch (error) {
         console.error('Error loading chime sound:', error);
       }
     };
 
-    loadSound();
+    loadChimeSound();
 
     return () => {
+      isMounted = false;
       if (chimeSound.current) {
-        chimeSound.current.unloadAsync();
+        chimeSound.current.unloadAsync().catch((error) => {
+          console.error('Error unloading chime sound:', error);
+        });
       }
     };
   }, []);
@@ -129,22 +139,15 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
   // Play chime at designated time
   const playChime = async () => {
-    if (chimeSound.current && audioEnabled) {
+    if (audioEnabled && chimeSound.current) {
       try {
-        await chimeSound.current.replayAsync();
+        const status = await chimeSound.current.getStatusAsync();
+        if (status.isLoaded) {
+          await chimeSound.current.setPositionAsync(0); // Reset to start
+          await chimeSound.current.playAsync();
+        }
       } catch (error) {
         console.error('Error playing chime:', error);
-      }
-    } else if (audioEnabled) {
-      // Fallback: Generate a simple beep tone programmatically
-      try {
-        const { sound } = await Audio.Sound.createAsync(
-          { uri: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGGa77OmdSgwPUKrj77RgGgU7k9bxz34rBSh+zO/aizsKElyx6OyrWBUIR5/h8sFuIQUpgM3y2okyBxdjuuvnnUsMD06p4u+2Yh0FO5TW8dB+KwUofMzv24s9CxFbsOjsrV0YCEef4PKCbyEFKX/N8tuKNQcWY7rp6Z1LDA5OqeLvtmIdBTuU1vHQfiwFKHzM8N2LPQsQWq/o7K5fGQlIn+DyvnAiBSl+zfLciTQHFWK56OmdTA0OTang8LdjHQU7k9bx0H4sBSh7zPDdiz4LEFqu6OyuYBoJSZ/h88BwIgUrfs3y3Ik0BxViuejpnUwNDk6p4PC3Yx0FO5PW8dB+LAUoe8vw3Ys9Cw9arOjrrmAaB0me4fPBcCIFK37N8tyJNAcVYrnn6Z1MDQ5PqeDwt2MdBTuT1vHQfiwFKHvL8N2LPQsPWqzp7K9hGghJn+H0wXAiBSt+zfLciTQHFWO65umeSw0OT6ng8LdjHQU7k9bx0H4sBSh7y/DdizwLEFqu6euuYBoJSp/h8sFwIgUrfs3y3Ik0BxVjuejpnkwNDk+p4PC3Yx0FO5TW8c9+LAUoe8vw3Ys9Cw9arOnsrmAaCUqf4fTBcCIFK37N8tyJNAcWY7rp6Z5MDQ5PqODvt2IcBTuU1vHQfiwFKHzM8NyLPQsQWq3p7K5gGglKn+H0wXAiBSt+zfPciTQHFmO65umeSw0OT6jg8LdjHQU7lNbx0H4sBCh7zPDdiz0LEFqt6eyvYRsJSp/h9MFwIgUrfs303Ik1CBVjuujpnUsNDk+o4PG3ZBwFPJTW8c9+LAQoe8zw3ow9CxBbrOnsr2EbCEqf4vTBciIFK3/N8tqJNQgVY7ro6J1LDQ5Op+DxuGQcBTyT1/DPfywFJ3vL7+CKOwsQWq3o66xfGQhKn+L0xG8iBSt/zvLaiTYIF2O76OieTA0NTqjg8bhlHAQ8lNbwz34sBCh7y+/gijsLEVqt6OutXxkJSp/i9MNvIgUpfs7y2ok1CBZjuunoHkwNC06p4PCy' },
-          { shouldPlay: true }
-        );
-        setTimeout(() => sound.unloadAsync(), 100);
-      } catch (error) {
-        console.error('Error generating beep:', error);
       }
     }
   };
@@ -153,7 +156,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   useEffect(() => {
     const elapsedSeconds = totalSeconds - remainingSeconds;
 
-    for (const chime of chimePoints) {
+    for (const chime of adjustableChimes) {
       if (
         elapsedSeconds >= chime.timeInSeconds &&
         !playedChimes.current.has(chime.timeInSeconds)
@@ -162,7 +165,21 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         playChime();
       }
     }
-  }, [remainingSeconds, chimePoints, totalSeconds]);
+  }, [remainingSeconds, adjustableChimes, totalSeconds]);
+
+  // Adjust chime time (±30 seconds)
+  const adjustChimeTime = (index: number, delta: number) => {
+    const newChimes = [...adjustableChimes];
+    const newTime = Math.max(30, Math.min(totalSeconds - 30, newChimes[index].timeInSeconds + delta));
+    newChimes[index] = {
+      ...newChimes[index],
+      timeInSeconds: newTime,
+      label: `${Math.floor(newTime / 60)} min ${newTime % 60}s`,
+    };
+    setAdjustableChimes(newChimes);
+    // Clear played chimes so adjusted ones can play again if needed
+    playedChimes.current.clear();
+  };
 
   useEffect(() => {
     if (!isRunning || remainingSeconds <= 0) return;
@@ -271,6 +288,24 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
       {/* Progress Bar with Chime Markers */}
       <View style={styles.progressBarContainer}>
+        {adjustableChimes.length > 0 && !isRunning && (
+          <TouchableOpacity
+            style={styles.adjustButton}
+            onPress={() => setShowChimeControls(!showChimeControls)}
+            accessibilityLabel="Toggle chime adjustment controls"
+            accessibilityRole="button"
+          >
+            <Ionicons
+              name={showChimeControls ? 'lock-closed' : 'lock-open'}
+              size={16}
+              color="rgba(255, 255, 255, 0.8)"
+            />
+            <Text style={styles.adjustButtonText}>
+              {showChimeControls ? 'Lock' : 'Adjust'}
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <View style={styles.progressBar}>
           <View
             style={[
@@ -280,7 +315,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           />
 
           {/* Chime markers - larger and more visible */}
-          {chimePoints.map((chime, index) => {
+          {adjustableChimes.map((chime, index) => {
             const position = (chime.timeInSeconds / totalSeconds) * 100;
             const isPassed = (totalSeconds - remainingSeconds) >= chime.timeInSeconds;
 
@@ -309,6 +344,28 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
                   ]}>
                     {chime.label}
                   </Text>
+                )}
+
+                {/* Adjustment controls - shown when paused and controls enabled */}
+                {!isRunning && showChimeControls && (
+                  <View style={styles.chimeAdjustControls}>
+                    <TouchableOpacity
+                      style={styles.chimeAdjustButton}
+                      onPress={() => adjustChimeTime(index, -30)}
+                      accessibilityLabel="Move chime earlier by 30 seconds"
+                      accessibilityRole="button"
+                    >
+                      <Ionicons name="remove-circle" size={20} color={theme.colors.accent.mint[400]} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.chimeAdjustButton}
+                      onPress={() => adjustChimeTime(index, 30)}
+                      accessibilityLabel="Move chime later by 30 seconds"
+                      accessibilityRole="button"
+                    >
+                      <Ionicons name="add-circle" size={20} color={theme.colors.accent.mint[400]} />
+                    </TouchableOpacity>
+                  </View>
                 )}
               </View>
             );
@@ -358,7 +415,7 @@ const styles = StyleSheet.create({
     top: theme.spacing.lg,
     right: theme.spacing.lg,
     padding: theme.spacing.sm,
-    borderRadius: theme.borderRadius.full,
+    borderRadius: theme.borderRadius.round,
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     zIndex: 10,
   },
@@ -447,7 +504,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxWidth: 150,
     padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.full,
+    borderRadius: theme.borderRadius.round,
     alignItems: 'center',
   },
   primaryButton: {
@@ -507,5 +564,34 @@ const styles = StyleSheet.create({
   },
   chimeLabelPassed: {
     color: theme.colors.accent.mint[200],
+  },
+  adjustButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    gap: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: theme.spacing.xs,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: theme.borderRadius.md,
+    marginBottom: theme.spacing.xs,
+  },
+  adjustButtonText: {
+    fontSize: theme.typography.fontSizes.xs,
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: theme.typography.fontWeights.medium,
+  },
+  chimeAdjustControls: {
+    position: 'absolute',
+    top: 30,
+    flexDirection: 'row',
+    gap: theme.spacing.xs,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.xs,
+  },
+  chimeAdjustButton: {
+    padding: theme.spacing.xs,
   },
 });

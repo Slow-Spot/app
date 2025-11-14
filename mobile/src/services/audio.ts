@@ -37,9 +37,9 @@ class AudioEngine {
         allowsRecordingIOS: false,
         playsInSilentModeIOS: true,
         staysActiveInBackground: true,
-        shouldDuckAndroid: true,
       });
       this.isInitialized = true;
+      console.log('Audio engine initialized successfully');
     } catch (error) {
       console.error('Failed to initialize audio:', error);
       throw error;
@@ -53,19 +53,24 @@ class AudioEngine {
       // Unload existing track if present
       await this.unloadTrack(layer);
 
+      // Create sound from URI or require()
       const { sound } = await Audio.Sound.createAsync(
-        { uri },
+        typeof uri === 'string' && uri.startsWith('http')
+          ? { uri }
+          : uri as any, // For local files passed as require()
         {
-          volume,
           shouldPlay: false,
           isLooping: layer === 'ambient', // Only ambient loops
+          volume: Math.max(0, Math.min(1, volume)),
         }
       );
 
       this.tracks.set(layer, sound);
+      console.log(`Successfully loaded ${layer} track`);
     } catch (error) {
       console.error(`Failed to load ${layer} track:`, error);
-      throw error;
+      // Don't throw - allow app to continue without this audio
+      console.warn(`Continuing without ${layer} audio`);
     }
   }
 
@@ -77,7 +82,11 @@ class AudioEngine {
     }
 
     try {
-      await sound.playAsync();
+      const status = await sound.getStatusAsync();
+      if (status.isLoaded && !status.isPlaying) {
+        await sound.playAsync();
+        console.log(`Playing ${layer} track`);
+      }
     } catch (error) {
       console.error(`Failed to play ${layer}:`, error);
     }
@@ -88,7 +97,11 @@ class AudioEngine {
     if (!sound) return;
 
     try {
-      await sound.pauseAsync();
+      const status = await sound.getStatusAsync();
+      if (status.isLoaded && status.isPlaying) {
+        await sound.pauseAsync();
+        console.log(`Paused ${layer} track`);
+      }
     } catch (error) {
       console.error(`Failed to pause ${layer}:`, error);
     }
@@ -99,8 +112,12 @@ class AudioEngine {
     if (!sound) return;
 
     try {
-      await sound.stopAsync();
-      await sound.setPositionAsync(0);
+      const status = await sound.getStatusAsync();
+      if (status.isLoaded) {
+        await sound.stopAsync();
+        await sound.setPositionAsync(0);
+        console.log(`Stopped ${layer} track`);
+      }
     } catch (error) {
       console.error(`Failed to stop ${layer}:`, error);
     }
@@ -111,25 +128,34 @@ class AudioEngine {
     if (!sound) return;
 
     try {
-      await sound.setVolumeAsync(Math.max(0, Math.min(1, volume)));
+      const normalizedVolume = Math.max(0, Math.min(1, volume));
+      await sound.setVolumeAsync(normalizedVolume);
     } catch (error) {
       console.error(`Failed to set volume for ${layer}:`, error);
     }
   }
 
-  async fadeIn(layer: AudioLayer, duration: number = 2000) {
+  async fadeIn(layer: AudioLayer, duration: number = 2000, targetVolume: number = 1.0) {
     const sound = this.tracks.get(layer);
     if (!sound) return;
 
     const steps = 20;
     const stepDuration = duration / steps;
 
-    await this.play(layer);
+    try {
+      // Start at volume 0
+      await this.setVolume(layer, 0);
+      await this.play(layer);
 
-    for (let i = 0; i <= steps; i++) {
-      const volume = i / steps;
-      await this.setVolume(layer, volume);
-      await new Promise((resolve) => setTimeout(resolve, stepDuration));
+      // Gradually increase volume
+      for (let i = 0; i <= steps; i++) {
+        const volume = (i / steps) * targetVolume;
+        await this.setVolume(layer, volume);
+        await new Promise((resolve) => setTimeout(resolve, stepDuration));
+      }
+      console.log(`Faded in ${layer} track`);
+    } catch (error) {
+      console.error(`Failed to fade in ${layer}:`, error);
     }
   }
 
@@ -140,29 +166,44 @@ class AudioEngine {
     const steps = 20;
     const stepDuration = duration / steps;
 
-    for (let i = steps; i >= 0; i--) {
-      const volume = i / steps;
-      await this.setVolume(layer, volume);
-      await new Promise((resolve) => setTimeout(resolve, stepDuration));
-    }
+    try {
+      // Get current volume
+      const status = await sound.getStatusAsync();
+      if (!status.isLoaded) return;
 
-    await this.stop(layer);
+      const currentVolume = status.volume || 1.0;
+
+      // Gradually decrease volume
+      for (let i = steps; i >= 0; i--) {
+        const volume = (i / steps) * currentVolume;
+        await this.setVolume(layer, volume);
+        await new Promise((resolve) => setTimeout(resolve, stepDuration));
+      }
+
+      await this.stop(layer);
+      console.log(`Faded out ${layer} track`);
+    } catch (error) {
+      console.error(`Failed to fade out ${layer}:`, error);
+    }
   }
 
   async playAll() {
-    for (const layer of this.tracks.keys()) {
+    const layers = Array.from(this.tracks.keys());
+    for (const layer of layers) {
       await this.play(layer);
     }
   }
 
   async pauseAll() {
-    for (const layer of this.tracks.keys()) {
+    const layers = Array.from(this.tracks.keys());
+    for (const layer of layers) {
       await this.pause(layer);
     }
   }
 
   async stopAll() {
-    for (const layer of this.tracks.keys()) {
+    const layers = Array.from(this.tracks.keys());
+    for (const layer of layers) {
       await this.stop(layer);
     }
   }
@@ -172,23 +213,46 @@ class AudioEngine {
     if (!sound) return;
 
     try {
-      await sound.unloadAsync();
+      const status = await sound.getStatusAsync();
+      if (status.isLoaded) {
+        await sound.unloadAsync();
+      }
       this.tracks.delete(layer);
+      console.log(`Unloaded ${layer} track`);
     } catch (error) {
       console.error(`Failed to unload ${layer}:`, error);
     }
   }
 
   async cleanup() {
-    for (const layer of this.tracks.keys()) {
+    console.log('Cleaning up audio engine...');
+    const layers = Array.from(this.tracks.keys());
+    for (const layer of layers) {
       await this.unloadTrack(layer);
     }
     this.isInitialized = false;
+    console.log('Audio engine cleanup complete');
   }
 
-  getStatus(layer: AudioLayer) {
+  async getStatus(layer: AudioLayer) {
     const sound = this.tracks.get(layer);
-    return sound?.getStatusAsync();
+    if (!sound) return null;
+
+    try {
+      const status = await sound.getStatusAsync();
+      if (!status.isLoaded) return null;
+
+      return {
+        isPlaying: status.isPlaying,
+        currentTime: status.positionMillis / 1000, // Convert to seconds
+        duration: status.durationMillis ? status.durationMillis / 1000 : 0,
+        volume: status.volume || 0,
+        isLooping: status.isLooping,
+      };
+    } catch (error) {
+      console.error(`Failed to get status for ${layer}:`, error);
+      return null;
+    }
   }
 }
 

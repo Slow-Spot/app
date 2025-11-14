@@ -1,13 +1,13 @@
 // ══════════════════════════════════════════════════════════════
 // Pre-Session Instructions Component
-// Modern, Interactive, Better than Headspace
+// Ultra-Modern Design Following CelebrationScreen Patterns
 // ══════════════════════════════════════════════════════════════
 
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Animated, TouchableOpacity } from 'react-native';
-import { YStack, XStack, Text, Button, Circle } from 'tamagui';
+import { View, Text, ScrollView, StyleSheet, Pressable, Animated, TextInput, TouchableOpacity } from 'react-native';
+import { YStack, XStack, Text as TamaguiText, Button, Circle } from 'tamagui';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
@@ -18,8 +18,51 @@ import Reanimated, {
 import { useTranslation } from 'react-i18next';
 
 import { PreSessionInstruction, ChecklistItem } from '../types/instructions';
-import { theme } from '../theme';
+import { GradientBackground } from './GradientBackground';
+import { GradientCard } from './GradientCard';
+import { GradientButton } from './GradientButton';
+import theme, { gradients } from '../theme';
 import { userPreferences } from '../services/userPreferences';
+
+// ══════════════════════════════════════════════════════════════
+// Icon Mapping Helper
+// ══════════════════════════════════════════════════════════════
+
+interface IconProps {
+  name: string;
+  size?: number;
+  color?: string;
+}
+
+const Icon: React.FC<IconProps> = ({ name, size = 24, color = theme.colors.accent.blue[600] }) => {
+  const iconMap: Record<string, string> = {
+    // Physical setup icons
+    chair: 'chair',
+    spa: 'spa',
+    'praying-hands': 'praying-hands',
+    eye: 'eye',
+    bed: 'bed',
+    walking: 'walking',
+    thermometer: 'thermometer-half',
+    anchor: 'anchor',
+    heart: 'heart',
+    smile: 'smile',
+    water: 'water',
+    mountain: 'mountain',
+    bullseye: 'bullseye',
+    // UI icons
+    sunrise: 'sun',
+    target: 'bullseye',
+    lightbulb: 'lightbulb',
+    clipboard: 'clipboard-list',
+    wind: 'wind',
+    sparkles: 'star',
+  };
+
+  const fontAwesomeName = iconMap[name] || 'question-circle';
+
+  return <FontAwesome5 name={fontAwesomeName} size={size} color={color} solid />;
+};
 
 // ══════════════════════════════════════════════════════════════
 // Main Component
@@ -75,60 +118,69 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
     setAlwaysSkip(!alwaysSkip);
   };
 
-  // ══════════════════════════════════════════════════════════════
-  // Render Different Steps
-  // ══════════════════════════════════════════════════════════════
+  // Get time-based greeting
+  const getTimeGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return t('instructions.timeOfDay.morning');
+    if (hour < 17) return t('instructions.timeOfDay.afternoon');
+    if (hour < 22) return t('instructions.timeOfDay.evening');
+    return t('instructions.timeOfDay.night');
+  };
 
   return (
-    <LinearGradient
-      colors={['#E8F5FF', '#D4EBFF', '#C0E0FF']}
-      style={styles.container}
-    >
+    <GradientBackground gradient={gradients.screen.celebration} style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <YStack style={styles.header}>
-          <Text style={styles.title}>{instruction.title}</Text>
-          <Text style={styles.subtitle}>{instruction.subtitle}</Text>
-        </YStack>
+        <View style={styles.header}>
+          <Text style={styles.title}>{t(`instructions.${instruction.id}.title`)}</Text>
+          <Text style={styles.subtitle}>{t(`instructions.${instruction.id}.subtitle`)}</Text>
+        </View>
 
         {/* Progress Indicator */}
-        <StepProgress currentStep={currentStep} />
+        <StepProgress currentStep={currentStep} t={t} />
 
         {/* Content based on current step */}
         {currentStep === 'overview' && (
           <OverviewStep
             instruction={instruction}
+            timeGreeting={getTimeGreeting()}
             onNext={() => setCurrentStep('setup')}
             onSkip={onSkip}
+            t={t}
           />
         )}
 
         {currentStep === 'setup' && (
           <PhysicalSetupStep
+            instructionId={instruction.id}
             setup={instruction.physicalSetup}
             checklist={setupChecklist}
             onToggle={handleChecklistToggle}
             onNext={() => setCurrentStep(instruction.breathingPrep ? 'breathing' : 'intention')}
             canContinue={allRequiredComplete}
+            t={t}
           />
         )}
 
         {currentStep === 'breathing' && instruction.breathingPrep && (
           <BreathingPrepStep
+            instructionId={instruction.id}
             breathingPrep={instruction.breathingPrep}
             onComplete={() => {
               setBreathingPrepComplete(true);
               setCurrentStep('intention');
             }}
             onSkip={() => setCurrentStep('intention')}
+            t={t}
           />
         )}
 
         {currentStep === 'intention' && (
           <IntentionStep
+            instructionId={instruction.id}
             mentalPrep={instruction.mentalPreparation}
             sessionTips={instruction.sessionTips}
             intention={userIntention}
@@ -140,7 +192,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
           />
         )}
       </ScrollView>
-    </LinearGradient>
+    </GradientBackground>
   );
 };
 
@@ -150,58 +202,79 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
 
 interface OverviewStepProps {
   instruction: PreSessionInstruction;
+  timeGreeting: string;
   onNext: () => void;
   onSkip: () => void;
+  t: any;
 }
 
-const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, onNext, onSkip }) => {
-  const hour = new Date().getHours();
-  let timeGreeting = 'Good evening';
-  if (hour < 12) timeGreeting = 'Good morning';
-  else if (hour < 18) timeGreeting = 'Good afternoon';
-
+const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, onNext, onSkip, t }) => {
   return (
-    <YStack gap="$4">
+    <View style={styles.stepContainer}>
       {/* Time of Day Insight */}
-      <InstructionCard
-        icon="🌅"
-        title={timeGreeting}
-        description={`You're about to practice ${instruction.technique.replace('_', ' ')}. Let's prepare mindfully.`}
-      />
+      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Icon name="sunrise" size={32} />
+          <Text style={styles.cardTitle}>{timeGreeting}</Text>
+        </View>
+        <Text style={styles.cardDescription}>
+          {t('instructions.preparation.greeting', {
+            technique: instruction.technique.replace('_', ' '),
+          }) || `You're about to practice ${instruction.technique.replace('_', ' ')}. Let's prepare mindfully.`}
+        </Text>
+      </GradientCard>
 
       {/* Mental Preparation */}
-      <InstructionCard
-        icon="🎯"
-        title="Your Focus Today"
-        description={instruction.mentalPreparation.intention}
-      />
+      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Icon name="target" size={32} />
+          <Text style={styles.cardTitle}>
+            {t('instructions.preparation.focusToday') || 'Your Focus Today'}
+          </Text>
+        </View>
+        <Text style={styles.cardDescription}>
+          {t(`instructions.${instruction.id}.intention`)}
+        </Text>
+      </GradientCard>
 
       {/* Common Challenges */}
-      <InstructionCard
-        icon="💡"
-        title="Remember"
-        description="Some reminders to keep in mind:"
-        list={instruction.mentalPreparation.commonChallenges}
-      />
+      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Icon name="lightbulb" size={32} />
+          <Text style={styles.cardTitle}>
+            {t('instructions.preparation.remember') || 'Remember'}
+          </Text>
+        </View>
+        <Text style={styles.cardDescription}>
+          {t('instructions.preparation.reminders') || 'Some reminders to keep in mind:'}
+        </Text>
+        {[1, 2, 3].map((num) => {
+          const challengeText = t(`instructions.${instruction.id}.challenges.${num}`, { defaultValue: '' });
+          if (!challengeText) return null;
+          return (
+            <View key={num} style={styles.listItem}>
+              <Text style={styles.listBullet}>•</Text>
+              <Text style={styles.listText}>{challengeText}</Text>
+            </View>
+          );
+        })}
+      </GradientCard>
 
       {/* Actions */}
-      <XStack gap="$3" style={{ marginTop: 16 }}>
-        <Button
-          flex={1}
+      <View style={styles.buttonContainer}>
+        <GradientButton
+          title={t('instructions.preparation.prepareMySpace') || 'Prepare My Space'}
           onPress={onNext}
+          gradient={gradients.button.primary}
           style={styles.primaryButton}
-        >
-          <Text style={styles.primaryButtonText}>Prepare My Space</Text>
-        </Button>
-        <Button
-          flex={0.3}
-          onPress={onSkip}
-          style={styles.secondaryButton}
-        >
-          <Text style={styles.secondaryButtonText}>Skip</Text>
-        </Button>
-      </XStack>
-    </YStack>
+        />
+        <Pressable onPress={onSkip} style={styles.skipButton}>
+          <Text style={styles.skipButtonText}>
+            {t('instructions.preparation.skip') || 'Skip'}
+          </Text>
+        </Pressable>
+      </View>
+    </View>
   );
 };
 
@@ -210,55 +283,73 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, onNext, onSkip
 // ══════════════════════════════════════════════════════════════
 
 interface PhysicalSetupStepProps {
+  instructionId: string;
   setup: PreSessionInstruction['physicalSetup'];
   checklist: ChecklistItem[];
   onToggle: (id: string) => void;
   onNext: () => void;
   canContinue: boolean;
+  t: any;
 }
 
 const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
+  instructionId,
   setup,
   checklist,
   onToggle,
   onNext,
   canContinue,
+  t,
 }) => {
   return (
-    <YStack gap="$4">
-      <InstructionCard
-        icon="📋"
-        title="Physical Setup"
-        description="Check off each item as you set up your meditation space:"
-      />
+    <View style={styles.stepContainer}>
+      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Icon name="clipboard" size={32} />
+          <Text style={styles.cardTitle}>
+            {t('instructions.preparation.physicalSetup') || 'Physical Setup'}
+          </Text>
+        </View>
+        <Text style={styles.cardDescription}>
+          {t('instructions.preparation.checkOffItems') || 'Check off each item as you set up your meditation space:'}
+        </Text>
+      </GradientCard>
 
-      {setup.map((step, index) => {
+      {setup.map((step) => {
         const checklistItem = checklist.find((item) => item.id === step.order.toString());
         const isCompleted = checklistItem?.completed || false;
+
+        // Fetch translations using instruction ID and step order
+        const stepNum = step.order;
+        const title = t(`instructions.${instructionId}.physicalSetup.${stepNum}.title`);
+        const description = t(`instructions.${instructionId}.physicalSetup.${stepNum}.description`);
 
         return (
           <ChecklistItemCard
             key={step.order}
             icon={step.icon}
-            title={step.title}
-            description={step.description}
+            title={title}
+            description={description}
             isOptional={step.isOptional}
             isCompleted={isCompleted}
             onToggle={() => onToggle(step.order.toString())}
+            t={t}
           />
         );
       })}
 
-      <Button
+      <GradientButton
+        title={
+          canContinue
+            ? t('instructions.preparation.continue') || 'Continue'
+            : t('instructions.preparation.completeRequired') || 'Complete Required Steps'
+        }
         onPress={onNext}
+        gradient={canContinue ? gradients.button.primary : gradients.button.disabled}
+        style={styles.primaryButton}
         disabled={!canContinue}
-        style={[styles.primaryButton, !canContinue && styles.disabledButton]}
-      >
-        <Text style={styles.primaryButtonText}>
-          {canContinue ? 'Continue' : 'Complete Required Steps'}
-        </Text>
-      </Button>
-    </YStack>
+      />
+    </View>
   );
 };
 
@@ -267,15 +358,19 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
 // ══════════════════════════════════════════════════════════════
 
 interface BreathingPrepStepProps {
+  instructionId: string;
   breathingPrep: NonNullable<PreSessionInstruction['breathingPrep']>;
   onComplete: () => void;
   onSkip: () => void;
+  t: any;
 }
 
 const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
+  instructionId,
   breathingPrep,
   onComplete,
   onSkip,
+  t,
 }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(breathingPrep.duration);
@@ -302,17 +397,22 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
   };
 
   return (
-    <YStack gap="$4" style={{ alignItems: 'center' }}>
-      <InstructionCard
-        icon="🌬️"
-        title="Quick Breathing Exercise"
-        description={breathingPrep.instruction}
-      />
+    <View style={styles.stepContainer}>
+      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Icon name="wind" size={32} />
+          <Text style={styles.cardTitle}>
+            {t('instructions.preparation.breathingExercise') || 'Quick Breathing Exercise'}
+          </Text>
+        </View>
+        <Text style={styles.cardDescription}>{t(`instructions.${instructionId}.breathingPrep.instruction`)}</Text>
+      </GradientCard>
 
       {/* Animated Breathing Circle */}
       <AnimatedBreathingCircle
         isRunning={isRunning}
         pattern={breathingPrep.pattern}
+        t={t}
       />
 
       {/* Timer */}
@@ -324,20 +424,27 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
 
       {/* Actions */}
       {!isRunning ? (
-        <XStack gap="$3" style={{ width: '100%' }}>
-          <Button flex={1} onPress={handleStart} style={styles.primaryButton}>
-            <Text style={styles.primaryButtonText}>Start Breathing Prep</Text>
-          </Button>
-          <Button flex={0.3} onPress={onSkip} style={styles.secondaryButton}>
-            <Text style={styles.secondaryButtonText}>Skip</Text>
-          </Button>
-        </XStack>
+        <View style={styles.buttonContainer}>
+          <GradientButton
+            title={t('instructions.preparation.startBreathing') || 'Start Breathing Prep'}
+            onPress={handleStart}
+            gradient={gradients.button.primary}
+            style={styles.primaryButton}
+          />
+          <Pressable onPress={onSkip} style={styles.skipButton}>
+            <Text style={styles.skipButtonText}>
+              {t('instructions.preparation.skip') || 'Skip'}
+            </Text>
+          </Pressable>
+        </View>
       ) : (
-        <Button onPress={onComplete} style={styles.secondaryButton}>
-          <Text style={styles.secondaryButtonText}>Finish Early</Text>
-        </Button>
+        <Pressable onPress={onComplete} style={styles.skipButton}>
+          <Text style={styles.skipButtonText}>
+            {t('instructions.preparation.finishEarly') || 'Finish Early'}
+          </Text>
+        </Pressable>
       )}
-    </YStack>
+    </View>
   );
 };
 
@@ -346,20 +453,19 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
 // ══════════════════════════════════════════════════════════════
 
 interface IntentionStepProps {
+  instructionId: string;
   mentalPrep: PreSessionInstruction['mentalPreparation'];
   sessionTips: string[];
   intention: string;
   onIntentionChange: (text: string) => void;
   onBegin: () => void;
-}
-
-interface IntentionStepInternalProps extends IntentionStepProps {
   alwaysSkip: boolean;
   onToggleSkip: () => void;
   t: any;
 }
 
-const IntentionStep: React.FC<IntentionStepInternalProps> = ({
+const IntentionStep: React.FC<IntentionStepProps> = ({
+  instructionId,
   mentalPrep,
   sessionTips,
   intention,
@@ -370,37 +476,56 @@ const IntentionStep: React.FC<IntentionStepInternalProps> = ({
   t,
 }) => {
   return (
-    <YStack gap="$4">
-      <InstructionCard
-        icon="🎯"
-        title="Set Your Intention"
-        description="What would you like to cultivate in this session?"
-      />
+    <View style={styles.stepContainer}>
+      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Icon name="target" size={32} />
+          <Text style={styles.cardTitle}>
+            {t('instructions.preparation.setIntention') || 'Set Your Intention'}
+          </Text>
+        </View>
+        <Text style={styles.cardDescription}>
+          {t('instructions.preparation.intentionPrompt') || 'What would you like to cultivate in this session?'}
+        </Text>
+      </GradientCard>
 
-      {/* Intention Input (simplified - use TextInput in real implementation) */}
-      <YStack
-        style={{
-          backgroundColor: 'rgba(255,255,255,0.9)',
-          padding: 16,
-          borderRadius: 12,
-        }}
-      >
-        <Text style={{ fontSize: 14, color: '#666', marginBottom: 8 }}>
-          Your Intention (Optional)
+      {/* Intention Input */}
+      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+        <Text style={styles.inputLabel}>
+          {t('instructions.preparation.yourIntention') || 'Your Intention (Optional)'}
         </Text>
-        <Text style={{ fontSize: 16, fontStyle: 'italic', color: '#999' }}>
-          {intention || 'e.g., "Stay present with my breath"'}
-        </Text>
-        {/* TODO: Add TextInput here */}
-      </YStack>
+        <TextInput
+          style={styles.textInput}
+          placeholder={t('instructions.preparation.intentionPlaceholder') || 'e.g., "Stay present with my breath"'}
+          placeholderTextColor={theme.colors.text.tertiary}
+          value={intention}
+          onChangeText={onIntentionChange}
+          multiline
+        />
+      </GradientCard>
 
       {/* Session Tips */}
-      <InstructionCard
-        icon="✨"
-        title="During Your Session"
-        description="Keep these tips in mind:"
-        list={sessionTips}
-      />
+      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Icon name="sparkles" size={32} />
+          <Text style={styles.cardTitle}>
+            {t('instructions.preparation.duringSession') || 'During Your Session'}
+          </Text>
+        </View>
+        <Text style={styles.cardDescription}>
+          {t('instructions.preparation.keepInMind') || 'Keep these tips in mind:'}
+        </Text>
+        {[1, 2, 3, 4].map((num) => {
+          const tipText = t(`instructions.${instructionId}.sessionTips.${num}`, { defaultValue: '' });
+          if (!tipText) return null;
+          return (
+            <View key={num} style={styles.listItem}>
+              <Text style={styles.listBullet}>•</Text>
+              <Text style={styles.listText}>{tipText}</Text>
+            </View>
+          );
+        })}
+      </GradientCard>
 
       {/* Skip Instructions Checkbox */}
       <TouchableOpacity
@@ -430,58 +555,19 @@ const IntentionStep: React.FC<IntentionStepInternalProps> = ({
       </TouchableOpacity>
 
       {/* Begin Button */}
-      <Button onPress={onBegin} style={[styles.primaryButton, { marginTop: 16 }]}>
-        <Text style={[styles.primaryButtonText, { fontSize: 18, fontWeight: '700' }]}>
-          Begin Meditation
-        </Text>
-      </Button>
-    </YStack>
+      <GradientButton
+        title={t('instructions.preparation.beginMeditation') || 'Begin Meditation'}
+        onPress={onBegin}
+        gradient={gradients.button.primary}
+        style={[styles.primaryButton, styles.beginButton]}
+      />
+    </View>
   );
 };
 
 // ══════════════════════════════════════════════════════════════
 // Reusable Components
 // ══════════════════════════════════════════════════════════════
-
-const InstructionCard: React.FC<{
-  icon: string;
-  title: string;
-  description: string;
-  list?: string[];
-}> = ({ icon, title, description, list }) => {
-  return (
-    <YStack
-      style={{
-        backgroundColor: 'rgba(255,255,255,0.95)',
-        padding: 20,
-        borderRadius: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 3,
-      }}
-    >
-      <XStack style={{ alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 32, marginRight: 12 }}>{icon}</Text>
-        <Text style={{ fontSize: 18, fontWeight: '700', color: '#1a1a2e', flex: 1 }}>
-          {title}
-        </Text>
-      </XStack>
-      <Text style={{ fontSize: 15, color: '#4a5568', lineHeight: 24, marginBottom: list ? 12 : 0 }}>
-        {description}
-      </Text>
-      {list && list.map((item, index) => (
-        <XStack key={index} style={{ marginTop: 8 }}>
-          <Text style={{ color: '#667eea', marginRight: 8, fontWeight: '600' }}>•</Text>
-          <Text style={{ fontSize: 14, color: '#4a5568', lineHeight: 22, flex: 1 }}>
-            {item}
-          </Text>
-        </XStack>
-      ))}
-    </YStack>
-  );
-};
 
 const ChecklistItemCard: React.FC<{
   icon: string;
@@ -490,63 +576,53 @@ const ChecklistItemCard: React.FC<{
   isOptional: boolean;
   isCompleted: boolean;
   onToggle: () => void;
-}> = ({ icon, title, description, isOptional, isCompleted, onToggle }) => {
+  t: any;
+}> = ({ icon, title, description, isOptional, isCompleted, onToggle, t }) => {
   return (
-    <YStack
-      onPress={onToggle}
-      style={{
-        backgroundColor: isCompleted ? 'rgba(102,126,234,0.1)' : 'rgba(255,255,255,0.95)',
-        padding: 16,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: isCompleted ? '#667eea' : 'rgba(102,126,234,0.2)',
-      }}
-    >
-      <XStack style={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <XStack style={{ alignItems: 'center', flex: 1 }}>
-          <Text style={{ fontSize: 24, marginRight: 12 }}>{icon}</Text>
-          <YStack flex={1}>
-            <XStack style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: 16, fontWeight: '600', color: '#1a1a2e' }}>
-                {title}
-              </Text>
-              {isOptional && (
-                <Text
-                  style={{
-                    fontSize: 11,
-                    color: '#9ca3af',
-                    marginLeft: 8,
-                    fontStyle: 'italic',
-                  }}
-                >
-                  (optional)
+    <Pressable onPress={onToggle}>
+      <GradientCard
+        gradient={isCompleted ? gradients.card.blueCard : gradients.card.lightCard}
+        style={[styles.checklistCard, isCompleted && styles.checklistCardCompleted]}
+      >
+        <View style={styles.checklistContent}>
+          <View style={styles.checklistLeft}>
+            <Icon name={icon} size={24} color={isCompleted ? theme.colors.neutral.white : theme.colors.accent.blue[600]} />
+            <View style={styles.checklistText}>
+              <View style={styles.checklistTitleRow}>
+                <Text style={[styles.checklistTitle, isCompleted && styles.checklistTitleCompleted]}>
+                  {title}
                 </Text>
-              )}
-            </XStack>
-            <Text style={{ fontSize: 13, color: '#6b7280', marginTop: 4 }}>
-              {description}
-            </Text>
-          </YStack>
-        </XStack>
-        <Ionicons
-          name={isCompleted ? 'checkmark-circle' : 'ellipse-outline'}
-          size={28}
-          color={isCompleted ? '#667eea' : '#d1d5db'}
-        />
-      </XStack>
-    </YStack>
+                {isOptional && (
+                  <Text style={[styles.optionalBadge, isCompleted && styles.optionalBadgeCompleted]}>
+                    {t('instructions.preparation.optional') || '(optional)'}
+                  </Text>
+                )}
+              </View>
+              <Text style={[styles.checklistDescription, isCompleted && styles.checklistDescriptionCompleted]}>
+                {description}
+              </Text>
+            </View>
+          </View>
+          <Ionicons
+            name={isCompleted ? 'checkmark-circle' : 'ellipse-outline'}
+            size={28}
+            color={isCompleted ? theme.colors.neutral.white : theme.colors.accent.blue[400]}
+          />
+        </View>
+      </GradientCard>
+    </Pressable>
   );
 };
 
 const AnimatedBreathingCircle: React.FC<{
   isRunning: boolean;
   pattern: 'box' | '4-7-8' | 'equal' | 'calm';
-}> = ({ isRunning, pattern }) => {
+  t: any;
+}> = ({ isRunning, pattern, t }) => {
   const scale = useSharedValue(1);
 
   useEffect(() => {
     if (isRunning) {
-      // Different patterns have different timings
       const duration = pattern === 'box' ? 4000 : pattern === '4-7-8' ? 4000 : 4000;
       scale.value = withRepeat(
         withTiming(1.4, { duration, easing: Easing.inOut(Easing.ease) }),
@@ -563,66 +639,49 @@ const AnimatedBreathingCircle: React.FC<{
   }));
 
   return (
-    <YStack style={{ alignItems: 'center', justifyContent: 'center', height: 200 }}>
-      <Reanimated.View style={[animatedStyle]}>
-        <Circle
-          size={140}
-          style={{
-            backgroundColor: 'rgba(102,126,234,0.3)',
-            borderWidth: 3,
-            borderColor: '#667eea',
-          }}
-        />
+    <View style={styles.breathingContainer}>
+      <Reanimated.View style={[styles.breathingCircleWrapper, animatedStyle]}>
+        <View style={styles.breathingCircle} />
       </Reanimated.View>
       {isRunning && (
-        <Text
-          style={{
-            position: 'absolute',
-            fontSize: 18,
-            fontWeight: '600',
-            color: '#667eea',
-          }}
-        >
-          Breathe
+        <Text style={styles.breathingText}>
+          {t('instructions.preparation.breathe') || 'Breathe'}
         </Text>
       )}
-    </YStack>
+    </View>
   );
 };
 
-const StepProgress: React.FC<{ currentStep: string }> = ({ currentStep }) => {
+const StepProgress: React.FC<{ currentStep: string; t: any }> = ({ currentStep, t }) => {
   const steps = ['overview', 'setup', 'breathing', 'intention'];
   const currentIndex = steps.indexOf(currentStep);
 
   return (
-    <XStack style={{ justifyContent: 'space-between', marginVertical: 24, paddingHorizontal: 20 }}>
+    <View style={styles.progressContainer}>
       {steps.map((step, index) => {
         const isActive = index === currentIndex;
         const isComplete = index < currentIndex;
 
         return (
           <React.Fragment key={step}>
-            <Circle
-              size={12}
-              style={{
-                backgroundColor: isComplete || isActive ? '#667eea' : '#e5e7eb',
-              }}
+            <View
+              style={[
+                styles.progressDot,
+                (isComplete || isActive) && styles.progressDotActive,
+              ]}
             />
             {index < steps.length - 1 && (
-              <YStack
-                style={{
-                  flex: 1,
-                  height: 2,
-                  backgroundColor: isComplete ? '#667eea' : '#e5e7eb',
-                  marginHorizontal: 4,
-                  alignSelf: 'center',
-                }}
+              <View
+                style={[
+                  styles.progressLine,
+                  isComplete && styles.progressLineActive,
+                ]}
               />
             )}
           </React.Fragment>
         );
       })}
-    </XStack>
+    </View>
   );
 };
 
@@ -635,62 +694,213 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
+    padding: theme.spacing.lg,
+    paddingBottom: theme.spacing.xxxl,
   },
   header: {
-    marginBottom: 8,
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#1a1a2e',
-    marginBottom: 8,
+    fontSize: theme.typography.fontSizes.xxxl,
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.xs,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
-    color: '#6b7280',
+    fontSize: theme.typography.fontSizes.md,
+    color: theme.colors.text.secondary,
     textAlign: 'center',
-    fontWeight: '500',
+    fontWeight: theme.typography.fontWeights.medium,
+  },
+  stepContainer: {
+    gap: theme.spacing.md,
+  },
+  card: {
+    padding: theme.spacing.lg,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.md,
+    gap: theme.spacing.sm,
+  },
+  iconLarge: {
+    fontSize: 32,
+  },
+  iconMedium: {
+    fontSize: 24,
+  },
+  cardTitle: {
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+    flex: 1,
+  },
+  cardDescription: {
+    fontSize: theme.typography.fontSizes.md,
+    color: theme.colors.text.secondary,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.md,
+  },
+  listItem: {
+    flexDirection: 'row',
+    marginTop: theme.spacing.sm,
+    gap: theme.spacing.xs,
+  },
+  listBullet: {
+    color: theme.colors.accent.blue[600],
+    fontWeight: theme.typography.fontWeights.semiBold,
+    fontSize: theme.typography.fontSizes.md,
+  },
+  listText: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.sm,
+    flex: 1,
+  },
+  buttonContainer: {
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.md,
   },
   primaryButton: {
-    backgroundColor: '#667eea',
-    paddingVertical: 16,
-    borderRadius: 12,
-    shadowColor: '#667eea',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    width: '100%',
   },
-  primaryButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+  beginButton: {
+    marginTop: theme.spacing.lg,
   },
-  secondaryButton: {
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    paddingVertical: 16,
-    borderRadius: 12,
+  skipButton: {
+    paddingVertical: theme.spacing.md,
+    alignItems: 'center',
+  },
+  skipButtonText: {
+    fontSize: theme.typography.fontSizes.md,
+    color: theme.colors.text.secondary,
+    fontWeight: theme.typography.fontWeights.medium,
+    textDecorationLine: 'underline',
+  },
+  checklistCard: {
+    padding: theme.spacing.md,
+  },
+  checklistCardCompleted: {
     borderWidth: 2,
-    borderColor: 'rgba(102,126,234,0.3)',
+    borderColor: theme.colors.accent.blue[500],
   },
-  secondaryButtonText: {
-    color: '#667eea',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+  checklistContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  disabledButton: {
-    backgroundColor: '#d1d5db',
-    shadowOpacity: 0,
+  checklistLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: theme.spacing.sm,
+  },
+  checklistText: {
+    flex: 1,
+  },
+  checklistTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
+  checklistTitle: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+  },
+  checklistTitleCompleted: {
+    color: theme.colors.neutral.white,
+  },
+  checklistDescription: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    marginTop: theme.spacing.xxs,
+  },
+  checklistDescriptionCompleted: {
+    color: theme.colors.neutral.white,
+    opacity: 0.9,
+  },
+  optionalBadge: {
+    fontSize: theme.typography.fontSizes.xs,
+    color: theme.colors.text.tertiary,
+    fontStyle: 'italic',
+  },
+  optionalBadgeCompleted: {
+    color: theme.colors.neutral.white,
+    opacity: 0.8,
+  },
+  inputLabel: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    fontWeight: theme.typography.fontWeights.medium,
+    marginBottom: theme.spacing.xs,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: theme.colors.border.default,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.md,
+    fontSize: theme.typography.fontSizes.md,
+    color: theme.colors.text.primary,
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
+  breathingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 200,
+    marginVertical: theme.spacing.lg,
+  },
+  breathingCircleWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  breathingCircle: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: `${theme.colors.accent.blue[500]}30`,
+    borderWidth: 3,
+    borderColor: theme.colors.accent.blue[500],
+  },
+  breathingText: {
+    position: 'absolute',
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.accent.blue[600],
   },
   timerText: {
-    fontSize: 36,
-    fontWeight: '700',
-    color: '#667eea',
-    marginTop: 16,
+    fontSize: 48,
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.accent.blue[600],
+    marginVertical: theme.spacing.md,
+    textAlign: 'center',
+  },
+  progressContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.xl,
+  },
+  progressDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: theme.colors.neutral.gray[300],
+  },
+  progressDotActive: {
+    backgroundColor: theme.colors.accent.blue[500],
+  },
+  progressLine: {
+    flex: 1,
+    height: 2,
+    backgroundColor: theme.colors.neutral.gray[300],
+    marginHorizontal: theme.spacing.xxs,
+  },
+  progressLineActive: {
+    backgroundColor: theme.colors.accent.blue[500],
   },
 });

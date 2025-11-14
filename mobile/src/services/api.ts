@@ -22,7 +22,7 @@ export interface Quote {
 }
 
 export interface MeditationSession {
-  id: number;
+  id: number | string; // number for preset sessions, string for custom sessions
   title: string;
   titleKey?: string; // i18n translation key (e.g., "sessionsList.morningAwakening.title")
   languageCode: string;
@@ -87,6 +87,7 @@ export const api = {
     getAll: async (lang?: string): Promise<Quote[]> => {
       // Return mock data if enabled
       // NOTE: All quotes now have translations for all languages, so we don't filter by language
+      // The QuoteCard component handles showing the appropriate translation based on user's language
       if (USE_MOCK_DATA) {
         return Promise.resolve(MOCK_QUOTES);
       }
@@ -121,6 +122,11 @@ export const api = {
         let filtered = MOCK_SESSIONS;
         if (lang) {
           filtered = filtered.filter((s) => s.languageCode === lang);
+          // Fallback to English if no sessions found for requested language
+          if (filtered.length === 0) {
+            console.log(`[API] No sessions found for language '${lang}', falling back to English`);
+            filtered = MOCK_SESSIONS.filter((s) => s.languageCode === 'en');
+          }
         }
         if (level !== undefined) {
           filtered = filtered.filter((s) => s.level === level);

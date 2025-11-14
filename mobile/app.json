@@ -14,7 +14,12 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.slowspot.app"
+      "bundleIdentifier": "com.slowspot.app",
+      "infoPlist": {
+        "UIBackgroundModes": ["audio"],
+        "NSCalendarsUsageDescription": "We need access to your calendar to schedule meditation sessions.",
+        "NSRemindersUsageDescription": "We need access to your reminders to set meditation reminders."
+      }
     },
     "android": {
       "package": "com.slowspot.app",
@@ -23,7 +28,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "READ_CALENDAR",
+        "WRITE_CALENDAR"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,7 +44,9 @@
     },
     "owner": "leszekszpunar",
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-av",
+      "expo-calendar"
     ]
   }
 }

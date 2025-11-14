@@ -16,6 +16,7 @@ interface GradientCardProps {
   style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
   onPress?: () => void;
+  onLongPress?: () => void;
   disabled?: boolean;
 }
 
@@ -40,6 +41,7 @@ export const GradientCard = React.memo<GradientCardProps>(({
   style,
   children,
   onPress,
+  onLongPress,
   disabled,
 }) => {
   const cardContent = (
@@ -54,10 +56,11 @@ export const GradientCard = React.memo<GradientCardProps>(({
     </LinearGradient>
   );
 
-  if (onPress && !disabled) {
+  if ((onPress || onLongPress) && !disabled) {
     return (
       <TouchableOpacity
         onPress={onPress}
+        onLongPress={onLongPress}
         disabled={disabled}
         activeOpacity={0.8}
         style={styles.touchable}
