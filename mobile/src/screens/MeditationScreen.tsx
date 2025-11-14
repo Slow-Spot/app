@@ -3,15 +3,16 @@ import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-nativ
 import { useTranslation } from 'react-i18next';
 import { SessionCard } from '../components/SessionCard';
 import { MeditationTimer } from '../components/MeditationTimer';
-import { PreparationScreen } from '../components/PreparationScreen';
+import { PreSessionInstructions } from '../components/PreSessionInstructions';
 import { CelebrationScreen } from '../components/CelebrationScreen';
 import { GradientBackground } from '../components/GradientBackground';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
+import { getInstructionForSession } from '../data/instructions';
 import theme, { gradients } from '../theme';
 
-type FlowState = 'list' | 'preparation' | 'meditation' | 'celebration';
+type FlowState = 'list' | 'instructions' | 'meditation' | 'celebration';
 
 export const MeditationScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -19,6 +20,7 @@ export const MeditationScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | null>(null);
   const [flowState, setFlowState] = useState<FlowState>('list');
+  const [userIntention, setUserIntention] = useState('');
 
   useEffect(() => {
     loadSessions();
@@ -38,13 +40,14 @@ export const MeditationScreen: React.FC = () => {
 
   const handleStartSession = (session: MeditationSession) => {
     setSelectedSession(session);
-    setFlowState('preparation');
+    setFlowState('instructions');
   };
 
-  const handleReadyToStart = async () => {
-    if (!selectedSession) return;
-
+  const handleInstructionsComplete = async (intention: string) => {
+    setUserIntention(intention);
     setFlowState('meditation');
+
+    if (!selectedSession) return;
 
     try {
       // Load audio tracks if available
@@ -71,6 +74,11 @@ export const MeditationScreen: React.FC = () => {
     } catch (error) {
       console.error('Failed to start audio:', error);
     }
+  };
+
+  const handleSkipInstructions = () => {
+    setFlowState('list');
+    setSelectedSession(null);
   };
 
   const handleComplete = async () => {
@@ -119,6 +127,7 @@ export const MeditationScreen: React.FC = () => {
       await audioEngine.cleanup();
       setFlowState('list');
       setSelectedSession(null);
+      setUserIntention('');
     } catch (error) {
       console.error('Failed to cleanup after celebration:', error);
     }
@@ -153,9 +162,22 @@ export const MeditationScreen: React.FC = () => {
     []
   );
 
-  // Show preparation screen
-  if (flowState === 'preparation' && selectedSession) {
-    return <PreparationScreen onReady={handleReadyToStart} />;
+  // Show pre-session instructions
+  if (flowState === 'instructions' && selectedSession) {
+    const instruction = getInstructionForSession(
+      selectedSession.level,
+      'breath_awareness' // Default technique, can be mapped from session type
+    );
+
+    return (
+      <View style={{ flex: 1 }}>
+        <PreSessionInstructions
+          instruction={instruction}
+          onComplete={handleInstructionsComplete}
+          onSkip={handleSkipInstructions}
+        />
+      </View>
+    );
   }
 
   // Show meditation timer
