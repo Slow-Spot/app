@@ -84,8 +84,8 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>{instruction.title}</Text>
-          <Text style={styles.subtitle}>{instruction.subtitle}</Text>
+          <Text style={styles.title}>{t(`instructions.${instruction.id}.title`)}</Text>
+          <Text style={styles.subtitle}>{t(`instructions.${instruction.id}.subtitle`)}</Text>
         </View>
 
         {/* Progress Indicator */}
@@ -104,6 +104,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
 
         {currentStep === 'setup' && (
           <PhysicalSetupStep
+            instructionId={instruction.id}
             setup={instruction.physicalSetup}
             checklist={setupChecklist}
             onToggle={handleChecklistToggle}
@@ -115,6 +116,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
 
         {currentStep === 'breathing' && instruction.breathingPrep && (
           <BreathingPrepStep
+            instructionId={instruction.id}
             breathingPrep={instruction.breathingPrep}
             onComplete={() => {
               setBreathingPrepComplete(true);
@@ -127,6 +129,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
 
         {currentStep === 'intention' && (
           <IntentionStep
+            instructionId={instruction.id}
             mentalPrep={instruction.mentalPreparation}
             sessionTips={instruction.sessionTips}
             intention={userIntention}
@@ -177,7 +180,7 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
           </Text>
         </View>
         <Text style={styles.cardDescription}>
-          {instruction.mentalPreparation.intention}
+          {t(`instructions.${instruction.id}.intention`)}
         </Text>
       </GradientCard>
 
@@ -192,12 +195,16 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
         <Text style={styles.cardDescription}>
           {t('instructions.preparation.reminders') || 'Some reminders to keep in mind:'}
         </Text>
-        {instruction.mentalPreparation.commonChallenges.map((item, index) => (
-          <View key={index} style={styles.listItem}>
-            <Text style={styles.listBullet}>•</Text>
-            <Text style={styles.listText}>{item}</Text>
-          </View>
-        ))}
+        {[1, 2, 3].map((num) => {
+          const challengeText = t(`instructions.${instruction.id}.challenges.${num}`, { defaultValue: '' });
+          if (!challengeText) return null;
+          return (
+            <View key={num} style={styles.listItem}>
+              <Text style={styles.listBullet}>•</Text>
+              <Text style={styles.listText}>{challengeText}</Text>
+            </View>
+          );
+        })}
       </GradientCard>
 
       {/* Actions */}
@@ -223,6 +230,7 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
 // ══════════════════════════════════════════════════════════════
 
 interface PhysicalSetupStepProps {
+  instructionId: string;
   setup: PreSessionInstruction['physicalSetup'];
   checklist: ChecklistItem[];
   onToggle: (id: string) => void;
@@ -232,6 +240,7 @@ interface PhysicalSetupStepProps {
 }
 
 const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
+  instructionId,
   setup,
   checklist,
   onToggle,
@@ -257,12 +266,17 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
         const checklistItem = checklist.find((item) => item.id === step.order.toString());
         const isCompleted = checklistItem?.completed || false;
 
+        // Fetch translations using instruction ID and step order
+        const stepNum = step.order;
+        const title = t(`instructions.${instructionId}.physicalSetup.${stepNum}.title`);
+        const description = t(`instructions.${instructionId}.physicalSetup.${stepNum}.description`);
+
         return (
           <ChecklistItemCard
             key={step.order}
             icon={step.icon}
-            title={step.title}
-            description={step.description}
+            title={title}
+            description={description}
             isOptional={step.isOptional}
             isCompleted={isCompleted}
             onToggle={() => onToggle(step.order.toString())}
@@ -291,6 +305,7 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
 // ══════════════════════════════════════════════════════════════
 
 interface BreathingPrepStepProps {
+  instructionId: string;
   breathingPrep: NonNullable<PreSessionInstruction['breathingPrep']>;
   onComplete: () => void;
   onSkip: () => void;
@@ -298,6 +313,7 @@ interface BreathingPrepStepProps {
 }
 
 const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
+  instructionId,
   breathingPrep,
   onComplete,
   onSkip,
@@ -336,7 +352,7 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
             {t('instructions.preparation.breathingExercise') || 'Quick Breathing Exercise'}
           </Text>
         </View>
-        <Text style={styles.cardDescription}>{breathingPrep.instruction}</Text>
+        <Text style={styles.cardDescription}>{t(`instructions.${instructionId}.breathingPrep.instruction`)}</Text>
       </GradientCard>
 
       {/* Animated Breathing Circle */}
@@ -384,6 +400,7 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
 // ══════════════════════════════════════════════════════════════
 
 interface IntentionStepProps {
+  instructionId: string;
   mentalPrep: PreSessionInstruction['mentalPreparation'];
   sessionTips: string[];
   intention: string;
@@ -393,6 +410,7 @@ interface IntentionStepProps {
 }
 
 const IntentionStep: React.FC<IntentionStepProps> = ({
+  instructionId,
   mentalPrep,
   sessionTips,
   intention,
@@ -440,12 +458,16 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
         <Text style={styles.cardDescription}>
           {t('instructions.preparation.keepInMind') || 'Keep these tips in mind:'}
         </Text>
-        {sessionTips.map((tip, index) => (
-          <View key={index} style={styles.listItem}>
-            <Text style={styles.listBullet}>•</Text>
-            <Text style={styles.listText}>{tip}</Text>
-          </View>
-        ))}
+        {[1, 2, 3, 4].map((num) => {
+          const tipText = t(`instructions.${instructionId}.sessionTips.${num}`, { defaultValue: '' });
+          if (!tipText) return null;
+          return (
+            <View key={num} style={styles.listItem}>
+              <Text style={styles.listBullet}>•</Text>
+              <Text style={styles.listText}>{tipText}</Text>
+            </View>
+          );
+        })}
       </GradientCard>
 
       {/* Begin Button */}
