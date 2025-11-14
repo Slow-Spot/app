@@ -273,13 +273,19 @@
     "system": "Systemowy",
     "notifications": "Powiadomienia",
     "reminderTime": "Czas Przypomnienia",
-    "about": "O Aplikacji"
+    "about": "O Aplikacji",
+    "viewProfile": "Zobacz Profil",
+    "viewProfileDescription": "Zobacz swój postęp i statystyki"
   },
   "navigation": {
     "home": "Główna",
     "meditate": "Medytacja",
     "quotes": "Cytaty",
     "settings": "Ustawienia"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Anuluj"
   },
   "custom": {
     "title": "Własna Sesja",
@@ -307,6 +313,64 @@
     "wakeUpChimeDescription": "Delikatny dzwonek na zakończenie sesji",
     "voiceGuidance": "Głos Prowadzący",
     "voiceGuidanceDescription": "Prowadzenie głosowe podczas medytacji",
-    "startSession": "Rozpocznij Sesję"
+    "startSession": "Rozpocznij Sesję",
+    "saveError": "Błąd",
+    "sessionNameRequired": "Proszę podać nazwę sesji przed zapisaniem",
+    "saveSuccess": "Sukces",
+    "sessionUpdated": "Twoja sesja została zaktualizowana pomyślnie!",
+    "sessionSaved": "Twoja sesja została zapisana pomyślnie!",
+    "startNow": "Rozpocznij Teraz",
+    "backToList": "Powrót do Listy",
+    "saveFailed": "Nie udało się zapisać sesji. Spróbuj ponownie",
+    "sessionOptions": "Co chcesz zrobić?",
+    "editSession": "Edytuj",
+    "deleteSession": "Usuń",
+    "editNotImplemented": "Funkcja edycji będzie dostępna po podłączeniu do ekranu budowania sesji",
+    "deleteConfirmTitle": "Usuń Sesję",
+    "deleteConfirmMessage": "Czy na pewno chcesz usunąć tę sesję?",
+    "delete": "Usuń",
+    "deleteError": "Błąd",
+    "deleteFailed": "Nie udało się usunąć sesji. Spróbuj ponownie",
+    "customSession": "własna sesja",
+    "customSessions": "własne sesje"
+  },
+  "profile": {
+    "title": "Twój Profil",
+    "statistics": "Statystyki",
+    "totalSessions": "Wszystkie Sesje",
+    "totalMinutes": "Suma Minut",
+    "currentStreak": "Aktualna Passa",
+    "longestStreak": "Najdłuższa Passa",
+    "days": "dni",
+    "recentSessions": "Ostatnie Sesje",
+    "customSessions": "Moje Własne Sesje",
+    "noSessionsYet": "Nie ukończono jeszcze żadnej sesji",
+    "startMeditating": "Rozpocznij swoją pierwszą medytację!",
+    "today": "Dziś",
+    "yesterday": "Wczoraj",
+    "thisWeek": "Ten Tydzień",
+    "earlier": "Wcześniej",
+    "manageCustomSessions": "Zarządzaj Własnymi Sesjami",
+    "custom": "Własna",
+    "saved": "zapisane",
+    "justNow": "Właśnie teraz",
+    "minutesAgo": "{{count}}m temu",
+    "hoursAgo": "{{count}}h temu",
+    "daysAgo": "{{count}}d temu"
+  },
+  "calendar": {
+    "title": "Integracja z kalendarzem",
+    "scheduleReminder": "Zaplanuj codzienną medytację",
+    "selectTime": "Wybierz godzinę",
+    "daily": "Codziennie",
+    "cancel": "Anuluj",
+    "save": "Zapisz przypomnienie",
+    "permissionDenied": "Brak dostępu do kalendarza",
+    "permissionMessage": "Proszę włączyć dostęp do kalendarza w Ustawieniach",
+    "reminderSet": "Przypomnienie ustawione!",
+    "reminderCanceled": "Przypomnienie anulowane",
+    "currentReminder": "Aktywne przypomnienie",
+    "noReminder": "Brak aktywnego przypomnienia",
+    "at": "o"
   }
 }

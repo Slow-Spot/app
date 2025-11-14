@@ -30,9 +30,15 @@ interface SettingsScreenProps {
   isDark: boolean;
   themeMode: ThemeMode;
   onThemeChange: (mode: ThemeMode) => void;
+  onNavigateToProfile?: () => void;
 }
 
-export const SettingsScreen: React.FC<SettingsScreenProps> = ({ isDark, themeMode, onThemeChange }) => {
+export const SettingsScreen: React.FC<SettingsScreenProps> = ({
+  isDark,
+  themeMode,
+  onThemeChange,
+  onNavigateToProfile
+}) => {
   const { t, i18n } = useTranslation();
 
   const handleLanguageChange = async (languageCode: string) => {
@@ -54,6 +60,39 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ isDark, themeMod
         <Text style={styles.title}>
           {t('settings.title')}
         </Text>
+
+        {/* Profile Navigation */}
+        {onNavigateToProfile && (
+          <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
+            <TouchableOpacity
+              style={styles.profileButton}
+              onPress={onNavigateToProfile}
+              accessibilityLabel={t('settings.viewProfile') || 'View Profile'}
+              accessibilityRole="button"
+            >
+              <View style={styles.profileButtonContent}>
+                <Ionicons
+                  name="person-circle"
+                  size={32}
+                  color={theme.colors.accent.blue[600]}
+                />
+                <View style={styles.profileButtonText}>
+                  <Text style={styles.profileButtonTitle}>
+                    {t('settings.viewProfile') || 'View Profile'}
+                  </Text>
+                  <Text style={styles.profileButtonSubtitle}>
+                    {t('settings.viewProfileDescription') || 'See your progress and statistics'}
+                  </Text>
+                </View>
+              </View>
+              <Ionicons
+                name="chevron-forward"
+                size={24}
+                color={theme.colors.text.tertiary}
+              />
+            </TouchableOpacity>
+          </GradientCard>
+        )}
 
         {/* Language Selection */}
         <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
@@ -260,5 +299,34 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes.xs,
     color: theme.colors.text.tertiary,
     marginTop: theme.spacing.sm,
+  },
+  profileButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing.md,
+    backgroundColor: theme.colors.background.tertiary,
+    borderWidth: 1,
+    borderColor: theme.colors.border.light,
+    borderRadius: theme.borderRadius.md,
+  },
+  profileButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.md,
+    flex: 1,
+  },
+  profileButtonText: {
+    flex: 1,
+    gap: theme.spacing.xs,
+  },
+  profileButtonTitle: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+  },
+  profileButtonSubtitle: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
   },
 });

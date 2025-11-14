@@ -273,13 +273,19 @@
     "system": "System",
     "notifications": "Notifications",
     "reminderTime": "Reminder Time",
-    "about": "About"
+    "about": "About",
+    "viewProfile": "View Profile",
+    "viewProfileDescription": "See your progress and statistics"
   },
   "navigation": {
     "home": "Home",
     "meditate": "Meditate",
     "quotes": "Quotes",
     "settings": "Settings"
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel"
   },
   "custom": {
     "title": "Custom Session",
@@ -307,6 +313,64 @@
     "wakeUpChimeDescription": "Gentle chime at the end of your session",
     "voiceGuidance": "Voice Guidance",
     "voiceGuidanceDescription": "Spoken guidance during meditation",
-    "startSession": "Start Session"
+    "startSession": "Start Session",
+    "saveError": "Error",
+    "sessionNameRequired": "Please enter a session name before saving",
+    "saveSuccess": "Success",
+    "sessionUpdated": "Your session has been updated successfully!",
+    "sessionSaved": "Your session has been saved successfully!",
+    "startNow": "Start Now",
+    "backToList": "Back to List",
+    "saveFailed": "Failed to save session. Please try again",
+    "sessionOptions": "What would you like to do?",
+    "editSession": "Edit",
+    "deleteSession": "Delete",
+    "editNotImplemented": "Edit functionality will be available when connected to the builder screen",
+    "deleteConfirmTitle": "Delete Session",
+    "deleteConfirmMessage": "Are you sure you want to delete this session?",
+    "delete": "Delete",
+    "deleteError": "Error",
+    "deleteFailed": "Failed to delete session. Please try again",
+    "customSession": "custom session",
+    "customSessions": "custom sessions"
+  },
+  "profile": {
+    "title": "Your Profile",
+    "statistics": "Statistics",
+    "totalSessions": "Total Sessions",
+    "totalMinutes": "Total Minutes",
+    "currentStreak": "Current Streak",
+    "longestStreak": "Longest Streak",
+    "days": "days",
+    "recentSessions": "Recent Sessions",
+    "customSessions": "My Custom Sessions",
+    "noSessionsYet": "No sessions completed yet",
+    "startMeditating": "Start your first meditation!",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This Week",
+    "earlier": "Earlier",
+    "manageCustomSessions": "Manage Custom Sessions",
+    "custom": "Custom",
+    "saved": "saved",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago"
+  },
+  "calendar": {
+    "title": "Calendar Integration",
+    "scheduleReminder": "Schedule Daily Meditation",
+    "selectTime": "Select Time",
+    "daily": "Daily",
+    "cancel": "Cancel",
+    "save": "Save Reminder",
+    "permissionDenied": "Calendar permission denied",
+    "permissionMessage": "Please enable calendar access in Settings",
+    "reminderSet": "Reminder set successfully!",
+    "reminderCanceled": "Reminder canceled",
+    "currentReminder": "Current Reminder",
+    "noReminder": "No active reminder",
+    "at": "at"
   }
 }

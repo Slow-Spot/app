@@ -13,8 +13,9 @@ import { MeditationScreen } from './src/screens/MeditationScreen';
 import { QuotesScreen } from './src/screens/QuotesScreen';
 import { SettingsScreen, THEME_STORAGE_KEY, ThemeMode } from './src/screens/SettingsScreen';
 import { CustomSessionBuilderScreen, CustomSessionConfig } from './src/screens/CustomSessionBuilderScreen';
+import { ProfileScreen } from './src/screens/ProfileScreen';
 
-type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom';
+type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
@@ -79,7 +80,16 @@ export default function App() {
       case 'quotes':
         return <QuotesScreen />;
       case 'settings':
-        return <SettingsScreen isDark={isDark} themeMode={themeMode} onThemeChange={handleThemeChange} />;
+        return (
+          <SettingsScreen
+            isDark={isDark}
+            themeMode={themeMode}
+            onThemeChange={handleThemeChange}
+            onNavigateToProfile={() => setCurrentScreen('profile')}
+          />
+        );
+      case 'profile':
+        return <ProfileScreen onNavigateToCustom={() => setCurrentScreen('custom')} />;
       case 'custom':
         return (
           <CustomSessionBuilderScreen
