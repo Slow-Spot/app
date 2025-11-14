@@ -12,14 +12,21 @@
     },
     "preview": {
       "distribution": "internal",
+      "channel": "preview",
       "ios": {
-        "simulator": false
+        "simulator": false,
+        "resourceClass": "m-medium"
       },
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
       }
     },
     "production": {
+      "channel": "production",
+      "ios": {
+        "resourceClass": "m-medium"
+      },
       "android": {
         "buildType": "apk"
       }
