@@ -46,12 +46,11 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   useEffect(() => {
     const loadSound = async () => {
       try {
-        // TODO: Add chime.mp3 file to assets/sounds/
-        // const { sound } = await Audio.Sound.createAsync(
-        //   require('../../assets/sounds/chime.mp3')
-        // );
-        // chimeSound.current = sound;
-        console.log('Chime sound loading disabled - add chime.mp3 to assets/sounds/');
+        const { sound } = await Audio.Sound.createAsync(
+          require('../../assets/sounds/meditation-bell.mp3')
+        );
+        chimeSound.current = sound;
+        console.log('Meditation bell sound loaded successfully');
       } catch (error) {
         console.error('Error loading chime sound:', error);
       }
