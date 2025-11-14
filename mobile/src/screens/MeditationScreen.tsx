@@ -3,9 +3,11 @@ import { YStack, H2, ScrollView, Spinner } from 'tamagui';
 import { useTranslation } from 'react-i18next';
 import { SessionCard } from '../components/SessionCard';
 import { MeditationTimer } from '../components/MeditationTimer';
+import { PreSessionInstructions } from '../components/PreSessionInstructions';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
+import { getInstructionForSession } from '../data/instructions';
 
 export const MeditationScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -13,6 +15,8 @@ export const MeditationScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | null>(null);
   const [isActive, setIsActive] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [userIntention, setUserIntention] = useState('');
 
   useEffect(() => {
     loadSessions();
@@ -30,35 +34,48 @@ export const MeditationScreen: React.FC = () => {
     }
   };
 
-  const handleStartSession = async (session: MeditationSession) => {
+  const handleSelectSession = (session: MeditationSession) => {
     setSelectedSession(session);
+    setShowInstructions(true);
+  };
+
+  const handleInstructionsComplete = async (intention: string) => {
+    setUserIntention(intention);
+    setShowInstructions(false);
     setIsActive(true);
+
+    if (!selectedSession) return;
 
     try {
       // Load audio tracks if available
-      if (session.voiceUrl) {
-        await audioEngine.loadTrack('voice', session.voiceUrl, 0.8);
+      if (selectedSession.voiceUrl) {
+        await audioEngine.loadTrack('voice', selectedSession.voiceUrl, 0.8);
       }
-      if (session.ambientUrl) {
-        await audioEngine.loadTrack('ambient', session.ambientUrl, 0.4);
+      if (selectedSession.ambientUrl) {
+        await audioEngine.loadTrack('ambient', selectedSession.ambientUrl, 0.4);
       }
-      if (session.chimeUrl) {
-        await audioEngine.loadTrack('chime', session.chimeUrl, 0.6);
+      if (selectedSession.chimeUrl) {
+        await audioEngine.loadTrack('chime', selectedSession.chimeUrl, 0.6);
       }
 
       // Start with chime, then fade in ambient
-      if (session.chimeUrl) {
+      if (selectedSession.chimeUrl) {
         await audioEngine.play('chime');
       }
-      if (session.ambientUrl) {
+      if (selectedSession.ambientUrl) {
         await audioEngine.fadeIn('ambient', 3000);
       }
-      if (session.voiceUrl) {
+      if (selectedSession.voiceUrl) {
         setTimeout(() => audioEngine.play('voice'), 5000);
       }
     } catch (error) {
       console.error('Failed to start audio:', error);
     }
+  };
+
+  const handleSkipInstructions = () => {
+    setShowInstructions(false);
+    setSelectedSession(null);
   };
 
   const handleComplete = async () => {
@@ -104,6 +121,25 @@ export const MeditationScreen: React.FC = () => {
     }
   };
 
+  // Show Pre-Session Instructions
+  if (showInstructions && selectedSession) {
+    const instruction = getInstructionForSession(
+      selectedSession.level,
+      'breath_awareness' // Default technique, can be mapped from session type
+    );
+
+    return (
+      <YStack flex={1}>
+        <PreSessionInstructions
+          instruction={instruction}
+          onComplete={handleInstructionsComplete}
+          onSkip={handleSkipInstructions}
+        />
+      </YStack>
+    );
+  }
+
+  // Show Meditation Timer (active session)
   if (isActive && selectedSession) {
     return (
       <YStack flex={1} background="$background">
@@ -116,6 +152,7 @@ export const MeditationScreen: React.FC = () => {
     );
   }
 
+  // Show Session List
   return (
     <ScrollView>
       <YStack flex={1} p="$6" gap="$6" background="$background">
@@ -133,7 +170,7 @@ export const MeditationScreen: React.FC = () => {
               <SessionCard
                 key={session.id}
                 session={session}
-                onPress={() => handleStartSession(session)}
+                onPress={() => handleSelectSession(session)}
               />
             ))}
           </YStack>
