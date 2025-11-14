@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MOCK_QUOTES, MOCK_SESSIONS } from './mockData';
 
 const API_BASE_URL = 'http://localhost:5019/api'; // Will be replaced with Railway URL in production
+const USE_MOCK_DATA = true; // Enable mock data for offline development
 
 export interface Quote {
   id: number;
@@ -24,6 +26,9 @@ export interface MeditationSession {
   level: number;
   description?: string;
   createdAt: string;
+  // Healing frequency metadata (432Hz for ambient, 528Hz for chimes)
+  ambientFrequency?: number; // Default: 432Hz (natural harmonic)
+  chimeFrequency?: number; // Default: 528Hz (love/healing frequency)
 }
 
 // Offline-first architecture: Try cache first, then API
@@ -71,6 +76,13 @@ const fetchWithCache = async <T>(
 export const api = {
   quotes: {
     getAll: async (lang?: string): Promise<Quote[]> => {
+      // Return mock data if enabled
+      if (USE_MOCK_DATA) {
+        return Promise.resolve(
+          lang ? MOCK_QUOTES.filter((q) => q.languageCode === lang) : MOCK_QUOTES
+        );
+      }
+
       const url = lang
         ? `${API_BASE_URL}/quotes?lang=${lang}`
         : `${API_BASE_URL}/quotes`;
@@ -78,6 +90,13 @@ export const api = {
     },
 
     getRandom: async (lang: string = 'en'): Promise<Quote> => {
+      // Return mock data if enabled
+      if (USE_MOCK_DATA) {
+        const filtered = MOCK_QUOTES.filter((q) => q.languageCode === lang);
+        const randomIndex = Math.floor(Math.random() * filtered.length);
+        return Promise.resolve(filtered[randomIndex] || MOCK_QUOTES[0]);
+      }
+
       const url = `${API_BASE_URL}/quotes/random?lang=${lang}`;
       const response = await fetch(url);
       if (!response.ok) {
@@ -89,6 +108,18 @@ export const api = {
 
   sessions: {
     getAll: async (lang?: string, level?: number): Promise<MeditationSession[]> => {
+      // Return mock data if enabled
+      if (USE_MOCK_DATA) {
+        let filtered = MOCK_SESSIONS;
+        if (lang) {
+          filtered = filtered.filter((s) => s.languageCode === lang);
+        }
+        if (level !== undefined) {
+          filtered = filtered.filter((s) => s.level === level);
+        }
+        return Promise.resolve(filtered);
+      }
+
       let url = `${API_BASE_URL}/sessions`;
       const params = new URLSearchParams();
       if (lang) params.append('lang', lang);
@@ -102,6 +133,15 @@ export const api = {
     },
 
     getById: async (id: number): Promise<MeditationSession> => {
+      // Return mock data if enabled
+      if (USE_MOCK_DATA) {
+        const session = MOCK_SESSIONS.find((s) => s.id === id);
+        if (session) {
+          return Promise.resolve(session);
+        }
+        throw new Error(`Session ${id} not found`);
+      }
+
       const url = `${API_BASE_URL}/sessions/${id}`;
       return fetchWithCache(`session_${id}`, url);
     },

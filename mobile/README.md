@@ -1,25 +1,53 @@
 # Slow Spot Mobile App
 
-A minimalist meditation and mindfulness mobile application built with **Expo**, **React Native**, and **Tamagui**.
+Aplikacja mobilna do medytacji i mindfulness zbudowana z **Expo**, **React Native**, i **NativeWind**.
 
-## Features
+## 🚀 Szybki start
 
-- 🧘 **Meditation Sessions**: Guided meditation with voice, ambient sounds, and interval chimes
-- 💭 **Inspirational Quotes**: Daily quotes in 6 languages
-- 🌍 **Multilingual**: Full support for English, Polish, Spanish, German, French, and Hindi
-- 🎨 **Beautiful UI**: Minimalist design with Tamagui (performance-focused UI framework)
-- 📱 **Offline-First**: Works without internet connection with smart caching
-- 🎵 **3-Layer Audio**: Voice guidance + ambient sounds + meditation chimes
+### Testowanie przez Expo Go (0 minut setup)
+```bash
+./start-expo-go.sh
+```
+📖 Dokumentacja: [EXPO_GO_TESTING.md](./EXPO_GO_TESTING.md)
 
-## Tech Stack
+### Development na symulatorze
+```bash
+npx expo run:ios          # iOS
+npx expo run:android      # Android
+```
 
-- **Framework**: Expo SDK 54 + React Native
-- **UI Library**: Tamagui (performance-optimized, minimalist design)
+### Budowanie aplikacji
+📖 Pełna dokumentacja: [BUILD_AND_DEPLOY.md](../BUILD_AND_DEPLOY.md)
+
+## 📚 Dokumentacja
+
+- **[EXPO_GO_TESTING.md](./EXPO_GO_TESTING.md)** - Najszybszy sposób testowania (Expo Go)
+- **[BUILD_AND_DEPLOY.md](../BUILD_AND_DEPLOY.md)** - Budowanie i dystrybucja (APK, IPA, sklepy)
+- **[IMPLEMENTATION-CHECKLIST.md](../architecture/IMPLEMENTATION-CHECKLIST.md)** - Progress MVP
+- **[RESOURCES.md](../RESOURCES.md)** - Darmowe assety (ikony, dźwięki)
+
+## ✨ Features
+
+- 🧘 **Sesje medytacji**: Guided meditation z timerem i chimes
+- 💭 **Cytaty inspirujące**: Codzienne cytaty w 6 językach
+- 🌍 **6 języków**: EN, PL, ES, DE, FR, HI
+- 🎨 **Piękny UI**: Minimalistyczny design z gradientami
+- 📱 **Offline-First**: Działa bez internetu (w planach)
+- 🎵 **3-Layer Audio**: Voice + ambient + meditation chimes
+- 🌙 **Dark mode**: Light/Dark/System theme
+- ♿ **Accessibility**: VoiceOver i TalkBack support
+
+## 🛠 Tech Stack
+
+- **Framework**: Expo SDK 54 + React Native 0.81
+- **UI**: NativeWind (Tailwind CSS for RN) + gradients
 - **Language**: TypeScript
-- **i18n**: react-i18next with expo-localization
-- **Audio**: expo-av (3-layer audio engine)
-- **Storage**: @react-native-async-storage/async-storage
-- **State Management**: React hooks (useState, useEffect)
+- **Navigation**: Expo Router (React Navigation)
+- **i18n**: react-i18next + expo-localization
+- **Audio**: expo-av (⚠️ deprecated → migrate to expo-audio)
+- **Animations**: React Native Reanimated 4 (60fps)
+- **Storage**: AsyncStorage + SQLite (planned)
+- **State**: Zustand stores
 
 ## Project Structure
 

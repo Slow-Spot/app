@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { YStack, H2, ScrollView, Spinner } from 'tamagui';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SessionCard } from '../components/SessionCard';
 import { MeditationTimer } from '../components/MeditationTimer';
 import { PreSessionInstructions } from '../components/PreSessionInstructions';
+import { CelebrationScreen } from '../components/CelebrationScreen';
+import { GradientBackground } from '../components/GradientBackground';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
 import { getInstructionForSession } from '../data/instructions';
+import theme, { gradients } from '../theme';
+
+type FlowState = 'list' | 'instructions' | 'meditation' | 'celebration';
 
 export const MeditationScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [sessions, setSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | null>(null);
-  const [isActive, setIsActive] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
+  const [flowState, setFlowState] = useState<FlowState>('list');
   const [userIntention, setUserIntention] = useState('');
 
   useEffect(() => {
@@ -34,15 +38,14 @@ export const MeditationScreen: React.FC = () => {
     }
   };
 
-  const handleSelectSession = (session: MeditationSession) => {
+  const handleStartSession = (session: MeditationSession) => {
     setSelectedSession(session);
-    setShowInstructions(true);
+    setFlowState('instructions');
   };
 
   const handleInstructionsComplete = async (intention: string) => {
     setUserIntention(intention);
-    setShowInstructions(false);
-    setIsActive(true);
+    setFlowState('meditation');
 
     if (!selectedSession) return;
 
@@ -74,7 +77,7 @@ export const MeditationScreen: React.FC = () => {
   };
 
   const handleSkipInstructions = () => {
-    setShowInstructions(false);
+    setFlowState('list');
     setSelectedSession(null);
   };
 
@@ -99,11 +102,9 @@ export const MeditationScreen: React.FC = () => {
       await audioEngine.fadeOut('voice', 2000);
       await audioEngine.fadeOut('ambient', 3000);
 
-      // Cleanup
-      setTimeout(async () => {
-        await audioEngine.cleanup();
-        setIsActive(false);
-        setSelectedSession(null);
+      // Move to celebration screen
+      setTimeout(() => {
+        setFlowState('celebration');
       }, 3000);
     } catch (error) {
       console.error('Failed to complete session:', error);
@@ -114,68 +115,145 @@ export const MeditationScreen: React.FC = () => {
     try {
       await audioEngine.stopAll();
       await audioEngine.cleanup();
-      setIsActive(false);
+      setFlowState('list');
       setSelectedSession(null);
     } catch (error) {
       console.error('Failed to cancel session:', error);
     }
   };
 
-  // Show Pre-Session Instructions
-  if (showInstructions && selectedSession) {
+  const handleCelebrationContinue = async () => {
+    try {
+      await audioEngine.cleanup();
+      setFlowState('list');
+      setSelectedSession(null);
+      setUserIntention('');
+    } catch (error) {
+      console.error('Failed to cleanup after celebration:', error);
+    }
+  };
+
+  // ✨ FlatList optimization - Memoized render functions
+  const renderItem = useCallback(
+    ({ item }: { item: MeditationSession }) => (
+      <SessionCard session={item} onPress={() => handleStartSession(item)} />
+    ),
+    []
+  );
+
+  const keyExtractor = useCallback((item: MeditationSession) => item.id, []);
+
+  const renderListHeader = useCallback(
+    () => (
+      <View style={styles.header}>
+        <Text style={styles.title}>{t('meditation.title')}</Text>
+        <Text style={styles.subtitle}>{t('meditation.subtitle')}</Text>
+      </View>
+    ),
+    [t]
+  );
+
+  const renderListEmpty = useCallback(
+    () => (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color={theme.colors.accent.blue[500]} />
+      </View>
+    ),
+    []
+  );
+
+  // Show pre-session instructions
+  if (flowState === 'instructions' && selectedSession) {
     const instruction = getInstructionForSession(
       selectedSession.level,
       'breath_awareness' // Default technique, can be mapped from session type
     );
 
     return (
-      <YStack flex={1}>
+      <View style={{ flex: 1 }}>
         <PreSessionInstructions
           instruction={instruction}
           onComplete={handleInstructionsComplete}
           onSkip={handleSkipInstructions}
         />
-      </YStack>
+      </View>
     );
   }
 
-  // Show Meditation Timer (active session)
-  if (isActive && selectedSession) {
+  // Show meditation timer
+  if (flowState === 'meditation' && selectedSession) {
     return (
-      <YStack flex={1} background="$background">
+      <GradientBackground gradient={gradients.screen.timer} style={styles.container}>
         <MeditationTimer
           totalSeconds={selectedSession.durationSeconds}
           onComplete={handleComplete}
           onCancel={handleCancel}
         />
-      </YStack>
+      </GradientBackground>
     );
   }
 
-  // Show Session List
-  return (
-    <ScrollView>
-      <YStack flex={1} p="$6" gap="$6" background="$background">
-        <H2 size="$8" fontWeight="400" color="$color" pt="$4">
-          {t('meditation.title')}
-        </H2>
+  // Show celebration screen
+  if (flowState === 'celebration' && selectedSession) {
+    return (
+      <CelebrationScreen
+        durationMinutes={Math.ceil(selectedSession.durationSeconds / 60)}
+        sessionTitle={selectedSession.title}
+        onContinue={handleCelebrationContinue}
+      />
+    );
+  }
 
-        {loading ? (
-          <YStack p="$8" style={{ alignItems: 'center' }}>
-            <Spinner size="large" color={"$primary" as any} />
-          </YStack>
-        ) : (
-          <YStack gap="$4">
-            {sessions.map((session) => (
-              <SessionCard
-                key={session.id}
-                session={session}
-                onPress={() => handleSelectSession(session)}
-              />
-            ))}
-          </YStack>
-        )}
-      </YStack>
-    </ScrollView>
+  // Default: show session list
+  return (
+    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+      <FlatList
+        data={loading ? [] : sessions}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        ListHeaderComponent={renderListHeader}
+        ListEmptyComponent={loading ? renderListEmpty : null}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={5}
+        maxToRenderPerBatch={3}
+        windowSize={5}
+        removeClippedSubviews={true}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
+    </GradientBackground>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  listContent: {
+    padding: theme.layout.screenPadding,
+    paddingBottom: theme.spacing.xxxl,
+    flexGrow: 1,
+  },
+  header: {
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.md,
+  },
+  title: {
+    fontSize: theme.typography.fontSizes.hero,
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.xs,
+  },
+  subtitle: {
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.regular,
+    color: theme.colors.text.secondary,
+  },
+  loader: {
+    paddingVertical: theme.spacing.xxl,
+    alignItems: 'center',
+  },
+  separator: {
+    height: theme.spacing.md,
+  },
+});

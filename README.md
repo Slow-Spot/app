@@ -2,6 +2,31 @@
 
 **Unikatowa aplikacja do medytacji z naciskiem na prostotę, wielojęzyczność i prywatność.**
 
+## 🚀 Try It Now
+
+<div align="center">
+
+### Testuj aplikację na swoim telefonie
+
+**Krok 1:** Zainstaluj Expo Go
+- [📱 iOS (App Store)](https://apps.apple.com/app/expo-go/id982107779)
+- [🤖 Android (Google Play)](https://play.google.com/store/apps/details?id=host.exp.exponent)
+
+**Krok 2:** Uruchom lokalnie
+
+```bash
+cd mobile
+./start-expo-go.sh
+```
+
+Lub zeskanuj QR kod wygenerowany w terminalu!
+
+📖 **[Pełna instrukcja testowania](./mobile/EXPO_GO_TESTING.md)**
+
+</div>
+
+---
+
 ## 🎯 O Projekcie
 
 Slow Spot to wieloplatformowa aplikacja do medytacji, która wyróżnia się:
@@ -86,13 +111,24 @@ npm run dev
 
 ## 📖 Dokumentacja
 
-Pełna dokumentacja architektury znajduje się w folderze `/architecture`:
+### 🚀 Quick Start & Testing
+- **[EXPO_GO_TESTING.md](./mobile/EXPO_GO_TESTING.md)** - Testowanie przez Expo Go (0 minut setup!)
+- **[BUILD_AND_DEPLOY.md](./BUILD_AND_DEPLOY.md)** - Pełny przewodnik budowania i dystrybucji
+- **[mobile/README.md](./mobile/README.md)** - Dokumentacja aplikacji mobilnej
 
-- **[README.md](./architecture/README.md)** - Przegląd architektury
+### 🏗️ Architektura
+- **[architecture/README.md](./architecture/README.md)** - Przegląd architektury
+- **[IMPLEMENTATION-CHECKLIST.md](./architecture/IMPLEMENTATION-CHECKLIST.md)** - MVP Checklist (co zrobione)
+- **[TECHNOLOGY-STACK.md](./architecture/TECHNOLOGY-STACK.md)** - Stack technologiczny
 - **[ADR-001](./architecture/ADR-001-system-architecture.md)** - Szczegółowa architektura systemu
+
+### 💰 Biznes & Bezpieczeństwo
 - **[Cost Analysis](./architecture/cost-analysis.md)** - Analiza kosztów
 - **[Security Plan](./architecture/security-plan.md)** - Plan bezpieczeństwa
 - **[Deployment](./architecture/deployment-strategy.md)** - Strategia wdrożenia
+
+### 🎨 Zasoby
+- **[RESOURCES.md](./RESOURCES.md)** - Darmowe assety (ikony, dźwięki, grafiki)
 
 ## 🎯 MVP Roadmap (6 tygodni)
 

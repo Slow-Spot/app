@@ -31,9 +31,9 @@ export const CULTURE_THEMES: Record<string, CultureTheme> = {
   },
   vipassana: {
     name: 'Vipassana',
-    primary: '#FF6F00',    // Deep orange
-    ambient: '#FFF3E0',    // Light orange
-    accent: '#FFB74D',     // Orange accent
+    primary: '#4FA8FF',    // Soft blue
+    ambient: '#EBF5FF',    // Light blue
+    accent: '#3B8FDB',     // Blue accent
   },
   transcendental: {
     name: 'Transcendental',

@@ -23,7 +23,13 @@
     "resume": "फिर से शुरू करें",
     "finish": "समाप्त करें",
     "minutes": "{{count}} मिनट",
-    "seconds": "{{count}} सेकंड"
+    "seconds": "{{count}} सेकंड",
+    "takeDeepBreath": "एक गहरी सांस लें",
+    "imReady": "मैं तैयार हूँ",
+    "wellDone": "बहुत बढ़िया!",
+    "completedSession": "आपने अपना ध्यान सत्र पूरा किया",
+    "session": "सत्र",
+    "continue": "जारी रखें"
   },
   "quotes": {
     "title": "प्रेरक उद्धरण",
@@ -38,6 +44,7 @@
     "theme": "थीम",
     "light": "हल्का",
     "dark": "गहरा",
+    "system": "सिस्टम",
     "notifications": "सूचनाएं",
     "reminderTime": "अनुस्मारक समय",
     "about": "के बारे में"

@@ -9,10 +9,21 @@ export interface AudioTrack {
 }
 
 /**
- * 3-Layer Audio Engine
+ * 3-Layer Audio Engine with Healing Frequencies
+ *
+ * Audio Layers:
  * - Voice: Guided meditation narration (foreground)
- * - Ambient: Background sounds (nature, music)
- * - Chime: Start/end bells and interval markers
+ * - Ambient: Background sounds tuned to 432Hz (natural harmonic frequency)
+ * - Chime: Start/end bells tuned to 528Hz (love/healing frequency)
+ *
+ * Healing Frequencies:
+ * - 432Hz: Natural tuning frequency that resonates with the universe
+ *   Promotes mental clarity, emotional stability, and reduced stress
+ * - 528Hz: "Miracle tone" associated with transformation and DNA repair
+ *   Promotes peace, love, healing, and spiritual awareness
+ *
+ * Note: Audio files must be pre-tuned to these frequencies during production.
+ * See docs/AUDIO_FREQUENCIES.md for detailed guidelines.
  */
 class AudioEngine {
   private tracks: Map<AudioLayer, Audio.Sound> = new Map();

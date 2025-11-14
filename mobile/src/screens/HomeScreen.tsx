@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { YStack, XStack, H2, H3, Text, Button, Spinner, ScrollView, Card } from 'tamagui';
+import { View, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 import { QuoteCard } from '../components/QuoteCard';
+import { GradientBackground } from '../components/GradientBackground';
+import { GradientCard } from '../components/GradientCard';
+import { GradientButton } from '../components/GradientButton';
 import { api, Quote } from '../services/api';
 import { getUniqueRandomQuote } from '../services/quoteHistory';
 import { getProgressStats, ProgressStats } from '../services/progressTracker';
+import theme, { gradients } from '../theme';
 
 interface HomeScreenProps {
   onNavigateToMeditation: () => void;
@@ -51,96 +56,172 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   return (
-    <ScrollView>
-      <YStack flex={1} p="$6" gap="$6" background="$background">
-        {/* Welcome */}
-        <YStack gap="$2" pt="$8" style={{ alignItems: 'center' }}>
-          <H2 size="$9" fontWeight="300" color="$color">
-            {t('app.name')}
-          </H2>
-          <H2 size="$5" fontWeight="300" color="$placeholderColor">
-            {t('app.tagline')}
-          </H2>
-        </YStack>
+    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Welcome Header */}
+        <View style={styles.header}>
+          <Text style={styles.title}>{t('app.name')}</Text>
+          <Text style={styles.tagline}>{t('app.tagline')}</Text>
+        </View>
 
         {/* Progress Stats */}
         {stats && stats.totalSessions > 0 && (
-          <Card p="$4" background="$backgroundHover" borderRadius="$4">
-            <YStack gap="$3">
-              <H3 size="$6" fontWeight="500" color="$color">
-                {t('home.progress') || 'Your Progress'}
-              </H3>
-              <XStack gap="$4" style={{ justifyContent: 'space-around' }}>
-                <YStack gap="$1" style={{ alignItems: 'center' }}>
-                  <Text fontSize={32} fontWeight="700" color={"$primary" as any}>
-                    {stats.currentStreak}
-                  </Text>
-                  <Text fontSize="$3" color="$placeholderColor">
-                    🔥 {t('home.dayStreak') || 'day streak'}
-                  </Text>
-                </YStack>
-                <YStack gap="$1" style={{ alignItems: 'center' }}>
-                  <Text fontSize={32} fontWeight="700" color={"$primary" as any}>
-                    {stats.totalMinutes}
-                  </Text>
-                  <Text fontSize="$3" color="$placeholderColor">
-                    ⏱️ {t('home.totalMinutes') || 'total min'}
-                  </Text>
-                </YStack>
-                <YStack gap="$1" style={{ alignItems: 'center' }}>
-                  <Text fontSize={32} fontWeight="700" color={"$primary" as any}>
-                    {stats.totalSessions}
-                  </Text>
-                  <Text fontSize="$3" color="$placeholderColor">
-                    ✅ {t('home.sessions') || 'sessions'}
-                  </Text>
-                </YStack>
-              </XStack>
-            </YStack>
-          </Card>
+          <GradientCard
+            gradient={gradients.card.lightCard}
+            style={styles.progressCard}
+          >
+            <Text style={styles.progressTitle}>
+              {t('home.progress') || 'Your Progress'}
+            </Text>
+            <View style={styles.statsRow}>
+              <View style={styles.statItem}>
+                <Ionicons
+                  name="flame"
+                  size={32}
+                  color={theme.colors.semantic.warning.default}
+                  style={styles.statIcon}
+                />
+                <Text style={styles.statValue}>{stats.currentStreak}</Text>
+                <Text style={styles.statLabel}>
+                  {t('home.dayStreak') || 'day streak'}
+                </Text>
+              </View>
+              <View style={styles.statItem}>
+                <Ionicons
+                  name="time-outline"
+                  size={32}
+                  color={theme.colors.accent.blue[500]}
+                  style={styles.statIcon}
+                />
+                <Text style={styles.statValue}>{stats.totalMinutes}</Text>
+                <Text style={styles.statLabel}>
+                  {t('home.totalMinutes') || 'total min'}
+                </Text>
+              </View>
+              <View style={styles.statItem}>
+                <Ionicons
+                  name="checkmark-circle"
+                  size={32}
+                  color={theme.colors.semantic.success.default}
+                  style={styles.statIcon}
+                />
+                <Text style={styles.statValue}>{stats.totalSessions}</Text>
+                <Text style={styles.statLabel}>
+                  {t('home.sessions') || 'sessions'}
+                </Text>
+              </View>
+            </View>
+          </GradientCard>
         )}
 
-        {/* Daily Quote */}
-        <YStack gap="$3">
-          <H2 size="$6" fontWeight="400" color="$color">
-            {t('home.dailyQuote')}
-          </H2>
+        {/* Daily Quote Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('home.dailyQuote')}</Text>
           {loading ? (
-            <YStack p="$8" style={{ alignItems: 'center' }}>
-              <Spinner size="large" color={"$primary" as any} />
-            </YStack>
+            <View style={styles.loader}>
+              <ActivityIndicator size="large" color={theme.colors.accent.blue[500]} />
+            </View>
           ) : dailyQuote ? (
             <QuoteCard quote={dailyQuote} />
           ) : null}
-        </YStack>
+        </View>
 
-        {/* Actions */}
-        <YStack gap="$4" mt="$4">
-          <Button
-            size="$5"
-            background="$primary"
-            color="$background"
-            fontSize="$6"
-            fontWeight="500"
+        {/* Action Buttons */}
+        <View style={styles.actions}>
+          <GradientButton
+            title={t('home.startMeditation')}
+            gradient={gradients.button.primary}
             onPress={onNavigateToMeditation}
-          >
-            {t('home.startMeditation')}
-          </Button>
-
-          <Button
-            size="$5"
-            background="$backgroundPress"
-            color="$color"
-            fontSize="$6"
-            fontWeight="500"
-            borderWidth={1}
-            borderColor="$borderColor"
+            size="lg"
+          />
+          <GradientButton
+            title={t('home.exploreSessions')}
+            gradient={gradients.button.secondary}
             onPress={onNavigateToQuotes}
-          >
-            {t('home.exploreSessions')}
-          </Button>
-        </YStack>
-      </YStack>
-    </ScrollView>
+            size="md"
+          />
+        </View>
+      </ScrollView>
+    </GradientBackground>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: theme.layout.screenPadding,
+    paddingBottom: theme.spacing.xxxl,
+  },
+  header: {
+    alignItems: 'center',
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.xxl,
+  },
+  title: {
+    fontSize: theme.typography.fontSizes.hero,
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.xs,
+  },
+  tagline: {
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.regular,
+    color: theme.colors.text.secondary,
+  },
+  progressCard: {
+    marginBottom: theme.spacing.lg,
+  },
+  progressTitle: {
+    fontSize: theme.typography.fontSizes.xxl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.md,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statIcon: {
+    marginBottom: theme.spacing.xs,
+  },
+  statValue: {
+    fontSize: theme.typography.fontSizes.xxxl,
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.accent.blue[600],
+    marginBottom: theme.spacing.xs,
+  },
+  statLabel: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    textAlign: 'center',
+  },
+  section: {
+    marginBottom: theme.spacing.lg,
+  },
+  sectionTitle: {
+    fontSize: theme.typography.fontSizes.xxl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.md,
+  },
+  loader: {
+    paddingVertical: theme.spacing.xl,
+    alignItems: 'center',
+  },
+  actions: {
+    marginTop: theme.spacing.lg,
+    gap: theme.spacing.md,
+  },
+});

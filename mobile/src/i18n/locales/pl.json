@@ -7,13 +7,19 @@
     "welcome": "Witaj",
     "dailyQuote": "Dzienny Cytat",
     "startMeditation": "Rozpocznij Medytację",
-    "exploreSessions": "Przeglądaj Sesje"
+    "exploreSessions": "Przeglądaj Sesje",
+    "progress": "Twój Postęp",
+    "dayStreak": "dni z rzędu",
+    "totalMinutes": "łącznie min",
+    "sessions": "sesje"
   },
   "meditation": {
     "title": "Medytacja",
+    "subtitle": "Wybierz swoją praktykę",
     "duration": "Czas trwania",
     "level": "Poziom",
     "beginner": "Początkujący",
+    "beginnerGuidance": "Prowadzona medytacja dla początkujących",
     "intermediate": "Średniozaawansowany",
     "advanced": "Zaawansowany",
     "expert": "Ekspert",
@@ -23,7 +29,13 @@
     "resume": "Wznów",
     "finish": "Zakończ",
     "minutes": "{{count}} min",
-    "seconds": "{{count}} sek"
+    "seconds": "{{count}} sek",
+    "takeDeepBreath": "Weź głęboki oddech",
+    "imReady": "Jestem gotowy",
+    "wellDone": "Świetna robota!",
+    "completedSession": "Ukończyłeś sesję medytacji",
+    "session": "Sesja",
+    "continue": "Kontynuuj"
   },
   "quotes": {
     "title": "Inspirujące Cytaty",
@@ -38,6 +50,7 @@
     "theme": "Motyw",
     "light": "Jasny",
     "dark": "Ciemny",
+    "system": "Systemowy",
     "notifications": "Powiadomienia",
     "reminderTime": "Czas Przypomnienia",
     "about": "O Aplikacji"

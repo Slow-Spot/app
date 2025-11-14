@@ -1,21 +1,168 @@
-import React, { useState, useEffect } from 'react';
-import { YStack, XStack, Text, Button, Circle, Progress } from 'tamagui';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Audio } from 'expo-av';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withTiming,
+  Easing,
+  withSequence,
+  cancelAnimation,
+} from 'react-native-reanimated';
+import Svg, { Circle } from 'react-native-svg';
+import theme from '../theme';
+import { ChimePoint } from '../types/customSession';
 
 interface MeditationTimerProps {
   totalSeconds: number;
   onComplete: () => void;
   onCancel: () => void;
+  chimePoints?: ChimePoint[];
 }
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   totalSeconds,
   onComplete,
   onCancel,
+  chimePoints = [],
 }) => {
   const { t } = useTranslation();
   const [remainingSeconds, setRemainingSeconds] = useState(totalSeconds);
-  const [isRunning, setIsRunning] = useState(false);
+  const [isRunning, setIsRunning] = useState(true); // Auto-start enabled
+  const [audioEnabled, setAudioEnabled] = useState(true);
+  const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'exhale'>('inhale');
+  const playedChimes = useRef<Set<number>>(new Set());
+  const chimeSound = useRef<Audio.Sound | null>(null);
+
+  // ✨ Reanimated 4 - Smooth 60fps breathing animation
+  // 4 seconds inhale, 4 seconds exhale
+  const breathingScale = useSharedValue(0.85);
+  const breathingOpacity = useSharedValue(0.3);
+
+  // Load chime sound
+  useEffect(() => {
+    const loadSound = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('../../assets/sounds/meditation-bell.mp3')
+        );
+        chimeSound.current = sound;
+        console.log('Meditation bell sound loaded successfully');
+      } catch (error) {
+        console.error('Error loading chime sound:', error);
+      }
+    };
+
+    loadSound();
+
+    return () => {
+      if (chimeSound.current) {
+        chimeSound.current.unloadAsync();
+      }
+    };
+  }, []);
+
+  // Start breathing animation loop
+  useEffect(() => {
+    if (isRunning) {
+      // Inhale and exhale sequence with infinite repeat
+      breathingScale.value = withRepeat(
+        withSequence(
+          withTiming(1.0, {
+            duration: 4000,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          withTiming(0.85, {
+            duration: 4000,
+            easing: Easing.inOut(Easing.ease),
+          })
+        ),
+        -1, // infinite repeat
+        false
+      );
+
+      breathingOpacity.value = withRepeat(
+        withSequence(
+          withTiming(0.6, {
+            duration: 4000,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          withTiming(0.3, {
+            duration: 4000,
+            easing: Easing.inOut(Easing.ease),
+          })
+        ),
+        -1, // infinite repeat
+        false
+      );
+    } else {
+      // Cancel animations when paused
+      cancelAnimation(breathingScale);
+      cancelAnimation(breathingOpacity);
+    }
+
+    return () => {
+      cancelAnimation(breathingScale);
+      cancelAnimation(breathingOpacity);
+    };
+  }, [isRunning, breathingScale, breathingOpacity]);
+
+  // Track breathing phase for guidance text
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const interval = setInterval(() => {
+      setBreathingPhase((prev) => (prev === 'inhale' ? 'exhale' : 'inhale'));
+    }, 4000); // Switch every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [isRunning]);
+
+  // Animated style for breathing circle
+  const breathingAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: breathingOpacity.value,
+    transform: [{ scale: breathingScale.value }],
+  }));
+
+  // Play chime at designated time
+  const playChime = async () => {
+    if (chimeSound.current && audioEnabled) {
+      try {
+        await chimeSound.current.replayAsync();
+      } catch (error) {
+        console.error('Error playing chime:', error);
+      }
+    } else if (audioEnabled) {
+      // Fallback: Generate a simple beep tone programmatically
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          { uri: 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGGa77OmdSgwPUKrj77RgGgU7k9bxz34rBSh+zO/aizsKElyx6OyrWBUIR5/h8sFuIQUpgM3y2okyBxdjuuvnnUsMD06p4u+2Yh0FO5TW8dB+KwUofMzv24s9CxFbsOjsrV0YCEef4PKCbyEFKX/N8tuKNQcWY7rp6Z1LDA5OqeLvtmIdBTuU1vHQfiwFKHzM8N2LPQsQWq/o7K5fGQlIn+DyvnAiBSl+zfLciTQHFWK56OmdTA0OTang8LdjHQU7k9bx0H4sBSh7zPDdiz4LEFqu6OyuYBoJSZ/h88BwIgUrfs3y3Ik0BxViuejpnUwNDk6p4PC3Yx0FO5PW8dB+LAUoe8vw3Ys9Cw9arOjrrmAaB0me4fPBcCIFK37N8tyJNAcVYrnn6Z1MDQ5PqeDwt2MdBTuT1vHQfiwFKHvL8N2LPQsPWqzp7K9hGghJn+H0wXAiBSt+zfLciTQHFWO65umeSw0OT6ng8LdjHQU7k9bx0H4sBSh7y/DdizwLEFqu6euuYBoJSp/h8sFwIgUrfs3y3Ik0BxVjuejpnkwNDk+p4PC3Yx0FO5TW8c9+LAUoe8vw3Ys9Cw9arOnsrmAaCUqf4fTBcCIFK37N8tyJNAcWY7rp6Z5MDQ5PqODvt2IcBTuU1vHQfiwFKHzM8NyLPQsQWq3p7K5gGglKn+H0wXAiBSt+zfPciTQHFmO65umeSw0OT6jg8LdjHQU7lNbx0H4sBCh7zPDdiz0LEFqt6eyvYRsJSp/h9MFwIgUrfs303Ik1CBVjuujpnUsNDk+o4PG3ZBwFPJTW8c9+LAQoe8zw3ow9CxBbrOnsr2EbCEqf4vTBciIFK3/N8tqJNQgVY7ro6J1LDQ5Op+DxuGQcBTyT1/DPfywFJ3vL7+CKOwsQWq3o66xfGQhKn+L0xG8iBSt/zvLaiTYIF2O76OieTA0NTqjg8bhlHAQ8lNbwz34sBCh7y+/gijsLEVqt6OutXxkJSp/i9MNvIgUpfs7y2ok1CBZjuunoHkwNC06p4PCy' },
+          { shouldPlay: true }
+        );
+        setTimeout(() => sound.unloadAsync(), 100);
+      } catch (error) {
+        console.error('Error generating beep:', error);
+      }
+    }
+  };
+
+  // Check and play chimes
+  useEffect(() => {
+    const elapsedSeconds = totalSeconds - remainingSeconds;
+
+    for (const chime of chimePoints) {
+      if (
+        elapsedSeconds >= chime.timeInSeconds &&
+        !playedChimes.current.has(chime.timeInSeconds)
+      ) {
+        playedChimes.current.add(chime.timeInSeconds);
+        playChime();
+      }
+    }
+  }, [remainingSeconds, chimePoints, totalSeconds]);
 
   useEffect(() => {
     if (!isRunning || remainingSeconds <= 0) return;
@@ -42,66 +189,323 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
   const progress = ((totalSeconds - remainingSeconds) / totalSeconds) * 100;
 
+  // Circle calculations
+  const size = 280;
+  const strokeWidth = 8;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (circumference * progress) / 100;
+
   return (
-    <YStack gap="$6" flex={1} p="$6" style={{ alignItems: 'center', justifyContent: 'center' }}>
-      {/* Circular Progress */}
-      <YStack position="relative" style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Circle size={280} borderWidth={8} borderColor="$borderColor" />
-
-        <Circle
-          size={280}
-          borderWidth={8}
-          borderColor={"$primary" as any}
-          position="absolute"
-          style={{
-            strokeDasharray: 880,
-            strokeDashoffset: 880 - (880 * progress) / 100,
-            transform: [{ rotate: '-90deg' }],
-          }}
+    <View style={styles.container}>
+      {/* Audio Toggle */}
+      <TouchableOpacity
+        style={styles.audioToggle}
+        onPress={() => setAudioEnabled(!audioEnabled)}
+        accessibilityLabel={audioEnabled ? 'Audio enabled' : 'Audio disabled'}
+        accessibilityRole="button"
+      >
+        <Ionicons
+          name={audioEnabled ? 'volume-high' : 'volume-mute'}
+          size={24}
+          color="rgba(255, 255, 255, 0.8)"
         />
+      </TouchableOpacity>
 
-        <YStack
-          position="absolute"
-          style={{ alignItems: 'center', justifyContent: 'center' }}
-        >
-          <Text fontSize={72} fontWeight="300" color="$color">
-            {formatTime(remainingSeconds)}
-          </Text>
-          <Text fontSize={16} color="$placeholderColor" mt="$2">
-            {t('meditation.minutes', { count: Math.ceil(remainingSeconds / 60) })}
-          </Text>
-        </YStack>
-      </YStack>
+      {/* Breathing Guidance */}
+      <View style={styles.breathingGuidance}>
+        <Text style={styles.instructionText}>
+          {t('meditation.focusOnBreath', 'Focus on your breath')}
+        </Text>
+        <Animated.Text style={styles.breathingText}>
+          {breathingPhase === 'inhale'
+            ? t('meditation.breatheIn', 'Breathe In')
+            : t('meditation.breatheOut', 'Breathe Out')}
+        </Animated.Text>
+      </View>
 
-      {/* Progress Bar */}
-      <Progress size="$2" value={progress} width="80%">
-        <Progress.Indicator animation="bouncy" background="$primary" />
-      </Progress>
+      {/* Circular Progress */}
+      <View style={styles.circleContainer}>
+        {/* Breathing Circle Animation - Powered by Reanimated 4 */}
+        <Animated.View style={[styles.breathingCircle, breathingAnimatedStyle]}>
+          <View style={styles.breathingCircleInner} />
+        </Animated.View>
+
+        <Svg width={size} height={size} style={styles.svg}>
+          {/* Background Circle */}
+          <Circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke="rgba(255, 255, 255, 0.2)"
+            strokeWidth={strokeWidth}
+            fill="none"
+          />
+
+          {/* Progress Circle */}
+          <Circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={theme.colors.accent.mint[400]}
+            strokeWidth={strokeWidth}
+            fill="none"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            rotation="-90"
+            origin={`${size / 2}, ${size / 2}`}
+          />
+        </Svg>
+
+        {/* Progress Indicator - No exact time shown */}
+        <View style={styles.timerOverlay}>
+          <Text style={styles.progressText}>
+            {Math.round(progress)}%
+          </Text>
+          <Text style={styles.minutesText}>
+            {t('meditation.inProgress', 'In Progress')}
+          </Text>
+        </View>
+      </View>
+
+      {/* Progress Bar with Chime Markers */}
+      <View style={styles.progressBarContainer}>
+        <View style={styles.progressBar}>
+          <View
+            style={[
+              styles.progressIndicator,
+              { width: `${progress}%` }
+            ]}
+          />
+
+          {/* Chime markers - larger and more visible */}
+          {chimePoints.map((chime, index) => {
+            const position = (chime.timeInSeconds / totalSeconds) * 100;
+            const isPassed = (totalSeconds - remainingSeconds) >= chime.timeInSeconds;
+
+            return (
+              <View
+                key={index}
+                style={[
+                  styles.chimeMarkerContainer,
+                  { left: `${position}%` },
+                ]}
+              >
+                <View style={[
+                  styles.chimeMarker,
+                  isPassed && styles.chimeMarkerPassed,
+                ]}>
+                  <Ionicons
+                    name={audioEnabled ? 'musical-note' : 'musical-note-outline'}
+                    size={14}
+                    color={isPassed ? theme.colors.accent.mint[300] : 'rgba(255, 255, 255, 0.9)'}
+                  />
+                </View>
+                {chime.label && (
+                  <Text style={[
+                    styles.chimeLabel,
+                    isPassed && styles.chimeLabelPassed,
+                  ]}>
+                    {chime.label}
+                  </Text>
+                )}
+              </View>
+            );
+          })}
+        </View>
+      </View>
 
       {/* Controls */}
-      <XStack gap="$4" width="100%" style={{ justifyContent: 'center' }}>
-        <Button
-          size="$5"
-          background="$backgroundPress"
-          color="$color"
-          flex={1}
-          width={150}
+      <View style={styles.controls}>
+        <TouchableOpacity
+          style={[styles.button, styles.secondaryButton]}
           onPress={onCancel}
         >
-          {t('meditation.finish')}
-        </Button>
+          <Text style={styles.buttonText}>
+            {t('meditation.finish')}
+          </Text>
+        </TouchableOpacity>
 
-        <Button
-          size="$5"
-          background="$primary"
-          color="$background"
-          flex={1}
-          width={150}
-          onPress={() => setIsRunning(!isRunning)}
+        <TouchableOpacity
+          style={[styles.button, styles.primaryButton]}
+          onPress={() => {
+            setIsRunning(!isRunning);
+          }}
         >
-          {isRunning ? t('meditation.pause') : t('meditation.resume')}
-        </Button>
-      </XStack>
-    </YStack>
+          <Text style={styles.primaryButtonText}>
+            {isRunning
+              ? t('meditation.pause')
+              : t('meditation.resume')
+            }
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: theme.spacing.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing.xl,
+  },
+  audioToggle: {
+    position: 'absolute',
+    top: theme.spacing.lg,
+    right: theme.spacing.lg,
+    padding: theme.spacing.sm,
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    zIndex: 10,
+  },
+  breathingGuidance: {
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    marginBottom: theme.spacing.md,
+  },
+  instructionText: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontWeight: theme.typography.fontWeights.regular,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+  },
+  breathingText: {
+    fontSize: theme.typography.fontSizes.xxxl,
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.inverse,
+    letterSpacing: 2,
+  },
+  circleContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 280,
+    height: 280,
+  },
+  breathingCircle: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 280,
+    height: 280,
+  },
+  breathingCircleInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 140,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+  },
+  svg: {
+    transform: [{ rotate: '0deg' }],
+  },
+  timerOverlay: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  progressText: {
+    fontSize: 64,
+    fontWeight: theme.typography.fontWeights.light,
+    color: theme.colors.text.inverse,
+  },
+  minutesText: {
+    fontSize: theme.typography.fontSizes.sm,
+    marginTop: theme.spacing.xs,
+    color: 'rgba(255, 255, 255, 0.7)',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  progressBarContainer: {
+    width: '80%',
+    paddingVertical: theme.spacing.md,
+  },
+  progressBar: {
+    position: 'relative',
+    width: '100%',
+    height: 6,
+    borderRadius: theme.borderRadius.sm,
+    overflow: 'visible',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  progressIndicator: {
+    height: '100%',
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.colors.accent.mint[400],
+  },
+  controls: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    gap: theme.spacing.md,
+  },
+  button: {
+    flex: 1,
+    maxWidth: 150,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.full,
+    alignItems: 'center',
+  },
+  primaryButton: {
+    backgroundColor: theme.colors.accent.mint[500],
+  },
+  secondaryButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  primaryButtonText: {
+    color: theme.colors.text.primary,
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    letterSpacing: 0.5,
+  },
+  buttonText: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.inverse,
+    letterSpacing: 0.5,
+  },
+  chimeMarkerContainer: {
+    position: 'absolute',
+    top: -15,
+    alignItems: 'center',
+    transform: [{ translateX: -12 }],
+  },
+  chimeMarker: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.95)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  chimeMarkerPassed: {
+    backgroundColor: theme.colors.accent.mint[400],
+    borderColor: theme.colors.accent.mint[300],
+  },
+  chimeLabel: {
+    position: 'absolute',
+    top: -20,
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontWeight: theme.typography.fontWeights.semiBold,
+    textAlign: 'center',
+    minWidth: 50,
+    letterSpacing: 0.5,
+  },
+  chimeLabelPassed: {
+    color: theme.colors.accent.mint[200],
+  },
+});

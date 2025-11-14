@@ -1,7 +1,10 @@
 import React from 'react';
-import { Card, YStack, XStack, H4, Paragraph, Text, Button } from 'tamagui';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MeditationSession } from '../services/api';
+import { GradientCard } from './GradientCard';
+import { getGradientForLevel } from '../theme/gradients';
+import theme from '../theme';
 
 interface SessionCardProps {
   session: MeditationSession;
@@ -13,73 +16,140 @@ const getLevelLabel = (level: number): string => {
   return levels[level - 1] || 'beginner';
 };
 
+const getGuidanceText = (level: number, t: any): string => {
+  // Beginners: Detailed step-by-step instructions
+  if (level === 1) {
+    return t('meditation.beginnerGuidance') || '1. Find a quiet space\n2. Sit comfortably\n3. Close your eyes\n4. Follow the voice guidance';
+  }
+  // Intermediate: Brief reminders
+  if (level === 2) {
+    return t('meditation.intermediateGuidance') || 'Find your comfortable position, breathe naturally';
+  }
+  // Advanced+: Minimal or no text (just ambient)
+  return t('meditation.advancedGuidance') || 'Settle into stillness';
+};
+
 const formatDuration = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
   return `${minutes} min`;
 };
 
-export const SessionCard: React.FC<SessionCardProps> = ({ session, onPress }) => {
+// ✨ React.memo for performance optimization - Prevents unnecessary re-renders
+export const SessionCard = React.memo<SessionCardProps>(({ session, onPress }) => {
   const { t } = useTranslation();
+  const gradient = getGradientForLevel(getLevelLabel(session.level));
 
   return (
-    <Card
-      elevate
-      size="$4"
-      bordered
-      animation="bouncy"
-      scale={0.9}
-      hoverStyle={{ scale: 0.925 }}
-      pressStyle={{ scale: 0.875 }}
-      p="$4"
-      background="$background"
-      borderColor="$borderColor"
-      borderRadius="$4"
-      onPress={onPress}
-    >
-      <Card.Header padded>
-        <YStack gap="$2">
-          <H4 size="$6" fontWeight="500" color="$color">
-            {session.title}
-          </H4>
-          {session.description && (
-            <Paragraph size="$3" color="$placeholderColor">
-              {session.description}
-            </Paragraph>
-          )}
-        </YStack>
-      </Card.Header>
+    <GradientCard gradient={gradient} onPress={onPress} style={styles.card}>
+      {/* Card Header */}
+      <View style={styles.header}>
+        <Text style={styles.title}>{session.title}</Text>
+        {session.description && (
+          <Text style={styles.description}>{session.description}</Text>
+        )}
 
-      <Card.Footer padded>
-        <XStack width="100%" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <YStack gap="$1">
-            <XStack gap="$2" style={{ alignItems: 'center' }}>
-              <Text fontSize="$2" color="$color">
-                {t('meditation.duration')}:
-              </Text>
-              <Text fontSize="$3" fontWeight="600" color="$color">
-                {formatDuration(session.durationSeconds)}
-              </Text>
-            </XStack>
-            <XStack gap="$2" style={{ alignItems: 'center' }}>
-              <Text fontSize="$2" color="$color">
-                {t('meditation.level')}:
-              </Text>
-              <Text fontSize="$3" fontWeight="600" color="$color">
-                {t(`meditation.${getLevelLabel(session.level)}`)}
-              </Text>
-            </XStack>
-          </YStack>
+        {/* Guidance for beginners */}
+        {session.level === 1 && (
+          <View style={styles.guidanceBox}>
+            <Text style={styles.guidanceText}>{getGuidanceText(session.level, t)}</Text>
+          </View>
+        )}
 
-          <Button
-            size="$3"
-            background="$primary"
-            color="$background"
-            px="$4"
-          >
-            {t('meditation.start')}
-          </Button>
-        </XStack>
-      </Card.Footer>
-    </Card>
+        {/* Minimal guidance for intermediate+ */}
+        {session.level > 1 && (
+          <Text style={styles.minimalGuidance}>{getGuidanceText(session.level, t)}</Text>
+        )}
+      </View>
+
+      {/* Card Footer */}
+      <View style={styles.footer}>
+        <View style={styles.detailsContainer}>
+          <View style={styles.detailRow}>
+            <Text style={styles.label}>{t('meditation.duration')}:</Text>
+            <Text style={styles.value}>{formatDuration(session.durationSeconds)}</Text>
+          </View>
+          <View style={styles.detailRow}>
+            <Text style={styles.label}>{t('meditation.level')}:</Text>
+            <Text style={styles.value}>{t(`meditation.${getLevelLabel(session.level)}`)}</Text>
+          </View>
+        </View>
+
+        <View style={styles.startBadge}>
+          <Text style={styles.startBadgeText}>▶ {t('meditation.start')}</Text>
+        </View>
+      </View>
+    </GradientCard>
   );
-};
+});
+
+const styles = StyleSheet.create({
+  card: {
+    marginBottom: theme.spacing.md,
+  },
+  header: {
+    marginBottom: theme.spacing.md,
+  },
+  title: {
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+    marginBottom: theme.spacing.xs,
+  },
+  description: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.sm,
+  },
+  guidanceBox: {
+    marginTop: theme.spacing.md,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  guidanceText: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.primary,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.sm,
+  },
+  minimalGuidance: {
+    marginTop: theme.spacing.sm,
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    fontStyle: 'italic',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: theme.spacing.sm,
+  },
+  detailsContainer: {
+    gap: theme.spacing.xs,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
+  label: {
+    fontSize: theme.typography.fontSizes.xs,
+    color: theme.colors.text.secondary,
+    fontWeight: theme.typography.fontWeights.medium,
+  },
+  value: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.primary,
+    fontWeight: theme.typography.fontWeights.semiBold,
+  },
+  startBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+  },
+  startBadgeText: {
+    color: theme.colors.text.primary,
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: theme.typography.fontWeights.semiBold,
+  },
+});

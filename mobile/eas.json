@@ -12,20 +12,23 @@
     },
     "preview": {
       "distribution": "internal",
+      "channel": "preview",
       "ios": {
-        "simulator": false
-      },
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "production": {
-      "ios": {
-        "bundleIdentifier": "com.slowspot.app"
+        "simulator": false,
+        "resourceClass": "m-medium"
       },
       "android": {
         "buildType": "apk",
-        "packageName": "com.slowspot.app"
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "production": {
+      "channel": "production",
+      "ios": {
+        "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "apk"
       }
     }
   },

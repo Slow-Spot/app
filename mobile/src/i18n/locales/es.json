@@ -23,7 +23,13 @@
     "resume": "Reanudar",
     "finish": "Terminar",
     "minutes": "{{count}} min",
-    "seconds": "{{count}} seg"
+    "seconds": "{{count}} seg",
+    "takeDeepBreath": "Toma una respiración profunda",
+    "imReady": "Estoy listo",
+    "wellDone": "¡Bien hecho!",
+    "completedSession": "Completaste tu sesión de meditación",
+    "session": "Sesión",
+    "continue": "Continuar"
   },
   "quotes": {
     "title": "Citas Inspiradoras",
@@ -38,6 +44,7 @@
     "theme": "Tema",
     "light": "Claro",
     "dark": "Oscuro",
+    "system": "Sistema",
     "notifications": "Notificaciones",
     "reminderTime": "Hora de Recordatorio",
     "about": "Acerca de"
