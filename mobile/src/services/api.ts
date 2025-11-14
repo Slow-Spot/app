@@ -6,10 +6,17 @@ const USE_MOCK_DATA = true; // Enable mock data for offline development
 
 export interface Quote {
   id: number;
-  text: string;
+  text: string; // Original text in original language
+  textTransliteration?: string; // Romanization/transliteration (e.g., Sanskrit in Roman script)
+  translations?: {
+    [languageCode: string]: string; // Translations to different languages
+  };
+  originalLanguage: string; // Language code of the original text (e.g., 'sa' for Sanskrit, 'fa' for Persian)
   author?: string;
-  languageCode: string;
-  cultureTag?: string;
+  authorTranslation?: {
+    [languageCode: string]: string; // Author name in different scripts
+  };
+  cultureTag?: string; // buddhist, sufi, taoist, zen, vedic, christian, stoic, etc.
   category?: string;
   createdAt: string;
 }
@@ -17,6 +24,7 @@ export interface Quote {
 export interface MeditationSession {
   id: number | string; // number for preset sessions, string for custom sessions
   title: string;
+  titleKey?: string; // i18n translation key (e.g., "sessionsList.morningAwakening.title")
   languageCode: string;
   durationSeconds: number;
   voiceUrl?: string;
@@ -25,6 +33,7 @@ export interface MeditationSession {
   cultureTag?: string;
   level: number;
   description?: string;
+  descriptionKey?: string; // i18n translation key (e.g., "sessionsList.morningAwakening.description")
   createdAt: string;
   // Healing frequency metadata (432Hz for ambient, 528Hz for chimes)
   ambientFrequency?: number; // Default: 432Hz (natural harmonic)
@@ -77,14 +86,10 @@ export const api = {
   quotes: {
     getAll: async (lang?: string): Promise<Quote[]> => {
       // Return mock data if enabled
+      // NOTE: All quotes now have translations for all languages, so we don't filter by language
+      // The QuoteCard component handles showing the appropriate translation based on user's language
       if (USE_MOCK_DATA) {
-        let filtered = lang ? MOCK_QUOTES.filter((q) => q.languageCode === lang) : MOCK_QUOTES;
-        // Fallback to English if no quotes found for requested language
-        if (lang && filtered.length === 0) {
-          console.log(`[API] No quotes found for language '${lang}', falling back to English`);
-          filtered = MOCK_QUOTES.filter((q) => q.languageCode === 'en');
-        }
-        return Promise.resolve(filtered);
+        return Promise.resolve(MOCK_QUOTES);
       }
 
       const url = lang
@@ -95,10 +100,10 @@ export const api = {
 
     getRandom: async (lang: string = 'en'): Promise<Quote> => {
       // Return mock data if enabled
+      // NOTE: All quotes have translations, so just pick any random quote
       if (USE_MOCK_DATA) {
-        const filtered = MOCK_QUOTES.filter((q) => q.languageCode === lang);
-        const randomIndex = Math.floor(Math.random() * filtered.length);
-        return Promise.resolve(filtered[randomIndex] || MOCK_QUOTES[0]);
+        const randomIndex = Math.floor(Math.random() * MOCK_QUOTES.length);
+        return Promise.resolve(MOCK_QUOTES[randomIndex]);
       }
 
       const url = `${API_BASE_URL}/quotes/random?lang=${lang}`;

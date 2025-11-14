@@ -100,7 +100,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     }
   };
 
-  const handleStartSession = (session: MeditationSession) => {
+  const handleStartSession = async (session: MeditationSession) => {
     setSelectedSession(session);
     setFlowState('instructions');
   };

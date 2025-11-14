@@ -60,7 +60,9 @@
       "skip": "छोड़ें",
       "continue": "जारी रखें",
       "beginMeditation": "ध्यान शुरू करें",
-      "stepProgress": "चरण {{current}} का {{total}}"
+      "stepProgress": "चरण {{current}} का {{total}}",
+      "alwaysSkipInstructions": "हमेशा निर्देश छोड़ें (अनुभवी ध्यानियों के लिए)",
+      "skipInstructionsNote": "आप इसे बाद में सेटिंग्स में बदल सकते हैं"
     },
     "level1_breath": {
       "title": "आपके पहले ध्यान में स्वागत है",
@@ -239,6 +241,11 @@
       "taoist": "ताओवादी (चीनी)",
       "sufi": "सूफी (इस्लामी)",
       "christian": "ईसाई चिंतन"
+    },
+    "filters": {
+      "all": "सभी सत्र",
+      "showFilters": "फ़िल्टर दिखाएं",
+      "hideFilters": "फ़िल्टर छुपाएं"
     }
   },
   "settings": {
@@ -257,5 +264,167 @@
     "meditate": "ध्यान करें",
     "quotes": "उद्धरण",
     "settings": "सेटिंग्स"
+  },
+  "sessionsList": {
+    "morningAwakening": {
+      "title": "प्रातः जागरण",
+      "description": "अपने दिन की शुरुआत स्पष्टता और एकाग्रता के साथ करें। स्वयं को केंद्रित करने के लिए एक सौम्य 5 मिनट की साधना।"
+    },
+    "breathAwareness": {
+      "title": "श्वास जागरूकता",
+      "description": "अपनी प्राकृतिक सांस पर ध्यान केंद्रित करें। शुरुआती लोगों के लिए एक मौलिक अभ्यास।"
+    },
+    "bodyScanRelaxation": {
+      "title": "शरीर स्कैन विश्राम",
+      "description": "शरीर में ध्यान घुमाते हुए क्रमिक विश्राम तकनीक।"
+    },
+    "lovingKindness": {
+      "title": "मैत्री भावना",
+      "description": "अपने और दूसरों के प्रति करुणा और सद्भावना विकसित करें।"
+    },
+    "deepMeditation": {
+      "title": "गहन ध्यान",
+      "description": "अनुभवी ध्यानियों के लिए विस्तारित साधना। स्थिरता में गहरे उतरें।"
+    },
+    "morningEnergyBoost": {
+      "title": "प्रातः ऊर्जा वृद्धि",
+      "description": "श्वास तकनीकों के साथ आने वाले दिन के लिए अपने शरीर और मन को ऊर्जावान बनाएं।"
+    },
+    "sunriseMeditation": {
+      "title": "सूर्योदय ध्यान",
+      "description": "कृतज्ञता और संकल्प के साथ नए दिन का स्वागत करें।"
+    },
+    "quickStressRelief": {
+      "title": "त्वरित तनाव मुक्ति",
+      "description": "केवल 5 मिनट में तनाव मुक्त करें। कार्य अवकाश के लिए बिल्कुल उपयुक्त।"
+    },
+    "deepStressRelease": {
+      "title": "गहन तनाव मुक्ति",
+      "description": "क्रमिक विश्राम के माध्यम से व्यापक तनाव निवारण।"
+    },
+    "eveningWindDown": {
+      "title": "संध्या विश्राम",
+      "description": "दिन के तनाव को मुक्त करें और आरामदायक नींद के लिए तैयार हों।"
+    },
+    "sleepSanctuary": {
+      "title": "निद्रा अभयारण्य",
+      "description": "गहन विश्राम के लिए गहरा शरीर स्कैन और विश्रांति।"
+    },
+    "concentrationBuilder": {
+      "title": "एकाग्रता निर्माता",
+      "description": "अपना ध्यान तीक्ष्ण करें और विकर्षणों को समाप्त करें।"
+    },
+    "flowStateActivation": {
+      "title": "प्रवाह अवस्था सक्रियण",
+      "description": "कार्य या अध्ययन के लिए गहन एकाग्रता में प्रवेश करें।"
+    },
+    "calmAnxiety": {
+      "title": "चिंता शांत करें",
+      "description": "सौम्य श्वास जागरूकता के साथ चिंताजनक विचारों को शांत करें।"
+    },
+    "anxietyReleasePractice": {
+      "title": "चिंता मुक्ति साधना",
+      "description": "शरीर जागरूकता के माध्यम से स्वयं को स्थिर करें और चिंता को मुक्त करें।"
+    },
+    "healingThroughGrief": {
+      "title": "शोक के माध्यम से उपचार",
+      "description": "हानि को सम्मान देने और शांति पाने के लिए एक सौम्य स्थान।"
+    },
+    "embracingLoss": {
+      "title": "हानि को स्वीकार करना",
+      "description": "कठिन भावनाओं को संसाधित करने के लिए करुणामय ध्यान।"
+    },
+    "gratitudeReflection": {
+      "title": "कृतज्ञता चिंतन",
+      "description": "जीवन के आशीर्वादों के लिए प्रशंसा विकसित करें।"
+    },
+    "deepGratitudeJourney": {
+      "title": "गहन कृतज्ञता यात्रा",
+      "description": "गहन धन्यवाद और आनंद का अन्वेषण करें।"
+    },
+    "creativeAwakening": {
+      "title": "सृजनात्मक जागरण",
+      "description": "खुली जागरूकता के माध्यम से अपनी रचनात्मक क्षमता को खोलें।"
+    },
+    "inspirationFlow": {
+      "title": "प्रेरणा प्रवाह",
+      "description": "अपनी आंतरिक प्रेरणा और सृजनात्मक प्रतिभा तक पहुंचें।"
+    },
+    "zazenZenSitting": {
+      "title": "ज़ाज़ेन - ज़ेन बैठक",
+      "description": "पारंपरिक ज़ेन ध्यान। केवल बैठना, सांस और विचारों का अवलोकन।"
+    },
+    "kinhinZenWalking": {
+      "title": "किन्हिन - ज़ेन चलना",
+      "description": "बैठने की अवधियों के बीच धीमा, सचेत चलना।"
+    },
+    "beginnerZazen": {
+      "title": "शुरुआती ज़ाज़ेन",
+      "description": "ज़ेन बैठने ध्यान साधना का परिचय।"
+    },
+    "vipassanaBodyScan": {
+      "title": "विपश्यना शरीर स्कैन",
+      "description": "पूरे शरीर में संवेदनाओं की व्यवस्थित जागरूकता।"
+    },
+    "insightMeditation": {
+      "title": "अंतर्दृष्टि ध्यान",
+      "description": "सभी घटनाओं की अनित्य प्रकृति का अवलोकन करें।"
+    },
+    "beginnerVipassana": {
+      "title": "शुरुआती विपश्यना",
+      "description": "अंतर्दृष्टि ध्यान साधना का परिचय।"
+    },
+    "omMeditation": {
+      "title": "ओम् ध्यान",
+      "description": "आदिम ध्वनि ओम् का जप और ध्यान।"
+    },
+    "transcendentalMeditation": {
+      "title": "त्रान्सेंडेंटल ध्यान",
+      "description": "मंत्र साधना के साथ गहन आंतरिक मौन में स्थिर हों।"
+    },
+    "chakraAwareness": {
+      "title": "चक्र जागरूकता",
+      "description": "सात ऊर्जा केंद्रों के माध्यम से यात्रा।"
+    },
+    "qigongMeditation": {
+      "title": "क्यिगोंग ध्यान",
+      "description": "श्वास और दृश्यावलोकन के माध्यम से क्यि ऊर्जा की खेती करें।"
+    },
+    "innerSmilePractice": {
+      "title": "आंतरिक मुस्कान साधना",
+      "description": "आंतरिक शांति और आनंद विकसित करने के लिए ताओवादी ध्यान।"
+    },
+    "wuWeiEffortlessBeing": {
+      "title": "वू वेई - सहज अस्तित्व",
+      "description": "चीज़ों के प्राकृतिक तरीके के साथ प्रवाहित हों।"
+    },
+    "dhikrRemembrance": {
+      "title": "ज़िक्र - स्मरण",
+      "description": "परमात्मा का लयबद्ध स्मरण।"
+    },
+    "muraqabaHeartMeditation": {
+      "title": "मुराकबा - हृदय ध्यान",
+      "description": "हृदय केंद्र का सूफी चिंतन।"
+    },
+    "breathOfCompassion": {
+      "title": "करुणा की श्वास",
+      "description": "हृदय खोलने के लिए सूफी श्वास साधना।"
+    },
+    "centeringPrayer": {
+      "title": "केंद्रण प्रार्थना",
+      "description": "पवित्र शब्द के माध्यम से परमेश्वर के साथ मौन संवाद।"
+    },
+    "lectioDivina": {
+      "title": "लेक्शियो डिविना",
+      "description": "चिंतनशील धर्मग्रंथ पठन और ध्यान।"
+    },
+    "contemplativeSilence": {
+      "title": "चिंतनशील मौन",
+      "description": "परमात्मा की उपस्थिति में विश्राम करें।"
+    },
+    "breathPrayer": {
+      "title": "श्वास प्रार्थना",
+      "description": "श्वास के साथ समन्वित लयबद्ध प्रार्थना।"
+    }
   }
 }

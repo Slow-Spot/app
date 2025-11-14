@@ -42,20 +42,24 @@ export const SessionCard = React.memo<SessionCardProps>(({ session, onPress, onL
   const { t } = useTranslation();
   const gradient = getGradientForLevel(getLevelLabel(session.level));
 
+  // Use translation keys if available, otherwise fall back to direct values
+  const title = session.titleKey ? t(session.titleKey) : session.title;
+  const description = session.descriptionKey ? t(session.descriptionKey) : session.description;
+
   return (
     <GradientCard gradient={gradient} onPress={onPress} onLongPress={onLongPress} style={styles.card}>
       {/* Card Header */}
       <View style={styles.header}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>{session.title}</Text>
+          <Text style={styles.title}>{title}</Text>
           {isCustom && (
             <View style={styles.customBadge}>
               <Ionicons name="star" size={16} color={theme.colors.accent.blue[600]} />
             </View>
           )}
         </View>
-        {session.description && (
-          <Text style={styles.description}>{session.description}</Text>
+        {description && (
+          <Text style={styles.description}>{description}</Text>
         )}
 
         {/* Guidance for beginners */}

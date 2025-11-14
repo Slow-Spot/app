@@ -60,6 +60,8 @@
       "continue": "Continue",
       "beginMeditation": "Begin Meditation",
       "stepProgress": "Step {{current}} of {{total}}",
+      "alwaysSkipInstructions": "Always skip instructions (for experienced meditators)",
+      "skipInstructionsNote": "You can change this later in Settings",
       "greeting": "You're about to practice {{technique}}. Let's prepare mindfully.",
       "focusToday": "Your Focus Today",
       "remember": "Remember",
@@ -234,6 +236,11 @@
     }
   },
   "sessions": {
+    "filters": {
+      "all": "All Sessions",
+      "showFilters": "Show Filters",
+      "hideFilters": "Hide Filters"
+    },
     "categories": {
       "traditional": "Traditional",
       "occasion": "Occasion",
@@ -283,6 +290,168 @@
     "meditate": "Meditate",
     "quotes": "Quotes",
     "settings": "Settings"
+  },
+  "sessionsList": {
+    "morningAwakening": {
+      "title": "Morning Awakening",
+      "description": "Start your day with clarity and focus. A gentle 5-minute practice to center yourself."
+    },
+    "breathAwareness": {
+      "title": "Breath Awareness",
+      "description": "Focus on your natural breath. A foundational practice for beginners."
+    },
+    "bodyScanRelaxation": {
+      "title": "Body Scan Relaxation",
+      "description": "Progressive relaxation technique moving attention through the body."
+    },
+    "lovingKindness": {
+      "title": "Loving Kindness",
+      "description": "Cultivate compassion and goodwill toward yourself and others."
+    },
+    "deepMeditation": {
+      "title": "Deep Meditation",
+      "description": "Extended practice for experienced meditators. Dive into stillness."
+    },
+    "morningEnergyBoost": {
+      "title": "Morning Energy Boost",
+      "description": "Energize your body and mind for the day ahead with breath techniques."
+    },
+    "sunriseMeditation": {
+      "title": "Sunrise Meditation",
+      "description": "Greet the new day with gratitude and intention setting."
+    },
+    "quickStressRelief": {
+      "title": "Quick Stress Relief",
+      "description": "Release tension in just 5 minutes. Perfect for work breaks."
+    },
+    "deepStressRelease": {
+      "title": "Deep Stress Release",
+      "description": "Comprehensive stress relief through progressive relaxation."
+    },
+    "eveningWindDown": {
+      "title": "Evening Wind Down",
+      "description": "Release the day's tensions and prepare for restful sleep."
+    },
+    "sleepSanctuary": {
+      "title": "Sleep Sanctuary",
+      "description": "Deep body scan and relaxation for profound rest."
+    },
+    "concentrationBuilder": {
+      "title": "Concentration Builder",
+      "description": "Sharpen your focus and eliminate distractions."
+    },
+    "flowStateActivation": {
+      "title": "Flow State Activation",
+      "description": "Enter deep concentration for work or study."
+    },
+    "calmAnxiety": {
+      "title": "Calm Anxiety",
+      "description": "Soothe anxious thoughts with gentle breath awareness."
+    },
+    "anxietyReleasePractice": {
+      "title": "Anxiety Release Practice",
+      "description": "Ground yourself and release worry through body awareness."
+    },
+    "healingThroughGrief": {
+      "title": "Healing Through Grief",
+      "description": "A gentle space to honor loss and find peace."
+    },
+    "embracingLoss": {
+      "title": "Embracing Loss",
+      "description": "Compassionate meditation for processing difficult emotions."
+    },
+    "gratitudeReflection": {
+      "title": "Gratitude Reflection",
+      "description": "Cultivate appreciation for life's blessings."
+    },
+    "deepGratitudeJourney": {
+      "title": "Deep Gratitude Journey",
+      "description": "Explore profound thankfulness and joy."
+    },
+    "creativeAwakening": {
+      "title": "Creative Awakening",
+      "description": "Unlock your creative potential through open awareness."
+    },
+    "inspirationFlow": {
+      "title": "Inspiration Flow",
+      "description": "Access your inner muse and creative genius."
+    },
+    "zazenZenSitting": {
+      "title": "Zazen - Zen Sitting",
+      "description": "Traditional Zen meditation. Just sitting, observing breath and thoughts."
+    },
+    "kinthinZenWalking": {
+      "title": "Kinhin - Zen Walking",
+      "description": "Slow, mindful walking between sitting periods."
+    },
+    "beginnerZazen": {
+      "title": "Beginner Zazen",
+      "description": "Introduction to Zen sitting meditation practice."
+    },
+    "vipassanaBodyScan": {
+      "title": "Vipassana Body Scan",
+      "description": "Systematic awareness of sensations throughout the body."
+    },
+    "insightMeditation": {
+      "title": "Insight Meditation",
+      "description": "Observe the impermanent nature of all phenomena."
+    },
+    "beginnerVipassana": {
+      "title": "Beginner Vipassana",
+      "description": "Introduction to insight meditation practice."
+    },
+    "omMeditation": {
+      "title": "Om Meditation",
+      "description": "Chant and meditate on the primordial sound Om."
+    },
+    "transcendentalMeditation": {
+      "title": "Transcendental Meditation",
+      "description": "Settle into deep inner silence with mantra practice."
+    },
+    "chakraAwareness": {
+      "title": "Chakra Awareness",
+      "description": "Journey through the seven energy centers."
+    },
+    "qigongMeditation": {
+      "title": "Qigong Meditation",
+      "description": "Cultivate Qi energy through breath and visualization."
+    },
+    "innerSmilePractice": {
+      "title": "Inner Smile Practice",
+      "description": "Taoist meditation for cultivating inner peace and joy."
+    },
+    "wuWeiEffortlessBeing": {
+      "title": "Wu Wei - Effortless Being",
+      "description": "Flow with the natural way of things."
+    },
+    "dhikrRemembrance": {
+      "title": "Dhikr - Remembrance",
+      "description": "Rhythmic remembrance of the Divine."
+    },
+    "muraqabaHeartMeditation": {
+      "title": "Muraqaba - Heart Meditation",
+      "description": "Sufi contemplation of the heart center."
+    },
+    "breathOfCompassion": {
+      "title": "Breath of Compassion",
+      "description": "Sufi breathing practice for opening the heart."
+    },
+    "centeringPrayer": {
+      "title": "Centering Prayer",
+      "description": "Silent communion with God through sacred word."
+    },
+    "lectioDivina": {
+      "title": "Lectio Divina",
+      "description": "Contemplative scripture reading and meditation."
+    },
+    "contemplativeSilence": {
+      "title": "Contemplative Silence",
+      "description": "Rest in the presence of the Divine."
+    },
+    "breathPrayer": {
+      "title": "Breath Prayer",
+      "description": "Rhythmic prayer synchronized with breathing."
+    }
   },
   "common": {
     "ok": "OK",

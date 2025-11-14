@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Quote } from '../services/api';
 
 interface QuoteCardProps {
@@ -9,15 +10,46 @@ interface QuoteCardProps {
 export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const { i18n } = useTranslation();
+
+  const userLanguage = i18n.language;
+  const isOriginalLanguage = quote.originalLanguage === userLanguage;
+
+  // Get the translation for user's language, or fallback to English
+  const translation = quote.translations?.[userLanguage] || quote.translations?.en || quote.text;
+
+  // Show original + transliteration + translation only if quote is in different language
+  const showOriginal = !isOriginalLanguage && quote.originalLanguage !== 'en';
 
   return (
     <View style={[styles.card, isDark ? styles.darkCard : styles.lightCard]}>
       {/* Card Header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
+          {/* Original text in original script (if different language) */}
+          {showOriginal && (
+            <>
+              <Text style={[styles.originalText, isDark ? styles.darkText : styles.lightText]}>
+                "{quote.text}"
+              </Text>
+
+              {/* Transliteration (romanization) */}
+              {quote.textTransliteration && (
+                <Text style={[styles.transliterationText, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
+                  {quote.textTransliteration}
+                </Text>
+              )}
+
+              {/* Divider */}
+              <View style={[styles.divider, isDark ? styles.darkDivider : styles.lightDivider]} />
+            </>
+          )}
+
+          {/* Translation or main text */}
           <Text style={[styles.quoteText, isDark ? styles.darkText : styles.lightText]}>
-            "{quote.text}"
+            "{translation}"
           </Text>
+
           {quote.author && (
             <Text style={[styles.authorText, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
               — {quote.author}
@@ -31,14 +63,18 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
         <View style={styles.footer}>
           <View style={styles.footerContent}>
             {quote.category && (
-              <Text style={[styles.categoryText, isDark ? styles.darkText : styles.lightText]}>
-                {quote.category}
-              </Text>
+              <View style={[styles.badge, isDark ? styles.darkBadge : styles.lightBadge]}>
+                <Text style={[styles.badgeText, isDark ? styles.darkText : styles.lightText]}>
+                  {quote.category}
+                </Text>
+              </View>
             )}
             {quote.cultureTag && (
-              <Text style={[styles.cultureTagText, isDark ? styles.darkPlaceholder : styles.lightPlaceholder]}>
-                {quote.cultureTag}
-              </Text>
+              <View style={[styles.badge, isDark ? styles.darkBadge : styles.lightBadge]}>
+                <Text style={[styles.badgeText, isDark ? styles.darkText : styles.lightText]}>
+                  {quote.cultureTag}
+                </Text>
+              </View>
             )}
           </View>
         </View>
@@ -73,18 +109,44 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   headerContent: {
-    gap: 8,
+    gap: 12,
     alignItems: 'center',
   },
+  originalText: {
+    fontSize: 20,
+    fontWeight: '400',
+    textAlign: 'center',
+    lineHeight: 32,
+    opacity: 0.9,
+  },
+  transliterationText: {
+    fontSize: 14,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginTop: 4,
+  },
+  divider: {
+    width: 60,
+    height: 1,
+    marginVertical: 8,
+  },
+  lightDivider: {
+    backgroundColor: '#E5E5E5',
+  },
+  darkDivider: {
+    backgroundColor: '#3A3A3C',
+  },
   quoteText: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '300',
     textAlign: 'center',
+    lineHeight: 32,
   },
   authorText: {
     fontSize: 16,
     fontStyle: 'italic',
     textAlign: 'center',
+    marginTop: 8,
   },
   lightText: {
     color: '#000000',
@@ -103,13 +165,25 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   footerContent: {
-    gap: 4,
-    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    flexWrap: 'wrap',
   },
-  categoryText: {
-    fontSize: 14,
+  badge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
   },
-  cultureTagText: {
-    fontSize: 14,
+  lightBadge: {
+    backgroundColor: '#F2F2F7',
+  },
+  darkBadge: {
+    backgroundColor: '#3A3A3C',
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: '500',
+    textTransform: 'capitalize',
   },
 });

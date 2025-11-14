@@ -4,8 +4,9 @@
 // ══════════════════════════════════════════════════════════════
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, Pressable, Animated, TextInput } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { View, Text, ScrollView, StyleSheet, Pressable, Animated, TextInput, TouchableOpacity } from 'react-native';
+import { YStack, XStack, Text as TamaguiText, Button, Circle } from 'tamagui';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import Reanimated, {
   useAnimatedStyle,
@@ -14,12 +15,14 @@ import Reanimated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 
 import { PreSessionInstruction, ChecklistItem } from '../types/instructions';
 import { GradientBackground } from './GradientBackground';
 import { GradientCard } from './GradientCard';
 import { GradientButton } from './GradientButton';
 import theme, { gradients } from '../theme';
+import { userPreferences } from '../services/userPreferences';
 
 // ══════════════════════════════════════════════════════════════
 // Icon Mapping Helper
@@ -81,6 +84,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
   const [setupChecklist, setSetupChecklist] = useState<ChecklistItem[]>([]);
   const [breathingPrepComplete, setBreathingPrepComplete] = useState(false);
   const [userIntention, setUserIntention] = useState('');
+  const [alwaysSkip, setAlwaysSkip] = useState(false);
 
   useEffect(() => {
     // Initialize checklist from physical setup steps
@@ -103,8 +107,15 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
     .filter((item) => item.required)
     .every((item) => item.completed);
 
-  const handleContinueToSession = () => {
+  const handleContinueToSession = async () => {
+    if (alwaysSkip) {
+      await userPreferences.set('skipInstructions', true);
+    }
     onComplete(userIntention);
+  };
+
+  const toggleAlwaysSkip = () => {
+    setAlwaysSkip(!alwaysSkip);
   };
 
   // Get time-based greeting
@@ -175,6 +186,8 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
             intention={userIntention}
             onIntentionChange={setUserIntention}
             onBegin={handleContinueToSession}
+            alwaysSkip={alwaysSkip}
+            onToggleSkip={toggleAlwaysSkip}
             t={t}
           />
         )}
@@ -446,6 +459,8 @@ interface IntentionStepProps {
   intention: string;
   onIntentionChange: (text: string) => void;
   onBegin: () => void;
+  alwaysSkip: boolean;
+  onToggleSkip: () => void;
   t: any;
 }
 
@@ -456,6 +471,8 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
   intention,
   onIntentionChange,
   onBegin,
+  alwaysSkip,
+  onToggleSkip,
   t,
 }) => {
   return (
@@ -509,6 +526,33 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
           );
         })}
       </GradientCard>
+
+      {/* Skip Instructions Checkbox */}
+      <TouchableOpacity
+        onPress={onToggleSkip}
+        style={{
+          backgroundColor: 'rgba(255,255,255,0.9)',
+          padding: 16,
+          borderRadius: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        <Ionicons
+          name={alwaysSkip ? 'checkbox' : 'square-outline'}
+          size={24}
+          color="#667eea"
+          style={{ marginRight: 12 }}
+        />
+        <YStack flex={1}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: '#1a1a2e' }}>
+            {t('instructions.preparation.alwaysSkipInstructions')}
+          </Text>
+          <Text style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>
+            {t('instructions.preparation.skipInstructionsNote')}
+          </Text>
+        </YStack>
+      </TouchableOpacity>
 
       {/* Begin Button */}
       <GradientButton
