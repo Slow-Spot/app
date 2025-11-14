@@ -17,6 +17,7 @@ export interface Quote {
 export interface MeditationSession {
   id: number;
   title: string;
+  titleKey?: string; // i18n translation key (e.g., "sessionsList.morningAwakening.title")
   languageCode: string;
   durationSeconds: number;
   voiceUrl?: string;
@@ -25,6 +26,7 @@ export interface MeditationSession {
   cultureTag?: string;
   level: number;
   description?: string;
+  descriptionKey?: string; // i18n translation key (e.g., "sessionsList.morningAwakening.description")
   createdAt: string;
   // Healing frequency metadata (432Hz for ambient, 528Hz for chimes)
   ambientFrequency?: number; // Default: 432Hz (natural harmonic)

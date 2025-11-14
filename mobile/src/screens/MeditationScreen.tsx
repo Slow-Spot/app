@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SessionCard } from '../components/SessionCard';
+import { SessionFilters, FilterOptions } from '../components/SessionFilters';
 import { MeditationTimer } from '../components/MeditationTimer';
 import { PreSessionInstructions } from '../components/PreSessionInstructions';
 import { CelebrationScreen } from '../components/CelebrationScreen';
@@ -10,27 +11,36 @@ import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
 import { getInstructionForSession } from '../data/instructions';
+import { userPreferences } from '../services/userPreferences';
 import theme, { gradients } from '../theme';
 
 type FlowState = 'list' | 'instructions' | 'meditation' | 'celebration';
 
 export const MeditationScreen: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [sessions, setSessions] = useState<MeditationSession[]>([]);
+  const [allSessions, setAllSessions] = useState<MeditationSession[]>([]);
+  const [filteredSessions, setFilteredSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | null>(null);
   const [flowState, setFlowState] = useState<FlowState>('list');
   const [userIntention, setUserIntention] = useState('');
+  const [filters, setFilters] = useState<FilterOptions>({
+    category: 'all',
+  });
 
   useEffect(() => {
     loadSessions();
   }, [i18n.language]);
 
+  useEffect(() => {
+    applyFilters();
+  }, [allSessions, filters]);
+
   const loadSessions = async () => {
     try {
       setLoading(true);
       const data = await api.sessions.getAll(i18n.language);
-      setSessions(data);
+      setAllSessions(data);
     } catch (error) {
       console.error('Failed to load sessions:', error);
     } finally {
@@ -38,9 +48,56 @@ export const MeditationScreen: React.FC = () => {
     }
   };
 
-  const handleStartSession = (session: MeditationSession) => {
+  const applyFilters = () => {
+    let filtered = [...allSessions];
+
+    // Filter by category
+    if (filters.category !== 'all') {
+      if (filters.category === 'traditional') {
+        filtered = filtered.filter((s) => s.cultureTag === 'traditional');
+      } else if (filters.category === 'occasion') {
+        if (filters.occasion) {
+          filtered = filtered.filter((s) => s.cultureTag === `occasion_${filters.occasion}`);
+        } else {
+          filtered = filtered.filter((s) => s.cultureTag?.startsWith('occasion_'));
+        }
+      } else if (filters.category === 'cultural') {
+        if (filters.culture) {
+          filtered = filtered.filter((s) => s.cultureTag === filters.culture);
+        } else {
+          filtered = filtered.filter(
+            (s) =>
+              s.cultureTag &&
+              !s.cultureTag.startsWith('occasion_') &&
+              s.cultureTag !== 'traditional'
+          );
+        }
+      }
+    }
+
+    // Filter by level
+    if (filters.level) {
+      filtered = filtered.filter((s) => s.level === filters.level);
+    }
+
+    setFilteredSessions(filtered);
+  };
+
+  const handleFiltersChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
+  };
+
+  const handleStartSession = async (session: MeditationSession) => {
     setSelectedSession(session);
-    setFlowState('instructions');
+
+    // Check if user wants to skip instructions
+    const shouldSkip = await userPreferences.shouldSkipInstructions();
+    if (shouldSkip) {
+      setFlowState('meditation');
+      await handleInstructionsComplete('');
+    } else {
+      setFlowState('instructions');
+    }
   };
 
   const handleInstructionsComplete = async (intention: string) => {
@@ -145,12 +202,15 @@ export const MeditationScreen: React.FC = () => {
 
   const renderListHeader = useCallback(
     () => (
-      <View style={styles.header}>
-        <Text style={styles.title}>{t('meditation.title')}</Text>
-        <Text style={styles.subtitle}>{t('meditation.subtitle')}</Text>
-      </View>
+      <>
+        <View style={styles.header}>
+          <Text style={styles.title}>{t('meditation.title')}</Text>
+          <Text style={styles.subtitle}>{t('meditation.subtitle')}</Text>
+        </View>
+        <SessionFilters filters={filters} onFiltersChange={handleFiltersChange} />
+      </>
     ),
-    [t]
+    [t, filters]
   );
 
   const renderListEmpty = useCallback(
@@ -208,7 +268,7 @@ export const MeditationScreen: React.FC = () => {
   return (
     <GradientBackground gradient={gradients.screen.home} style={styles.container}>
       <FlatList
-        data={loading ? [] : sessions}
+        data={loading ? [] : filteredSessions}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={renderListHeader}

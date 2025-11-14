@@ -1261,7 +1261,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 1,
     title: 'Morning Awakening',
+    titleKey: 'sessionsList.morningAwakening.title',
     description: 'Start your day with clarity and focus. A gentle 5-minute practice to center yourself.',
+    descriptionKey: 'sessionsList.morningAwakening.description',
     languageCode: 'en',
     durationSeconds: 300, // 5 minutes
     level: 1,
@@ -1273,7 +1275,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 2,
     title: 'Breath Awareness',
+    titleKey: 'sessionsList.breathAwareness.title',
     description: 'Focus on your natural breath. A foundational practice for beginners.',
+    descriptionKey: 'sessionsList.breathAwareness.description',
     languageCode: 'en',
     durationSeconds: 600, // 10 minutes
     level: 1,
@@ -1285,7 +1289,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 3,
     title: 'Body Scan Relaxation',
+    titleKey: 'sessionsList.bodyScanRelaxation.title',
     description: 'Progressive relaxation technique moving attention through the body.',
+    descriptionKey: 'sessionsList.bodyScanRelaxation.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1297,7 +1303,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 4,
     title: 'Loving Kindness',
+    titleKey: 'sessionsList.lovingKindness.title',
     description: 'Cultivate compassion and goodwill toward yourself and others.',
+    descriptionKey: 'sessionsList.lovingKindness.description',
     languageCode: 'en',
     durationSeconds: 720, // 12 minutes
     level: 2,
@@ -1309,7 +1317,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 5,
     title: 'Deep Meditation',
+    titleKey: 'sessionsList.deepMeditation.title',
     description: 'Extended practice for experienced meditators. Dive into stillness.',
+    descriptionKey: 'sessionsList.deepMeditation.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 3,
@@ -1324,7 +1334,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 10,
     title: 'Morning Energy Boost',
+    titleKey: 'sessionsList.morningEnergyBoost.title',
     description: 'Energize your body and mind for the day ahead with breath techniques.',
+    descriptionKey: 'sessionsList.morningEnergyBoost.description',
     languageCode: 'en',
     durationSeconds: 480, // 8 minutes
     level: 1,
@@ -1336,7 +1348,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 11,
     title: 'Sunrise Meditation',
+    titleKey: 'sessionsList.sunriseMeditation.title',
     description: 'Greet the new day with gratitude and intention setting.',
+    descriptionKey: 'sessionsList.sunriseMeditation.description',
     languageCode: 'en',
     durationSeconds: 600, // 10 minutes
     level: 2,
@@ -1350,7 +1364,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 20,
     title: 'Quick Stress Relief',
+    titleKey: 'sessionsList.quickStressRelief.title',
     description: 'Release tension in just 5 minutes. Perfect for work breaks.',
+    descriptionKey: 'sessionsList.quickStressRelief.description',
     languageCode: 'en',
     durationSeconds: 300, // 5 minutes
     level: 1,
@@ -1362,7 +1378,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 21,
     title: 'Deep Stress Release',
+    titleKey: 'sessionsList.deepStressRelease.title',
     description: 'Comprehensive stress relief through progressive relaxation.',
+    descriptionKey: 'sessionsList.deepStressRelease.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1376,7 +1394,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 30,
     title: 'Evening Wind Down',
+    titleKey: 'sessionsList.eveningWindDown.title',
     description: 'Release the day\'s tensions and prepare for restful sleep.',
+    descriptionKey: 'sessionsList.eveningWindDown.description',
     languageCode: 'en',
     durationSeconds: 480, // 8 minutes
     level: 1,
@@ -1388,7 +1408,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 31,
     title: 'Sleep Sanctuary',
+    titleKey: 'sessionsList.sleepSanctuary.title',
     description: 'Deep body scan and relaxation for profound rest.',
+    descriptionKey: 'sessionsList.sleepSanctuary.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 2,
@@ -1402,7 +1424,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 40,
     title: 'Concentration Builder',
+    titleKey: 'sessionsList.concentrationBuilder.title',
     description: 'Sharpen your focus and eliminate distractions.',
+    descriptionKey: 'sessionsList.concentrationBuilder.description',
     languageCode: 'en',
     durationSeconds: 600, // 10 minutes
     level: 2,
@@ -1414,7 +1438,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 41,
     title: 'Flow State Activation',
+    titleKey: 'sessionsList.flowStateActivation.title',
     description: 'Enter deep concentration for work or study.',
+    descriptionKey: 'sessionsList.flowStateActivation.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 3,
@@ -1428,7 +1454,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 50,
     title: 'Calm Anxiety',
+    titleKey: 'sessionsList.calmAnxiety.title',
     description: 'Soothe anxious thoughts with gentle breath awareness.',
+    descriptionKey: 'sessionsList.calmAnxiety.description',
     languageCode: 'en',
     durationSeconds: 420, // 7 minutes
     level: 1,
@@ -1440,7 +1468,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 51,
     title: 'Anxiety Release Practice',
+    titleKey: 'sessionsList.anxietyReleasePractice.title',
     description: 'Ground yourself and release worry through body awareness.',
+    descriptionKey: 'sessionsList.anxietyReleasePractice.description',
     languageCode: 'en',
     durationSeconds: 720, // 12 minutes
     level: 2,
@@ -1454,7 +1484,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 60,
     title: 'Healing Through Grief',
+    titleKey: 'sessionsList.healingThroughGrief.title',
     description: 'A gentle space to honor loss and find peace.',
+    descriptionKey: 'sessionsList.healingThroughGrief.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1466,7 +1498,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 61,
     title: 'Embracing Loss',
+    titleKey: 'sessionsList.embracingLoss.title',
     description: 'Compassionate meditation for processing difficult emotions.',
+    descriptionKey: 'sessionsList.embracingLoss.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 3,
@@ -1480,7 +1514,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 70,
     title: 'Gratitude Reflection',
+    titleKey: 'sessionsList.gratitudeReflection.title',
     description: 'Cultivate appreciation for life\'s blessings.',
+    descriptionKey: 'sessionsList.gratitudeReflection.description',
     languageCode: 'en',
     durationSeconds: 480, // 8 minutes
     level: 1,
@@ -1492,7 +1528,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 71,
     title: 'Deep Gratitude Journey',
+    titleKey: 'sessionsList.deepGratitudeJourney.title',
     description: 'Explore profound thankfulness and joy.',
+    descriptionKey: 'sessionsList.deepGratitudeJourney.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1506,7 +1544,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 80,
     title: 'Creative Awakening',
+    titleKey: 'sessionsList.creativeAwakening.title',
     description: 'Unlock your creative potential through open awareness.',
+    descriptionKey: 'sessionsList.creativeAwakening.description',
     languageCode: 'en',
     durationSeconds: 600, // 10 minutes
     level: 2,
@@ -1518,7 +1558,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 81,
     title: 'Inspiration Flow',
+    titleKey: 'sessionsList.inspirationFlow.title',
     description: 'Access your inner muse and creative genius.',
+    descriptionKey: 'sessionsList.inspirationFlow.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 3,
@@ -1533,7 +1575,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 100,
     title: 'Zazen - Zen Sitting',
+    titleKey: 'sessionsList.zazenZenSitting.title',
     description: 'Traditional Zen meditation. Just sitting, observing breath and thoughts.',
+    descriptionKey: 'sessionsList.zazenZenSitting.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 3,
@@ -1545,7 +1589,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 101,
     title: 'Kinhin - Zen Walking',
+    titleKey: 'sessionsList.kinhinZenWalking.title',
     description: 'Slow, mindful walking between sitting periods.',
+    descriptionKey: 'sessionsList.kinhinZenWalking.description',
     languageCode: 'en',
     durationSeconds: 600, // 10 minutes
     level: 2,
@@ -1557,7 +1603,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 102,
     title: 'Beginner Zazen',
+    titleKey: 'sessionsList.beginnerZazen.title',
     description: 'Introduction to Zen sitting meditation practice.',
+    descriptionKey: 'sessionsList.beginnerZazen.description',
     languageCode: 'en',
     durationSeconds: 600, // 10 minutes
     level: 1,
@@ -1571,7 +1619,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 110,
     title: 'Vipassana Body Scan',
+    titleKey: 'sessionsList.vipassanaBodyScan.title',
     description: 'Systematic awareness of sensations throughout the body.',
+    descriptionKey: 'sessionsList.vipassanaBodyScan.description',
     languageCode: 'en',
     durationSeconds: 1800, // 30 minutes
     level: 4,
@@ -1583,7 +1633,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 111,
     title: 'Insight Meditation',
+    titleKey: 'sessionsList.insightMeditation.title',
     description: 'Observe the impermanent nature of all phenomena.',
+    descriptionKey: 'sessionsList.insightMeditation.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 3,
@@ -1595,7 +1647,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 112,
     title: 'Beginner Vipassana',
+    titleKey: 'sessionsList.beginnerVipassana.title',
     description: 'Introduction to insight meditation practice.',
+    descriptionKey: 'sessionsList.beginnerVipassana.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1609,7 +1663,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 120,
     title: 'Om Meditation',
+    titleKey: 'sessionsList.omMeditation.title',
     description: 'Chant and meditate on the primordial sound Om.',
+    descriptionKey: 'sessionsList.omMeditation.description',
     languageCode: 'en',
     durationSeconds: 720, // 12 minutes
     level: 2,
@@ -1621,7 +1677,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 121,
     title: 'Transcendental Meditation',
+    titleKey: 'sessionsList.transcendentalMeditation.title',
     description: 'Settle into deep inner silence with mantra practice.',
+    descriptionKey: 'sessionsList.transcendentalMeditation.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 3,
@@ -1633,7 +1691,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 122,
     title: 'Chakra Awareness',
+    titleKey: 'sessionsList.chakraAwareness.title',
     description: 'Journey through the seven energy centers.',
+    descriptionKey: 'sessionsList.chakraAwareness.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1647,7 +1707,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 130,
     title: 'Qigong Meditation',
+    titleKey: 'sessionsList.qigongMeditation.title',
     description: 'Cultivate Qi energy through breath and visualization.',
+    descriptionKey: 'sessionsList.qigongMeditation.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1659,7 +1721,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 131,
     title: 'Inner Smile Practice',
+    titleKey: 'sessionsList.innerSmilePractice.title',
     description: 'Taoist meditation for cultivating inner peace and joy.',
+    descriptionKey: 'sessionsList.innerSmilePractice.description',
     languageCode: 'en',
     durationSeconds: 720, // 12 minutes
     level: 2,
@@ -1671,7 +1735,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 132,
     title: 'Wu Wei - Effortless Being',
+    titleKey: 'sessionsList.wuWeiEffortlessBeing.title',
     description: 'Flow with the natural way of things.',
+    descriptionKey: 'sessionsList.wuWeiEffortlessBeing.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 3,
@@ -1685,7 +1751,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 140,
     title: 'Dhikr - Remembrance',
+    titleKey: 'sessionsList.dhikrRemembrance.title',
     description: 'Rhythmic remembrance of the Divine.',
+    descriptionKey: 'sessionsList.dhikrRemembrance.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1697,7 +1765,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 141,
     title: 'Muraqaba - Heart Meditation',
+    titleKey: 'sessionsList.muraqabaHeartMeditation.title',
     description: 'Sufi contemplation of the heart center.',
+    descriptionKey: 'sessionsList.muraqabaHeartMeditation.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 3,
@@ -1709,7 +1779,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 142,
     title: 'Breath of Compassion',
+    titleKey: 'sessionsList.breathOfCompassion.title',
     description: 'Sufi breathing practice for opening the heart.',
+    descriptionKey: 'sessionsList.breathOfCompassion.description',
     languageCode: 'en',
     durationSeconds: 720, // 12 minutes
     level: 2,
@@ -1723,7 +1795,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 150,
     title: 'Centering Prayer',
+    titleKey: 'sessionsList.centeringPrayer.title',
     description: 'Silent communion with God through sacred word.',
+    descriptionKey: 'sessionsList.centeringPrayer.description',
     languageCode: 'en',
     durationSeconds: 1200, // 20 minutes
     level: 2,
@@ -1735,7 +1809,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 151,
     title: 'Lectio Divina',
+    titleKey: 'sessionsList.lectioDivina.title',
     description: 'Contemplative scripture reading and meditation.',
+    descriptionKey: 'sessionsList.lectioDivina.description',
     languageCode: 'en',
     durationSeconds: 900, // 15 minutes
     level: 2,
@@ -1747,7 +1823,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 152,
     title: 'Contemplative Silence',
+    titleKey: 'sessionsList.contemplativeSilence.title',
     description: 'Rest in the presence of the Divine.',
+    descriptionKey: 'sessionsList.contemplativeSilence.description',
     languageCode: 'en',
     durationSeconds: 1500, // 25 minutes
     level: 3,
@@ -1759,7 +1837,9 @@ export const MOCK_SESSIONS: MeditationSession[] = [
   {
     id: 153,
     title: 'Breath Prayer',
+    titleKey: 'sessionsList.breathPrayer.title',
     description: 'Rhythmic prayer synchronized with breathing.',
+    descriptionKey: 'sessionsList.breathPrayer.description',
     languageCode: 'en',
     durationSeconds: 600, // 10 minutes
     level: 1,

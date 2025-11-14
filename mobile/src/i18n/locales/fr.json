@@ -60,7 +60,9 @@
       "skip": "Passer",
       "continue": "Continuer",
       "beginMeditation": "Commencer la Méditation",
-      "stepProgress": "Étape {{current}} sur {{total}}"
+      "stepProgress": "Étape {{current}} sur {{total}}",
+      "alwaysSkipInstructions": "Toujours ignorer les instructions (pour méditants expérimentés)",
+      "skipInstructionsNote": "Vous pouvez changer cela plus tard dans les Paramètres"
     },
     "level1_breath": {
       "title": "Bienvenue à Votre Première Méditation",
@@ -239,6 +241,11 @@
       "taoist": "Taoïste (Chinois)",
       "sufi": "Soufi (Islamique)",
       "christian": "Contemplative Chrétienne"
+    },
+    "filters": {
+      "all": "Toutes les sessions",
+      "showFilters": "Afficher les filtres",
+      "hideFilters": "Masquer les filtres"
     }
   },
   "settings": {
@@ -257,5 +264,167 @@
     "meditate": "Méditer",
     "quotes": "Citations",
     "settings": "Paramètres"
+  },
+  "sessionsList": {
+    "morningAwakening": {
+      "title": "Réveil Matinal",
+      "description": "Commencez votre journée avec clarté et concentration. Une pratique douce de 5 minutes pour vous recentrer."
+    },
+    "breathAwareness": {
+      "title": "Conscience de la Respiration",
+      "description": "Concentrez-vous sur votre respiration naturelle. Une pratique fondamentale pour les débutants."
+    },
+    "bodyScanRelaxation": {
+      "title": "Relaxation par Scan Corporel",
+      "description": "Technique de relaxation progressive qui déplace l'attention à travers le corps."
+    },
+    "lovingKindness": {
+      "title": "Bienveillance Aimante",
+      "description": "Cultivez la compassion et la bonne volonté envers vous-même et les autres."
+    },
+    "deepMeditation": {
+      "title": "Méditation Profonde",
+      "description": "Pratique prolongée pour les méditants expérimentés. Plongez dans l'immobilité."
+    },
+    "morningEnergyBoost": {
+      "title": "Boost d'Énergie Matinale",
+      "description": "Dynamisez votre corps et votre esprit pour la journée à venir avec des techniques respiratoires."
+    },
+    "sunriseMeditation": {
+      "title": "Méditation au Lever du Soleil",
+      "description": "Accueillez la nouvelle journée avec gratitude et définition d'intentions."
+    },
+    "quickStressRelief": {
+      "title": "Soulagement Rapide du Stress",
+      "description": "Relâchez les tensions en seulement 5 minutes. Parfait pour les pauses au travail."
+    },
+    "deepStressRelease": {
+      "title": "Libération Profonde du Stress",
+      "description": "Soulagement complet du stress grâce à la relaxation progressive."
+    },
+    "eveningWindDown": {
+      "title": "Détente du Soir",
+      "description": "Relâchez les tensions de la journée et préparez-vous à un sommeil réparateur."
+    },
+    "sleepSanctuary": {
+      "title": "Sanctuaire du Sommeil",
+      "description": "Scan corporel profond et relaxation pour un repos profond."
+    },
+    "concentrationBuilder": {
+      "title": "Développement de la Concentration",
+      "description": "Affûtez votre concentration et éliminez les distractions."
+    },
+    "flowStateActivation": {
+      "title": "Activation de l'État de Flow",
+      "description": "Entrez dans une concentration profonde pour le travail ou les études."
+    },
+    "calmAnxiety": {
+      "title": "Apaiser l'Anxiété",
+      "description": "Calmez les pensées anxieuses avec une conscience douce de la respiration."
+    },
+    "anxietyReleasePractice": {
+      "title": "Pratique de Libération de l'Anxiété",
+      "description": "Ancrez-vous et libérez les inquiétudes grâce à la conscience corporelle."
+    },
+    "healingThroughGrief": {
+      "title": "Guérison par le Deuil",
+      "description": "Un espace doux pour honorer la perte et trouver la paix."
+    },
+    "embracingLoss": {
+      "title": "Accueillir la Perte",
+      "description": "Méditation compassionnée pour traiter les émotions difficiles."
+    },
+    "gratitudeReflection": {
+      "title": "Réflexion de Gratitude",
+      "description": "Cultivez l'appréciation pour les bénédictions de la vie."
+    },
+    "deepGratitudeJourney": {
+      "title": "Voyage de Gratitude Profonde",
+      "description": "Explorez la reconnaissance et la joie profondes."
+    },
+    "creativeAwakening": {
+      "title": "Éveil Créatif",
+      "description": "Libérez votre potentiel créatif grâce à une conscience ouverte."
+    },
+    "inspirationFlow": {
+      "title": "Flux d'Inspiration",
+      "description": "Accédez à votre muse intérieure et à votre génie créatif."
+    },
+    "zazenZenSitting": {
+      "title": "Zazen - Assise Zen",
+      "description": "Méditation Zen traditionnelle. Simplement s'asseoir, observer la respiration et les pensées."
+    },
+    "kinhinZenWalking": {
+      "title": "Kinhin - Marche Zen",
+      "description": "Marche lente et consciente entre les périodes d'assise."
+    },
+    "beginnerZazen": {
+      "title": "Zazen pour Débutants",
+      "description": "Introduction à la pratique de méditation assise Zen."
+    },
+    "vipassanaBodyScan": {
+      "title": "Scan Corporel Vipassana",
+      "description": "Conscience systématique des sensations à travers tout le corps."
+    },
+    "insightMeditation": {
+      "title": "Méditation de Vision Profonde",
+      "description": "Observez la nature impermanente de tous les phénomènes."
+    },
+    "beginnerVipassana": {
+      "title": "Vipassana pour Débutants",
+      "description": "Introduction à la pratique de méditation de vision profonde."
+    },
+    "omMeditation": {
+      "title": "Méditation Om",
+      "description": "Chantez et méditez sur le son primordial Om."
+    },
+    "transcendentalMeditation": {
+      "title": "Méditation Transcendantale",
+      "description": "Installez-vous dans un silence intérieur profond avec la pratique du mantra."
+    },
+    "chakraAwareness": {
+      "title": "Conscience des Chakras",
+      "description": "Voyage à travers les sept centres énergétiques."
+    },
+    "qigongMeditation": {
+      "title": "Méditation Qigong",
+      "description": "Cultivez l'énergie Qi par la respiration et la visualisation."
+    },
+    "innerSmilePractice": {
+      "title": "Pratique du Sourire Intérieur",
+      "description": "Méditation taoïste pour cultiver la paix intérieure et la joie."
+    },
+    "wuWeiEffortlessBeing": {
+      "title": "Wu Wei - Être Sans Effort",
+      "description": "Flottez avec la voie naturelle des choses."
+    },
+    "dhikrRemembrance": {
+      "title": "Dhikr - Souvenance",
+      "description": "Souvenance rythmique du Divin."
+    },
+    "muraqabaHeartMeditation": {
+      "title": "Muraqaba - Méditation du Cœur",
+      "description": "Contemplation soufie du centre du cœur."
+    },
+    "breathOfCompassion": {
+      "title": "Souffle de Compassion",
+      "description": "Pratique respiratoire soufie pour ouvrir le cœur."
+    },
+    "centeringPrayer": {
+      "title": "Prière Centrante",
+      "description": "Communion silencieuse avec Dieu à travers un mot sacré."
+    },
+    "lectioDivina": {
+      "title": "Lectio Divina",
+      "description": "Lecture contemplative de l'Écriture et méditation."
+    },
+    "contemplativeSilence": {
+      "title": "Silence Contemplatif",
+      "description": "Reposez-vous en présence du Divin."
+    },
+    "breathPrayer": {
+      "title": "Prière Respiratoire",
+      "description": "Prière rythmique synchronisée avec la respiration."
+    }
   }
 }

@@ -4,7 +4,7 @@
 // ══════════════════════════════════════════════════════════════
 
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Animated } from 'react-native';
+import { ScrollView, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import { YStack, XStack, Text, Button, Circle } from 'tamagui';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,9 +15,11 @@ import Reanimated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 
 import { PreSessionInstruction, ChecklistItem } from '../types/instructions';
 import { theme } from '../theme';
+import { userPreferences } from '../services/userPreferences';
 
 // ══════════════════════════════════════════════════════════════
 // Main Component
@@ -34,10 +36,12 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
   onComplete,
   onSkip,
 }) => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState<'overview' | 'setup' | 'breathing' | 'intention'>('overview');
   const [setupChecklist, setSetupChecklist] = useState<ChecklistItem[]>([]);
   const [breathingPrepComplete, setBreathingPrepComplete] = useState(false);
   const [userIntention, setUserIntention] = useState('');
+  const [alwaysSkip, setAlwaysSkip] = useState(false);
 
   useEffect(() => {
     // Initialize checklist from physical setup steps
@@ -60,8 +64,15 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
     .filter((item) => item.required)
     .every((item) => item.completed);
 
-  const handleContinueToSession = () => {
+  const handleContinueToSession = async () => {
+    if (alwaysSkip) {
+      await userPreferences.set('skipInstructions', true);
+    }
     onComplete(userIntention);
+  };
+
+  const toggleAlwaysSkip = () => {
+    setAlwaysSkip(!alwaysSkip);
   };
 
   // ══════════════════════════════════════════════════════════════
@@ -123,6 +134,9 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
             intention={userIntention}
             onIntentionChange={setUserIntention}
             onBegin={handleContinueToSession}
+            alwaysSkip={alwaysSkip}
+            onToggleSkip={toggleAlwaysSkip}
+            t={t}
           />
         )}
       </ScrollView>
@@ -339,12 +353,21 @@ interface IntentionStepProps {
   onBegin: () => void;
 }
 
-const IntentionStep: React.FC<IntentionStepProps> = ({
+interface IntentionStepInternalProps extends IntentionStepProps {
+  alwaysSkip: boolean;
+  onToggleSkip: () => void;
+  t: any;
+}
+
+const IntentionStep: React.FC<IntentionStepInternalProps> = ({
   mentalPrep,
   sessionTips,
   intention,
   onIntentionChange,
   onBegin,
+  alwaysSkip,
+  onToggleSkip,
+  t,
 }) => {
   return (
     <YStack gap="$4">
@@ -378,6 +401,33 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
         description="Keep these tips in mind:"
         list={sessionTips}
       />
+
+      {/* Skip Instructions Checkbox */}
+      <TouchableOpacity
+        onPress={onToggleSkip}
+        style={{
+          backgroundColor: 'rgba(255,255,255,0.9)',
+          padding: 16,
+          borderRadius: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        <Ionicons
+          name={alwaysSkip ? 'checkbox' : 'square-outline'}
+          size={24}
+          color="#667eea"
+          style={{ marginRight: 12 }}
+        />
+        <YStack flex={1}>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: '#1a1a2e' }}>
+            {t('instructions.preparation.alwaysSkipInstructions')}
+          </Text>
+          <Text style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>
+            {t('instructions.preparation.skipInstructionsNote')}
+          </Text>
+        </YStack>
+      </TouchableOpacity>
 
       {/* Begin Button */}
       <Button onPress={onBegin} style={[styles.primaryButton, { marginTop: 16 }]}>
