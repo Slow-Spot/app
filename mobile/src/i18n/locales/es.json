@@ -44,6 +44,7 @@
     "theme": "Tema",
     "light": "Claro",
     "dark": "Oscuro",
+    "system": "Sistema",
     "notifications": "Notificaciones",
     "reminderTime": "Hora de Recordatorio",
     "about": "Acerca de"

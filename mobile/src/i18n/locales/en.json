@@ -50,6 +50,7 @@
     "theme": "Theme",
     "light": "Light",
     "dark": "Dark",
+    "system": "System",
     "notifications": "Notifications",
     "reminderTime": "Reminder Time",
     "about": "About"
