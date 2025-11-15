@@ -12,13 +12,13 @@
 <tr>
 <td align="center">
 <b>Direct Link (Expo Go)</b><br/>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d?channel-name=preview" alt="QR Code Direct" width="200"/>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=exp%3A%2F%2Fu.expo.dev%2F2b3ebb2e-60e7-4355-922a-db729c41792d" alt="QR Code Direct" width="200"/>
 <br/>
 <sup>Scan in Expo Go app</sup>
 </td>
 <td align="center">
-<b>Web Link</b><br/>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://expo.dev/@leszekszpunar/slow-spot" alt="QR Code Web" width="200"/>
+<b>Web Link (Recommended)</b><br/>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fexpo.dev%2F%40leszekszpunar%2Fslow-spot" alt="QR Code Web" width="200"/>
 <br/>
 <sup>Scan with camera</sup>
 </td>

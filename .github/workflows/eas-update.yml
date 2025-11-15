@@ -63,13 +63,15 @@ jobs:
       - name: Generate QR Code for Expo Go
         id: qr
         run: |
-          # Get project URL
-          PROJECT_URL="exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d?channel-name=preview"
+          # Get project URL (URL-encoded for QR API)
+          PROJECT_URL="exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d"
+          PROJECT_URL_ENCODED="exp%3A%2F%2Fu.expo.dev%2F2b3ebb2e-60e7-4355-922a-db729c41792d"
           WEB_URL="https://expo.dev/@leszekszpunar/slow-spot"
+          WEB_URL_ENCODED="https%3A%2F%2Fexpo.dev%2F%40leszekszpunar%2Fslow-spot"
 
-          # Generate QR codes using API
-          QR_DIRECT="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${PROJECT_URL}"
-          QR_WEB="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${WEB_URL}"
+          # Generate QR codes using API (with proper URL encoding)
+          QR_DIRECT="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${PROJECT_URL_ENCODED}"
+          QR_WEB="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${WEB_URL_ENCODED}"
 
           # Add to summary
           echo "## 📱 Expo Go Testing" >> $GITHUB_STEP_SUMMARY

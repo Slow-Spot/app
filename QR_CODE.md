@@ -2,21 +2,21 @@
 
 ## Scan to Test the App
 
-### QR Code (Expo Go Direct Link)
+### QR Code (Web Link - RECOMMENDED) ⭐
 
-![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d?channel-name=preview)
+![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https%3A%2F%2Fexpo.dev%2F%40leszekszpunar%2Fslow-spot)
 
 **Instructions:**
 1. Install Expo Go on your phone
-2. Open Expo Go app
-3. Scan this QR code
+2. Scan this QR code with camera
+3. Open in Expo Go when prompted
 4. App will load automatically!
 
 ---
 
-### Alternative QR Code (Web Link)
+### Alternative QR Code (Direct Expo Link)
 
-![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https://expo.dev/@leszekszpunar/slow-spot)
+![QR Code](https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=exp%3A%2F%2Fu.expo.dev%2F2b3ebb2e-60e7-4355-922a-db729c41792d)
 
 **Instructions:**
 1. Install Expo Go on your phone
