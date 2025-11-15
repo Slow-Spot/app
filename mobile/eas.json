@@ -8,12 +8,10 @@
       "distribution": "internal",
       "channel": "development",
       "ios": {
-        "simulator": true,
-        "bundleIdentifier": "com.slowspot.app.dev"
+        "simulator": true
       },
       "android": {
-        "buildType": "apk",
-        "applicationId": "com.slowspot.app.dev"
+        "buildType": "apk"
       }
     },
     "preview": {
@@ -24,13 +22,11 @@
       },
       "ios": {
         "simulator": false,
-        "resourceClass": "m-medium",
-        "bundleIdentifier": "com.slowspot.app.preview"
+        "resourceClass": "m-medium"
       },
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease",
-        "applicationId": "com.slowspot.app.preview"
+        "gradleCommand": ":app:assembleRelease"
       }
     },
     "production": {
@@ -39,12 +35,10 @@
         "APP_ENV": "production"
       },
       "ios": {
-        "resourceClass": "m-medium",
-        "bundleIdentifier": "com.slowspot.app"
+        "resourceClass": "m-medium"
       },
       "android": {
-        "buildType": "aab",
-        "applicationId": "com.slowspot.app"
+        "buildType": "app-bundle"
       }
     }
   },
