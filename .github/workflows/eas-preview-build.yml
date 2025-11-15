@@ -10,13 +10,11 @@ on:
   workflow_dispatch:
     inputs:
       platform:
-        description: 'Platform to build (all, ios, android)'
+        description: 'Platform to build (android only - iOS uses Expo Go)'
         required: true
-        default: 'all'
+        default: 'android'
         type: choice
         options:
-          - all
-          - ios
           - android
 
 jobs:
@@ -45,17 +43,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build for iOS (Preview)
-        if: |
-          github.event_name == 'push' ||
-          github.event.inputs.platform == 'ios' ||
-          github.event.inputs.platform == 'all'
-        run: |
-          eas build --platform ios \
-            --profile preview \
-            --non-interactive \
-            --no-wait
-
       - name: Build for Android (Preview)
         if: |
           github.event_name == 'push' ||
@@ -72,13 +59,16 @@ jobs:
         run: |
           echo "## 🚀 EAS Preview Build Started" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Check build status: [Expo Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)" >> $GITHUB_STEP_SUMMARY
+          echo "**Android:** Native APK build → [Expo Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)" >> $GITHUB_STEP_SUMMARY
+          echo "**iOS:** Use Expo Go (no build needed) → [Install Expo Go](https://apps.apple.com/app/expo-go/id982107779)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Platforms:** iOS + Android" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "ℹ️ iOS build may fail without Apple Developer account (credentials required)" >> $GITHUB_STEP_SUMMARY
+          echo "### 📱 iOS Testing (FREE)" >> $GITHUB_STEP_SUMMARY
+          echo "1. Install Expo Go on iPhone" >> $GITHUB_STEP_SUMMARY
+          echo "2. Open: exp://@leszekszpunar/slow-spot" >> $GITHUB_STEP_SUMMARY
+          echo "3. OTA updates automatic via \`eas update\` workflow" >> $GITHUB_STEP_SUMMARY
 
       - name: Comment on PR (if applicable)
         if: github.event_name == 'pull_request'
@@ -89,5 +79,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚀 **Preview Build Started!**\n\nCheck build status: https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds\n\nOnce complete, you can:\n- Download APK/IPA directly\n- Install via Expo Go\n- Submit to TestFlight'
+              body: '🚀 **Preview Build Started!**\n\n**Android APK:** [Expo Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)\n**iOS Testing:** Use [Expo Go](https://apps.apple.com/app/expo-go/id982107779) (FREE, no build needed)\n\nOnce complete:\n- 📦 Download Android APK and install directly\n- 📱 iOS: Install Expo Go → Open `exp://@leszekszpunar/slow-spot`\n- 🔄 OTA updates automatic for both platforms'
             })
