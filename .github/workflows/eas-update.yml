@@ -6,6 +6,7 @@ name: EAS Update (OTA - Expo Go)
 on:
   push:
     branches:
+      - main
       - develop
       - test
   workflow_dispatch:
