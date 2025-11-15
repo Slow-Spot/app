@@ -20,12 +20,23 @@ const resources = {
   hi: { translation: hi },
 };
 
+// Get system language safely
+const getSystemLanguage = () => {
+  try {
+    const locales = Localization.getLocales();
+    return locales?.[0]?.languageCode || 'en';
+  } catch (error) {
+    console.warn('Failed to get system language:', error);
+    return 'en';
+  }
+};
+
 // Initialize with system language first
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: Localization.getLocales()[0]?.languageCode || 'en',
+    lng: getSystemLanguage(),
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
