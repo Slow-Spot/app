@@ -124,7 +124,37 @@ npx expo token:create
    - Value: [wklej token]
    - Kliknij `Add secret`
 
-### Krok 3: (Opcjonalnie) Skonfiguruj Apple/Google credentials
+### Krok 3: ⚠️ WYMAGANE - Setup Android Keystore (jednorazowy!)
+
+**Przed pierwszym automatycznym buildem musisz wygenerować Android keystore:**
+
+**Opcja A - Automatyczny script (najłatwiejszy):**
+```bash
+cd mobile
+../scripts/setup-android-keystore.sh
+```
+
+**Opcja B - Ręcznie (przez build):**
+```bash
+cd mobile
+eas build --platform android --profile preview
+# Gdy zapyta "Generate new keystore?" → YES
+```
+
+**Opcja C - Ręcznie (tylko keystore, szybkie):**
+```bash
+cd mobile
+eas credentials
+# Wybierz: Android → Set up new keystore → Generate
+```
+
+📖 **Szczegóły:** Zobacz `FIRST_TIME_SETUP.md` dla pełnej instrukcji
+
+⚠️ **To jest wymagane!** Bez tego GitHub Actions buildy będą failować z błędem "Generating a new Keystore is not supported in --non-interactive mode"
+
+✅ **Po setupie:** Wszystkie kolejne buildy przez GitHub Actions będą działać automatycznie!
+
+### Krok 4: (Opcjonalnie) Skonfiguruj Apple/Google credentials
 
 **Dla iOS (TestFlight):**
 ```bash
@@ -210,6 +240,29 @@ Możesz też wywołać buildy ręcznie przez GitHub UI:
 ---
 
 ## 🚨 Troubleshooting
+
+### Build fails: "Generating a new Keystore is not supported in --non-interactive mode"
+
+**To jest NORMALNY błąd przy pierwszym buildzie!**
+
+**Rozwiązanie:** Musisz raz wygenerować Android keystore ręcznie (jednorazowy setup):
+
+```bash
+cd mobile
+eas build --platform android --profile preview
+# Gdy zapyta "Generate new keystore?" → YES
+```
+
+**Alternatywnie (szybsze, bez buildu):**
+```bash
+cd mobile
+eas credentials
+# Wybierz: Android → Set up new keystore → Generate
+```
+
+📖 **Pełna instrukcja:** `FIRST_TIME_SETUP.md`
+
+✅ **Po tym setupie wszystkie GitHub Actions buildy będą działać automatycznie!**
 
 ### Build fails: "Missing EXPO_TOKEN"
 ```bash
