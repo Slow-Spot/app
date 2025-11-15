@@ -30,12 +30,55 @@ jobs:
 
     steps:
       - name: Delete old workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 7
-          keep_minimum_runs: ${{ github.event.inputs.keep_count || '5' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          KEEP_COUNT: ${{ github.event.inputs.keep_count || '5' }}
+        run: |
+          echo "🧹 Cleaning up old workflow runs..."
+          echo "📊 Keeping the ${KEEP_COUNT} most recent runs for each workflow"
+
+          # Get all workflows
+          workflows=$(gh api repos/${REPO}/actions/workflows --jq '.workflows[] | .id')
+
+          for workflow_id in $workflows; do
+            workflow_name=$(gh api repos/${REPO}/actions/workflows/${workflow_id} --jq '.name')
+            echo ""
+            echo "📋 Processing workflow: ${workflow_name}"
+
+            # Get all runs for this workflow, sorted by creation date (newest first)
+            run_ids=$(gh api \
+              "repos/${REPO}/actions/workflows/${workflow_id}/runs" \
+              --paginate \
+              --jq '.workflow_runs | sort_by(.created_at) | reverse | .[].id')
+
+            # Count total runs
+            total=$(echo "$run_ids" | wc -l | xargs)
+            echo "   Total runs: ${total}"
+
+            # Skip the first KEEP_COUNT runs (most recent)
+            to_delete=$(echo "$run_ids" | tail -n +$((KEEP_COUNT + 1)))
+            delete_count=$(echo "$to_delete" | grep -c . || echo 0)
+
+            if [ "$delete_count" -gt 0 ]; then
+              echo "   🗑️  Deleting ${delete_count} old runs..."
+
+              # Delete each old run
+              echo "$to_delete" | while read -r run_id; do
+                if [ -n "$run_id" ]; then
+                  gh api \
+                    --method DELETE \
+                    "repos/${REPO}/actions/runs/${run_id}" \
+                    2>/dev/null && echo "      ✅ Deleted run ${run_id}" || echo "      ❌ Failed to delete run ${run_id}"
+                fi
+              done
+            else
+              echo "   ✨ No runs to delete (${total} runs, keeping ${KEEP_COUNT})"
+            fi
+          done
+
+          echo ""
+          echo "✅ Cleanup complete!"
 
   cleanup-artifacts:
     name: Cleanup Old Artifacts

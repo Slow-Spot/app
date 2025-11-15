@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,13 +15,15 @@ import theme, { gradients } from '../theme';
 interface HomeScreenProps {
   onNavigateToMeditation: () => void;
   onNavigateToQuotes: () => void;
-  onNavigateToCustom?: () => void; // New: Navigate to custom session builder
+  onNavigateToCustom?: () => void;
+  onNavigateToProfile?: () => void; // New: Navigate to profile
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToMeditation,
   onNavigateToQuotes,
   onNavigateToCustom,
+  onNavigateToProfile,
 }) => {
   const { t, i18n } = useTranslation();
   const [dailyQuote, setDailyQuote] = useState<Quote | null>(null);
@@ -71,83 +73,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <Text style={styles.tagline}>{t('app.tagline')}</Text>
         </View>
 
-        {/* Progress Stats */}
-        {stats && stats.totalSessions > 0 && (
-          <View style={styles.progressSection}>
-            <Text style={styles.progressTitle}>
-              {t('home.progress') || 'Your Progress'}
-            </Text>
-            <View style={styles.statsRow}>
-              {/* Streak Stat */}
-              <View style={styles.statCard}>
-                <LinearGradient
-                  colors={gradients.session.streak.colors}
-                  start={gradients.session.streak.start}
-                  end={gradients.session.streak.end}
-                  style={styles.statGradient}
-                >
-                  <View style={styles.statIconContainer}>
-                    <Ionicons
-                      name="flame"
-                      size={24}
-                      color={theme.colors.neutral.white}
-                    />
-                  </View>
-                  <Text style={styles.statValue}>{stats.currentStreak}</Text>
-                  <Text style={styles.statLabel}>
-                    {t('home.dayStreak') || 'day streak'}
-                  </Text>
-                </LinearGradient>
-              </View>
-
-              {/* Time Stat */}
-              <View style={styles.statCard}>
-                <LinearGradient
-                  colors={gradients.session.duration.colors}
-                  start={gradients.session.duration.start}
-                  end={gradients.session.duration.end}
-                  style={styles.statGradient}
-                >
-                  <View style={styles.statIconContainer}>
-                    <Ionicons
-                      name="time-outline"
-                      size={24}
-                      color={theme.colors.neutral.white}
-                    />
-                  </View>
-                  <Text style={styles.statValue}>{stats.totalMinutes}</Text>
-                  <Text style={styles.statLabel}>
-                    {t('home.totalMinutes') || 'total min'}
-                  </Text>
-                </LinearGradient>
-              </View>
-
-              {/* Sessions Stat */}
-              <View style={styles.statCard}>
-                <LinearGradient
-                  colors={gradients.session.completions.colors}
-                  start={gradients.session.completions.start}
-                  end={gradients.session.completions.end}
-                  style={styles.statGradient}
-                >
-                  <View style={styles.statIconContainer}>
-                    <Ionicons
-                      name="checkmark-circle-outline"
-                      size={24}
-                      color={theme.colors.neutral.white}
-                    />
-                  </View>
-                  <Text style={styles.statValue}>{stats.totalSessions}</Text>
-                  <Text style={styles.statLabel}>
-                    {t('home.sessions') || 'sessions'}
-                  </Text>
-                </LinearGradient>
-              </View>
-            </View>
-          </View>
-        )}
-
-        {/* Daily Quote Section */}
+        {/* Daily Quote Section - Now at the top! */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('home.dailyQuote')}</Text>
           {loading ? (
@@ -159,16 +85,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           ) : null}
         </View>
 
-        {/* Feature Tiles */}
+        {/* Feature Tiles - Now in the middle! */}
         <View style={styles.tilesContainer}>
           <Text style={styles.sectionTitle}>
-            {t('home.exploreFeatures') || 'Explore Features'}
+            {t('home.exploreFeatures') || 'Odkryj Funkcje'}
           </Text>
 
           {onNavigateToCustom && (
             <FeatureTile
-              title={t('home.customSessions') || 'Custom Sessions'}
-              description={t('home.customSessionsDesc') || 'Create your own personalized meditation sessions'}
+              title={t('home.customSessions') || 'Własne Sesje'}
+              description={t('home.customSessionsDesc') || 'Stwórz spersonalizowane sesje medytacji'}
               icon="create-outline"
               gradient={gradients.card.purpleCard}
               onPress={onNavigateToCustom}
@@ -177,14 +103,67 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           )}
 
           <FeatureTile
-            title={t('home.sessionCatalog') || 'Session Catalog'}
-            description={t('home.sessionCatalogDesc') || 'Browse our curated collection of guided meditations'}
+            title={t('home.sessionCatalog') || 'Katalog Sesji'}
+            description={t('home.sessionCatalogDesc') || 'Przeglądaj naszą kolekcję prowadzonych medytacji'}
             icon="library-outline"
             gradient={gradients.card.blueCard}
             onPress={onNavigateToMeditation}
             style={styles.tile}
           />
         </View>
+
+        {/* Compact Progress Bar - Now at the bottom! */}
+        {stats && stats.totalSessions > 0 && onNavigateToProfile && (
+          <TouchableOpacity
+            style={styles.compactStatsBar}
+            onPress={onNavigateToProfile}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={['rgba(99, 102, 241, 0.15)', 'rgba(168, 85, 247, 0.15)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.statsBarGradient}
+            >
+              <View style={styles.statsBarContent}>
+                <Text style={styles.statsBarTitle}>
+                  {t('home.progress') || 'Twój Postęp'}
+                </Text>
+                <View style={styles.statsBarRow}>
+                  <View style={styles.compactStat}>
+                    <Ionicons name="flame" size={16} color={theme.colors.accent.mint[600]} />
+                    <Text style={styles.compactStatValue}>{stats.currentStreak}</Text>
+                    <Text style={styles.compactStatLabel}>
+                      {t('home.dayStreak') || 'dni z rzędu'}
+                    </Text>
+                  </View>
+                  <View style={styles.statDivider} />
+                  <View style={styles.compactStat}>
+                    <Ionicons name="time-outline" size={16} color={theme.colors.accent.blue[600]} />
+                    <Text style={styles.compactStatValue}>{stats.totalMinutes}</Text>
+                    <Text style={styles.compactStatLabel}>
+                      {t('home.totalMinutes') || 'łącznie min'}
+                    </Text>
+                  </View>
+                  <View style={styles.statDivider} />
+                  <View style={styles.compactStat}>
+                    <Ionicons name="checkmark-circle-outline" size={16} color={theme.colors.accent.purple[600]} />
+                    <Text style={styles.compactStatValue}>{stats.totalSessions}</Text>
+                    <Text style={styles.compactStatLabel}>
+                      {t('home.sessions') || 'sesje'}
+                    </Text>
+                  </View>
+                </View>
+                <Ionicons
+                  name="chevron-forward"
+                  size={20}
+                  color={theme.colors.text.secondary}
+                  style={styles.statsBarIcon}
+                />
+              </View>
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </GradientBackground>
   );
@@ -217,52 +196,53 @@ const styles = StyleSheet.create({
     fontWeight: theme.typography.fontWeights.regular,
     color: theme.colors.text.secondary,
   },
-  progressSection: {
-    marginBottom: theme.spacing.lg,
-  },
-  progressTitle: {
-    fontSize: theme.typography.fontSizes.lg,
-    fontWeight: theme.typography.fontWeights.semiBold,
-    color: theme.colors.text.primary,
-    marginBottom: theme.spacing.md,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: theme.spacing.sm,
-    justifyContent: 'space-between',
-  },
-  statCard: {
-    flex: 1,
+  compactStatsBar: {
+    marginTop: theme.spacing.lg,
     borderRadius: theme.borderRadius.xl,
     overflow: 'hidden',
-    ...theme.shadows.lg,
+    ...theme.shadows.md,
   },
-  statGradient: {
+  statsBarGradient: {
     padding: theme.spacing.md,
-    alignItems: 'center',
-    minHeight: 110,
-    justifyContent: 'center',
   },
-  statIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: theme.borderRadius.full,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  statsBarContent: {
+    position: 'relative',
+  },
+  statsBarTitle: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
     marginBottom: theme.spacing.sm,
   },
-  statValue: {
-    fontSize: theme.typography.fontSizes.xxxl,
-    fontWeight: theme.typography.fontWeights.bold,
-    color: theme.colors.neutral.white,
-    marginBottom: theme.spacing.xxs,
+  statsBarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
-  statLabel: {
+  compactStat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
+  compactStatValue: {
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.text.primary,
+  },
+  compactStatLabel: {
     fontSize: theme.typography.fontSizes.xs,
-    color: theme.colors.neutral.white,
-    textAlign: 'center',
-    opacity: 0.9,
+    color: theme.colors.text.secondary,
+  },
+  statDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: theme.colors.neutral.gray[300],
+    opacity: 0.5,
+  },
+  statsBarIcon: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   section: {
     marginBottom: theme.spacing.md,

@@ -58,7 +58,7 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
 
     breathingPrep: {
       duration: 60,
-      pattern: 'equal',
+      pattern: 'box',
       instruction: '', // Fetched from translations
     },
 
@@ -121,7 +121,7 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
 
     breathingPrep: {
       duration: 45,
-      pattern: 'calm',
+      pattern: 'box',
       instruction: '', // Fetched from translations
     },
 
@@ -228,7 +228,7 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
 
     breathingPrep: {
       duration: 60,
-      pattern: 'calm',
+      pattern: 'box',
       instruction: '', // Fetched from translations
     },
 
@@ -284,7 +284,7 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
 
     breathingPrep: {
       duration: 120,
-      pattern: '4-7-8',
+      pattern: 'box',
       instruction: '', // Fetched from translations
     },
 
@@ -340,7 +340,7 @@ export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
 
     breathingPrep: {
       duration: 180,
-      pattern: 'equal',
+      pattern: 'box',
       instruction: '', // Fetched from translations
     },
 

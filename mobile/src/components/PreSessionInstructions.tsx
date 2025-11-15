@@ -211,7 +211,7 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
   return (
     <View style={styles.stepContainer}>
       {/* Time of Day Insight */}
-      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
         <View style={styles.cardHeader}>
           <Icon name="sunrise" size={32} />
           <Text style={styles.cardTitle}>{timeGreeting}</Text>
@@ -224,7 +224,7 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
       </GradientCard>
 
       {/* Mental Preparation */}
-      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
         <View style={styles.cardHeader}>
           <Icon name="target" size={32} />
           <Text style={styles.cardTitle}>
@@ -237,7 +237,7 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
       </GradientCard>
 
       {/* Common Challenges */}
-      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
         <View style={styles.cardHeader}>
           <Icon name="lightbulb" size={32} />
           <Text style={styles.cardTitle}>
@@ -302,7 +302,7 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
 }) => {
   return (
     <View style={styles.stepContainer}>
-      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
         <View style={styles.cardHeader}>
           <Icon name="clipboard" size={32} />
           <Text style={styles.cardTitle}>
@@ -406,7 +406,7 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
 
   return (
     <View style={styles.stepContainer}>
-      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
         <View style={styles.cardHeader}>
           <Icon name="wind" size={32} />
           <Text style={styles.cardTitle}>
@@ -485,7 +485,7 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
 }) => {
   return (
     <View style={styles.stepContainer}>
-      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
         <View style={styles.cardHeader}>
           <Icon name="target" size={32} />
           <Text style={styles.cardTitle}>
@@ -498,7 +498,7 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
       </GradientCard>
 
       {/* Intention Input */}
-      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
         <Text style={styles.inputLabel}>
           {t('instructions.preparation.yourIntention') || 'Your Intention (Optional)'}
         </Text>
@@ -513,7 +513,7 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
       </GradientCard>
 
       {/* Session Tips */}
-      <GradientCard gradient={gradients.card.lightCard} style={styles.card}>
+      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
         <View style={styles.cardHeader}>
           <Icon name="sparkles" size={32} />
           <Text style={styles.cardTitle}>
@@ -589,7 +589,7 @@ const ChecklistItemCard: React.FC<{
   return (
     <Pressable onPress={onToggle}>
       <GradientCard
-        gradient={isCompleted ? gradients.card.blueCard : gradients.card.lightCard}
+        gradient={isCompleted ? gradients.card.blueCard : gradients.card.whiteCard}
         style={[styles.checklistCard, isCompleted && styles.checklistCardCompleted]}
       >
         <View style={styles.checklistContent}>
@@ -632,25 +632,63 @@ const AnimatedBreathingCircle: React.FC<{
 
   useEffect(() => {
     if (isRunning) {
-      const duration = pattern === 'box' ? 4000 : pattern === '4-7-8' ? 4000 : 4000;
-      scale.value = withRepeat(
-        withTiming(1.4, { duration, easing: Easing.inOut(Easing.ease) }),
-        -1,
-        true
-      );
+      // Define phase durations in milliseconds for each pattern
+      const patternConfig = {
+        'box': {
+          phases: ['inhale', 'hold', 'exhale', 'rest'] as const,
+          durations: [4000, 4000, 4000, 4000], // 4s each = 16s total
+        },
+        '4-7-8': {
+          phases: ['inhale', 'hold', 'exhale'] as const,
+          durations: [4000, 7000, 8000], // 4s-7s-8s = 19s total
+        },
+        'equal': {
+          phases: ['inhale', 'exhale'] as const,
+          durations: [4000, 4000], // 4s each = 8s total
+        },
+        'calm': {
+          phases: ['inhale', 'exhale'] as const,
+          durations: [4000, 4000], // 4s each = 8s total
+        },
+      };
 
-      // Cycle through breathing phases
-      const phases: Array<'inhale' | 'hold' | 'exhale' | 'rest'> = pattern === 'box'
-        ? ['inhale', 'hold', 'exhale', 'rest']
-        : ['inhale', 'exhale'];
+      const config = patternConfig[pattern] || patternConfig['equal'];
 
+      // Cycle through breathing phases with correct durations
       let phaseIndex = 0;
-      const phaseInterval = setInterval(() => {
-        phaseIndex = (phaseIndex + 1) % phases.length;
-        setBreathingPhase(phases[phaseIndex]);
-      }, duration / phases.length);
+      let timeoutId: NodeJS.Timeout;
 
-      return () => clearInterval(phaseInterval);
+      const animatePhase = (phase: typeof config.phases[number], duration: number) => {
+        // Animate based on phase: grow on inhale, shrink on exhale, hold on hold/rest
+        if (phase === 'inhale') {
+          scale.value = withTiming(1.5, { duration, easing: Easing.inOut(Easing.ease) });
+        } else if (phase === 'exhale') {
+          scale.value = withTiming(1, { duration, easing: Easing.inOut(Easing.ease) });
+        }
+        // For 'hold' and 'rest', keep current scale (don't animate)
+      };
+
+      const scheduleNextPhase = () => {
+        const currentPhase = config.phases[phaseIndex];
+        const currentPhaseDuration = config.durations[phaseIndex];
+
+        // Set the phase text
+        setBreathingPhase(currentPhase);
+
+        // Animate the circle
+        animatePhase(currentPhase, currentPhaseDuration);
+
+        // Schedule next phase
+        timeoutId = setTimeout(() => {
+          phaseIndex = (phaseIndex + 1) % config.phases.length;
+          scheduleNextPhase();
+        }, currentPhaseDuration);
+      };
+
+      // Start the cycle
+      scheduleNextPhase();
+
+      return () => clearTimeout(timeoutId);
     } else {
       scale.value = withTiming(1, { duration: 500 });
       setBreathingPhase('inhale');
@@ -664,15 +702,15 @@ const AnimatedBreathingCircle: React.FC<{
   const getPhaseText = () => {
     switch (breathingPhase) {
       case 'inhale':
-        return 'Wdech';
+        return t('meditation.breatheIn', 'Wdech');
       case 'hold':
-        return 'Zatrzymaj';
+        return t('instructions.breathingPrep.hold', 'Trzymaj');
       case 'exhale':
-        return 'Wydech';
+        return t('meditation.breatheOut', 'Wydech');
       case 'rest':
-        return 'Zatrzymaj';
+        return t('instructions.breathingPrep.hold', 'Trzymaj');
       default:
-        return 'Oddychaj';
+        return t('instructions.breathingPrep.breathe', 'Oddychaj');
     }
   };
 

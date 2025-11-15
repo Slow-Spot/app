@@ -22,6 +22,8 @@ interface MeditationTimerProps {
   onComplete: () => void;
   onCancel: () => void;
   chimePoints?: ChimePoint[];
+  onAudioToggle?: (enabled: boolean) => void; // Callback to control ambient sound
+  ambientSoundName?: string; // Name of the ambient sound (e.g., "Nature", "Ocean", "Silence")
 }
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({
@@ -29,12 +31,14 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   onComplete,
   onCancel,
   chimePoints = [],
+  onAudioToggle,
+  ambientSoundName,
 }) => {
   const { t } = useTranslation();
   const [remainingSeconds, setRemainingSeconds] = useState(totalSeconds);
   const [isRunning, setIsRunning] = useState(true); // Auto-start enabled
   const [audioEnabled, setAudioEnabled] = useState(true);
-  const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'exhale'>('inhale');
+  const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'rest'>('inhale');
   const [adjustableChimes, setAdjustableChimes] = useState<ChimePoint[]>(chimePoints);
   const [showChimeControls, setShowChimeControls] = useState(false);
   const playedChimes = useRef<Set<number>>(new Set());
@@ -53,11 +57,16 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       try {
         const { sound } = await Audio.Sound.createAsync(
           require('../../assets/sounds/meditation-bell.mp3'),
-          { shouldPlay: false }
+          {
+            shouldPlay: false,
+            isLooping: false, // IMPORTANT: Disable looping!
+          }
         );
         if (isMounted) {
           chimeSound.current = sound;
-          console.log('Chime sound loaded successfully');
+          // Ensure looping is disabled
+          await sound.setIsLoopingAsync(false);
+          console.log('Chime sound loaded successfully (looping disabled)');
         }
       } catch (error) {
         console.error('Error loading chime sound:', error);
@@ -69,6 +78,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     return () => {
       isMounted = false;
       if (chimeSound.current) {
+        chimeSound.current.stopAsync().catch(() => {});
         chimeSound.current.unloadAsync().catch((error) => {
           console.error('Error unloading chime sound:', error);
         });
@@ -76,61 +86,75 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     };
   }, []);
 
-  // Start breathing animation loop
+  // Start breathing animation loop - SYNCHRONIZED with text
   useEffect(() => {
     if (isRunning) {
-      // Inhale and exhale sequence with infinite repeat - more visible
-      breathingScale.value = withRepeat(
-        withSequence(
-          withTiming(1.3, {
-            duration: 4000,
-            easing: Easing.inOut(Easing.ease),
-          }),
-          withTiming(0.7, {
-            duration: 4000,
-            easing: Easing.inOut(Easing.ease),
-          })
-        ),
-        -1, // infinite repeat
-        false
-      );
+      let timeoutId: NodeJS.Timeout;
 
-      breathingOpacity.value = withRepeat(
-        withSequence(
-          withTiming(0.8, {
-            duration: 4000,
-            easing: Easing.inOut(Easing.ease),
-          }),
-          withTiming(0.4, {
-            duration: 4000,
-            easing: Easing.inOut(Easing.ease),
-          })
-        ),
-        -1, // infinite repeat
-        false
-      );
+      const animateBreathing = () => {
+        // BOX BREATHING: Inhale (4s) → Hold (4s) → Exhale (4s) → Hold (4s)
+
+        // STEP 1: INHALE - grow
+        setBreathingPhase('inhale');
+        breathingScale.value = withTiming(1.3, {
+          duration: 4000,
+          easing: Easing.inOut(Easing.ease),
+        });
+        breathingOpacity.value = withTiming(0.8, {
+          duration: 4000,
+          easing: Easing.inOut(Easing.ease),
+        });
+
+        timeoutId = setTimeout(() => {
+          // STEP 2: HOLD (full) - stay big
+          setBreathingPhase('hold');
+          // Keep current size
+
+          timeoutId = setTimeout(() => {
+            // STEP 3: EXHALE - shrink
+            setBreathingPhase('exhale');
+            breathingScale.value = withTiming(0.7, {
+              duration: 4000,
+              easing: Easing.inOut(Easing.ease),
+            });
+            breathingOpacity.value = withTiming(0.4, {
+              duration: 4000,
+              easing: Easing.inOut(Easing.ease),
+            });
+
+            timeoutId = setTimeout(() => {
+              // STEP 4: HOLD (empty) - stay small
+              setBreathingPhase('rest');
+              // Keep current size
+
+              timeoutId = setTimeout(() => {
+                // Loop to next cycle
+                animateBreathing();
+              }, 4000);
+            }, 4000);
+          }, 4000);
+        }, 4000);
+      };
+
+      // Start the cycle
+      animateBreathing();
+
+      return () => {
+        clearTimeout(timeoutId);
+        cancelAnimation(breathingScale);
+        cancelAnimation(breathingOpacity);
+      };
     } else {
-      // Cancel animations when paused
+      // Stop animations when paused
       cancelAnimation(breathingScale);
       cancelAnimation(breathingOpacity);
+
+      // Stop any playing chime sound
+      if (chimeSound.current) {
+        chimeSound.current.stopAsync().catch(err => console.error('Error stopping chime:', err));
+      }
     }
-
-    return () => {
-      cancelAnimation(breathingScale);
-      cancelAnimation(breathingOpacity);
-    };
   }, [isRunning, breathingScale, breathingOpacity]);
-
-  // Track breathing phase for guidance text
-  useEffect(() => {
-    if (!isRunning) return;
-
-    const interval = setInterval(() => {
-      setBreathingPhase((prev) => (prev === 'inhale' ? 'exhale' : 'inhale'));
-    }, 4000); // Switch every 4 seconds
-
-    return () => clearInterval(interval);
-  }, [isRunning]);
 
   // Animated style for breathing circle
   const breathingAnimatedStyle = useAnimatedStyle(() => ({
@@ -148,7 +172,11 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       try {
         const status = await chimeSound.current.getStatusAsync();
         if (status.isLoaded) {
-          await chimeSound.current.setPositionAsync(0); // Reset to start
+          // Stop if playing, reset position, ensure no looping
+          await chimeSound.current.stopAsync();
+          await chimeSound.current.setPositionAsync(0);
+          await chimeSound.current.setIsLoopingAsync(false);
+          // Play once
           await chimeSound.current.playAsync();
         }
       } catch (error) {
@@ -220,29 +248,62 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Audio Toggle */}
-      <TouchableOpacity
-        style={styles.audioToggle}
-        onPress={() => setAudioEnabled(!audioEnabled)}
-        accessibilityLabel={audioEnabled ? 'Audio enabled' : 'Audio disabled'}
-        accessibilityRole="button"
-      >
-        <Ionicons
-          name={audioEnabled ? 'volume-high' : 'volume-mute'}
-          size={24}
-          color="rgba(255, 255, 255, 0.8)"
-        />
-      </TouchableOpacity>
+      {/* Audio Toggle with Ambient Info */}
+      <View style={styles.audioControlContainer}>
+        <TouchableOpacity
+          style={styles.audioToggle}
+          onPress={() => {
+            const newState = !audioEnabled;
+            setAudioEnabled(newState);
+            // Also control ambient sound via callback
+            if (onAudioToggle) {
+              onAudioToggle(newState);
+            }
+          }}
+          accessibilityLabel={audioEnabled ? 'Audio enabled' : 'Audio disabled'}
+          accessibilityRole="button"
+        >
+          <Ionicons
+            name={audioEnabled ? 'volume-high' : 'volume-mute'}
+            size={28}
+            color={audioEnabled ? theme.colors.accent.mint[600] : theme.colors.neutral.gray[400]}
+          />
+        </TouchableOpacity>
+        {ambientSoundName && (
+          <View style={[
+            styles.ambientLabelContainer,
+            !audioEnabled && styles.ambientLabelContainerMuted
+          ]}>
+            <Ionicons
+              name={audioEnabled ? 'musical-notes' : 'musical-notes-outline'}
+              size={12}
+              color={audioEnabled ? theme.colors.accent.mint[600] : theme.colors.neutral.gray[400]}
+            />
+            <Text style={[
+              styles.ambientLabel,
+              !audioEnabled && styles.ambientLabelMuted
+            ]}>
+              {ambientSoundName}
+            </Text>
+          </View>
+        )}
+      </View>
 
       {/* Breathing Guidance */}
       <View style={styles.breathingGuidance}>
         <Text style={styles.instructionText}>
-          {t('meditation.focusOnBreath', 'Focus on your breath')}
+          {t('meditation.focusOnBreath', 'SKUP SIĘ NA ODDECHU')}
         </Text>
-        <Animated.Text style={styles.breathingText}>
-          {breathingPhase === 'inhale'
-            ? t('meditation.breatheIn', 'Breathe In')
-            : t('meditation.breatheOut', 'Breathe Out')}
+        <Animated.Text style={[
+          styles.breathingText,
+          breathingPhase === 'inhale' && styles.breathingTextInhale,
+          breathingPhase === 'exhale' && styles.breathingTextExhale,
+          (breathingPhase === 'hold' || breathingPhase === 'rest') && styles.breathingTextHold,
+        ]}>
+          {breathingPhase === 'inhale' && (t('meditation.breatheIn', 'Wdech'))}
+          {breathingPhase === 'hold' && 'Trzymaj'}
+          {breathingPhase === 'exhale' && (t('meditation.breatheOut', 'Wydech'))}
+          {breathingPhase === 'rest' && 'Trzymaj'}
         </Animated.Text>
       </View>
 
@@ -264,12 +325,26 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             fill="none"
           />
 
-          {/* Progress Circle */}
+          {/* Progress Circle - Enhanced with glow */}
           <Circle
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke={theme.colors.accent.mint[400]}
+            stroke={theme.colors.accent.mint[500]}
+            strokeWidth={strokeWidth + 1}
+            fill="none"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            rotation="-90"
+            origin={`${size / 2}, ${size / 2}`}
+            opacity={0.6}
+          />
+          <Circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            stroke={theme.colors.accent.mint[600]}
             strokeWidth={strokeWidth}
             fill="none"
             strokeDasharray={circumference}
@@ -334,9 +409,9 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
                   isPassed && styles.chimeMarkerPassed,
                 ]}>
                   <Ionicons
-                    name={audioEnabled ? 'musical-note' : 'musical-note-outline'}
-                    size={14}
-                    color={isPassed ? theme.colors.accent.mint[300] : 'rgba(255, 255, 255, 0.9)'}
+                    name="musical-note"
+                    size={16}
+                    color={isPassed ? theme.colors.neutral.white : theme.colors.accent.blue[600]}
                   />
                 </View>
                 {chime.label && (
@@ -412,16 +487,56 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: theme.spacing.xl,
   },
-  audioToggle: {
+  audioControlContainer: {
     position: 'absolute',
     top: theme.spacing.lg,
     right: theme.spacing.lg,
-    padding: theme.spacing.sm,
-    borderRadius: theme.borderRadius.round,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    alignItems: 'flex-end',
+    gap: theme.spacing.xs,
     zIndex: 10,
+  },
+  audioToggle: {
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.round,
+    backgroundColor: theme.colors.neutral.white,
+    borderWidth: 2,
+    borderColor: theme.colors.accent.blue[400],
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  ambientLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(42, 168, 124, 0.12)',
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 6,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(42, 168, 124, 0.3)',
+    shadowColor: theme.colors.accent.mint[600],
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  ambientLabelContainerMuted: {
+    backgroundColor: 'rgba(200, 200, 200, 0.15)',
+    borderColor: 'rgba(200, 200, 200, 0.3)',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+  },
+  ambientLabel: {
+    fontSize: theme.typography.fontSizes.xs,
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.accent.mint[700],
+    letterSpacing: 0.3,
+  },
+  ambientLabelMuted: {
+    color: theme.colors.neutral.gray[500],
   },
   breathingGuidance: {
     alignItems: 'center',
@@ -439,13 +554,21 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   breathingText: {
-    fontSize: theme.typography.fontSizes.xxxl,
-    fontWeight: theme.typography.fontWeights.semiBold,
-    color: theme.colors.accent.blue[600],
+    fontSize: 48,
+    fontWeight: theme.typography.fontWeights.bold,
     letterSpacing: 2,
-    textShadowColor: 'rgba(255, 255, 255, 0.5)',
+    textShadowColor: 'rgba(0, 0, 0, 0.1)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
+  },
+  breathingTextInhale: {
+    color: theme.colors.accent.mint[600],
+  },
+  breathingTextExhale: {
+    color: theme.colors.accent.blue[600],
+  },
+  breathingTextHold: {
+    color: theme.colors.accent.lavender[600],
   },
   circleContainer: {
     position: 'relative',
@@ -486,12 +609,13 @@ const styles = StyleSheet.create({
     textShadowRadius: 4,
   },
   minutesText: {
-    fontSize: theme.typography.fontSizes.sm,
+    fontSize: theme.typography.fontSizes.xs,
     marginTop: theme.spacing.xs,
-    color: theme.colors.accent.blue[700],
+    color: theme.colors.accent.blue[600],
     textTransform: 'uppercase',
-    letterSpacing: 1,
-    fontWeight: theme.typography.fontWeights.medium,
+    letterSpacing: 2.5,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    opacity: 0.85,
   },
   progressBarContainer: {
     width: '80%',
@@ -518,29 +642,42 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    maxWidth: 150,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.round,
+    maxWidth: 180,
+    minWidth: 140,
+    paddingVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius.xxl,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   primaryButton: {
-    backgroundColor: theme.colors.accent.mint[500],
+    backgroundColor: theme.colors.accent.mint[600],
+    shadowColor: theme.colors.accent.mint[700],
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 6,
   },
   secondaryButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    borderWidth: 1.5,
-    borderColor: theme.colors.accent.blue[300],
+    backgroundColor: theme.colors.neutral.white,
+    borderWidth: 2.5,
+    borderColor: theme.colors.accent.blue[600],
+    shadowColor: theme.colors.accent.blue[500],
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
   },
   primaryButtonText: {
-    color: theme.colors.text.primary,
+    color: theme.colors.neutral.white,
     fontSize: theme.typography.fontSizes.md,
-    fontWeight: theme.typography.fontWeights.semiBold,
+    fontWeight: theme.typography.fontWeights.bold,
     letterSpacing: 0.5,
   },
   buttonText: {
     fontSize: theme.typography.fontSizes.md,
-    fontWeight: theme.typography.fontWeights.semiBold,
-    color: theme.colors.accent.blue[600],
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.accent.blue[700],
     letterSpacing: 0.5,
   },
   chimeMarkerContainer: {
@@ -550,14 +687,14 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -12 }],
   },
   chimeMarker: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: theme.colors.neutral.white,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.95)',
+    borderWidth: 2.5,
+    borderColor: theme.colors.accent.blue[500],
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -565,21 +702,31 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   chimeMarkerPassed: {
-    backgroundColor: theme.colors.accent.mint[400],
-    borderColor: theme.colors.accent.mint[300],
+    backgroundColor: theme.colors.accent.mint[500],
+    borderColor: theme.colors.accent.mint[600],
   },
   chimeLabel: {
     position: 'absolute',
-    top: -20,
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.9)',
+    top: -26,
+    fontSize: 9,
+    color: theme.colors.accent.blue[700],
+    backgroundColor: theme.colors.neutral.white,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    borderRadius: 4,
     fontWeight: theme.typography.fontWeights.semiBold,
     textAlign: 'center',
-    minWidth: 50,
-    letterSpacing: 0.5,
+    minWidth: 32,
+    letterSpacing: 0.3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0.5 },
+    shadowOpacity: 0.15,
+    shadowRadius: 1,
+    elevation: 1,
   },
   chimeLabelPassed: {
-    color: theme.colors.accent.mint[200],
+    color: theme.colors.accent.mint[700],
+    backgroundColor: theme.colors.accent.mint[100],
   },
   adjustButton: {
     flexDirection: 'row',

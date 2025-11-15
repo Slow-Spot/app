@@ -128,6 +128,9 @@ class AudioEngine {
     if (!sound) return;
 
     try {
+      const status = await sound.getStatusAsync();
+      if (!status.isLoaded) return;
+
       const normalizedVolume = Math.max(0, Math.min(1, volume));
       await sound.setVolumeAsync(normalizedVolume);
     } catch (error) {
@@ -143,6 +146,13 @@ class AudioEngine {
     const stepDuration = duration / steps;
 
     try {
+      // Check if sound is loaded before fading
+      const status = await sound.getStatusAsync();
+      if (!status.isLoaded) {
+        console.warn(`Cannot fade in ${layer}: sound not loaded`);
+        return;
+      }
+
       // Start at volume 0
       await this.setVolume(layer, 0);
       await this.play(layer);
@@ -169,7 +179,10 @@ class AudioEngine {
     try {
       // Get current volume
       const status = await sound.getStatusAsync();
-      if (!status.isLoaded) return;
+      if (!status.isLoaded) {
+        console.warn(`Cannot fade out ${layer}: sound not loaded`);
+        return;
+      }
 
       const currentVolume = status.volume || 1.0;
 

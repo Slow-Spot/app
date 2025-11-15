@@ -54,6 +54,12 @@ export const primaryGradients = {
  * Card gradients - For meditation session cards and UI elements
  */
 export const cardGradients = {
+  // Pure white card (no gradient, solid white background)
+  whiteCard: {
+    colors: [neutralColors.white, neutralColors.white],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
   // Light card (very subtle)
   lightCard: {
     colors: [neutralColors.white, neutralColors.offWhite],

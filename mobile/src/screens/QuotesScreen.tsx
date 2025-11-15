@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, StyleSheet, useColorScheme } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 import { QuoteCard } from '../components/QuoteCard';
 import { GradientButton } from '../components/GradientButton';
 import { api, Quote } from '../services/api';
@@ -97,19 +98,21 @@ export const QuotesScreen: React.FC = () => {
           <>
             <QuoteCard quote={quotes[currentIndex]} />
 
-            {/* Navigation */}
+            {/* Navigation - Compact Icon Buttons */}
             <View style={styles.navigation}>
               <TouchableOpacity
                 style={[
-                  styles.navButton,
+                  styles.iconButton,
                   quotes.length <= 1 && styles.disabledButton
                 ]}
                 onPress={handlePrevious}
                 disabled={quotes.length <= 1}
               >
-                <Text style={styles.navButtonText}>
-                  {t('quotes.previous')}
-                </Text>
+                <Ionicons
+                  name="chevron-back"
+                  size={24}
+                  color={theme.colors.text.primary}
+                />
               </TouchableOpacity>
 
               <GradientButton
@@ -122,15 +125,17 @@ export const QuotesScreen: React.FC = () => {
 
               <TouchableOpacity
                 style={[
-                  styles.navButton,
+                  styles.iconButton,
                   quotes.length <= 1 && styles.disabledButton
                 ]}
                 onPress={handleNext}
                 disabled={quotes.length <= 1}
               >
-                <Text style={styles.navButtonText}>
-                  {t('quotes.next')}
-                </Text>
+                <Ionicons
+                  name="chevron-forward"
+                  size={24}
+                  color={theme.colors.text.primary}
+                />
               </TouchableOpacity>
             </View>
           </>
@@ -168,21 +173,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  navButton: {
-    flex: 1,
-    width: 120,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
+  iconButton: {
+    width: 56,
+    height: 56,
+    borderRadius: theme.borderRadius.full,
     alignItems: 'center',
-    backgroundColor: theme.colors.background.tertiary,
-  },
-  navButtonText: {
-    fontSize: theme.typography.fontSizes.md,
-    fontWeight: theme.typography.fontWeights.medium,
-    color: theme.colors.text.primary,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    ...theme.shadows.sm,
   },
   randomButton: {
     flex: 1,
+    maxWidth: 200,
   },
   disabledButton: {
     opacity: theme.opacity.disabled,

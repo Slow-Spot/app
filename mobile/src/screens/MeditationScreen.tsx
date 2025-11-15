@@ -244,6 +244,23 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     setSelectedSession(null);
   };
 
+  const handleAudioToggle = async (enabled: boolean) => {
+    try {
+      // Control ambient sound when audio is toggled
+      if (enabled) {
+        // Fade in ambient if it was loaded
+        if (selectedSession?.ambientUrl && selectedSession.ambientUrl !== 'silence') {
+          await audioEngine.fadeIn('ambient', 1500, 0.4);
+        }
+      } else {
+        // Fade out ambient when muted
+        await audioEngine.fadeOut('ambient', 1500);
+      }
+    } catch (error) {
+      console.error('Failed to toggle audio:', error);
+    }
+  };
+
   const handleComplete = async () => {
     try {
       // Play ending chime with haptic feedback
@@ -378,6 +395,21 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   if (flowState === 'meditation' && selectedSession) {
     const chimePoints = getChimePointsFromSession(selectedSession);
 
+    // Get ambient sound name for display
+    const getAmbientSoundName = () => {
+      if (!selectedSession.ambientUrl) return t('custom.ambientSilence');
+
+      // Check if it's a custom session with config
+      if ('config' in selectedSession && selectedSession.config) {
+        const sound = selectedSession.config.ambientSound;
+        const key = `custom.ambient${sound.charAt(0).toUpperCase() + sound.slice(1)}`;
+        return t(key);
+      }
+
+      // For non-custom sessions, check the URL or return generic name
+      return selectedSession.ambientUrl ? t('custom.ambientNature') : t('custom.ambientSilence');
+    };
+
     return (
       <GradientBackground gradient={gradients.primary.subtleBlue} style={styles.container}>
         <MeditationTimer
@@ -385,6 +417,8 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           onComplete={handleComplete}
           onCancel={handleCancel}
           chimePoints={chimePoints}
+          onAudioToggle={handleAudioToggle}
+          ambientSoundName={getAmbientSoundName()}
         />
       </GradientBackground>
     );

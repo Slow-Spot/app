@@ -87,13 +87,18 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
 const styles = StyleSheet.create({
   card: {
     padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    ...theme.shadows.card,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 0,
+    // Enhanced shadow for better depth
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
   lightCard: {
     backgroundColor: theme.colors.neutral.white,
-    borderColor: theme.colors.neutral.lightGray[200],
+    borderColor: 'transparent',
   },
   darkCard: {
     backgroundColor: theme.colors.neutral.charcoal[200],

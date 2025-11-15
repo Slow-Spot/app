@@ -49,10 +49,13 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
   const [intervalBellMinutes, setIntervalBellMinutes] = useState(initialConfig?.intervalBellMinutes || 5);
   const [customInterval, setCustomInterval] = useState('');
   const [wakeUpChimeEnabled, setWakeUpChimeEnabled] = useState(
-    initialConfig?.wakeUpChimeEnabled !== undefined ? initialConfig.wakeUpChimeEnabled : true
+    initialConfig?.wakeUpChimeEnabled !== undefined ? initialConfig.wakeUpChimeEnabled : false
   );
   const [voiceGuidanceEnabled, setVoiceGuidanceEnabled] = useState(initialConfig?.voiceGuidanceEnabled || false);
   const [sessionName, setSessionName] = useState(initialConfig?.name || '');
+
+  // Local editing state for quick edits from saved sessions list
+  const [localEditSessionId, setLocalEditSessionId] = useState<string | undefined>(editSessionId);
 
   // Saved sessions state
   const [savedSessions, setSavedSessions] = useState<SavedCustomSession[]>([]);
@@ -106,6 +109,13 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
     { id: '528hz', icon: 'musical-notes', label: t('custom.ambient528hz') },
   ] as const;
 
+  // Helper function to get translated ambient sound label
+  const getAmbientSoundLabel = (soundId: string | undefined): string => {
+    if (!soundId) return t('custom.ambientSilence');
+    const option = ambientSoundOptions.find(opt => opt.id === soundId);
+    return option?.label || t('custom.ambientSilence');
+  };
+
   const getCurrentConfig = (): CustomSessionConfig => {
     return {
       durationMinutes,
@@ -135,18 +145,35 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       return;
     }
 
+    // Use localEditSessionId if available (from quick edit), otherwise use editSessionId prop
+    const currentEditId = localEditSessionId || editSessionId;
+
     try {
-      if (editSessionId) {
+      if (currentEditId) {
         // Update existing session
-        await updateCustomSession(editSessionId, config);
+        await updateCustomSession(currentEditId, config);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+        // Reload sessions list to show updated session
+        await loadSavedSessions();
+
+        // Clear edit mode
+        setLocalEditSessionId(undefined);
+
         Alert.alert(
           t('custom.saveSuccess') || 'Success',
           t('custom.sessionUpdated') || 'Your session has been updated successfully!',
           [
             {
               text: t('common.ok') || 'OK',
-              onPress: onBack,
+              onPress: () => {
+                // Reset form to default state
+                setSessionName('');
+                setDurationMinutes(15);
+                setAmbientSound('nature');
+                setIntervalBellEnabled(false);
+                setWakeUpChimeEnabled(true);
+              },
             },
           ]
         );
@@ -154,6 +181,10 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
         // Save new session
         await saveCustomSession(config);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+        // Reload sessions list to show new session
+        await loadSavedSessions();
+
         Alert.alert(
           t('custom.saveSuccess') || 'Success',
           t('custom.sessionSaved') || 'Your session has been saved successfully!',
@@ -232,13 +263,16 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
 
   const handleEditSavedSession = (session: SavedCustomSession) => {
     // Load the session data into the form
-    setDurationMinutes(session.durationMinutes);
-    setAmbientSound(session.ambientSound);
-    setIntervalBellEnabled(session.intervalBellEnabled);
-    setIntervalBellMinutes(session.intervalBellMinutes);
-    setWakeUpChimeEnabled(session.wakeUpChimeEnabled);
-    setVoiceGuidanceEnabled(session.voiceGuidanceEnabled);
+    setDurationMinutes(session.config.durationMinutes);
+    setAmbientSound(session.config.ambientSound);
+    setIntervalBellEnabled(session.config.intervalBellEnabled);
+    setIntervalBellMinutes(session.config.intervalBellMinutes);
+    setWakeUpChimeEnabled(session.config.wakeUpChimeEnabled);
+    setVoiceGuidanceEnabled(session.config.voiceGuidanceEnabled);
     setSessionName(session.title);
+
+    // Set edit mode with session ID
+    setLocalEditSessionId(session.id);
   };
 
   const handleDeleteSavedSession = async (session: SavedCustomSession) => {
@@ -322,7 +356,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
             <View style={styles.savedSessionsHeader}>
               <Ionicons name="bookmark" size={24} color={theme.colors.accent.blue[600]} />
               <Text style={styles.savedSessionsTitle}>
-                {t('custom.mySavedSessions') || 'My Saved Sessions'}
+                {t('custom.mySavedSessions')}
               </Text>
             </View>
             <ScrollView
@@ -350,17 +384,17 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                       <View style={styles.savedSessionMetaRow}>
                         <Ionicons name="time-outline" size={14} color={theme.colors.neutral.white} />
                         <Text style={styles.savedSessionMetaText}>
-                          {t('custom.minutes', { count: session.durationMinutes })}
+                          {session.config.durationMinutes} {t('custom.min')}
                         </Text>
                       </View>
                       <View style={styles.savedSessionMetaRow}>
                         <Ionicons
-                          name={session.ambientSound === 'silence' ? 'volume-mute' : 'musical-notes'}
+                          name={session.config.ambientSound === 'silence' ? 'volume-mute' : 'musical-notes'}
                           size={14}
                           color={theme.colors.neutral.white}
                         />
                         <Text style={styles.savedSessionMetaText} numberOfLines={1}>
-                          {session.ambientSound}
+                          {getAmbientSoundLabel(session.config.ambientSound)}
                         </Text>
                       </View>
                     </View>
@@ -412,13 +446,13 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                       style={styles.presetButton}
                     >
                       <Text style={styles.presetButtonTextActive}>
-                        {t('meditation.minutes', { count: minutes })}
+                        {minutes} {t('custom.min')}
                       </Text>
                     </LinearGradient>
                   ) : (
                     <View style={styles.presetButtonInactive}>
                       <Text style={styles.presetButtonText}>
-                        {t('meditation.minutes', { count: minutes })}
+                        {minutes} {t('custom.min')}
                       </Text>
                     </View>
                   )}
@@ -438,11 +472,11 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               maxLength={3}
               placeholderTextColor={theme.colors.text.tertiary}
             />
-            <Text style={styles.label}>{t('custom.minutes')}</Text>
+            <Text style={styles.label}>{t('custom.min')}</Text>
           </View>
 
           <Text style={styles.currentValue}>
-            {t('custom.selected')}: {durationMinutes} {t('custom.minutes')}
+            {t('custom.selected')}: {durationMinutes} {t('custom.min')}
           </Text>
         </GradientCard>
 
@@ -561,7 +595,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               </View>
 
               <View style={styles.customIntervalRow}>
-                <Text style={styles.label}>{t('custom.customInterval', 'Własna wartość:')}</Text>
+                <Text style={styles.label}>{t('custom.customInterval')}</Text>
                 <TextInput
                   style={styles.durationInput}
                   placeholder="0"
@@ -571,7 +605,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                   maxLength={2}
                   placeholderTextColor={theme.colors.text.tertiary}
                 />
-                <Text style={styles.label}>{t('custom.minutes')}</Text>
+                <Text style={styles.label}>{t('custom.min')}</Text>
               </View>
             </View>
           )}
@@ -601,8 +635,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           </View>
         </GradientCard>
 
-        {/* Voice Guidance */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
+        {/* Voice Guidance - COMMENTED OUT - NOT IMPLEMENTED YET */}
+        {/* <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
           <View style={styles.switchRow}>
             <View style={styles.switchLabel}>
               <Text style={styles.sectionTitle}>{t('custom.voiceGuidance')}</Text>
@@ -623,11 +657,11 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               thumbColor={theme.colors.neutral.white}
             />
           </View>
-        </GradientCard>
+        </GradientCard> */}
 
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
-          {editSessionId ? (
+          {(editSessionId || localEditSessionId) ? (
             // When editing, show Update button
             <GradientButton
               title={t('custom.updateSession') || 'Update Session'}

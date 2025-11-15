@@ -42,6 +42,8 @@
     "session": "Sesja",
     "continue": "Kontynuuj",
     "howDoYouFeel": "Jak się czujesz?",
+    "sessionNotes": "Notatki z sesji (opcjonalnie)",
+    "notesPlaceholder": "Jak się czujesz? Jakie masz przemyślenia?",
     "focusOnBreath": "Skup się na oddechu",
     "breatheIn": "Wdech",
     "breatheOut": "Wydech",
@@ -57,6 +59,10 @@
       "afternoonRecommendation": "Popołudniowa praktyka odświeża umysł. Rozważ medytację metta lub spacer w uważności.",
       "eveningRecommendation": "Wieczorne sesje pomagają się odprężyć. Skanowanie ciała lub łagodna świadomość oddechu działają świetnie.",
       "nightRecommendation": "Nocna medytacja przygotowuje do spokojnego snu. Skanowanie ciała jest bardzo polecane."
+    },
+    "breathingPrep": {
+      "hold": "Trzymaj",
+      "breathe": "Oddychaj"
     },
     "preparation": {
       "prepareMySpace": "Przygotuj Przestrzeń",
@@ -126,8 +132,8 @@
         "4": "Każda chwila świadomości się liczy, bez względu na to, jak krótka"
       },
       "breathingPrep": {
-        "instruction": "Weź 5 powolnych, głębokich oddechów, aby się uspokoić. Wdech na 4 liczy, wydech na 4 liczy.",
-        "pattern": "equal"
+        "instruction": "Zrób kilka spokojnych oddechów techniką Box Breathing. Wdech 4s → Trzymaj 4s → Wydech 4s → Trzymaj 4s",
+        "pattern": "box"
       },
       "reminders": {
         "1": {
@@ -177,8 +183,8 @@
         "4": "Nie musisz pamiętać dokładnej kolejności—głos cię poprowadzi"
       },
       "breathingPrep": {
-        "instruction": "Weź 3 głębokie westchnienia. Wdech przez nos, głośne westchnienie przez usta.",
-        "pattern": "calm"
+        "instruction": "Uspokój się oddychając techniką Box Breathing. To pomoże ci się zrelaksować przed skanowaniem ciała.",
+        "pattern": "box"
       },
       "reminders": {
         "1": {
@@ -217,8 +223,8 @@
         "4": "Utrzymuj równowagę—nie szukaj przyjemnego ani nie unikaj nieprzyjemnego"
       },
       "breathingPrep": {
-        "instruction": "Uspokój się 10 minutami świadomości oddechu przed rozpoczęciem skanowania.",
-        "pattern": "equal"
+        "instruction": "Uspokój oddech używając techniki Box Breathing. Wdech 4s → Trzymaj 4s → Wydech 4s → Trzymaj 4s",
+        "pattern": "box"
       },
       "reminders": {
         "1": {
@@ -298,53 +304,6 @@
   "common": {
     "ok": "OK",
     "cancel": "Anuluj"
-  },
-  "custom": {
-    "title": "Własna Sesja",
-    "subtitle": "Stwórz medytację dopasowaną do swoich potrzeb",
-    "sessionName": "Nazwa Sesji (opcjonalnie)",
-    "sessionNamePlaceholder": "Np. Poranna medytacja",
-    "duration": "Czas Trwania",
-    "durationDescription": "Wybierz długość swojej sesji medytacji",
-    "customDuration": "Własny czas:",
-    "minutes": "min",
-    "selected": "Wybrano",
-    "ambientSound": "Dźwięk Tła",
-    "ambientDescription": "Wybierz dźwięki, które pomogą Ci się skupić",
-    "ambientSilence": "Cisza",
-    "ambientNature": "Natura",
-    "ambientOcean": "Ocean",
-    "ambientForest": "Las",
-    "ambient432hz": "432 Hz",
-    "ambient528hz": "528 Hz",
-    "intervalBell": "Dzwonek Interwałowy",
-    "intervalBellDescription": "Delikatne przypomnienie podczas sesji",
-    "intervalEvery": "Dzwonek co:",
-    "min": "min",
-    "wakeUpChime": "Dzwonek Przebudzenia",
-    "wakeUpChimeDescription": "Delikatny dzwonek na zakończenie sesji",
-    "voiceGuidance": "Głos Prowadzący",
-    "voiceGuidanceDescription": "Prowadzenie głosowe podczas medytacji",
-    "startSession": "Rozpocznij Sesję",
-    "saveError": "Błąd",
-    "sessionNameRequired": "Proszę podać nazwę sesji przed zapisaniem",
-    "saveSuccess": "Sukces",
-    "sessionUpdated": "Twoja sesja została zaktualizowana pomyślnie!",
-    "sessionSaved": "Twoja sesja została zapisana pomyślnie!",
-    "startNow": "Rozpocznij Teraz",
-    "backToList": "Powrót do Listy",
-    "saveFailed": "Nie udało się zapisać sesji. Spróbuj ponownie",
-    "sessionOptions": "Co chcesz zrobić?",
-    "editSession": "Edytuj",
-    "deleteSession": "Usuń",
-    "editNotImplemented": "Funkcja edycji będzie dostępna po podłączeniu do ekranu budowania sesji",
-    "deleteConfirmTitle": "Usuń Sesję",
-    "deleteConfirmMessage": "Czy na pewno chcesz usunąć tę sesję?",
-    "delete": "Usuń",
-    "deleteError": "Błąd",
-    "deleteFailed": "Nie udało się usunąć sesji. Spróbuj ponownie",
-    "customSession": "własna sesja",
-    "customSessions": "własne sesje"
   },
   "profile": {
     "title": "Twój Profil",
@@ -550,27 +509,65 @@
   "custom": {
     "title": "Własna Sesja",
     "subtitle": "Stwórz medytację dopasowaną do swoich potrzeb",
-    "mySavedSessions": "custom.mySavedSessions",
+    "mySavedSessions": "Moje Zapisane Sesje",
     "sessionName": "Nazwa Sesji (opcjonalnie)",
     "sessionNamePlaceholder": "Np. Poranna medytacja",
     "duration": "Czas Trwania",
+    "durationDescription": "Wybierz długość swojej sesji medytacji",
     "durationSubtitle": "Wybierz długość swojej sesji medytacji",
-    "minutes": "{{count}} min",
+    "minutes": "min",
+    "minutesWithCount": "{{count}} min",
+    "customInterval": "Własna wartość:",
+    "customDuration": "Własny czas:",
+    "selected": "Wybrano",
+    "ambientSound": "Dźwięk Tła",
+    "ambientDescription": "Wybierz dźwięki, które pomogą Ci się skupić",
     "backgroundSound": "Dźwięk Tła",
     "backgroundSoundSubtitle": "Wybierz uspokajający dźwięk",
-    "intervalChime": "Dzwonek Interwałowy",
-    "intervalChimeSubtitle": "Delikatne przypomnienie podczas sesji",
+    "intervalBell": "Dzwonek Interwałowy",
+    "intervalBellDescription": "Delikatne przypomnienie podczas sesji",
+    "intervalEvery": "Dzwonek co:",
+    "min": "min",
     "awakeningChime": "Dzwonek Przebudzenia",
     "awakeningChimeSubtitle": "Delikatny dzwonek na zakończenie sesji",
+    "wakeUpChime": "Dzwonek Przebudzenia",
+    "wakeUpChimeDescription": "Delikatny dzwonek na zakończenie sesji",
     "guidingVoice": "Głos Prowadzący",
     "guidingVoiceSubtitle": "Prowadzenie głosowe podczas medytacji",
+    "voiceGuidance": "Głos Prowadzący",
+    "voiceGuidanceDescription": "Prowadzenie głosowe podczas medytacji",
+    "ambientSilence": "Cisza",
+    "ambientNature": "Natura",
+    "ambientOcean": "Ocean",
+    "ambientForest": "Las",
+    "ambient432hz": "432 Hz",
+    "ambient528hz": "528 Hz",
     "saveSession": "Zapisz Sesję",
+    "updateSession": "Aktualizuj Sesję",
     "saveAndStart": "Zapisz i Rozpocznij",
     "startWithoutSaving": "Rozpocznij bez Zapisywania",
     "start": "Rozpocznij",
     "longPressToEdit": "Przytrzymaj, aby edytować",
     "editSession": "Edytuj Sesję",
     "deleteSession": "Usuń Sesję",
+    "startSession": "Rozpocznij Sesję",
+    "saveError": "Błąd",
+    "sessionNameRequired": "Proszę podać nazwę sesji przed zapisaniem",
+    "saveSuccess": "Sukces",
+    "sessionUpdated": "Twoja sesja została zaktualizowana pomyślnie!",
+    "sessionSaved": "Twoja sesja została zapisana pomyślnie!",
+    "startNow": "Rozpocznij Teraz",
+    "backToList": "Powrót do Listy",
+    "saveFailed": "Nie udało się zapisać sesji. Spróbuj ponownie",
+    "sessionOptions": "Co chcesz zrobić?",
+    "editNotImplemented": "Funkcja edycji będzie dostępna po podłączeniu do ekranu budowania sesji",
+    "deleteConfirmTitle": "Usuń Sesję",
+    "deleteConfirmMessage": "Czy na pewno chcesz usunąć tę sesję?",
+    "delete": "Usuń",
+    "deleteError": "Błąd",
+    "deleteFailed": "Nie udało się usunąć sesji. Spróbuj ponownie",
+    "customSession": "własna sesja",
+    "customSessions": "własne sesje",
     "sounds": {
       "nature": "Natura",
       "rain": "Deszcz",

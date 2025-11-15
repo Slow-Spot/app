@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Animated, ScrollView, TextInput } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -41,6 +41,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
   const [quote, setQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedMood, setSelectedMood] = useState<MoodRating | null>(null);
+  const [notes, setNotes] = useState('');
   const [scaleAnim] = useState(new Animated.Value(0));
   const [pulseAnim] = useState(new Animated.Value(1));
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -102,66 +103,42 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
   };
 
   return (
-    <GradientBackground gradient={gradients.screen.celebration} style={styles.container}>
-      <View style={styles.content}>
-        {/* Ultra-modern animated checkmark with halos */}
-        <View style={styles.checkmarkContainer}>
-          {/* Outer pulsing halo */}
+    <GradientBackground gradient={gradients.primary.subtleBlue} style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        bounces={true}
+      >
+        {/* Compact header with checkmark and title in one line */}
+        <Animated.View style={[styles.headerSection, { opacity: fadeAnim }]}>
           <Animated.View
             style={[
-              styles.haloOuter,
-              {
-                transform: [{ scale: pulseAnim }],
-                opacity: pulseAnim.interpolate({
-                  inputRange: [1, 1.15],
-                  outputRange: [0.1, 0.05],
-                }),
-              },
-            ]}
-          />
-
-          {/* Middle halo */}
-          <Animated.View
-            style={[
-              styles.haloMiddle,
-              {
-                transform: [{ scale: pulseAnim }],
-                opacity: 0.15,
-              },
-            ]}
-          />
-
-          {/* Main checkmark */}
-          <Animated.View
-            style={[
-              styles.iconContainer,
+              styles.compactCheckmark,
               { transform: [{ scale: scaleAnim }] },
             ]}
           >
             <LinearGradient
-              colors={[theme.colors.accent.mint[300], theme.colors.accent.mint[500], theme.colors.accent.mint[600]]}
+              colors={[theme.colors.accent.mint[400], theme.colors.accent.mint[600]]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={styles.checkmarkGradient}
+              style={styles.checkmarkSmall}
             >
               <Ionicons
                 name="checkmark"
-                size={56}
+                size={32}
                 color={theme.colors.neutral.white}
-                style={styles.checkmarkIcon}
               />
             </LinearGradient>
           </Animated.View>
-        </View>
-
-        {/* Congratulations message with fade-in */}
-        <Animated.View style={[styles.messageSection, { opacity: fadeAnim }]}>
-          <Text style={styles.titleText}>
-            {t('meditation.wellDone') || 'Well Done!'}
-          </Text>
-          <Text style={styles.subtitleText}>
-            {t('meditation.completedSession') || 'You completed your meditation session'}
-          </Text>
+          <View style={styles.headerTextContainer}>
+            <Text style={styles.titleText}>
+              {t('meditation.wellDone') || 'Świetna robota!'}
+            </Text>
+            <Text style={styles.subtitleText}>
+              {t('meditation.completedSession') || 'Ukończyłeś sesję medytacji'}
+            </Text>
+          </View>
         </Animated.View>
 
         {/* Beautiful stats card with glass morphism */}
@@ -220,11 +197,26 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
           </View>
         </Animated.View>
 
-        {/* Elegant quote section */}
-        <Animated.View style={[styles.quoteSection, { opacity: fadeAnim }]}>
-          {loading ? (
-            <ActivityIndicator size="small" color={theme.colors.accent.mint[500]} />
-          ) : quote ? (
+        {/* Notes section */}
+        <Animated.View style={[styles.notesSection, { opacity: fadeAnim }]}>
+          <Text style={styles.notesLabel}>
+            {t('meditation.sessionNotes', 'Notatki z sesji (opcjonalnie)')}
+          </Text>
+          <TextInput
+            style={styles.notesInput}
+            placeholder={t('meditation.notesPlaceholder', 'Jak się czujesz? Jakie masz przemyślenia?')}
+            placeholderTextColor={theme.colors.neutral.gray[400]}
+            value={notes}
+            onChangeText={setNotes}
+            multiline
+            numberOfLines={3}
+            maxLength={500}
+          />
+        </Animated.View>
+
+        {/* Elegant quote section - Only if loaded successfully */}
+        {!loading && quote && quote.text && (
+          <Animated.View style={[styles.quoteSection, { opacity: fadeAnim }]}>
             <View style={styles.quoteContainer}>
               <Text style={styles.quoteText}>
                 "{quote.text}"
@@ -235,8 +227,8 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                 </Text>
               )}
             </View>
-          ) : null}
-        </Animated.View>
+          </Animated.View>
+        )}
 
         {/* Continue button with fade-in */}
         <Animated.View style={[styles.buttonContainer, { opacity: fadeAnim }]}>
@@ -247,7 +239,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
             size="lg"
           />
         </Animated.View>
-      </View>
+      </ScrollView>
     </GradientBackground>
   );
 };
@@ -256,64 +248,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
+  scrollView: {
     flex: 1,
+  },
+  scrollContent: {
     paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.xxl,
-    justifyContent: 'space-evenly',
+    paddingTop: theme.spacing.xxl,
+    paddingBottom: theme.spacing.xxxl,
+    gap: theme.spacing.xl,
     alignItems: 'center',
   },
-  checkmarkContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: theme.spacing.lg,
-  },
-  haloOuter: {
-    position: 'absolute',
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: theme.colors.accent.mint[600],
-  },
-  haloMiddle: {
-    position: 'absolute',
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    backgroundColor: theme.colors.accent.mint[600],
-  },
-  iconContainer: {
-    ...theme.shadows.xl,
-  },
-  checkmarkGradient: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkmarkIcon: {
-    fontWeight: 'bold',
-  },
-  messageSection: {
+  headerSection: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
+  },
+  compactCheckmark: {
+    ...theme.shadows.md,
+  },
+  checkmarkSmall: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerTextContainer: {
+    flex: 1,
   },
   titleText: {
-    fontSize: 42,
-    fontWeight: '300',
-    textAlign: 'center',
+    fontSize: 28,
+    fontWeight: '600',
     color: theme.colors.text.primary,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   subtitleText: {
-    fontSize: theme.typography.fontSizes.md,
-    textAlign: 'center',
+    fontSize: theme.typography.fontSizes.sm,
     color: theme.colors.text.secondary,
     fontWeight: '400',
-    letterSpacing: 0.3,
+    letterSpacing: 0.2,
     opacity: 0.85,
+    marginTop: 2,
   },
   statsCard: {
     width: '100%',
@@ -352,7 +328,6 @@ const styles = StyleSheet.create({
   moodSection: {
     width: '100%',
     gap: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
   },
   moodQuestion: {
     fontSize: theme.typography.fontSizes.lg,
@@ -404,38 +379,56 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     opacity: 1,
   },
+  notesSection: {
+    width: '100%',
+    gap: theme.spacing.sm,
+  },
+  notesLabel: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: '500',
+    color: theme.colors.text.primary,
+    letterSpacing: 0.2,
+    marginBottom: theme.spacing.xs,
+  },
+  notesInput: {
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    borderRadius: 20,
+    padding: theme.spacing.lg,
+    fontSize: theme.typography.fontSizes.md,
+    color: theme.colors.text.primary,
+    minHeight: 100,
+    textAlignVertical: 'top',
+    ...theme.shadows.sm,
+  },
   quoteSection: {
     width: '100%',
-    paddingVertical: theme.spacing.md,
     alignItems: 'center',
   },
   quoteContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: 24,
-    padding: theme.spacing.xl,
-    gap: theme.spacing.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 20,
+    padding: theme.spacing.lg,
+    gap: theme.spacing.sm,
     ...theme.shadows.sm,
   },
   quoteText: {
     fontSize: theme.typography.fontSizes.md,
-    fontWeight: '400',
+    fontWeight: '500',
     textAlign: 'center',
     lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.md,
     color: theme.colors.text.primary,
     letterSpacing: 0.2,
-    opacity: 0.9,
   },
   authorText: {
     fontSize: theme.typography.fontSizes.sm,
     fontStyle: 'italic',
     textAlign: 'center',
     color: theme.colors.text.secondary,
-    fontWeight: '400',
-    letterSpacing: 0.3,
-    opacity: 0.7,
+    fontWeight: '500',
+    letterSpacing: 0.2,
+    opacity: 0.85,
   },
   buttonContainer: {
     width: '100%',
-    paddingTop: theme.spacing.sm,
   },
 });
