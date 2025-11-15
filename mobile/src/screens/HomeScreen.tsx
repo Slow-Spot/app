@@ -73,17 +73,60 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <Text style={styles.tagline}>{t('app.tagline')}</Text>
         </View>
 
-        {/* Daily Quote Section - Now at the top! */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('home.dailyQuote')}</Text>
-          {loading ? (
-            <View style={styles.loader}>
-              <ActivityIndicator size="large" color={theme.colors.accent.blue[500]} />
+        {/* Daily Quote Teaser - Links to Quotes tab! */}
+        {!loading && dailyQuote && (
+          <TouchableOpacity
+            style={styles.quoteTeaser}
+            onPress={onNavigateToQuotes}
+            activeOpacity={0.8}
+          >
+            <View style={styles.quoteTeaserCard}>
+              <View style={styles.quoteTeaserHeader}>
+                <Ionicons name="chatbox-ellipses" size={24} color={theme.colors.accent.purple[600]} />
+                <Text style={styles.quoteTeaserTitle}>
+                  {t('home.dailyQuote') || 'Dzienny Cytat'}
+                </Text>
+              </View>
+              <Text style={styles.quoteTeaserText} numberOfLines={2}>
+                "{dailyQuote.text}"
+              </Text>
+              <View style={styles.quoteTeaserFooter}>
+                <Text style={styles.quoteTeaserAuthor}>— {dailyQuote.author}</Text>
+                <View style={styles.quoteTeaserCTA}>
+                  <Text style={styles.quoteTeaserCTAText}>Odkryj więcej</Text>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.accent.purple[600]} />
+                </View>
+              </View>
             </View>
-          ) : dailyQuote ? (
-            <QuoteCard quote={dailyQuote} />
-          ) : null}
-        </View>
+          </TouchableOpacity>
+        )}
+
+        {/* MEGA Quick Start Button! */}
+        <TouchableOpacity
+          style={styles.quickStartButton}
+          onPress={onNavigateToMeditation}
+          activeOpacity={0.9}
+        >
+          <LinearGradient
+            colors={gradients.button.primary.colors}
+            start={gradients.button.primary.start}
+            end={gradients.button.primary.end}
+            style={styles.quickStartGradient}
+          >
+            <View style={styles.quickStartContent}>
+              <Ionicons name="play-circle" size={32} color={theme.colors.neutral.white} />
+              <View style={styles.quickStartText}>
+                <Text style={styles.quickStartTitle}>
+                  {t('home.quickStart') || 'Szybki Start'}
+                </Text>
+                <Text style={styles.quickStartDesc}>
+                  {t('home.quickStartDesc') || 'Rozpocznij 5-minutową medytację teraz'}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={24} color={theme.colors.neutral.white} />
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
 
         {/* Feature Tiles - Now in the middle! */}
         <View style={styles.tilesContainer}>
@@ -93,8 +136,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
           {onNavigateToCustom && (
             <FeatureTile
-              title={t('home.customSessions') || 'Własne Sesje'}
-              description={t('home.customSessionsDesc') || 'Stwórz spersonalizowane sesje medytacji'}
+              title={t('home.customSessions') || 'Własne Sesje ✨'}
+              description={t('home.customSessionsDesc') || 'Skomponuj swoją idealną medytację w 3 krokach'}
               icon="create-outline"
               gradient={gradients.card.purpleCard}
               onPress={onNavigateToCustom}
@@ -103,8 +146,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           )}
 
           <FeatureTile
-            title={t('home.sessionCatalog') || 'Katalog Sesji'}
-            description={t('home.sessionCatalogDesc') || 'Przeglądaj naszą kolekcję prowadzonych medytacji'}
+            title={t('home.sessionCatalog') || 'Katalog Sesji 🧘‍♀️'}
+            description={t('home.sessionCatalogDesc') || '350+ medytacji dla każdego nastroju i chwili'}
             icon="library-outline"
             gradient={gradients.card.blueCard}
             onPress={onNavigateToMeditation}
@@ -243,6 +286,84 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 0,
+  },
+  quoteTeaser: {
+    marginBottom: theme.spacing.md,
+  },
+  quoteTeaserCard: {
+    backgroundColor: 'rgba(168, 85, 247, 0.08)',
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(168, 85, 247, 0.2)',
+    ...theme.shadows.sm,
+  },
+  quoteTeaserHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
+  },
+  quoteTeaserTitle: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+  },
+  quoteTeaserText: {
+    fontSize: theme.typography.fontSizes.md,
+    fontStyle: 'italic',
+    color: theme.colors.text.primary,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.md,
+    marginBottom: theme.spacing.sm,
+  },
+  quoteTeaserFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  quoteTeaserAuthor: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+    fontStyle: 'italic',
+  },
+  quoteTeaserCTA: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xxs,
+  },
+  quoteTeaserCTAText: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: theme.typography.fontWeights.medium,
+    color: theme.colors.accent.purple[600],
+  },
+  quickStartButton: {
+    marginBottom: theme.spacing.lg,
+    borderRadius: theme.borderRadius.xl,
+    overflow: 'hidden',
+    ...theme.shadows.lg,
+  },
+  quickStartGradient: {
+    paddingVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.xl,
+  },
+  quickStartContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.md,
+  },
+  quickStartText: {
+    flex: 1,
+  },
+  quickStartTitle: {
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.neutral.white,
+    marginBottom: theme.spacing.xxs,
+  },
+  quickStartDesc: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.neutral.white,
+    opacity: 0.9,
   },
   section: {
     marginBottom: theme.spacing.md,

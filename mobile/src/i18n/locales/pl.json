@@ -1,18 +1,20 @@
 {
   "app": {
     "name": "Slow Spot",
-    "tagline": "Znajdź swoją chwilę spokoju"
+    "tagline": "5 minut dziennie zmienia wszystko ✨"
   },
   "home": {
     "welcome": "Witaj",
     "dailyQuote": "Dzienny Cytat",
+    "quickStart": "Szybki Start",
+    "quickStartDesc": "Rozpocznij 5-minutową medytację teraz",
     "startMeditation": "Rozpocznij Medytację",
     "exploreSessions": "Przeglądaj Sesje",
     "exploreFeatures": "Odkryj Funkcje",
     "customSessions": "Własne Sesje",
-    "customSessionsDesc": "Stwórz spersonalizowane sesje medytacji",
+    "customSessionsDesc": "Skomponuj swoją idealną medytację w 3 krokach",
     "sessionCatalog": "Katalog Sesji",
-    "sessionCatalogDesc": "Przeglądaj naszą kolekcję prowadzonych medytacji",
+    "sessionCatalogDesc": "350+ medytacji dla każdego nastroju i chwili",
     "progress": "Twój Postęp",
     "dayStreak": "dni z rzędu",
     "totalMinutes": "łącznie min",
