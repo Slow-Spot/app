@@ -24,6 +24,9 @@ jobs:
   cleanup:
     name: Cleanup Old Workflow Runs
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
 
     steps:
       - name: Delete old workflow runs
@@ -37,6 +40,9 @@ jobs:
   cleanup-artifacts:
     name: Cleanup Old Artifacts
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
 
     steps:
       - name: Delete old artifacts

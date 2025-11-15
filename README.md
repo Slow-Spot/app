@@ -32,8 +32,9 @@
 - [🤖 Android (Google Play)](https://play.google.com/store/apps/details?id=host.exp.exponent)
 
 **Step 2:** Scan QR code above OR open link:
-- 🔗 **Web**: [https://expo.dev/@leszekszpunar/slow-spot](https://expo.dev/@leszekszpunar/slow-spot)
-- 📱 **Direct**: `exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d?channel-name=preview`
+- 🔗 **Web** (recommended): [https://expo.dev/@leszekszpunar/slow-spot](https://expo.dev/@leszekszpunar/slow-spot)
+- 📱 **Direct Expo Go**: `exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d`
+- 🔄 **Latest Update**: [Expo Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/updates)
 
 **Step 3:** App opens automatically! ✨
 

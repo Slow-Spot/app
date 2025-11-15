@@ -27,15 +27,23 @@
 
 ## Direct Links (if QR doesn't work)
 
-**Expo Go Direct:**
-```
-exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d?channel-name=preview
-```
-
-**Web Link:**
+**Web Link (Recommended):**
 ```
 https://expo.dev/@leszekszpunar/slow-spot
 ```
+
+**Expo Go Direct:**
+```
+exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d
+```
+
+**Latest Update (from Dashboard):**
+```
+https://expo.dev/accounts/leszekszpunar/projects/slow-spot/updates
+```
+
+**QR Code from Dashboard:**
+Check latest update at: [Expo Updates](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/updates)
 
 ---
 
