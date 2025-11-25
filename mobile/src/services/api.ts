@@ -1,8 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MOCK_QUOTES, MOCK_SESSIONS } from './mockData';
+import { logger } from '../utils/logger';
 
-const API_BASE_URL = 'http://localhost:5019/api'; // Will be replaced with Railway URL in production
-const USE_MOCK_DATA = true; // Enable mock data for offline development
+// ✅ SECURITY: Use environment variables for API URL
+// ✅ SECURITY: Always use HTTPS in production
+const API_BASE_URL = process.env.API_BASE_URL || 'https://api.slowspot.app/api';
+const USE_MOCK_DATA = process.env.USE_MOCK_DATA === 'true' || true; // Enable mock data for offline development
+
+// ✅ SECURITY: Validate that production uses HTTPS
+if (process.env.APP_ENV === 'production' && API_BASE_URL.startsWith('http://')) {
+  throw new Error('SECURITY ERROR: Production must use HTTPS for API calls');
+}
 
 export interface Quote {
   id: number;
@@ -27,10 +35,11 @@ export interface MeditationSession {
   titleKey?: string; // i18n translation key (e.g., "sessionsList.morningAwakening.title")
   languageCode: string;
   durationSeconds: number;
-  voiceUrl?: string;
-  ambientUrl?: string;
-  chimeUrl?: string;
+  voiceUrl?: string | number;
+  ambientUrl?: string | number;
+  chimeUrl?: string | number;
   cultureTag?: string;
+  purposeTag?: string;
   level: number;
   description?: string;
   descriptionKey?: string; // i18n translation key (e.g., "sessionsList.morningAwakening.description")
@@ -58,13 +67,24 @@ const fetchWithCache = async <T>(
       }
     }
 
-    // Fetch from API
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
-    }
+    // Fetch from API with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
-    const data = await response.json();
+    try {
+      const response = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
 
     // Save to cache
     await AsyncStorage.setItem(
@@ -72,15 +92,27 @@ const fetchWithCache = async <T>(
       JSON.stringify({ data, timestamp: Date.now() })
     );
 
-    return data as T;
+      return data as T;
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      throw fetchError;
+    }
   } catch (error) {
+    logger.error('API fetch failed:', error);
+
     // If API fails, try to return stale cache
     const cached = await AsyncStorage.getItem(key);
     if (cached) {
+      logger.log('Using stale cache for:', key);
       const { data } = JSON.parse(cached);
       return data as T;
     }
-    throw error;
+
+    // Re-throw with user-friendly message
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timeout. Please check your connection.');
+    }
+    throw new Error('Failed to load data. Please check your connection.');
   }
 };
 
@@ -101,19 +133,36 @@ export const api = {
     },
 
     getRandom: async (lang: string = 'en'): Promise<Quote> => {
-      // Return mock data if enabled
-      // NOTE: All quotes have translations, so just pick any random quote
-      if (USE_MOCK_DATA) {
-        const randomIndex = Math.floor(Math.random() * MOCK_QUOTES.length);
-        return Promise.resolve(MOCK_QUOTES[randomIndex]);
-      }
+      try {
+        // Return mock data if enabled
+        // NOTE: All quotes have translations, so just pick any random quote
+        if (USE_MOCK_DATA) {
+          const randomIndex = Math.floor(Math.random() * MOCK_QUOTES.length);
+          return Promise.resolve(MOCK_QUOTES[randomIndex]);
+        }
 
-      const url = `${API_BASE_URL}/quotes/random?lang=${lang}`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        const url = `${API_BASE_URL}/quotes/random?lang=${lang}`;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+        try {
+          const response = await fetch(url, { signal: controller.signal });
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+          }
+          return response.json();
+        } catch (fetchError) {
+          clearTimeout(timeoutId);
+          throw fetchError;
+        }
+      } catch (error) {
+        logger.error('Failed to fetch random quote:', error);
+        // Fallback to random mock quote
+        const randomIndex = Math.floor(Math.random() * MOCK_QUOTES.length);
+        return MOCK_QUOTES[randomIndex];
       }
-      return response.json();
     },
   },
 
@@ -126,7 +175,7 @@ export const api = {
           filtered = filtered.filter((s) => s.languageCode === lang);
           // Fallback to English if no sessions found for requested language
           if (filtered.length === 0) {
-            console.log(`[API] No sessions found for language '${lang}', falling back to English`);
+            logger.log(`No sessions found for language '${lang}', falling back to English`);
             filtered = MOCK_SESSIONS.filter((s) => s.languageCode === 'en');
           }
         }

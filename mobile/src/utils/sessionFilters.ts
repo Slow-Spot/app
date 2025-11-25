@@ -20,6 +20,9 @@ import {
 /**
  * Filter sessions based on filter criteria
  */
+const toNumber = (value: string | number | undefined): number =>
+  typeof value === 'number' ? value : Number(value || 0);
+
 export const filterSessions = (
   sessions: MeditationSession[],
   filters: SessionFilters,
@@ -32,7 +35,7 @@ export const filterSessions = (
     const query = filters.searchQuery.toLowerCase().trim();
     filtered = filtered.filter(session =>
       session.title.toLowerCase().includes(query) ||
-      session.description.toLowerCase().includes(query) ||
+      (session.description || '').toLowerCase().includes(query) ||
       session.cultureTag?.toLowerCase().includes(query) ||
       session.purposeTag?.toLowerCase().includes(query)
     );
@@ -41,7 +44,7 @@ export const filterSessions = (
   // Duration filters
   if (filters.durations && filters.durations.length > 0) {
     filtered = filtered.filter(session => {
-      const durationMinutes = Math.round(session.durationSeconds / 60);
+      const durationMinutes = Math.round(toNumber(session.durationSeconds) / 60);
       return filters.durations!.includes(durationMinutes);
     });
   }
@@ -49,7 +52,7 @@ export const filterSessions = (
   if (filters.durationRange) {
     const { min, max } = filters.durationRange;
     filtered = filtered.filter(session => {
-      const durationMinutes = Math.round(session.durationSeconds / 60);
+      const durationMinutes = Math.round(toNumber(session.durationSeconds) / 60);
       if (min !== undefined && durationMinutes < min) return false;
       if (max !== undefined && durationMinutes > max) return false;
       return true;
@@ -79,14 +82,14 @@ export const filterSessions = (
 
   // Favorites filter
   if (filters.showFavoritesOnly && userProgress) {
-    const favoriteIds = new Set(userProgress.favoriteSessions || []);
-    filtered = filtered.filter(session => favoriteIds.has(session.id));
+    const favoriteIds = new Set((userProgress.favoriteSessions || []).map(String));
+    filtered = filtered.filter(session => favoriteIds.has(String(session.id)));
   }
 
   // Hidden sessions filter
   if (!filters.showHiddenSessions && userProgress) {
-    const hiddenIds = new Set(userProgress.hiddenSessions || []);
-    filtered = filtered.filter(session => !hiddenIds.has(session.id));
+    const hiddenIds = new Set((userProgress.hiddenSessions || []).map(String));
+    filtered = filtered.filter(session => !hiddenIds.has(String(session.id)));
   }
 
   // Custom sessions filter
@@ -97,15 +100,15 @@ export const filterSessions = (
   // Completed/uncompleted filters
   if (userProgress) {
     const completedIds = new Set(
-      userProgress.completedSessions.map(s => s.sessionId)
+      userProgress.completedSessions.map(s => String(s.sessionId))
     );
 
     if (filters.showCompletedOnly) {
-      filtered = filtered.filter(session => completedIds.has(session.id));
+      filtered = filtered.filter(session => completedIds.has(String(session.id)));
     }
 
     if (filters.showUncompletedOnly) {
-      filtered = filtered.filter(session => !completedIds.has(session.id));
+      filtered = filtered.filter(session => !completedIds.has(String(session.id)));
     }
   }
 
@@ -150,7 +153,7 @@ export const sortSessions = (
         break;
 
       case 'duration':
-        comparison = a.durationSeconds - b.durationSeconds;
+        comparison = toNumber(a.durationSeconds) - toNumber(b.durationSeconds);
         break;
 
       case 'level':
@@ -222,7 +225,7 @@ export const filterAndSortSessions = (
  * Get last completion time for a session (timestamp)
  */
 const getLastCompletionTime = (
-  sessionId: number,
+  sessionId: number | string,
   progress: UserMeditationProgress
 ): number => {
   const completions = progress.completedSessions.filter(
@@ -244,7 +247,7 @@ const getLastCompletionTime = (
  * Get completion count for a session
  */
 const getCompletionCount = (
-  sessionId: number,
+  sessionId: number | string,
   progress: UserMeditationProgress
 ): number => {
   return progress.completedSessions.filter(

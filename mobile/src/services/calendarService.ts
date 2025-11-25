@@ -6,6 +6,7 @@
 import * as Calendar from 'expo-calendar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import { logger } from '../utils/logger';
 
 const CALENDAR_NAME = 'Slow Spot Meditation';
 const REMINDER_SETTINGS_KEY = '@slow_spot_reminder_settings';
@@ -40,7 +41,7 @@ export const requestCalendarPermissions = async (): Promise<boolean> => {
     const { status } = await Calendar.requestCalendarPermissionsAsync();
     return status === 'granted';
   } catch (error) {
-    console.error('Error requesting calendar permissions:', error);
+    logger.error('Error requesting calendar permissions:', error);
     return false;
   }
 };
@@ -53,7 +54,7 @@ export const checkCalendarPermissions = async (): Promise<boolean> => {
     const { status } = await Calendar.getCalendarPermissionsAsync();
     return status === 'granted';
   } catch (error) {
-    console.error('Error checking calendar permissions:', error);
+    logger.error('Error checking calendar permissions:', error);
     return false;
   }
 };
@@ -65,23 +66,22 @@ export const getOrCreateCalendar = async (): Promise<string | null> => {
   try {
     const hasPermission = await checkCalendarPermissions();
     if (!hasPermission) {
-      console.error('Calendar permissions not granted');
+      logger.error('Calendar permissions not granted');
       return null;
     }
 
     // Check if we have a stored calendar ID
-    const storedCalendarId = await AsyncStorage.getItem(CALENDAR_ID_KEY);
-    if (storedCalendarId) {
-      try {
-        const calendar = await Calendar.getCalendarAsync(storedCalendarId);
-        if (calendar) {
-          return storedCalendarId;
-        }
-      } catch (error) {
-        // Calendar might have been deleted, continue to create new one
-        console.log('Stored calendar not found, creating new one');
-      }
+  const storedCalendarId = await AsyncStorage.getItem(CALENDAR_ID_KEY);
+  if (storedCalendarId) {
+    try {
+      const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+      const found = calendars.find((cal) => cal.id === storedCalendarId);
+      if (found) return storedCalendarId;
+    } catch (error) {
+      // Calendar might have been deleted, continue to create new one
+      logger.log('Stored calendar not found, creating new one');
     }
+  }
 
     // Get all calendars
     const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
@@ -110,7 +110,7 @@ export const getOrCreateCalendar = async (): Promise<string | null> => {
     }
 
     if (!defaultCalendarSource) {
-      console.error('No suitable calendar source found');
+      logger.error('No suitable calendar source found');
       return null;
     }
 
@@ -128,7 +128,7 @@ export const getOrCreateCalendar = async (): Promise<string | null> => {
     await AsyncStorage.setItem(CALENDAR_ID_KEY, calendarId);
     return calendarId;
   } catch (error) {
-    console.error('Error creating/getting calendar:', error);
+    logger.error('Error creating/getting calendar:', error);
     return null;
   }
 };
@@ -163,7 +163,7 @@ export const createMeditationEvent = async (
 
     return eventId;
   } catch (error) {
-    console.error('Error creating meditation event:', error);
+    logger.error('Error creating meditation event:', error);
     return null;
   }
 };
@@ -224,7 +224,7 @@ export const createRecurringReminder = async (
     await AsyncStorage.setItem(REMINDER_SETTINGS_KEY, JSON.stringify(settings));
     return settings;
   } catch (error) {
-    console.error('Error creating recurring reminder:', error);
+    logger.error('Error creating recurring reminder:', error);
     return null;
   }
 };
@@ -242,7 +242,7 @@ export const deleteMeditationEvent = async (eventId: string): Promise<boolean> =
     await Calendar.deleteEventAsync(eventId);
     return true;
   } catch (error) {
-    console.error('Error deleting meditation event:', error);
+    logger.error('Error deleting meditation event:', error);
     return false;
   }
 };
@@ -265,7 +265,7 @@ export const cancelRecurringReminder = async (): Promise<boolean> => {
 
     return false;
   } catch (error) {
-    console.error('Error canceling recurring reminder:', error);
+    logger.error('Error canceling recurring reminder:', error);
     return false;
   }
 };
@@ -283,7 +283,7 @@ export const getReminderSettings = async (): Promise<ReminderSettings | null> =>
 
     return JSON.parse(settingsJson);
   } catch (error) {
-    console.error('Error getting reminder settings:', error);
+    logger.error('Error getting reminder settings:', error);
     return null;
   }
 };
@@ -317,7 +317,7 @@ export const getUpcomingMeditations = async (
 
     return events;
   } catch (error) {
-    console.error('Error getting upcoming meditations:', error);
+    logger.error('Error getting upcoming meditations:', error);
     return [];
   }
 };
@@ -335,7 +335,7 @@ export const updateRecurringReminder = async (
     // Create new reminder with new time
     return await createRecurringReminder(newTime);
   } catch (error) {
-    console.error('Error updating recurring reminder:', error);
+    logger.error('Error updating recurring reminder:', error);
     return null;
   }
 };

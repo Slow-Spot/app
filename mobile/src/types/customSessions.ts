@@ -15,8 +15,8 @@ export interface CustomMeditationSession extends Omit<MeditationSession, 'id'> {
   isCustom: true;
 
   // Metadata
-  createdAt: Date;
-  lastModified: Date;
+  createdAt: string;
+  lastModified: string;
   createdBy: string; // userId
 
   // Usage stats

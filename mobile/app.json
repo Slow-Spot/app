@@ -7,6 +7,19 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "privacy": "public",
+    "privacyManifests": {
+      "NSPrivacyAccessedAPITypes": [
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+          "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
+        },
+        {
+          "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+          "NSPrivacyAccessedAPITypeReasons": ["C617.1"]
+        }
+      ]
+    },
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -25,7 +38,14 @@
         "UIBackgroundModes": ["audio"],
         "NSCalendarsUsageDescription": "We need access to your calendar to schedule meditation sessions.",
         "NSRemindersUsageDescription": "We need access to your reminders to set meditation reminders.",
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSExceptionDomains": {}
+        }
+      },
+      "config": {
+        "usesNonExemptEncryption": false
       }
     },
     "android": {
@@ -36,6 +56,10 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
+      "notification": {
+        "icon": "./assets/notification-icon.png",
+        "color": "#667eea"
+      },
       "permissions": [
         "READ_CALENDAR",
         "WRITE_CALENDAR"

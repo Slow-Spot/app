@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +26,7 @@ export const PreparationScreen: React.FC<PreparationScreenProps> = ({ onReady })
       const randomQuote = await api.quotes.getRandom(i18n.language);
       setQuote(randomQuote);
     } catch (error) {
-      console.error('Failed to load quote:', error);
+      logger.error('Failed to load quote:', error);
       // Continue without quote
     } finally {
       setLoading(false);

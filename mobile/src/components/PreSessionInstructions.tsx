@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 // ══════════════════════════════════════════════════════════════
 // Pre-Session Instructions Component
 // Ultra-Modern Design Following CelebrationScreen Patterns

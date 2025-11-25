@@ -83,7 +83,7 @@ export interface UserMeditationProgress {
 
 export interface SessionCompletion {
   id: string; // Unique completion ID
-  sessionId: number;
+  sessionId: number | string;
   sessionTitle: string;
 
   // Session metadata (for filtering/sorting completed sessions)
@@ -96,6 +96,7 @@ export interface SessionCompletion {
   completedAt: string; // ISO datetime
   plannedDurationSeconds: number;
   actualDurationSeconds: number;
+  durationSeconds?: number;
 
   // Completion status
   completedFully: boolean; // Did they finish or quit early?
@@ -112,6 +113,9 @@ export interface SessionCompletion {
   difficulty?: 'too_easy' | 'just_right' | 'too_hard';
   enjoyment?: MoodRating;
   helpfulness?: MoodRating;
+
+  // Optional notes for achievements and reflection
+  notes?: string;
 
   // Experience points earned
   xpEarned: number;

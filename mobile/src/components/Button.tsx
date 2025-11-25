@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 /**
  * Button Component
  *
@@ -43,7 +44,7 @@ interface ButtonProps {
  * <Button
  *   title="Cancel"
  *   variant="outline"
- *   onPress={() => console.log('Cancel')}
+ *   onPress={() => logger.log('Cancel')}
  *   size="md"
  * />
  * ```

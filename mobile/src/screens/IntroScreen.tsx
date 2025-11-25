@@ -1,8 +1,9 @@
+import { logger } from '../utils/logger';
 /**
  * IntroScreen - Beautiful onboarding experience
  *
- * Pokazuje się tylko przy pierwszym uruchomieniu aplikacji.
- * 3 slajdy przedstawiające główne funkcje aplikacji.
+ * Shows only on first app launch.
+ * 3 slides presenting main app features.
  */
 
 import React, { useRef } from 'react';
@@ -11,6 +12,7 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
 import theme, { gradients } from '../theme';
 
 const { width, height } = Dimensions.get('window');
@@ -19,8 +21,8 @@ const INTRO_COMPLETED_KEY = '@slow_spot_intro_completed';
 
 interface Slide {
   key: string;
-  title: string;
-  text: string;
+  titleKey: string;
+  textKey: string;
   icon: keyof typeof Ionicons.glyphMap;
   gradient: { colors: string[]; start: { x: number; y: number }; end: { x: number; y: number } };
 }
@@ -28,8 +30,8 @@ interface Slide {
 const slides: Slide[] = [
   {
     key: '1',
-    title: 'Znajdź Swoją Chwilę Spokoju',
-    text: 'Medytacje, inspirujące cytaty i techniki mindfulness w jednym miejscu',
+    titleKey: 'onboarding.slide1.title',
+    textKey: 'onboarding.slide1.text',
     icon: 'flower-outline',
     gradient: {
       colors: ['#667eea', '#764ba2'],
@@ -39,8 +41,8 @@ const slides: Slide[] = [
   },
   {
     key: '2',
-    title: 'Własne Sesje Medytacji',
-    text: 'Stwórz spersonalizowane sesje dopasowane do Twoich potrzeb',
+    titleKey: 'onboarding.slide2.title',
+    textKey: 'onboarding.slide2.text',
     icon: 'construct-outline',
     gradient: {
       colors: ['#f093fb', '#f5576c'],
@@ -50,8 +52,8 @@ const slides: Slide[] = [
   },
   {
     key: '3',
-    title: 'Śledź Swój Postęp',
-    text: 'Buduj codzienną praktykę i obserwuj swój rozwój',
+    titleKey: 'onboarding.slide3.title',
+    textKey: 'onboarding.slide3.text',
     icon: 'trending-up-outline',
     gradient: {
       colors: ['#4facfe', '#00f2fe'],
@@ -66,14 +68,15 @@ interface IntroScreenProps {
 }
 
 export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
-  const sliderRef = useRef<AppIntroSlider>(null);
+  const { t } = useTranslation();
+  const sliderRef = useRef<any>(null);
 
   const handleDone = async () => {
     try {
       await AsyncStorage.setItem(INTRO_COMPLETED_KEY, 'true');
       onDone();
     } catch (error) {
-      console.error('Error saving intro completion:', error);
+      logger.error('Error saving intro completion:', error);
       onDone(); // Proceed anyway
     }
   };
@@ -114,8 +117,8 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
 
       {/* Content */}
       <View style={styles.content}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.text}>{item.text}</Text>
+        <Text style={styles.title}>{t(item.titleKey)}</Text>
+        <Text style={styles.text}>{t(item.textKey)}</Text>
       </View>
     </LinearGradient>
   );
@@ -172,7 +175,7 @@ export const hasCompletedIntro = async (): Promise<boolean> => {
     const value = await AsyncStorage.getItem(INTRO_COMPLETED_KEY);
     return value === 'true';
   } catch (error) {
-    console.error('Error checking intro completion:', error);
+    logger.error('Error checking intro completion:', error);
     return false;
   }
 };
@@ -182,7 +185,7 @@ export const resetIntro = async (): Promise<void> => {
   try {
     await AsyncStorage.removeItem(INTRO_COMPLETED_KEY);
   } catch (error) {
-    console.error('Error resetting intro:', error);
+    logger.error('Error resetting intro:', error);
   }
 };
 

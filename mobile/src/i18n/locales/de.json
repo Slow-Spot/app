@@ -3,6 +3,10 @@
     "name": "Slow Spot",
     "tagline": "Finde deinen Moment der Ruhe"
   },
+  "splash": {
+    "appName": "Slow Spot",
+    "tagline": "Finde deinen Moment der Ruhe"
+  },
   "home": {
     "welcome": "Willkommen",
     "dailyQuote": "Tägliches Zitat",
@@ -425,6 +429,155 @@
     "breathPrayer": {
       "title": "Atem-Gebet",
       "description": "Rhythmisches Gebet synchronisiert mit dem Atmen."
+    }
+  },
+  "achievements": {
+    "title": "Errungenschaften",
+    "level": "Level",
+    "levelProgress": "Level-Fortschritt",
+    "toNextLevel": "zum nächsten Level",
+    "unlocked": "Freigeschaltet",
+    "almostThere": "Fast geschafft",
+    "hidden": "Geheime Errungenschaft",
+    "firstSession": {
+      "title": "Erste Schritte",
+      "description": "Schließe deine erste Meditationssitzung ab"
+    },
+    "tenSessions": {
+      "title": "Engagierter Praktizierender",
+      "description": "Schließe 10 Meditationssitzungen ab"
+    },
+    "fiftySessions": {
+      "title": "Engagierter Meditierender",
+      "description": "Schließe 50 Meditationssitzungen ab"
+    },
+    "hundredSessions": {
+      "title": "Hundert-Club",
+      "description": "Schließe 100 Meditationssitzungen ab"
+    },
+    "thousandSessions": {
+      "title": "Meditationsmeister",
+      "description": "Schließe 1000 Meditationssitzungen ab"
+    },
+    "streak3": {
+      "title": "Guter Start",
+      "description": "Meditiere 3 Tage hintereinander"
+    },
+    "streak7": {
+      "title": "Eine Woche Stark",
+      "description": "Halte eine 7-tägige Meditationsserie aufrecht"
+    },
+    "streak14": {
+      "title": "Zwei-Wochen-Krieger",
+      "description": "Halte eine 14-tägige Meditationsserie aufrecht"
+    },
+    "streak30": {
+      "title": "Monatliches Engagement",
+      "description": "Halte eine 30-tägige Meditationsserie aufrecht"
+    },
+    "streak100": {
+      "title": "100 Tage Zen",
+      "description": "Halte eine 100-tägige Meditationsserie aufrecht"
+    },
+    "streak365": {
+      "title": "Jahr der Achtsamkeit",
+      "description": "Meditiere jeden Tag für ein ganzes Jahr"
+    },
+    "zenExplorer": {
+      "title": "Zen-Entdecker",
+      "description": "Schließe 5 Zen-Meditationssitzungen ab"
+    },
+    "vipassanaPractitioner": {
+      "title": "Vipassana-Praktizierender",
+      "description": "Schließe 5 Vipassana-Meditationssitzungen ab"
+    },
+    "vedicMaster": {
+      "title": "Vedischer Meister",
+      "description": "Schließe 10 vedische Meditationssitzungen ab"
+    },
+    "taoistSage": {
+      "title": "Taoistischer Weiser",
+      "description": "Schließe 10 taoistische Meditationssitzungen ab"
+    },
+    "sufiMystic": {
+      "title": "Sufi-Mystiker",
+      "description": "Schließe 10 Sufi-Meditationssitzungen ab"
+    },
+    "christianContemplative": {
+      "title": "Christlicher Kontemplativer",
+      "description": "Schließe 10 christliche Meditationssitzungen ab"
+    },
+    "worldTraveler": {
+      "title": "Weltreisender",
+      "description": "Erlebe alle 6 Meditationstraditionen"
+    },
+    "levelUp": {
+      "title": "Level aufgestiegen",
+      "description": "Erreiche Level 2"
+    },
+    "intermediate": {
+      "title": "Fortgeschrittener Meditierender",
+      "description": "Erreiche Level 3"
+    },
+    "advanced": {
+      "title": "Fortgeschrittener Praktizierender",
+      "description": "Erreiche Level 4"
+    },
+    "master": {
+      "title": "Meister-Meditierender",
+      "description": "Erreiche Level 5"
+    },
+    "timeDedication100": {
+      "title": "100 Minuten",
+      "description": "Meditiere insgesamt 100 Minuten"
+    },
+    "timeDedication1000": {
+      "title": "1000 Minuten",
+      "description": "Meditiere insgesamt 1000 Minuten"
+    },
+    "timeDedication10000": {
+      "title": "10000 Minuten",
+      "description": "Meditiere insgesamt 10000 Minuten"
+    },
+    "earlyBird": {
+      "title": "Frühaufsteher",
+      "description": "Schließe 5 Meditationssitzungen vor 7 Uhr ab"
+    },
+    "nightOwl": {
+      "title": "Nachteule",
+      "description": "Schließe 5 Meditationssitzungen nach 22 Uhr ab"
+    },
+    "weekendWarrior": {
+      "title": "Wochenend-Krieger",
+      "description": "Schließe 10 Meditationssitzungen am Wochenende ab"
+    },
+    "middayRefresh": {
+      "title": "Mittags-Erfrischung",
+      "description": "Schließe 10 Meditationssitzungen zwischen 11 und 14 Uhr ab"
+    },
+    "perfectionist": {
+      "title": "Perfektionist",
+      "description": "Schließe 10 Sitzungen vollständig ohne Unterbrechung ab"
+    },
+    "moodImprover": {
+      "title": "Stimmungsverbesserer",
+      "description": "Verbessere deine Stimmung durch Meditation 20 Mal"
+    },
+    "marathonMeditator": {
+      "title": "Marathon-Meditierender",
+      "description": "Schließe 10 Sitzungen von 20+ Minuten ab"
+    },
+    "explorer": {
+      "title": "Entdecker",
+      "description": "Probiere 20 verschiedene Meditationssitzungen aus"
+    },
+    "completionist": {
+      "title": "Vollender",
+      "description": "Erlebe alle 40 Meditationssitzungen"
+    },
+    "reflectionMaster": {
+      "title": "Reflexionsmeister",
+      "description": "Füge Notizen zu 25 Meditationssitzungen hinzu"
     }
   }
 }

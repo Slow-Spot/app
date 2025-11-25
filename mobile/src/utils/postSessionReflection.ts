@@ -133,7 +133,7 @@ export const createSessionCompletion = (
     level: session.level,
     startedAt: params.startedAt.toISOString(),
     completedAt: params.completedAt.toISOString(),
-    plannedDurationSeconds: session.durationSeconds,
+    plannedDurationSeconds: Number(session.durationSeconds || 0),
     actualDurationSeconds: params.actualDurationSeconds,
     completedFully: params.completedFully,
     quitReason: params.quitReason,

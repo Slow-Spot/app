@@ -1,0 +1,9 @@
+App privacy summary (Play Console / App Store Connect)
+
+Data collection: None (no data collected).
+Data sharing: None.
+Data storage: Local on device only (AsyncStorage); no cloud/backend sync.
+Identifiers: None collected; no account required.
+Tracking: None; no analytics/ads SDKs.
+Permissions: Calendar/reminders optional, used solely for local reminders; event data stays on device.
+Children/age: General audience; no special handling required.

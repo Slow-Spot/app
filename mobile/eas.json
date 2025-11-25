@@ -8,11 +8,16 @@
       "developmentClient": true,
       "distribution": "internal",
       "channel": "development",
+      "env": {
+        "APP_ENV": "development"
+      },
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "buildConfiguration": "Debug"
       },
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDebug"
       }
     },
     "preview": {
@@ -23,11 +28,14 @@
       },
       "ios": {
         "simulator": false,
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "buildConfiguration": "Release",
+        "autoIncrement": "buildNumber"
       },
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
+        "gradleCommand": ":app:assembleRelease",
+        "autoIncrement": "versionCode"
       }
     },
     "production": {
@@ -36,30 +44,51 @@
         "APP_ENV": "production"
       },
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "buildConfiguration": "Release",
+        "autoIncrement": "buildNumber",
+        "submitProfile": "production"
       },
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "autoIncrement": "versionCode",
+        "submitProfile": "production"
+      },
+      "cache": {
+        "disabled": false,
+        "cacheDefaultPaths": true,
+        "customPaths": ["node_modules"]
       }
+    },
+    "production-simulator": {
+      "extends": "production",
+      "ios": {
+        "simulator": true,
+        "buildConfiguration": "Release"
+      },
+      "distribution": "internal"
     }
   },
   "submit": {
     "preview": {
       "ios": {
         "appleId": "your-apple-id@example.com",
-        "ascAppId": "placeholder",
-        "appleTeamId": "placeholder"
+        "ascAppId": "PLACEHOLDER_APP_STORE_CONNECT_APP_ID",
+        "appleTeamId": "PLACEHOLDER_APPLE_TEAM_ID"
       }
     },
     "production": {
       "ios": {
         "appleId": "your-apple-id@example.com",
-        "ascAppId": "placeholder",
-        "appleTeamId": "placeholder"
+        "ascAppId": "PLACEHOLDER_APP_STORE_CONNECT_APP_ID",
+        "appleTeamId": "PLACEHOLDER_APPLE_TEAM_ID",
+        "sku": "slow-spot-app"
       },
       "android": {
-        "serviceAccountKeyPath": "./service-account.json",
-        "track": "internal"
+        "serviceAccountKeyPath": "./android-service-account.json",
+        "track": "production",
+        "releaseStatus": "completed",
+        "changesNotSentForReview": false
       }
     }
   }

@@ -27,12 +27,12 @@ export const cloneSession = (
   session: MeditationSession,
   userId: string
 ): CustomMeditationSession => {
-  const now = new Date();
+  const now = new Date().toISOString();
 
   return {
     ...session,
     id: uuidv4(),
-    baseSessionId: session.id,
+    baseSessionId: typeof session.id === 'number' ? session.id : undefined,
     isCustom: true,
     createdAt: now,
     lastModified: now,
@@ -53,7 +53,7 @@ export const createCustomSession = (
   userId: string,
   overrides?: Partial<CustomMeditationSession>
 ): CustomMeditationSession => {
-  const now = new Date();
+  const now = new Date().toISOString();
 
   return {
     id: uuidv4(),
@@ -93,7 +93,7 @@ export const updateCustomSession = (
   return {
     ...session,
     ...updates,
-    lastModified: new Date(),
+    lastModified: new Date().toISOString(),
   };
 };
 
@@ -104,7 +104,7 @@ export const duplicateCustomSession = (
   session: CustomMeditationSession,
   userId: string
 ): CustomMeditationSession => {
-  const now = new Date();
+  const now = new Date().toISOString();
 
   return {
     ...session,
@@ -295,7 +295,7 @@ export const importSession = (
     warnings.push(...validationResult.warnings.map(w => w.messageKey));
 
     // Create new session with imported data
-    const now = new Date();
+    const now = new Date().toISOString();
     const importedSession: CustomMeditationSession = {
       ...data.session,
       id: uuidv4(), // Generate new ID
@@ -333,9 +333,9 @@ export const serializeCustomSession = (
 ): Record<string, any> => {
   return {
     ...session,
-    createdAt: session.createdAt.toISOString(),
-    lastModified: session.lastModified.toISOString(),
-    lastCompletedAt: session.lastCompletedAt?.toISOString(),
+    createdAt: session.createdAt,
+    lastModified: session.lastModified,
+    lastCompletedAt: session.lastCompletedAt,
   };
 };
 
@@ -347,9 +347,9 @@ export const deserializeCustomSession = (
 ): CustomMeditationSession => {
   return {
     ...data,
-    createdAt: new Date(data.createdAt),
-    lastModified: new Date(data.lastModified),
-    lastCompletedAt: data.lastCompletedAt ? new Date(data.lastCompletedAt) : undefined,
+    createdAt: data.createdAt,
+    lastModified: data.lastModified,
+    lastCompletedAt: data.lastCompletedAt,
   } as CustomMeditationSession;
 };
 

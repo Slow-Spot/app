@@ -3,6 +3,10 @@
     "name": "Slow Spot",
     "tagline": "5 minut dziennie zmienia wszystko ✨"
   },
+  "splash": {
+    "appName": "Slow Spot",
+    "tagline": "Znajdź chwilę spokoju"
+  },
   "home": {
     "welcome": "Witaj",
     "dailyQuote": "Dzienny Cytat",
@@ -569,6 +573,155 @@
       "ocean": "Ocean",
       "forest": "Las",
       "silence": "Cisza"
+    }
+  },
+  "achievements": {
+    "title": "Osiągnięcia",
+    "level": "Poziom",
+    "levelProgress": "Postęp Poziomu",
+    "toNextLevel": "do następnego poziomu",
+    "unlocked": "Odblokowane",
+    "almostThere": "Prawie gotowe",
+    "hidden": "Sekretne osiągnięcie",
+    "firstSession": {
+      "title": "Pierwsze Kroki",
+      "description": "Ukończ swoją pierwszą sesję medytacji"
+    },
+    "tenSessions": {
+      "title": "Oddany Praktyk",
+      "description": "Ukończ 10 sesji medytacji"
+    },
+    "fiftySessions": {
+      "title": "Zaangażowany Medytujący",
+      "description": "Ukończ 50 sesji medytacji"
+    },
+    "hundredSessions": {
+      "title": "Klub Setki",
+      "description": "Ukończ 100 sesji medytacji"
+    },
+    "thousandSessions": {
+      "title": "Mistrz Medytacji",
+      "description": "Ukończ 1000 sesji medytacji"
+    },
+    "streak3": {
+      "title": "Dobry Start",
+      "description": "Medytuj przez 3 dni z rzędu"
+    },
+    "streak7": {
+      "title": "Tydzień Mocy",
+      "description": "Utrzymaj 7-dniową passę medytacji"
+    },
+    "streak14": {
+      "title": "Dwutygodniowy Wojownik",
+      "description": "Utrzymaj 14-dniową passę medytacji"
+    },
+    "streak30": {
+      "title": "Miesięczne Zaangażowanie",
+      "description": "Utrzymaj 30-dniową passę medytacji"
+    },
+    "streak100": {
+      "title": "100 Dni Zen",
+      "description": "Utrzymaj 100-dniową passę medytacji"
+    },
+    "streak365": {
+      "title": "Rok Uważności",
+      "description": "Medytuj każdego dnia przez cały rok"
+    },
+    "zenExplorer": {
+      "title": "Odkrywca Zen",
+      "description": "Ukończ 5 sesji medytacji Zen"
+    },
+    "vipassanaPractitioner": {
+      "title": "Praktykujący Vipassanę",
+      "description": "Ukończ 5 sesji medytacji Vipassana"
+    },
+    "vedicMaster": {
+      "title": "Mistrz Wedyjski",
+      "description": "Ukończ 10 sesji medytacji wedyjskiej"
+    },
+    "taoistSage": {
+      "title": "Taoistyczny Mędrzec",
+      "description": "Ukończ 10 sesji medytacji taoistycznej"
+    },
+    "sufiMystic": {
+      "title": "Mistyk Sufi",
+      "description": "Ukończ 10 sesji medytacji Sufi"
+    },
+    "christianContemplative": {
+      "title": "Kontemplujący Chrześcijanin",
+      "description": "Ukończ 10 sesji medytacji chrześcijańskiej"
+    },
+    "worldTraveler": {
+      "title": "Podróżnik Świata",
+      "description": "Doświadcz wszystkich 6 tradycji medytacyjnych"
+    },
+    "levelUp": {
+      "title": "Awans",
+      "description": "Osiągnij Poziom 2"
+    },
+    "intermediate": {
+      "title": "Medytujący Średniozaawansowany",
+      "description": "Osiągnij Poziom 3"
+    },
+    "advanced": {
+      "title": "Zaawansowany Praktyk",
+      "description": "Osiągnij Poziom 4"
+    },
+    "master": {
+      "title": "Mistrz Medytacji",
+      "description": "Osiągnij Poziom 5"
+    },
+    "timeDedication100": {
+      "title": "100 Minut",
+      "description": "Medytuj przez 100 minut łącznie"
+    },
+    "timeDedication1000": {
+      "title": "1000 Minut",
+      "description": "Medytuj przez 1000 minut łącznie"
+    },
+    "timeDedication10000": {
+      "title": "10000 Minut",
+      "description": "Medytuj przez 10000 minut łącznie"
+    },
+    "earlyBird": {
+      "title": "Ranny Ptaszek",
+      "description": "Ukończ 5 sesji medytacji przed 7 rano"
+    },
+    "nightOwl": {
+      "title": "Nocna Sowa",
+      "description": "Ukończ 5 sesji medytacji po 22:00"
+    },
+    "weekendWarrior": {
+      "title": "Weekendowy Wojownik",
+      "description": "Ukończ 10 sesji medytacji w weekendy"
+    },
+    "middayRefresh": {
+      "title": "Popołudniowe Orzeźwienie",
+      "description": "Ukończ 10 sesji medytacji między 11:00 a 14:00"
+    },
+    "perfectionist": {
+      "title": "Perfekcjonista",
+      "description": "Ukończ 10 sesji w pełni bez przerwy"
+    },
+    "moodImprover": {
+      "title": "Polepszacz Nastroju",
+      "description": "Popraw swój nastrój przez medytację 20 razy"
+    },
+    "marathonMeditator": {
+      "title": "Maratończyk Medytacji",
+      "description": "Ukończ 10 sesji trwających 20+ minut"
+    },
+    "explorer": {
+      "title": "Odkrywca",
+      "description": "Wypróbuj 20 różnych sesji medytacji"
+    },
+    "completionist": {
+      "title": "Kompletujący",
+      "description": "Doświadcz wszystkich 40 sesji medytacji"
+    },
+    "reflectionMaster": {
+      "title": "Mistrz Refleksji",
+      "description": "Dodaj notatki do 25 sesji medytacji"
     }
   }
 }

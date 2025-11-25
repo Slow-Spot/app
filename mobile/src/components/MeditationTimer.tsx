@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -66,10 +67,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           chimeSound.current = sound;
           // Ensure looping is disabled
           await sound.setIsLoopingAsync(false);
-          console.log('Chime sound loaded successfully (looping disabled)');
+          logger.log('Chime sound loaded successfully (looping disabled)');
         }
       } catch (error) {
-        console.error('Error loading chime sound:', error);
+        logger.error('Error loading chime sound:', error);
       }
     };
 
@@ -80,7 +81,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       if (chimeSound.current) {
         chimeSound.current.stopAsync().catch(() => {});
         chimeSound.current.unloadAsync().catch((error) => {
-          console.error('Error unloading chime sound:', error);
+          logger.error('Error unloading chime sound:', error);
         });
       }
     };
@@ -151,7 +152,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
       // Stop any playing chime sound
       if (chimeSound.current) {
-        chimeSound.current.stopAsync().catch(err => console.error('Error stopping chime:', err));
+        chimeSound.current.stopAsync().catch(err => logger.error('Error stopping chime:', err));
       }
     }
   }, [isRunning, breathingScale, breathingOpacity]);
@@ -180,7 +181,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           await chimeSound.current.playAsync();
         }
       } catch (error) {
-        console.error('Error playing chime:', error);
+        logger.error('Error playing chime:', error);
       }
     }
   };

@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import { useTranslation } from 'react-i18next';

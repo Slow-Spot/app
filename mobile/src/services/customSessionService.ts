@@ -5,6 +5,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CustomSessionConfig, CreateCustomSessionInput } from '../types/customSession';
+import { logger } from '../utils/logger';
 
 const STORAGE_KEY = '@custom_sessions';
 
@@ -23,7 +24,7 @@ export const getCustomSessions = async (): Promise<CustomSessionConfig[]> => {
     const data = await AsyncStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
   } catch (error) {
-    console.error('Error loading custom sessions:', error);
+    logger.error('Error loading custom sessions:', error);
     return [];
   }
 };

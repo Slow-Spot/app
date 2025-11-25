@@ -3,6 +3,10 @@
     "name": "Slow Spot",
     "tagline": "Trouvez votre moment de paix"
   },
+  "splash": {
+    "appName": "Slow Spot",
+    "tagline": "Trouvez votre moment de paix"
+  },
   "home": {
     "welcome": "Bienvenue",
     "dailyQuote": "Citation du Jour",
@@ -425,6 +429,155 @@
     "breathPrayer": {
       "title": "Prière Respiratoire",
       "description": "Prière rythmique synchronisée avec la respiration."
+    }
+  },
+  "achievements": {
+    "title": "Réalisations",
+    "level": "Niveau",
+    "levelProgress": "Progression de Niveau",
+    "toNextLevel": "jusqu'au niveau suivant",
+    "unlocked": "Débloqué",
+    "almostThere": "Presque terminé",
+    "hidden": "Réalisation secrète",
+    "firstSession": {
+      "title": "Premiers Pas",
+      "description": "Complétez votre première séance de méditation"
+    },
+    "tenSessions": {
+      "title": "Pratiquant Dévoué",
+      "description": "Complétez 10 séances de méditation"
+    },
+    "fiftySessions": {
+      "title": "Méditant Engagé",
+      "description": "Complétez 50 séances de méditation"
+    },
+    "hundredSessions": {
+      "title": "Club du Centenaire",
+      "description": "Complétez 100 séances de méditation"
+    },
+    "thousandSessions": {
+      "title": "Maître de Méditation",
+      "description": "Complétez 1000 séances de méditation"
+    },
+    "streak3": {
+      "title": "Bon Départ",
+      "description": "Méditez pendant 3 jours d'affilée"
+    },
+    "streak7": {
+      "title": "Une Semaine Forte",
+      "description": "Maintenez une série de 7 jours de méditation"
+    },
+    "streak14": {
+      "title": "Guerrier de Deux Semaines",
+      "description": "Maintenez une série de 14 jours de méditation"
+    },
+    "streak30": {
+      "title": "Engagement Mensuel",
+      "description": "Maintenez une série de 30 jours de méditation"
+    },
+    "streak100": {
+      "title": "100 Jours de Zen",
+      "description": "Maintenez une série de 100 jours de méditation"
+    },
+    "streak365": {
+      "title": "Année de Pleine Conscience",
+      "description": "Méditez tous les jours pendant une année complète"
+    },
+    "zenExplorer": {
+      "title": "Explorateur Zen",
+      "description": "Complétez 5 séances de méditation Zen"
+    },
+    "vipassanaPractitioner": {
+      "title": "Pratiquant Vipassana",
+      "description": "Complétez 5 séances de méditation Vipassana"
+    },
+    "vedicMaster": {
+      "title": "Maître Védique",
+      "description": "Complétez 10 séances de méditation védique"
+    },
+    "taoistSage": {
+      "title": "Sage Taoïste",
+      "description": "Complétez 10 séances de méditation taoïste"
+    },
+    "sufiMystic": {
+      "title": "Mystique Soufi",
+      "description": "Complétez 10 séances de méditation soufie"
+    },
+    "christianContemplative": {
+      "title": "Contemplatif Chrétien",
+      "description": "Complétez 10 séances de méditation chrétienne"
+    },
+    "worldTraveler": {
+      "title": "Voyageur du Monde",
+      "description": "Expérimentez toutes les 6 traditions de méditation"
+    },
+    "levelUp": {
+      "title": "Monter de Niveau",
+      "description": "Atteignez le Niveau 2"
+    },
+    "intermediate": {
+      "title": "Méditant Intermédiaire",
+      "description": "Atteignez le Niveau 3"
+    },
+    "advanced": {
+      "title": "Pratiquant Avancé",
+      "description": "Atteignez le Niveau 4"
+    },
+    "master": {
+      "title": "Maître Méditant",
+      "description": "Atteignez le Niveau 5"
+    },
+    "timeDedication100": {
+      "title": "100 Minutes",
+      "description": "Méditez pendant 100 minutes au total"
+    },
+    "timeDedication1000": {
+      "title": "1000 Minutes",
+      "description": "Méditez pendant 1000 minutes au total"
+    },
+    "timeDedication10000": {
+      "title": "10000 Minutes",
+      "description": "Méditez pendant 10000 minutes au total"
+    },
+    "earlyBird": {
+      "title": "Lève-tôt",
+      "description": "Complétez 5 séances de méditation avant 7h"
+    },
+    "nightOwl": {
+      "title": "Oiseau de Nuit",
+      "description": "Complétez 5 séances de méditation après 22h"
+    },
+    "weekendWarrior": {
+      "title": "Guerrier du Week-end",
+      "description": "Complétez 10 séances de méditation le week-end"
+    },
+    "middayRefresh": {
+      "title": "Rafraîchissement de Midi",
+      "description": "Complétez 10 séances de méditation entre 11h et 14h"
+    },
+    "perfectionist": {
+      "title": "Perfectionniste",
+      "description": "Complétez 10 séances entièrement sans interruption"
+    },
+    "moodImprover": {
+      "title": "Améliorateur d'Humeur",
+      "description": "Améliorez votre humeur par la méditation 20 fois"
+    },
+    "marathonMeditator": {
+      "title": "Méditant Marathon",
+      "description": "Complétez 10 séances de 20+ minutes"
+    },
+    "explorer": {
+      "title": "Explorateur",
+      "description": "Essayez 20 séances de méditation différentes"
+    },
+    "completionist": {
+      "title": "Complétiste",
+      "description": "Expérimentez toutes les 40 séances de méditation"
+    },
+    "reflectionMaster": {
+      "title": "Maître de la Réflexion",
+      "description": "Ajoutez des notes à 25 séances de méditation"
     }
   }
 }

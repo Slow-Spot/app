@@ -1,0 +1,9 @@
+Podsumowanie prywatności (Play Console / App Store Connect)
+
+Zbieranie danych: Brak (nie zbieramy żadnych danych).
+Udostępnianie danych: Brak.
+Przechowywanie danych: Wyłącznie lokalnie na urządzeniu (AsyncStorage); brak chmury/backendu.
+Identyfikatory: Nie są zbierane; brak kont użytkownika.
+Śledzenie: Brak; brak analityki i reklam.
+Uprawnienia: Kalendarz/przypomnienia opcjonalne, tylko do lokalnych przypomnień; dane zdarzeń pozostają na urządzeniu.
+Dzieci/wiek: Ogólna grupa odbiorców; bez specjalnego przetwarzania.

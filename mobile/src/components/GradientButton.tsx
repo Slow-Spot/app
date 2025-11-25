@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 /**
  * GradientButton Component
  *
@@ -28,6 +29,7 @@ interface GradientButtonProps {
   disabled?: boolean;
   loading?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  icon?: any; // optional icon support when passed by callers
 }
 
 /**
@@ -40,7 +42,7 @@ interface GradientButtonProps {
  * <GradientButton
  *   title="Start Meditation"
  *   gradient={gradients.button.primary}
- *   onPress={() => console.log('Start!')}
+ *   onPress={() => logger.log('Start!')}
  *   size="lg"
  * />
  * ```

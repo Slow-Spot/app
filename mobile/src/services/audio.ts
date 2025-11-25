@@ -1,4 +1,5 @@
 import { Audio } from 'expo-av';
+import { logger } from '../utils/logger';
 
 export type AudioLayer = 'voice' | 'ambient' | 'chime';
 
@@ -39,9 +40,9 @@ class AudioEngine {
         staysActiveInBackground: true,
       });
       this.isInitialized = true;
-      console.log('Audio engine initialized successfully');
+      logger.log('Audio engine initialized successfully');
     } catch (error) {
-      console.error('Failed to initialize audio:', error);
+      logger.error('Failed to initialize audio:', error);
       throw error;
     }
   }
@@ -66,18 +67,18 @@ class AudioEngine {
       );
 
       this.tracks.set(layer, sound);
-      console.log(`Successfully loaded ${layer} track`);
+      logger.log(`Successfully loaded ${layer} track`);
     } catch (error) {
-      console.error(`Failed to load ${layer} track:`, error);
+      logger.error(`Failed to load ${layer} track:`, error);
       // Don't throw - allow app to continue without this audio
-      console.warn(`Continuing without ${layer} audio`);
+      logger.warn(`Continuing without ${layer} audio`);
     }
   }
 
   async play(layer: AudioLayer) {
     const sound = this.tracks.get(layer);
     if (!sound) {
-      console.warn(`No track loaded for ${layer}`);
+      logger.warn(`No track loaded for ${layer}`);
       return;
     }
 
@@ -85,10 +86,10 @@ class AudioEngine {
       const status = await sound.getStatusAsync();
       if (status.isLoaded && !status.isPlaying) {
         await sound.playAsync();
-        console.log(`Playing ${layer} track`);
+        logger.log(`Playing ${layer} track`);
       }
     } catch (error) {
-      console.error(`Failed to play ${layer}:`, error);
+      logger.error(`Failed to play ${layer}:`, error);
     }
   }
 
@@ -100,10 +101,10 @@ class AudioEngine {
       const status = await sound.getStatusAsync();
       if (status.isLoaded && status.isPlaying) {
         await sound.pauseAsync();
-        console.log(`Paused ${layer} track`);
+        logger.log(`Paused ${layer} track`);
       }
     } catch (error) {
-      console.error(`Failed to pause ${layer}:`, error);
+      logger.error(`Failed to pause ${layer}:`, error);
     }
   }
 
@@ -116,10 +117,10 @@ class AudioEngine {
       if (status.isLoaded) {
         await sound.stopAsync();
         await sound.setPositionAsync(0);
-        console.log(`Stopped ${layer} track`);
+        logger.log(`Stopped ${layer} track`);
       }
     } catch (error) {
-      console.error(`Failed to stop ${layer}:`, error);
+      logger.error(`Failed to stop ${layer}:`, error);
     }
   }
 
@@ -134,7 +135,7 @@ class AudioEngine {
       const normalizedVolume = Math.max(0, Math.min(1, volume));
       await sound.setVolumeAsync(normalizedVolume);
     } catch (error) {
-      console.error(`Failed to set volume for ${layer}:`, error);
+      logger.error(`Failed to set volume for ${layer}:`, error);
     }
   }
 
@@ -149,7 +150,7 @@ class AudioEngine {
       // Check if sound is loaded before fading
       const status = await sound.getStatusAsync();
       if (!status.isLoaded) {
-        console.warn(`Cannot fade in ${layer}: sound not loaded`);
+        logger.warn(`Cannot fade in ${layer}: sound not loaded`);
         return;
       }
 
@@ -163,9 +164,9 @@ class AudioEngine {
         await this.setVolume(layer, volume);
         await new Promise((resolve) => setTimeout(resolve, stepDuration));
       }
-      console.log(`Faded in ${layer} track`);
+      logger.log(`Faded in ${layer} track`);
     } catch (error) {
-      console.error(`Failed to fade in ${layer}:`, error);
+      logger.error(`Failed to fade in ${layer}:`, error);
     }
   }
 
@@ -180,7 +181,7 @@ class AudioEngine {
       // Get current volume
       const status = await sound.getStatusAsync();
       if (!status.isLoaded) {
-        console.warn(`Cannot fade out ${layer}: sound not loaded`);
+        logger.warn(`Cannot fade out ${layer}: sound not loaded`);
         return;
       }
 
@@ -194,9 +195,9 @@ class AudioEngine {
       }
 
       await this.stop(layer);
-      console.log(`Faded out ${layer} track`);
+      logger.log(`Faded out ${layer} track`);
     } catch (error) {
-      console.error(`Failed to fade out ${layer}:`, error);
+      logger.error(`Failed to fade out ${layer}:`, error);
     }
   }
 
@@ -231,20 +232,20 @@ class AudioEngine {
         await sound.unloadAsync();
       }
       this.tracks.delete(layer);
-      console.log(`Unloaded ${layer} track`);
+      logger.log(`Unloaded ${layer} track`);
     } catch (error) {
-      console.error(`Failed to unload ${layer}:`, error);
+      logger.error(`Failed to unload ${layer}:`, error);
     }
   }
 
   async cleanup() {
-    console.log('Cleaning up audio engine...');
+    logger.log('Cleaning up audio engine...');
     const layers = Array.from(this.tracks.keys());
     for (const layer of layers) {
       await this.unloadTrack(layer);
     }
     this.isInitialized = false;
-    console.log('Audio engine cleanup complete');
+    logger.log('Audio engine cleanup complete');
   }
 
   async getStatus(layer: AudioLayer) {
@@ -263,7 +264,7 @@ class AudioEngine {
         isLooping: status.isLooping,
       };
     } catch (error) {
-      console.error(`Failed to get status for ${layer}:`, error);
+      logger.error(`Failed to get status for ${layer}:`, error);
       return null;
     }
   }

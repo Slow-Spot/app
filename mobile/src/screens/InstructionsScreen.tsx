@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 /**
  * Instructions Screen
  * Meditation techniques and session building guides
@@ -178,7 +179,7 @@ const InstructionsScreen: React.FC<Props> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<any>({
   container: {
     flex: 1,
   },
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: theme.typography.fontSizes.xxl,
     fontWeight: theme.typography.fontWeights.bold,
-    color: theme.colors.neutral.charcoal,
+    color: theme.colors.neutral.charcoal[100],
     marginBottom: theme.spacing.xs,
   },
   subtitle: {
@@ -204,7 +205,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: theme.typography.fontSizes.xl,
     fontWeight: theme.typography.fontWeights.semiBold,
-    color: theme.colors.neutral.charcoal,
+    color: theme.colors.neutral.charcoal[100],
     marginBottom: theme.spacing.md,
   },
   card: {

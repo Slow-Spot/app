@@ -3,6 +3,10 @@
     "name": "Slow Spot",
     "tagline": "अपनी शांति का क्षण खोजें"
   },
+  "splash": {
+    "appName": "Slow Spot",
+    "tagline": "अपनी शांति का क्षण खोजें"
+  },
   "home": {
     "welcome": "स्वागत है",
     "dailyQuote": "आज का उद्धरण",
@@ -425,6 +429,155 @@
     "breathPrayer": {
       "title": "श्वास प्रार्थना",
       "description": "श्वास के साथ समन्वित लयबद्ध प्रार्थना।"
+    }
+  },
+  "achievements": {
+    "title": "उपलब्धियाँ",
+    "level": "स्तर",
+    "levelProgress": "स्तर प्रगति",
+    "toNextLevel": "अगले स्तर तक",
+    "unlocked": "अनलॉक किया गया",
+    "almostThere": "लगभग पूरा",
+    "hidden": "गुप्त उपलब्धि",
+    "firstSession": {
+      "title": "पहले कदम",
+      "description": "अपना पहला ध्यान सत्र पूरा करें"
+    },
+    "tenSessions": {
+      "title": "समर्पित साधक",
+      "description": "10 ध्यान सत्र पूरे करें"
+    },
+    "fiftySessions": {
+      "title": "प्रतिबद्ध ध्यानी",
+      "description": "50 ध्यान सत्र पूरे करें"
+    },
+    "hundredSessions": {
+      "title": "शताब्दी क्लब",
+      "description": "100 ध्यान सत्र पूरे करें"
+    },
+    "thousandSessions": {
+      "title": "ध्यान गुरु",
+      "description": "1000 ध्यान सत्र पूरे करें"
+    },
+    "streak3": {
+      "title": "शुरुआत हो रही है",
+      "description": "लगातार 3 दिन ध्यान करें"
+    },
+    "streak7": {
+      "title": "एक सप्ताह मजबूत",
+      "description": "7 दिन की ध्यान श्रृंखला बनाए रखें"
+    },
+    "streak14": {
+      "title": "दो सप्ताह योद्धा",
+      "description": "14 दिन की ध्यान श्रृंखला बनाए रखें"
+    },
+    "streak30": {
+      "title": "मासिक प्रतिबद्धता",
+      "description": "30 दिन की ध्यान श्रृंखला बनाए रखें"
+    },
+    "streak100": {
+      "title": "100 दिन ज़ेन",
+      "description": "100 दिन की ध्यान श्रृंखला बनाए रखें"
+    },
+    "streak365": {
+      "title": "सचेतनता का वर्ष",
+      "description": "पूरे वर्ष प्रतिदिन ध्यान करें"
+    },
+    "zenExplorer": {
+      "title": "ज़ेन खोजकर्ता",
+      "description": "5 ज़ेन ध्यान सत्र पूरे करें"
+    },
+    "vipassanaPractitioner": {
+      "title": "विपश्यना साधक",
+      "description": "5 विपश्यना ध्यान सत्र पूरे करें"
+    },
+    "vedicMaster": {
+      "title": "वैदिक गुरु",
+      "description": "10 वैदिक ध्यान सत्र पूरे करें"
+    },
+    "taoistSage": {
+      "title": "ताओवादी ऋषि",
+      "description": "10 ताओवादी ध्यान सत्र पूरे करें"
+    },
+    "sufiMystic": {
+      "title": "सूफी रहस्यवादी",
+      "description": "10 सूफी ध्यान सत्र पूरे करें"
+    },
+    "christianContemplative": {
+      "title": "ईसाई चिंतक",
+      "description": "10 ईसाई ध्यान सत्र पूरे करें"
+    },
+    "worldTraveler": {
+      "title": "विश्व यात्री",
+      "description": "सभी 6 ध्यान परंपराओं का अनुभव करें"
+    },
+    "levelUp": {
+      "title": "स्तर वृद्धि",
+      "description": "स्तर 2 तक पहुंचें"
+    },
+    "intermediate": {
+      "title": "मध्यवर्ती ध्यानी",
+      "description": "स्तर 3 तक पहुंचें"
+    },
+    "advanced": {
+      "title": "उन्नत साधक",
+      "description": "स्तर 4 तक पहुंचें"
+    },
+    "master": {
+      "title": "ध्यान गुरु",
+      "description": "स्तर 5 तक पहुंचें"
+    },
+    "timeDedication100": {
+      "title": "100 मिनट",
+      "description": "कुल 100 मिनट तक ध्यान करें"
+    },
+    "timeDedication1000": {
+      "title": "1000 मिनट",
+      "description": "कुल 1000 मिनट तक ध्यान करें"
+    },
+    "timeDedication10000": {
+      "title": "10000 मिनट",
+      "description": "कुल 10000 मिनट तक ध्यान करें"
+    },
+    "earlyBird": {
+      "title": "प्रातःकालीन पक्षी",
+      "description": "सुबह 7 बजे से पहले 5 ध्यान सत्र पूरे करें"
+    },
+    "nightOwl": {
+      "title": "रात्रि उल्लू",
+      "description": "रात 10 बजे के बाद 5 ध्यान सत्र पूरे करें"
+    },
+    "weekendWarrior": {
+      "title": "सप्ताहांत योद्धा",
+      "description": "सप्ताहांत में 10 ध्यान सत्र पूरे करें"
+    },
+    "middayRefresh": {
+      "title": "दोपहर की ताजगी",
+      "description": "11 बजे से 2 बजे के बीच 10 ध्यान सत्र पूरे करें"
+    },
+    "perfectionist": {
+      "title": "पूर्णतावादी",
+      "description": "बिना रुकावट के 10 सत्र पूरे करें"
+    },
+    "moodImprover": {
+      "title": "मनोदशा सुधारक",
+      "description": "ध्यान के माध्यम से 20 बार अपना मूड सुधारें"
+    },
+    "marathonMeditator": {
+      "title": "मैराथन ध्यानी",
+      "description": "20+ मिनट के 10 सत्र पूरे करें"
+    },
+    "explorer": {
+      "title": "अन्वेषक",
+      "description": "20 विभिन्न ध्यान सत्र आजमाएं"
+    },
+    "completionist": {
+      "title": "पूर्णतावादी",
+      "description": "सभी 40 ध्यान सत्रों का अनुभव करें"
+    },
+    "reflectionMaster": {
+      "title": "चिंतन गुरु",
+      "description": "25 ध्यान सत्रों में नोट्स जोड़ें"
     }
   }
 }

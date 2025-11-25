@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +41,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       const progressStats = await getProgressStats();
       setStats(progressStats);
     } catch (error) {
-      console.error('Failed to load progress stats:', error);
+      logger.error('Failed to load progress stats:', error);
     }
   };
 
@@ -54,7 +55,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         setDailyQuote(quote);
       }
     } catch (error) {
-      console.error('Failed to load daily quote:', error);
+      logger.error('Failed to load daily quote:', error);
     } finally {
       setLoading(false);
     }

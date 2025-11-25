@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, StyleSheet, useColorScheme } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -28,7 +29,7 @@ export const QuotesScreen: React.FC = () => {
       setQuotes(data);
       setCurrentIndex(0);
     } catch (error) {
-      console.error('Failed to load quotes:', error);
+      logger.error('Failed to load quotes:', error);
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ export const QuotesScreen: React.FC = () => {
         setCurrentIndex(allQuotes.findIndex(q => q.id === quote.id));
       }
     } catch (error) {
-      console.error('Failed to load random quote:', error);
+      logger.error('Failed to load random quote:', error);
     }
   };
 

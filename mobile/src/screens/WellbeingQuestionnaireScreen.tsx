@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 /**
  * Well-being Questionnaire Screen
  * Pre or post session well-being assessment
@@ -138,7 +139,7 @@ const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) =>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<any>({
   container: {
     flex: 1,
   },
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: theme.typography.fontSizes.xxl,
     fontWeight: theme.typography.fontWeights.bold,
-    color: theme.colors.neutral.charcoal,
+    color: theme.colors.neutral.charcoal[100],
     marginBottom: theme.spacing.sm,
   },
   subtitle: {

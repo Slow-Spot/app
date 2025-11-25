@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, Switch, TextInput, Pressable, Animated, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -55,7 +56,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
   const [sessionName, setSessionName] = useState(initialConfig?.name || '');
 
   // Local editing state for quick edits from saved sessions list
-  const [localEditSessionId, setLocalEditSessionId] = useState<string | undefined>(editSessionId);
+  const [localEditSessionId, setLocalEditSessionId] = useState<string | number | undefined>(editSessionId);
 
   // Saved sessions state
   const [savedSessions, setSavedSessions] = useState<SavedCustomSession[]>([]);
@@ -84,7 +85,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       );
       setChimeSound(sound);
     } catch (error) {
-      console.error('Error loading audio:', error);
+      logger.error('Error loading audio:', error);
     }
   };
 
@@ -94,7 +95,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       const sessions = await getAllCustomSessions();
       setSavedSessions(sessions);
     } catch (error) {
-      console.error('Error loading saved sessions:', error);
+      logger.error('Error loading saved sessions:', error);
     } finally {
       setLoadingSessions(false);
     }
@@ -151,7 +152,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
     try {
       if (currentEditId) {
         // Update existing session
-        await updateCustomSession(currentEditId, config);
+        await updateCustomSession(String(currentEditId), config);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
         // Reload sessions list to show updated session
@@ -202,7 +203,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
         );
       }
     } catch (error) {
-      console.error('Error saving custom session:', error);
+      logger.error('Error saving custom session:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       Alert.alert(
         t('custom.saveError') || 'Error',
@@ -229,7 +230,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       }
       onStartSession(config);
     } catch (error) {
-      console.error('Error saving custom session:', error);
+      logger.error('Error saving custom session:', error);
       // Still start the session even if save failed
       onStartSession(config);
     }
@@ -256,7 +257,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       try {
         await chimeSound.replayAsync();
       } catch (error) {
-        console.error('Error playing preview sound:', error);
+        logger.error('Error playing preview sound:', error);
       }
     }
   };
@@ -289,12 +290,12 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteCustomSession(session.id);
+              await deleteCustomSession(String(session.id));
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
               // Reload the sessions list
               await loadSavedSessions();
             } catch (error) {
-              console.error('Error deleting session:', error);
+              logger.error('Error deleting session:', error);
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert(
                 t('custom.deleteError') || 'Error',
@@ -367,7 +368,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               {savedSessions.map((session) => (
                 <Pressable
                   key={session.id}
-                  onPress={() => onStartSession(session)}
+                  onPress={() => onStartSession(session.config)}
                   onLongPress={() => handleLongPressSavedSession(session)}
                   style={styles.savedSessionCard}
                 >
@@ -991,7 +992,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   savedSessionHint: {
-    fontSize: theme.typography.fontSizes.xxs,
+    fontSize: theme.typography.fontSizes.xs,
     color: theme.colors.neutral.white,
     opacity: 0.7,
     fontStyle: 'italic',

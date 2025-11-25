@@ -140,9 +140,13 @@ export const adaptInstruction = (
       // Return empty instruction (will be handled by UI)
       return {
         ...baseInstruction,
-        physicalSetup: undefined,
+        physicalSetup: [],
         breathingPrep: undefined,
-        mentalPreparation: undefined,
+        mentalPreparation: {
+          intention: '',
+          focusPoint: '',
+          commonChallenges: [],
+        },
         duringSessionReminders: [],
       };
 
@@ -150,8 +154,9 @@ export const adaptInstruction = (
       // Keep only essential physical setup and one reminder
       return {
         ...baseInstruction,
+        physicalSetup: baseInstruction.physicalSetup?.slice(0, 1) || [],
         breathingPrep: undefined, // Skip breathing prep
-        mentalPreparation: undefined, // Skip mental prep
+        mentalPreparation: baseInstruction.mentalPreparation,
         duringSessionReminders: baseInstruction.duringSessionReminders.slice(0, 1),
       };
 
@@ -160,16 +165,13 @@ export const adaptInstruction = (
       return {
         ...baseInstruction,
         physicalSetup: baseInstruction.physicalSetup
-          ? {
-              ...baseInstruction.physicalSetup,
-              steps: baseInstruction.physicalSetup.steps.slice(0, 3), // Max 3 steps
-            }
-          : undefined,
+          ? baseInstruction.physicalSetup.slice(0, 3)
+          : [],
         breathingPrep: baseInstruction.breathingPrep
           ? {
               ...baseInstruction.breathingPrep,
-              durationSeconds: Math.round(
-                baseInstruction.breathingPrep.durationSeconds / 2
+              duration: Math.round(
+                baseInstruction.breathingPrep.duration / 2
               ), // Half duration
             }
           : undefined,
@@ -231,6 +233,7 @@ export const generateAdaptiveReminders = (
 ): AdaptiveReminder[] => {
   const reminders: AdaptiveReminder[] = [];
   const metrics = analyzeUserExperience(session, progress);
+  const duration = Number(session.durationSeconds || 0);
 
   // Check recent session history for patterns
   const recentQuits = progress.completedSessions
@@ -242,13 +245,13 @@ export const generateAdaptiveReminders = (
   if (recentQuits.length >= 2) {
     reminders.push(
       {
-        time: Math.round(session.durationSeconds * 0.3),
+        time: Math.round(duration * 0.3),
         message: "You're doing great. Just breathe.",
         type: 'encouragement',
         priority: 'high',
       },
       {
-        time: Math.round(session.durationSeconds * 0.6),
+        time: Math.round(duration * 0.6),
         message: 'Almost there. Stay present.',
         type: 'encouragement',
         priority: 'high',
@@ -257,10 +260,10 @@ export const generateAdaptiveReminders = (
   }
 
   // Progress markers for longer sessions
-  if (session.durationSeconds >= 600) {
+  if (duration >= 600) {
     // 10+ minutes
     reminders.push({
-      time: Math.round(session.durationSeconds * 0.5),
+      time: Math.round(duration * 0.5),
       message: 'Halfway there. Notice your breath.',
       type: 'progress',
       priority: 'normal',
@@ -270,7 +273,7 @@ export const generateAdaptiveReminders = (
   // Technique reminders for beginners
   if (metrics.level <= 2) {
     reminders.push({
-      time: Math.round(session.durationSeconds * 0.25),
+      time: Math.round(duration * 0.25),
       message: "Notice when your mind wanders. That's normal.",
       type: 'technique',
       priority: 'normal',
@@ -278,9 +281,9 @@ export const generateAdaptiveReminders = (
   }
 
   // Refocus reminder for mid-session
-  if (session.durationSeconds >= 300 && metrics.needsReminders) {
+  if (duration >= 300 && metrics.needsReminders) {
     reminders.push({
-      time: Math.round(session.durationSeconds * 0.5),
+      time: Math.round(duration * 0.5),
       message: 'Return to your breath.',
       type: 'refocus',
       priority: 'normal',
@@ -311,7 +314,7 @@ export const getPersonalizedRecommendations = (
 ): SessionRecommendation[] => {
   const recommendations: SessionRecommendation[] = [];
   const completedSessionIds = new Set(
-    progress.completedSessions.map(c => c.sessionId)
+    progress.completedSessions.map(c => String(c.sessionId))
   );
 
   for (const session of allSessions) {
@@ -379,7 +382,7 @@ export const getPersonalizedRecommendations = (
     }
 
     // Slight bonus for unexplored sessions
-    if (!completedSessionIds.has(session.id)) {
+    if (!completedSessionIds.has(String(session.id))) {
       score += 5;
       reasons.push('new to you');
     }

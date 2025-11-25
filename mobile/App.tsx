@@ -8,40 +8,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import * as SplashScreen from 'expo-splash-screen';
 import './src/i18n';
-
-// Analytics imports
-import vexo from 'vexo-analytics';
-import LogRocket from 'logrocket-react-native';
+import { logger } from './src/utils/logger';
 
 // Keep the splash screen visible while we load resources
 SplashScreen.preventAutoHideAsync();
 
-// Initialize Analytics (only in production)
-if (process.env.APP_ENV === 'production') {
-  // Initialize Vexo Analytics
-  if (process.env.VEXO_API_KEY) {
-    try {
-      vexo(process.env.VEXO_API_KEY);
-      console.log('✓ Vexo Analytics initialized');
-    } catch (error) {
-      console.warn('Failed to initialize Vexo Analytics:', error);
-    }
-  } else {
-    console.warn('VEXO_API_KEY not found in environment variables');
-  }
-
-  // Initialize LogRocket
-  if (process.env.LOGROCKET_APP_ID) {
-    try {
-      LogRocket.init(process.env.LOGROCKET_APP_ID);
-      console.log('✓ LogRocket initialized');
-    } catch (error) {
-      console.warn('Failed to initialize LogRocket:', error);
-    }
-  } else {
-    console.warn('LOGROCKET_APP_ID not found in environment variables');
-  }
-}
+// Note: Analytics removed - app operates fully offline
+// No external services or API calls required
 
 import { HomeScreen } from './src/screens/HomeScreen';
 import { MeditationScreen } from './src/screens/MeditationScreen';
@@ -50,6 +23,8 @@ import { SettingsScreen, THEME_STORAGE_KEY, ThemeMode } from './src/screens/Sett
 import { CustomSessionBuilderScreen, CustomSessionConfig } from './src/screens/CustomSessionBuilderScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { MeditationSession } from './src/services/api';
+import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
+import { ensureStorageSchema } from './src/services/storage';
 
 type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile';
 
@@ -68,6 +43,7 @@ export default function App() {
   const [editSessionConfig, setEditSessionConfig] = useState<CustomSessionConfig | undefined>();
   const [activeMeditationState, setActiveMeditationState] = useState<ActiveMeditationState | null>(null);
   const [appIsReady, setAppIsReady] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
   const systemColorScheme = useColorScheme();
 
   // Calculate actual dark mode based on theme mode and system preference
@@ -86,10 +62,13 @@ export default function App() {
           setThemeMode(parsedTheme);
         }
 
-        // Simulate minimum splash screen time for smooth experience (500ms)
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Ensure storage schema and run migrations before using local data
+        await ensureStorageSchema();
+
+        // Hide native splash screen immediately as we show custom one
+        await SplashScreen.hideAsync();
       } catch (error) {
-        console.warn('Error loading app resources:', error);
+        logger.warn('Error loading app resources:', error);
       } finally {
         setAppIsReady(true);
       }
@@ -98,16 +77,17 @@ export default function App() {
     prepareApp();
   }, []);
 
-  // Hide splash screen when app is ready
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
+  const handleSplashFinish = useCallback(() => {
+    setShowSplash(false);
+  }, []);
 
-  // Don't render app until ready
-  if (!appIsReady) {
-    return null;
+  const onLayoutRootView = useCallback(() => {
+    // Layout callback for SafeAreaView
+  }, []);
+
+  // Show custom splash screen
+  if (showSplash || !appIsReady) {
+    return <CustomSplashScreen onFinish={handleSplashFinish} />;
   }
 
   const handleThemeChange = async (mode: ThemeMode) => {
@@ -115,7 +95,7 @@ export default function App() {
       setThemeMode(mode);
       await AsyncStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(mode));
     } catch (error) {
-      console.error('Failed to save theme preference:', error);
+      logger.error('Failed to save theme preference:', error);
     }
   };
 
@@ -149,11 +129,29 @@ export default function App() {
     setCurrentScreen(screen);
   };
 
-  const handleStartCustomSession = (config: CustomSessionConfig) => {
-    // TODO: Implement custom session playback with the configured settings
-    // For now, just navigate to meditation screen
-    console.log('Starting custom session with config:', config);
-    setCurrentScreen('meditation');
+  const handleStartCustomSession = async (config: CustomSessionConfig) => {
+    try {
+      // Import the custom session storage service
+      const { saveCustomSession } = require('./src/services/customSessionStorage');
+
+      // Save the custom session to storage
+      const savedSession = await saveCustomSession(config);
+      logger.log('Custom session saved successfully:', savedSession.id);
+
+      // Navigate to meditation screen
+      // The MeditationScreen will automatically load and display the new custom session
+      setCurrentScreen('meditation');
+
+      // Provide haptic feedback
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (error) {
+      logger.error('Failed to save custom session:', error);
+      Alert.alert(
+        'Error',
+        'Failed to save custom session. Please try again.',
+        [{ text: 'OK' }]
+      );
+    }
   };
 
   const handleEditSession = (sessionId: string, sessionConfig: CustomSessionConfig) => {

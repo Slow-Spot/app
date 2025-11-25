@@ -5,6 +5,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WellbeingAssessment, WellbeingAnswer } from '../types/wellbeing';
+import { logger } from '../utils/logger';
 
 const STORAGE_KEY = '@wellbeing_assessments';
 
@@ -49,7 +50,7 @@ export const getAssessments = async (): Promise<WellbeingAssessment[]> => {
     const data = await AsyncStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
   } catch (error) {
-    console.error('Error loading assessments:', error);
+    logger.error('Error loading assessments:', error);
     return [];
   }
 };

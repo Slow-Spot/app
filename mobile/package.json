@@ -34,7 +34,6 @@
     "i18next": "^25.6.1",
     "immer": "^10.2.0",
     "logrocket": "^10.1.1",
-    "logrocket-react-native": "^0.0.0",
     "lottie-react-native": "~7.3.1",
     "react": "19.1.0",
     "react-hook-form": "^7.66.0",
@@ -47,7 +46,6 @@
     "react-native-svg": "15.12.1",
     "react-native-web": "^0.21.0",
     "react-native-worklets": "0.5.1",
-    "vexo-analytics": "^1.5.2",
     "victory-native": "^41.20.2",
     "zod": "^4.1.12",
     "zustand": "^5.0.8"

@@ -37,6 +37,10 @@ yarn-error.*
 .env.staging
 .env.production
 
+# EAS Build credentials (NEVER commit these!)
+android-service-account.json
+ios-distribution-cert.p12
+
 # typescript
 *.tsbuildinfo
 

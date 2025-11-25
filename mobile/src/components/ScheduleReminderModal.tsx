@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 /**
  * ScheduleReminderModal - Modal for scheduling daily meditation reminders
  *

@@ -4,6 +4,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '../utils/logger';
 
 const STORAGE_KEY = 'shown_quotes';
 
@@ -22,7 +23,7 @@ export const getShownQuotes = async (languageCode: string): Promise<number[]> =>
     const history: QuoteHistory = JSON.parse(historyJson);
     return history[languageCode] || [];
   } catch (error) {
-    console.error('Error reading quote history:', error);
+    logger.error('Error reading quote history:', error);
     return [];
   }
 };
@@ -49,7 +50,7 @@ export const markQuoteAsShown = async (
 
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   } catch (error) {
-    console.error('Error saving quote history:', error);
+    logger.error('Error saving quote history:', error);
   }
 };
 
@@ -66,7 +67,7 @@ export const resetQuoteHistory = async (languageCode: string): Promise<void> => 
 
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   } catch (error) {
-    console.error('Error resetting quote history:', error);
+    logger.error('Error resetting quote history:', error);
   }
 };
 
@@ -77,7 +78,7 @@ export const clearAllQuoteHistory = async (): Promise<void> => {
   try {
     await AsyncStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error('Error clearing quote history:', error);
+    logger.error('Error clearing quote history:', error);
   }
 };
 

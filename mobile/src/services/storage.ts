@@ -11,6 +11,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SessionConfiguration } from '../types/meditation';
+import { logger } from '../utils/logger';
 
 /**
  * Storage keys
@@ -20,7 +21,11 @@ const STORAGE_KEYS = {
   PREFERENCES: '@meditation:preferences',
   ONBOARDING_COMPLETE: '@meditation:onboarding_complete',
   LAST_SELECTED_CONFIG: '@meditation:last_selected_config',
+  SCHEMA_VERSION: '@meditation:schema_version',
 } as const;
+
+// Increment when storage structure changes; used for lightweight migrations
+const STORAGE_SCHEMA_VERSION = 1;
 
 /**
  * User preferences
@@ -68,7 +73,8 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   autoStartTimer: false,
   showPreSessionScreen: true,
   showPostSessionScreen: true,
-  collectAnonymousData: true,
+  // Default to no analytics collection to avoid mismatch with store privacy declarations
+  collectAnonymousData: false,
   lastUpdated: new Date().toISOString(),
 };
 
@@ -99,7 +105,7 @@ export const saveConfiguration = async (
       JSON.stringify(existing)
     );
   } catch (error) {
-    console.error('Failed to save configuration:', error);
+    logger.error('Failed to save configuration:', error);
     throw error;
   }
 };
@@ -118,10 +124,10 @@ export const loadConfigurations = async (): Promise<SessionConfiguration[]> => {
       if (a.lastUsedAt && b.lastUsedAt) {
         return new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime();
       }
-      return b.usageCount - a.usageCount;
+      return (b.usageCount || 0) - (a.usageCount || 0);
     });
   } catch (error) {
-    console.error('Failed to load configurations:', error);
+    logger.error('Failed to load configurations:', error);
     return [];
   }
 };
@@ -136,7 +142,7 @@ export const getConfiguration = async (
     const configurations = await loadConfigurations();
     return configurations.find((c) => c.id === id) || null;
   } catch (error) {
-    console.error('Failed to get configuration:', error);
+    logger.error('Failed to get configuration:', error);
     return null;
   }
 };
@@ -153,7 +159,7 @@ export const deleteConfiguration = async (id: string): Promise<void> => {
       JSON.stringify(filtered)
     );
   } catch (error) {
-    console.error('Failed to delete configuration:', error);
+    logger.error('Failed to delete configuration:', error);
     throw error;
   }
 };
@@ -168,12 +174,12 @@ export const incrementConfigurationUsage = async (
     const config = await getConfiguration(id);
     if (!config) return;
 
-    config.usageCount += 1;
+    config.usageCount = (config.usageCount || 0) + 1;
     config.lastUsedAt = new Date().toISOString();
 
     await saveConfiguration(config);
   } catch (error) {
-    console.error('Failed to update configuration usage:', error);
+    logger.error('Failed to update configuration usage:', error);
   }
 };
 
@@ -200,7 +206,7 @@ export const savePreferences = async (
       JSON.stringify(updated)
     );
   } catch (error) {
-    console.error('Failed to save preferences:', error);
+    logger.error('Failed to save preferences:', error);
     throw error;
   }
 };
@@ -217,7 +223,7 @@ export const loadPreferences = async (): Promise<UserPreferences> => {
     // Merge with defaults to ensure all fields are present
     return { ...DEFAULT_PREFERENCES, ...preferences };
   } catch (error) {
-    console.error('Failed to load preferences:', error);
+    logger.error('Failed to load preferences:', error);
     return DEFAULT_PREFERENCES;
   }
 };
@@ -232,7 +238,7 @@ export const resetPreferences = async (): Promise<void> => {
       JSON.stringify(DEFAULT_PREFERENCES)
     );
   } catch (error) {
-    console.error('Failed to reset preferences:', error);
+    logger.error('Failed to reset preferences:', error);
     throw error;
   }
 };
@@ -248,7 +254,7 @@ export const setOnboardingComplete = async (): Promise<void> => {
   try {
     await AsyncStorage.setItem(STORAGE_KEYS.ONBOARDING_COMPLETE, 'true');
   } catch (error) {
-    console.error('Failed to save onboarding state:', error);
+    logger.error('Failed to save onboarding state:', error);
   }
 };
 
@@ -260,7 +266,7 @@ export const isOnboardingComplete = async (): Promise<boolean> => {
     const value = await AsyncStorage.getItem(STORAGE_KEYS.ONBOARDING_COMPLETE);
     return value === 'true';
   } catch (error) {
-    console.error('Failed to check onboarding state:', error);
+    logger.error('Failed to check onboarding state:', error);
     return false;
   }
 };
@@ -272,7 +278,7 @@ export const setLastSelectedConfig = async (id: string): Promise<void> => {
   try {
     await AsyncStorage.setItem(STORAGE_KEYS.LAST_SELECTED_CONFIG, id);
   } catch (error) {
-    console.error('Failed to save last selected config:', error);
+    logger.error('Failed to save last selected config:', error);
   }
 };
 
@@ -283,7 +289,7 @@ export const getLastSelectedConfig = async (): Promise<string | null> => {
   try {
     return await AsyncStorage.getItem(STORAGE_KEYS.LAST_SELECTED_CONFIG);
   } catch (error) {
-    console.error('Failed to get last selected config:', error);
+    logger.error('Failed to get last selected config:', error);
     return null;
   }
 };
@@ -298,9 +304,10 @@ export const clearAllData = async (): Promise<void> => {
       STORAGE_KEYS.PREFERENCES,
       STORAGE_KEYS.ONBOARDING_COMPLETE,
       STORAGE_KEYS.LAST_SELECTED_CONFIG,
+      STORAGE_KEYS.SCHEMA_VERSION,
     ]);
   } catch (error) {
-    console.error('Failed to clear app data:', error);
+    logger.error('Failed to clear app data:', error);
     throw error;
   }
 };
@@ -324,7 +331,7 @@ export const exportAllData = async (): Promise<string> => {
 
     return JSON.stringify(exportData, null, 2);
   } catch (error) {
-    console.error('Failed to export data:', error);
+    logger.error('Failed to export data:', error);
     throw error;
   }
 };
@@ -335,6 +342,14 @@ export const exportAllData = async (): Promise<string> => {
 export const importData = async (jsonData: string): Promise<void> => {
   try {
     const data = JSON.parse(jsonData);
+
+    // Honor version in backup if provided
+    if (data.schemaVersion) {
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.SCHEMA_VERSION,
+        data.schemaVersion.toString()
+      );
+    }
 
     if (data.configurations) {
       await AsyncStorage.setItem(
@@ -350,7 +365,41 @@ export const importData = async (jsonData: string): Promise<void> => {
       );
     }
   } catch (error) {
-    console.error('Failed to import data:', error);
+    logger.error('Failed to import data:', error);
     throw error;
+  }
+};
+
+/**
+ * Storage schema versioning and migrations
+ */
+const getStoredSchemaVersion = async (): Promise<number | null> => {
+  const versionStr = await AsyncStorage.getItem(STORAGE_KEYS.SCHEMA_VERSION);
+  return versionStr ? Number(versionStr) : null;
+};
+
+const setSchemaVersion = async (version: number): Promise<void> => {
+  await AsyncStorage.setItem(STORAGE_KEYS.SCHEMA_VERSION, version.toString());
+};
+
+/**
+ * Run lightweight migrations; extend this switch when bumping STORAGE_SCHEMA_VERSION
+ */
+export const ensureStorageSchema = async (): Promise<void> => {
+  const current = await getStoredSchemaVersion();
+
+  // No version means pre-versioned installs; normalize and stamp version
+  if (current === null) {
+    // Ensure preferences include all defaults
+    const merged = await loadPreferences();
+    await AsyncStorage.setItem(STORAGE_KEYS.PREFERENCES, JSON.stringify(merged));
+    await setSchemaVersion(STORAGE_SCHEMA_VERSION);
+    return;
+  }
+
+  // Future migrations go here
+  if (current < STORAGE_SCHEMA_VERSION) {
+    // Example: if we add new keys in the future, migrate here
+    await setSchemaVersion(STORAGE_SCHEMA_VERSION);
   }
 };

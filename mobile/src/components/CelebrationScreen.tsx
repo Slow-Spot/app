@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Animated, ScrollView, TextInput } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -88,7 +89,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
       const randomQuote = await api.quotes.getRandom(i18n.language);
       setQuote(randomQuote);
     } catch (error) {
-      console.error('Failed to load quote:', error);
+      logger.error('Failed to load quote:', error);
     } finally {
       setLoading(false);
     }
@@ -244,7 +245,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<any>({
   container: {
     flex: 1,
   },
@@ -345,6 +346,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     gap: theme.spacing.sm,
+  },
+  moodOptionSelected: {
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    borderRadius: 16,
+    paddingVertical: theme.spacing.sm,
+    ...theme.shadows.sm,
   },
   moodCircle: {
     width: 62,

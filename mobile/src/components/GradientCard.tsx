@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 /**
  * GradientCard Component
  *
@@ -30,7 +31,7 @@ interface GradientCardProps {
  *
  * <GradientCard
  *   gradient={gradients.card.beginner}
- *   onPress={() => console.log('Pressed!')}
+ *   onPress={() => logger.log('Pressed!')}
  * >
  *   <Text>Card Content</Text>
  * </GradientCard>

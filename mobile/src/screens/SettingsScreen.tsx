@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -6,12 +7,18 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Share,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import theme, { gradients } from '../theme';
+import { exportAllData, clearAllData } from '../services/storage';
+import { clearAllCustomSessions } from '../services/customSessionStorage';
+import { clearProgress } from '../services/progressTracker';
+import { clearAllQuoteHistory } from '../services/quoteHistory';
 
 export const LANGUAGE_STORAGE_KEY = 'user_language_preference';
 export const THEME_STORAGE_KEY = 'user_theme_preference';
@@ -47,8 +54,54 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       await i18n.changeLanguage(languageCode);
       await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, languageCode);
     } catch (error) {
-      console.error('Failed to save language preference:', error);
+      logger.error('Failed to save language preference:', error);
     }
+  };
+
+  const handleExportData = async () => {
+    try {
+      const payload = await exportAllData();
+      await Share.share({ message: payload, title: 'Slow Spot backup (JSON)' });
+    } catch (error) {
+      logger.error('Failed to export data:', error);
+      Alert.alert('Export failed', 'Could not export your data. Please try again.');
+    }
+  };
+
+  const handleClearData = async () => {
+    Alert.alert(
+      t('settings.clearDataTitle', 'Clear local data?'),
+      t('settings.clearDataBody', 'This removes your sessions, progress, reminders, and preferences from this device.'),
+      [
+        { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+        {
+          text: t('common.confirm', 'Confirm'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await Promise.all([
+                clearAllData(),
+                clearAllCustomSessions(),
+                clearProgress(),
+                clearAllQuoteHistory(),
+                AsyncStorage.removeItem('@wellbeing_assessments'),
+                AsyncStorage.removeItem('@slow_spot_reminder_settings'),
+                AsyncStorage.removeItem('@slow_spot_calendar_id'),
+                AsyncStorage.removeItem('@custom_sessions'),
+              ]);
+
+              Alert.alert(
+                t('settings.dataCleared', 'Local data cleared'),
+                t('settings.dataClearedBody', 'You can rebuild your preferences and sessions anytime. No data leaves this device.')
+              );
+            } catch (error) {
+              logger.error('Failed to clear data:', error);
+              Alert.alert('Error', 'Could not clear all local data.');
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -180,6 +233,39 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </View>
         </GradientCard>
 
+        {/* Data & Privacy */}
+        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            {t('settings.dataPrivacy', 'Data & Privacy')}
+          </Text>
+          <Text style={styles.helperText}>
+            {t(
+              'settings.dataPrivacyDescription',
+              'All data stays on this device. No cloud sync or analytics are used.'
+            )}
+          </Text>
+          <View style={styles.dataButtons}>
+            <TouchableOpacity
+              style={[styles.actionButton, styles.exportButton]}
+              onPress={handleExportData}
+              accessibilityRole="button"
+            >
+              <Text style={styles.actionButtonText}>
+                {t('settings.exportData', 'Export data (JSON)')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.actionButton, styles.dangerButton]}
+              onPress={handleClearData}
+              accessibilityRole="button"
+            >
+              <Text style={styles.actionButtonText}>
+                {t('settings.clearData', 'Clear local data')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </GradientCard>
+
         {/* About Section */}
         <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
           <Text style={styles.sectionTitle}>
@@ -251,6 +337,33 @@ const styles = StyleSheet.create({
     fontWeight: theme.typography.fontWeights.regular,
   },
   languageButtonTextActive: {
+    color: theme.colors.neutral.white,
+    fontWeight: theme.typography.fontWeights.semiBold,
+  },
+  helperText: {
+    marginTop: theme.spacing.xs,
+    color: theme.colors.text.secondary,
+    fontSize: theme.typography.fontSizes.sm,
+    lineHeight: 20,
+  },
+  dataButtons: {
+    marginTop: theme.spacing.sm,
+    gap: theme.spacing.sm,
+  },
+  actionButton: {
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  exportButton: {
+    backgroundColor: theme.colors.accent.blue[600],
+  },
+  dangerButton: {
+    backgroundColor: '#d9534f',
+  },
+  actionButtonText: {
     color: theme.colors.neutral.white,
     fontWeight: theme.typography.fontWeights.semiBold,
   },

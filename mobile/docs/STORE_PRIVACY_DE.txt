@@ -1,0 +1,9 @@
+Datenschutz-Zusammenfassung (Play Console / App Store Connect)
+
+Datenerfassung: Keine (es werden keine Daten erhoben).
+Datenteilen: Keine.
+Speicherung: Nur lokal auf dem Gerät (AsyncStorage); kein Cloud-/Backend-Sync.
+Kennungen: Keine erhoben; kein Konto erforderlich.
+Tracking: Keines; keine Analytics- oder Werbe-SDKs.
+Berechtigungen: Kalender/Erinnerungen optional, nur für lokale Erinnerungen; Ereignisdaten bleiben auf dem Gerät.
+Kinder/Alter: Allgemeines Publikum; keine besondere Verarbeitung.

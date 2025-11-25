@@ -1,3 +1,4 @@
+import { logger } from './logger';
 // ══════════════════════════════════════════════════════════════
 // Instruction Helpers - Validation & Fallback System
 // ══════════════════════════════════════════════════════════════
@@ -15,14 +16,14 @@ export const getInstructionById = (
   instructionId?: string
 ): PreSessionInstruction | null => {
   if (!instructionId) {
-    console.warn('⚠️ No instructionId provided');
+    logger.warn('⚠️ No instructionId provided');
     return null;
   }
 
   const instruction = PRE_SESSION_INSTRUCTIONS[instructionId];
 
   if (!instruction) {
-    console.warn(`⚠️ Missing instruction: ${instructionId}`);
+    logger.warn(`⚠️ Missing instruction: ${instructionId}`);
     return null;
   }
 
@@ -59,7 +60,7 @@ export const getInstructionWithFallback = (
   for (const fallbackId of fallbacks) {
     const fallbackInstruction = PRE_SESSION_INSTRUCTIONS[fallbackId];
     if (fallbackInstruction) {
-      console.info(`✓ Using fallback instruction: ${fallbackId} for level ${sessionLevel}`);
+      logger.log(`✓ Using fallback instruction: ${fallbackId} for level ${sessionLevel}`);
       return fallbackInstruction;
     }
   }
@@ -93,12 +94,12 @@ export const validateSessionInstructions = (
   valid: number;
   invalid: number;
   missing: number;
-  issues: Array<{ sessionId: number; sessionTitle: string; issue: string }>;
+  issues: Array<{ sessionId: string | number; sessionTitle: string; issue: string }>;
 } => {
   let valid = 0;
   let invalid = 0;
   let missing = 0;
-  const issues: Array<{ sessionId: number; sessionTitle: string; issue: string }> = [];
+  const issues: Array<{ sessionId: string | number; sessionTitle: string; issue: string }> = [];
 
   sessions.forEach((session) => {
     if (!session.instructionId) {

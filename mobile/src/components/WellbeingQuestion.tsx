@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 /**
  * Wellbeing Question Component
  * Displays a single question in well-being assessment
@@ -122,14 +123,14 @@ export const WellbeingQuestion: React.FC<Props> = ({ question, value, onChange }
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<any>({
   container: {
     marginBottom: theme.spacing.xl,
   },
   questionText: {
     fontSize: theme.typography.fontSizes.lg,
     fontWeight: theme.typography.fontWeights.medium,
-    color: theme.colors.neutral.charcoal,
+    color: theme.colors.neutral.charcoal[100],
     marginBottom: theme.spacing.md,
   },
   scaleContainer: {

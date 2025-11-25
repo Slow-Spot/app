@@ -48,8 +48,21 @@ Używaj tylko:
 
 ## Status
 
-- [ ] nature.mp3
-- [ ] ocean.mp3
-- [ ] forest.mp3
-- [ ] 432hz.mp3
-- [ ] 528hz.mp3
+- [x] nature.mp3 (placeholder - replace with real ambient sound)
+- [x] ocean.mp3 (placeholder - replace with real ambient sound)
+- [x] forest.mp3 (placeholder - replace with real ambient sound)
+- [x] 432hz.mp3 (placeholder - replace with real ambient sound)
+- [x] 528hz.mp3 (placeholder - replace with real ambient sound)
+
+**⚠️ CURRENT STATUS: Placeholder files installed**
+
+All files currently use meditation-bell.mp3 as placeholder.
+App will build and run, but ambient sounds will all sound the same.
+
+**📥 TO INSTALL REAL AMBIENT SOUNDS:**
+1. See `/DOWNLOAD_SOUNDS_MANUAL.md` for step-by-step guide
+2. Or run: `./download-ambient-sounds.sh` (automatic download)
+3. Replace the 5 MP3 files in this directory
+4. Restart the app
+
+**🎯 Priority:** Replace before store submission for better user experience

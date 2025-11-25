@@ -510,7 +510,7 @@ const SPECIAL_ACHIEVEMENTS: Achievement[] = [
     rewardXP: 500,
     requirement: (p) => {
       const longSessions = p.completedSessions.filter(
-        s => s.durationSeconds >= 1200 // 20+ minutes
+        s => (s.durationSeconds ?? s.actualDurationSeconds ?? 0) >= 1200 // 20+ minutes
       );
       return longSessions.length >= 10;
     },

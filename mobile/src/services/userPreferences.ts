@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '../utils/logger';
 
 const PREFERENCES_KEY = '@user_preferences';
 
@@ -25,7 +26,7 @@ export const userPreferences = {
       }
       return DEFAULT_PREFERENCES;
     } catch (error) {
-      console.error('Failed to load user preferences:', error);
+      logger.error('Failed to load user preferences:', error);
       return DEFAULT_PREFERENCES;
     }
   },
@@ -40,7 +41,7 @@ export const userPreferences = {
       await AsyncStorage.setItem(PREFERENCES_KEY, JSON.stringify(updated));
       return updated;
     } catch (error) {
-      console.error('Failed to update user preferences:', error);
+      logger.error('Failed to update user preferences:', error);
       throw error;
     }
   },

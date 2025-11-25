@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ActivityIndicator, FlatList, StyleSheet, Alert, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,7 @@ interface MeditationScreenProps {
 }
 
 // Helper function to generate chime points from custom session config
-const getChimePointsFromSession = (session: MeditationSession): ChimePoint[] => {
+const getChimePointsFromSession = (session: MeditationSession | SavedCustomSession): ChimePoint[] => {
   const customSession = session as SavedCustomSession;
 
   // Check if it's a custom session with interval bells enabled
@@ -57,7 +58,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   const { t, i18n } = useTranslation();
   const [sessions, setSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSession, setSelectedSession] = useState<MeditationSession | null>(null);
+  const [selectedSession, setSelectedSession] = useState<MeditationSession | SavedCustomSession | null>(null);
   const [flowState, setFlowState] = useState<FlowState>('list');
   const [userIntention, setUserIntention] = useState('');
   const [sessionMood, setSessionMood] = useState<1 | 2 | 3 | 4 | 5 | undefined>();
@@ -71,10 +72,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     return () => {
       // Stop and cleanup audio to prevent background playback
       audioEngine.stopAll().catch((error) => {
-        console.error('Failed to stop audio on unmount:', error);
+        logger.error('Failed to stop audio on unmount:', error);
       });
       audioEngine.cleanup().catch((error) => {
-        console.error('Failed to cleanup audio on unmount:', error);
+        logger.error('Failed to cleanup audio on unmount:', error);
       });
     };
   }, []);
@@ -94,7 +95,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
       setSessions(allSessions);
     } catch (error) {
-      console.error('Failed to load sessions:', error);
+      logger.error('Failed to load sessions:', error);
     } finally {
       setLoading(false);
     }
@@ -137,22 +138,12 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   const handleEditSession = (session: SavedCustomSession) => {
     if (!onEditSession) {
-      console.warn('onEditSession prop not provided');
+      logger.warn('onEditSession prop not provided');
       return;
     }
 
-    // Convert SavedCustomSession to CustomSessionConfig
-    const config: CustomSessionConfig = {
-      durationMinutes: session.durationMinutes,
-      ambientSound: session.ambientSound,
-      intervalBellEnabled: session.intervalBellEnabled,
-      intervalBellMinutes: session.intervalBellMinutes,
-      wakeUpChimeEnabled: session.wakeUpChimeEnabled,
-      voiceGuidanceEnabled: session.voiceGuidanceEnabled,
-      name: session.title,
-    };
-
-    onEditSession(session.id, config);
+    // Use the existing config from the custom session
+    onEditSession(session.id as string, session.config);
   };
 
   const handleDeleteSession = async (session: SavedCustomSession) => {
@@ -166,15 +157,15 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         },
         {
           text: t('custom.delete') || 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteCustomSession(session.id);
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              style: 'destructive',
+              onPress: async () => {
+                try {
+                  await deleteCustomSession(String(session.id));
+                  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
               // Reload sessions
               await loadSessions();
             } catch (error) {
-              console.error('Error deleting session:', error);
+              logger.error('Error deleting session:', error);
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
               Alert.alert(
                 t('custom.deleteError') || 'Error',
@@ -205,21 +196,21 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     try {
       // Load audio tracks if available - with graceful error handling
       if (selectedSession.voiceUrl) {
-        console.log('Loading voice track:', selectedSession.voiceUrl);
-        await audioEngine.loadTrack('voice', selectedSession.voiceUrl, 0.8);
+        logger.log('Loading voice track:', selectedSession.voiceUrl);
+        await audioEngine.loadTrack('voice', String(selectedSession.voiceUrl), 0.8);
       }
 
       // Only load ambient if URL is provided and not 'silence'
       if (selectedSession.ambientUrl && selectedSession.ambientUrl !== 'silence') {
-        console.log('Loading ambient track:', selectedSession.ambientUrl);
-        await audioEngine.loadTrack('ambient', selectedSession.ambientUrl, 0.4);
+        logger.log('Loading ambient track:', selectedSession.ambientUrl);
+        await audioEngine.loadTrack('ambient', String(selectedSession.ambientUrl), 0.4);
       } else {
-        console.log('Skipping ambient track (silence mode or no URL)');
+        logger.log('Skipping ambient track (silence mode or no URL)');
       }
 
       if (selectedSession.chimeUrl) {
-        console.log('Loading chime track:', selectedSession.chimeUrl);
-        await audioEngine.loadTrack('chime', selectedSession.chimeUrl, 0.6);
+        logger.log('Loading chime track:', selectedSession.chimeUrl);
+        await audioEngine.loadTrack('chime', String(selectedSession.chimeUrl), 0.6);
       }
 
       // Start with chime, then fade in ambient
@@ -233,8 +224,8 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         setTimeout(() => audioEngine.play('voice'), 5000);
       }
     } catch (error) {
-      console.error('Failed to start audio:', error);
-      console.warn('Session will continue in silent mode');
+      logger.error('Failed to start audio:', error);
+      logger.warn('Session will continue in silent mode');
       // Don't prevent session from starting - just log the error
     }
   };
@@ -257,7 +248,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         await audioEngine.fadeOut('ambient', 1500);
       }
     } catch (error) {
-      console.error('Failed to toggle audio:', error);
+      logger.error('Failed to toggle audio:', error);
     }
   };
 
@@ -283,7 +274,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         setFlowState('celebration');
       }, 3000);
     } catch (error) {
-      console.error('Failed to complete session:', error);
+      logger.error('Failed to complete session:', error);
     }
   };
 
@@ -296,7 +287,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
       setFlowState('list');
       setSelectedSession(null);
     } catch (error) {
-      console.error('Failed to cancel session:', error);
+      logger.error('Failed to cancel session:', error);
     }
   };
 
@@ -321,7 +312,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
       setUserIntention('');
       setSessionMood(undefined);
     } catch (error) {
-      console.error('Failed to cleanup after celebration:', error);
+      logger.error('Failed to cleanup after celebration:', error);
     }
   };
 

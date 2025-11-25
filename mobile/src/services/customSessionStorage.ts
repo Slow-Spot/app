@@ -6,6 +6,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MeditationSession } from './api';
+import { logger } from '../utils/logger';
 
 const CUSTOM_SESSIONS_KEY = '@slow_spot_custom_sessions';
 
@@ -38,24 +39,42 @@ const generateUUID = (): string => {
 };
 
 /**
- * Reference to meditation bell asset
- * Using a single require at module level for better bundler compatibility
+ * Reference to audio assets
+ * Using requires at module level for better bundler compatibility
  */
 const MEDITATION_BELL = require('../../assets/sounds/meditation-bell.mp3');
 
+// Safely load ambient sound files without dynamic require (Metro needs static paths)
+// If files don't exist yet, fall back to meditation bell as placeholder
+const loadAmbientSound = (loader: () => number, label: string): number => {
+  try {
+    return loader();
+  } catch (error) {
+    logger.warn(`Ambient sound file not found: ${label}, using meditation bell as fallback`);
+    return MEDITATION_BELL;
+  }
+};
+
+// Ambient sound files - will be loaded when files are added to assets/sounds/ambient/
+const AMBIENT_SOUNDS = {
+  nature: loadAmbientSound(() => require('../../assets/sounds/ambient/nature.mp3'), 'nature.mp3'),
+  ocean: loadAmbientSound(() => require('../../assets/sounds/ambient/ocean.mp3'), 'ocean.mp3'),
+  forest: loadAmbientSound(() => require('../../assets/sounds/ambient/forest.mp3'), 'forest.mp3'),
+  '432hz': loadAmbientSound(() => require('../../assets/sounds/ambient/432hz.mp3'), '432hz.mp3'),
+  '528hz': loadAmbientSound(() => require('../../assets/sounds/ambient/528hz.mp3'), '528hz.mp3'),
+};
+
 /**
  * Map ambient sound to audio file path
- * Note: Currently using meditation bell as placeholder for all ambient sounds
- * TODO: Add actual ambient sound files to assets/sounds/ambient/
+ * Returns the appropriate ambient sound file or undefined for silence
  */
 const getAmbientUrl = (sound: CustomSessionConfig['ambientSound']): number | undefined => {
   if (sound === 'silence') {
     return undefined;
   }
 
-  // For now, all ambient sounds use the meditation bell as placeholder
-  // When actual ambient files are added, update this mapping
-  return MEDITATION_BELL;
+  // Return the appropriate ambient sound file
+  return AMBIENT_SOUNDS[sound];
 };
 
 /**
@@ -103,7 +122,7 @@ export const saveCustomSession = async (
 
     return newSession;
   } catch (error) {
-    console.error('Error saving custom session:', error);
+    logger.error('Error saving custom session:', error);
     throw error;
   }
 };
@@ -116,7 +135,7 @@ export const getAllCustomSessions = async (): Promise<SavedCustomSession[]> => {
     const data = await AsyncStorage.getItem(CUSTOM_SESSIONS_KEY);
     return data ? JSON.parse(data) : [];
   } catch (error) {
-    console.error('Error loading custom sessions:', error);
+    logger.error('Error loading custom sessions:', error);
     return [];
   }
 };
@@ -131,7 +150,7 @@ export const getCustomSessionById = async (
     const sessions = await getAllCustomSessions();
     return sessions.find((s) => s.id === id) || null;
   } catch (error) {
-    console.error('Error getting custom session:', error);
+    logger.error('Error getting custom session:', error);
     return null;
   }
 };
@@ -158,7 +177,7 @@ export const updateCustomSession = async (
     sessions[index] = updatedSession;
     await AsyncStorage.setItem(CUSTOM_SESSIONS_KEY, JSON.stringify(sessions));
   } catch (error) {
-    console.error('Error updating custom session:', error);
+    logger.error('Error updating custom session:', error);
     throw error;
   }
 };
@@ -177,7 +196,7 @@ export const deleteCustomSession = async (id: string): Promise<void> => {
 
     await AsyncStorage.setItem(CUSTOM_SESSIONS_KEY, JSON.stringify(filtered));
   } catch (error) {
-    console.error('Error deleting custom session:', error);
+    logger.error('Error deleting custom session:', error);
     throw error;
   }
 };
@@ -189,7 +208,7 @@ export const clearAllCustomSessions = async (): Promise<void> => {
   try {
     await AsyncStorage.removeItem(CUSTOM_SESSIONS_KEY);
   } catch (error) {
-    console.error('Error clearing custom sessions:', error);
+    logger.error('Error clearing custom sessions:', error);
     throw error;
   }
 };

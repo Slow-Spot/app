@@ -1,0 +1,9 @@
+Resumen de privacidad (Play Console / App Store Connect)
+
+Recopilación de datos: Ninguna (no se recopilan datos).
+Compartición de datos: Ninguna.
+Almacenamiento: Solo local en el dispositivo (AsyncStorage); sin nube ni backend.
+Identificadores: No se recopilan; no se requiere cuenta.
+Seguimiento: Ninguno; sin SDKs de analítica ni anuncios.
+Permisos: Calendario/recordatorios opcionales, solo para recordatorios locales; los datos del evento permanecen en el dispositivo.
+Niños/edad: Público general; sin tratamiento especial.

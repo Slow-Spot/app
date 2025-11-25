@@ -1,3 +1,4 @@
+import { logger } from '../utils/logger';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';

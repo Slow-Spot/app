@@ -1,7 +1,9 @@
+import { logger } from '../utils/logger';
 /**
  * ProfileScreen - User profile with session history and statistics
  *
- * Displays comprehensive user statistics, session history, and custom session management.
+ * Displays comprehensive user statistics, session history, custom session management,
+ * and achievements tracking with gamification elements.
  * Uses existing services for data and follows the app's design patterns.
  */
 
@@ -23,6 +25,8 @@ import * as Haptics from 'expo-haptics';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { ScheduleReminderModal } from '../components/ScheduleReminderModal';
+import { Badge } from '../components/Badge';
+import { AchievementBadge } from '../components/AchievementBadge';
 import theme, { gradients } from '../theme';
 import {
   getProgressStats,
@@ -38,6 +42,15 @@ import {
   getReminderSettings,
   ReminderSettings,
 } from '../services/calendarService';
+import {
+  getUnlockedAchievements,
+  getAlmostUnlockedAchievements,
+  calculateTotalXP,
+  calculateLevelFromXP,
+  getProgressToNextLevel,
+} from '../utils/achievementHelpers';
+import { Achievement } from '../types/achievements';
+import { UserMeditationProgress } from '../types/userProgress';
 
 interface ProfileScreenProps {
   onNavigateToCustom?: () => void;
@@ -66,8 +79,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateToCustom
   const [reminderSettings, setReminderSettings] = useState<ReminderSettings | null>(null);
   const [showReminderModal, setShowReminderModal] = useState(false);
 
+  // Achievements state
+  const [unlockedAchievements, setUnlockedAchievements] = useState<Achievement[]>([]);
+  const [almostUnlocked, setAlmostUnlocked] = useState<Array<{ achievement: Achievement; progress: any }>>([]);
+  const [totalXP, setTotalXP] = useState(0);
+  const [currentLevel, setCurrentLevel] = useState(1);
+  const [levelProgress, setLevelProgress] = useState({ current: 0, needed: 100, percentage: 0 });
+
   /**
-   * Load all profile data
+   * Load all profile data including achievements
    */
   const loadProfileData = useCallback(async () => {
     try {
@@ -82,8 +102,43 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateToCustom
       setSessions(completedSessions.reverse()); // Most recent first
       setCustomSessionCount(customSessions.length);
       setReminderSettings(reminder);
+
+      // Build UserMeditationProgress object for achievements
+      // Using a simplified version compatible with achievement helpers
+      const userProgress: any = {
+        completedSessions: completedSessions.map(s => ({
+          id: `completion-${s.id}-${s.date}`,
+          sessionId: typeof s.id === 'number' ? s.id : 0,
+          sessionTitle: s.title,
+          cultureTag: undefined, // TODO: populate from session data if available
+          level: 1,
+          startedAt: s.date,
+          completedAt: s.date,
+          plannedDurationSeconds: s.durationSeconds,
+          actualDurationSeconds: s.durationSeconds,
+          completedFully: true,
+          durationSeconds: s.durationSeconds,
+        })),
+        currentStreak: progressStats.currentStreak,
+        longestStreak: progressStats.longestStreak,
+        totalMeditationMinutes: progressStats.totalMinutes,
+        currentLevel: 1, // Will be calculated from XP
+      };
+
+      // Calculate achievements
+      const unlocked = getUnlockedAchievements(userProgress);
+      const almost = getAlmostUnlockedAchievements(userProgress);
+      const xp = calculateTotalXP(userProgress);
+      const level = calculateLevelFromXP(xp);
+      const progress = getProgressToNextLevel(xp, level);
+
+      setUnlockedAchievements(unlocked);
+      setAlmostUnlocked(almost);
+      setTotalXP(xp);
+      setCurrentLevel(level);
+      setLevelProgress(progress);
     } catch (error) {
-      console.error('Error loading profile data:', error);
+      logger.error('Error loading profile data:', error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -129,7 +184,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateToCustom
 
       setShowReminderModal(true);
     } catch (error) {
-      console.error('Error requesting calendar permission:', error);
+      logger.error('Error requesting calendar permission:', error);
       Alert.alert(
         t('calendar.permissionDenied'),
         t('calendar.permissionMessage')
@@ -157,7 +212,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateToCustom
         throw new Error('Failed to create reminder');
       }
     } catch (error) {
-      console.error('Error creating reminder:', error);
+      logger.error('Error creating reminder:', error);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       Alert.alert(
         t('calendar.permissionDenied'),
@@ -188,7 +243,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateToCustom
                 Alert.alert(t('calendar.reminderCanceled'));
               }
             } catch (error) {
-              console.error('Error canceling reminder:', error);
+              logger.error('Error canceling reminder:', error);
               await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
             }
           },
@@ -413,6 +468,94 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateToCustom
             )}
           </View>
         </View>
+
+        {/* Achievements Section */}
+        {(unlockedAchievements.length > 0 || almostUnlocked.length > 0) && (
+          <View style={styles.achievementsContainer}>
+            <View style={styles.achievementsHeader}>
+              <Text style={styles.sectionTitle}>
+                {t('achievements.title') || 'Achievements'}
+              </Text>
+              <View style={styles.levelBadge}>
+                <Text style={styles.levelText}>
+                  {t('achievements.level') || 'Level'} {currentLevel}
+                </Text>
+              </View>
+            </View>
+
+            {/* Level Progress Bar */}
+            <GradientCard gradient={gradients.card.purpleCard} style={styles.levelCard}>
+              <View style={styles.levelCardContent}>
+                <View style={styles.levelInfo}>
+                  <Text style={styles.levelCardTitle}>
+                    {t('achievements.levelProgress') || 'Level Progress'}
+                  </Text>
+                  <Text style={styles.xpCount}>{totalXP} XP</Text>
+                </View>
+                <View style={styles.levelProgressContainer}>
+                  <View style={styles.levelProgressBarBackground}>
+                    <View
+                      style={[
+                        styles.levelProgressBarFill,
+                        { width: `${levelProgress.percentage}%` },
+                      ]}
+                    />
+                  </View>
+                  <Text style={styles.levelProgressText}>
+                    {levelProgress.current}/{levelProgress.needed} XP {t('achievements.toNextLevel') || 'to next level'}
+                  </Text>
+                </View>
+              </View>
+            </GradientCard>
+
+            {/* Recently Unlocked Achievements */}
+            {unlockedAchievements.length > 0 && (
+              <View style={styles.achievementsSection}>
+                <Text style={styles.achievementsSectionTitle}>
+                  {t('achievements.unlocked') || 'Unlocked'} ({unlockedAchievements.length})
+                </Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.achievementsScroll}
+                >
+                  {unlockedAchievements.slice(0, 10).map((achievement) => (
+                    <AchievementBadge
+                      key={achievement.id}
+                      achievement={achievement}
+                      unlocked={true}
+                      compact={true}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+
+            {/* Almost Unlocked */}
+            {almostUnlocked.length > 0 && (
+              <View style={styles.achievementsSection}>
+                <Text style={styles.achievementsSectionTitle}>
+                  {t('achievements.almostThere') || 'Almost There'} ({almostUnlocked.length})
+                </Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.achievementsScroll}
+                >
+                  {almostUnlocked.map(({ achievement, progress }) => (
+                    <AchievementBadge
+                      key={achievement.id}
+                      achievement={achievement}
+                      unlocked={false}
+                      progress={progress}
+                      compact={true}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+          </View>
+        )}
 
         {/* Recent Sessions */}
         <View style={styles.historyContainer}>
@@ -834,5 +977,78 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes.md,
     fontWeight: theme.typography.fontWeights.semiBold,
     color: theme.colors.accent.mint[700],
+  },
+  // Achievements Section Styles
+  achievementsContainer: {
+    gap: theme.spacing.md,
+    marginTop: theme.spacing.lg,
+  },
+  achievementsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing.sm,
+  },
+  levelBadge: {
+    backgroundColor: theme.colors.accent.purple[600],
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.xs,
+    borderRadius: theme.borderRadius.full,
+  },
+  levelText: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.neutral.white,
+  },
+  levelCard: {
+    padding: theme.spacing.lg,
+  },
+  levelCardContent: {
+    gap: theme.spacing.md,
+  },
+  levelInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  levelCardTitle: {
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+  },
+  xpCount: {
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.bold,
+    color: theme.colors.accent.purple[600],
+  },
+  levelProgressContainer: {
+    gap: theme.spacing.xs,
+  },
+  levelProgressBarBackground: {
+    height: 8,
+    backgroundColor: theme.colors.border.light,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  levelProgressBarFill: {
+    height: '100%',
+    backgroundColor: theme.colors.accent.purple[600],
+    borderRadius: 4,
+  },
+  levelProgressText: {
+    fontSize: theme.typography.fontSizes.sm,
+    color: theme.colors.text.secondary,
+  },
+  achievementsSection: {
+    gap: theme.spacing.sm,
+  },
+  achievementsSectionTitle: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    color: theme.colors.text.primary,
+  },
+  achievementsScroll: {
+    gap: theme.spacing.md,
+    paddingVertical: theme.spacing.xs,
   },
 });

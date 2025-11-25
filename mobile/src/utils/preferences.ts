@@ -1,3 +1,4 @@
+import { logger } from './logger';
 // ══════════════════════════════════════════════════════════════
 // User Preferences & Customization
 // Manage all user settings and preferences
@@ -407,7 +408,7 @@ export const deserializePreferences = (data: string): UserPreferences => {
     const parsed = JSON.parse(data);
     return mergeWithDefaults(parsed);
   } catch (error) {
-    console.error('Failed to parse preferences:', error);
+    logger.error('Failed to parse preferences:', error);
     return DEFAULT_PREFERENCES;
   }
 };

@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LANGUAGE_STORAGE_KEY } from '../screens/SettingsScreen';
+import { logger } from '../utils/logger';
 
 import en from './locales/en.json';
 import pl from './locales/pl.json';
@@ -26,7 +27,7 @@ const getSystemLanguage = () => {
     const locales = Localization.getLocales();
     return locales?.[0]?.languageCode || 'en';
   } catch (error) {
-    console.warn('Failed to get system language:', error);
+    logger.warn('Failed to get system language:', error);
     return 'en';
   }
 };
@@ -52,7 +53,7 @@ i18n
       await i18n.changeLanguage(savedLanguage);
     }
   } catch (error) {
-    console.error('Failed to load language preference:', error);
+    logger.error('Failed to load language preference:', error);
   }
 })();
 

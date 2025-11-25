@@ -4,6 +4,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logger } from '../utils/logger';
 
 const STORAGE_KEY = 'meditation_progress';
 const SESSIONS_KEY = 'completed_sessions';
@@ -54,7 +55,7 @@ export const saveSessionCompletion = async (
 
     await AsyncStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
   } catch (error) {
-    console.error('Error saving session completion:', error);
+    logger.error('Error saving session completion:', error);
   }
 };
 
@@ -66,7 +67,7 @@ export const getCompletedSessions = async (): Promise<CompletedSession[]> => {
     const sessionsJson = await AsyncStorage.getItem(SESSIONS_KEY);
     return sessionsJson ? JSON.parse(sessionsJson) : [];
   } catch (error) {
-    console.error('Error reading completed sessions:', error);
+    logger.error('Error reading completed sessions:', error);
     return [];
   }
 };
@@ -181,7 +182,7 @@ export const getProgressStats = async (): Promise<ProgressStats> => {
       lastSessionDate,
     };
   } catch (error) {
-    console.error('Error calculating progress stats:', error);
+    logger.error('Error calculating progress stats:', error);
     return {
       totalSessions: 0,
       totalMinutes: 0,
@@ -200,7 +201,7 @@ export const clearProgress = async (): Promise<void> => {
     await AsyncStorage.removeItem(SESSIONS_KEY);
     await AsyncStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error('Error clearing progress:', error);
+    logger.error('Error clearing progress:', error);
   }
 };
 
@@ -219,7 +220,7 @@ export const getSessionsInRange = async (
       return sessionDate >= startDate && sessionDate <= endDate;
     });
   } catch (error) {
-    console.error('Error getting sessions in range:', error);
+    logger.error('Error getting sessions in range:', error);
     return [];
   }
 };
@@ -241,7 +242,7 @@ export const getTodayMinutes = async (): Promise<number> => {
       todaySessions.reduce((sum, s) => sum + s.durationSeconds, 0) / 60
     );
   } catch (error) {
-    console.error('Error getting today minutes:', error);
+    logger.error('Error getting today minutes:', error);
     return 0;
   }
 };

@@ -1,3 +1,4 @@
+import { logger } from './logger';
 // ══════════════════════════════════════════════════════════════
 // Achievement Helper Functions
 // Check, unlock, and track achievement progress
@@ -43,7 +44,7 @@ export const checkNewAchievements = (
         newAchievements.push(achievement);
       }
     } catch (error) {
-      console.error(`Error checking achievement ${achievement.id}:`, error);
+      logger.error(`Error checking achievement ${achievement.id}:`, error);
     }
   }
 
@@ -66,7 +67,7 @@ export const getUnlockedAchievements = (
         unlocked.push(achievement);
       }
     } catch (error) {
-      console.error(`Error checking achievement ${achievement.id}:`, error);
+      logger.error(`Error checking achievement ${achievement.id}:`, error);
     }
   }
 
@@ -99,7 +100,7 @@ export const getProgressTowardAchievement = (
       percentage,
     };
   } catch (error) {
-    console.error(`Error tracking progress for ${achievement.id}:`, error);
+    logger.error(`Error tracking progress for ${achievement.id}:`, error);
     return null;
   }
 };
@@ -193,8 +194,8 @@ export const getAchievementStats = (
   ];
 
   const byCategory = categories.reduce((stats, category) => {
-    const categoryAchievements = ACHIEVEMENTS_BY_CATEGORY[category] || [];
-    const unlockedInCategory = categoryAchievements.filter(a =>
+    const categoryAchievements = (ACHIEVEMENTS_BY_CATEGORY as any)[category] || [];
+    const unlockedInCategory = (categoryAchievements as any[]).filter((a: any) =>
       unlockedIds.has(a.id)
     ).length;
 
@@ -204,7 +205,7 @@ export const getAchievementStats = (
     };
 
     return stats;
-  }, {} as Record<AchievementCategory, { total: number; unlocked: number }>);
+  }, {} as Record<string, { total: number; unlocked: number }>);
 
   // By rarity
   const rarities: AchievementRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
@@ -341,7 +342,7 @@ export const getAchievementById = (achievementId: string): Achievement | null =>
 export const getAchievementsByCategory = (
   category: AchievementCategory
 ): Achievement[] => {
-  return ACHIEVEMENTS_BY_CATEGORY[category] || [];
+  return (ACHIEVEMENTS_BY_CATEGORY as any)[category] || [];
 };
 
 /**
