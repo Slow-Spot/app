@@ -40,28 +40,17 @@ const generateUUID = (): string => {
 
 /**
  * Reference to audio assets
- * Using requires at module level for better bundler compatibility
+ * Using static requires at module level for Metro bundler compatibility
  */
 const MEDITATION_BELL = require('../../assets/sounds/meditation-bell.mp3');
 
-// Safely load ambient sound files without dynamic require (Metro needs static paths)
-// If files don't exist yet, fall back to meditation bell as placeholder
-const loadAmbientSound = (loader: () => number, label: string): number => {
-  try {
-    return loader();
-  } catch (error) {
-    logger.warn(`Ambient sound file not found: ${label}, using meditation bell as fallback`);
-    return MEDITATION_BELL;
-  }
-};
-
-// Ambient sound files - will be loaded when files are added to assets/sounds/ambient/
+// Ambient sound files - static requires for Metro bundler
 const AMBIENT_SOUNDS = {
-  nature: loadAmbientSound(() => require('../../assets/sounds/ambient/nature.mp3'), 'nature.mp3'),
-  ocean: loadAmbientSound(() => require('../../assets/sounds/ambient/ocean.mp3'), 'ocean.mp3'),
-  forest: loadAmbientSound(() => require('../../assets/sounds/ambient/forest.mp3'), 'forest.mp3'),
-  '432hz': loadAmbientSound(() => require('../../assets/sounds/ambient/432hz.mp3'), '432hz.mp3'),
-  '528hz': loadAmbientSound(() => require('../../assets/sounds/ambient/528hz.mp3'), '528hz.mp3'),
+  nature: require('../../assets/sounds/ambient/nature.mp3'),
+  ocean: require('../../assets/sounds/ambient/ocean.mp3'),
+  forest: require('../../assets/sounds/ambient/forest.mp3'),
+  '432hz': require('../../assets/sounds/ambient/432hz.mp3'),
+  '528hz': require('../../assets/sounds/ambient/528hz.mp3'),
 };
 
 /**

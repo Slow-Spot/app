@@ -95,6 +95,9 @@ web-build/
 public/audio/
 mobile/assets/audio/
 
+# Exception: include ambient sounds for meditation app
+!mobile/assets/sounds/**/*.mp3
+
 # Documentation builds
 _site/
 .jekyll-cache/
