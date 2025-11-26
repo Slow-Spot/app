@@ -5,8 +5,8 @@
  * shadows, and other design tokens for a beautiful meditation app.
  */
 
-import colors from './colors';
-import gradients from './gradients';
+import colors, { darkColors, getThemeColors } from './colors';
+import gradients, { darkGradients, getThemeGradients } from './gradients';
 
 /**
  * Spacing scale - 2px base unit
@@ -109,10 +109,10 @@ export const shadows = {
   },
   card: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 5,
   },
   floatingButton: {
     shadowColor: colors.accent.blue[500],
@@ -252,7 +252,78 @@ export const opacity = {
 };
 
 /**
- * Complete theme object
+ * Dark mode shadows - more prominent for depth perception
+ */
+export const darkShadows = {
+  sm: {
+    shadowColor: 'rgba(0, 0, 0, 0.3)',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  md: {
+    shadowColor: 'rgba(0, 0, 0, 0.4)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  lg: {
+    shadowColor: 'rgba(0, 0, 0, 0.5)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  xl: {
+    shadowColor: 'rgba(0, 0, 0, 0.6)',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+  card: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 3,
+  },
+  floatingButton: {
+    shadowColor: '#70C0FF', // Lighter blue for dark mode
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+};
+
+/**
+ * Dark mode card styles
+ */
+export const darkCardStyles = {
+  default: {
+    padding: spacing.lg,
+    borderRadius: borderRadius.xl,
+    backgroundColor: '#2C2C2E', // darkBackgrounds.card
+    ...darkShadows.card,
+  },
+  elevated: {
+    padding: spacing.lg,
+    borderRadius: borderRadius.xl,
+    backgroundColor: '#3A3A3C', // darkBackgrounds.elevated
+    ...darkShadows.lg,
+  },
+  flat: {
+    padding: spacing.lg,
+    borderRadius: borderRadius.xl,
+    backgroundColor: '#2C2C2E', // darkBackgrounds.secondary
+  },
+};
+
+/**
+ * Complete theme object (light mode - default)
  */
 export const theme = {
   colors,
@@ -271,10 +342,35 @@ export const theme = {
   opacity,
 };
 
+/**
+ * Dark theme object
+ */
+export const darkTheme = {
+  colors: darkColors,
+  gradients: darkGradients,
+  spacing,
+  borderRadius,
+  typography,
+  shadows: darkShadows,
+  durations,
+  easings,
+  iconSizes,
+  buttonSizes,
+  cardStyles: darkCardStyles,
+  layout,
+  zIndex,
+  opacity,
+};
+
+/**
+ * Helper function to get complete theme based on mode
+ */
+export const getTheme = (isDark: boolean) => isDark ? darkTheme : theme;
+
 export type Theme = typeof theme;
 
 // Export individual modules
-export { colors, gradients };
+export { colors, gradients, darkColors, darkGradients, getThemeColors, getThemeGradients };
 
 // Export types from gradients
 export type { GradientDefinition } from './gradients';

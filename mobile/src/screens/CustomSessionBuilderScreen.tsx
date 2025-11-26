@@ -1,5 +1,5 @@
 import { logger } from '../utils/logger';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet, Switch, TextInput, Pressable, Animated, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ import { Audio } from 'expo-av';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { GradientButton } from '../components/GradientButton';
-import theme, { gradients } from '../theme';
+import theme, { gradients, getThemeColors, getThemeGradients } from '../theme';
 import { saveCustomSession, updateCustomSession, getAllCustomSessions, deleteCustomSession, SavedCustomSession } from '../services/customSessionStorage';
 
 export interface CustomSessionConfig {
@@ -23,6 +23,7 @@ export interface CustomSessionConfig {
 }
 
 interface CustomSessionBuilderScreenProps {
+  isDark?: boolean;
   onStartSession: (config: CustomSessionConfig) => void;
   onBack: () => void;
   editSessionId?: string; // If provided, we're editing an existing session
@@ -33,12 +34,62 @@ const DURATION_PRESETS = [5, 10, 15, 20, 30];
 const INTERVAL_PRESETS = [3, 5, 10];
 
 export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProps> = ({
+  isDark = false,
   onStartSession,
   onBack,
   editSessionId,
   initialConfig,
 }) => {
   const { t } = useTranslation();
+
+  // Theme-aware colors and gradients
+  const colors = useMemo(() => getThemeColors(isDark), [isDark]);
+  const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
+
+  // Dynamic styles based on theme - using mint accent for consistency
+  const dynamicStyles = useMemo(() => ({
+    title: { color: colors.text.primary },
+    subtitle: { color: colors.text.secondary },
+    backIcon: colors.text.primary,
+    sectionTitle: { color: colors.text.primary },
+    sectionDescription: { color: colors.text.secondary },
+    label: { color: colors.text.secondary },
+    currentValue: { color: colors.accent.mint[600] },
+    textInput: {
+      borderColor: isDark ? colors.neutral.charcoal[100] : theme.colors.border.default,
+      color: colors.text.primary,
+      backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+    },
+    durationInput: {
+      borderColor: isDark ? colors.neutral.charcoal[100] : theme.colors.border.default,
+      color: colors.text.primary,
+      backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+    },
+    presetButtonInactive: {
+      backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+      borderColor: isDark ? colors.neutral.charcoal[100] : theme.colors.border.light,
+    },
+    presetButtonText: { color: colors.text.secondary },
+    ambientOptionInactive: {
+      backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+      borderColor: isDark ? colors.neutral.charcoal[100] : theme.colors.border.light,
+    },
+    ambientOptionText: { color: colors.text.secondary },
+    ambientIconColor: colors.text.primary,
+    intervalOptionsContainer: {
+      borderTopColor: isDark ? colors.neutral.charcoal[100] : theme.colors.border.light,
+    },
+    smallPresetButtonInactive: {
+      backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+      borderColor: isDark ? colors.neutral.charcoal[100] : theme.colors.border.light,
+    },
+    smallPresetButtonText: { color: colors.text.secondary },
+    quickStartText: { color: colors.text.secondary },
+    savedSessionsTitle: { color: colors.text.primary },
+    savedSessionsIconColor: colors.accent.mint[500],
+    switchTrackColorFalse: isDark ? colors.neutral.charcoal[100] : theme.colors.neutral.gray[200],
+    switchTrackColorTrue: colors.accent.mint[500],
+  }), [colors, isDark]);
 
   // Session configuration state - initialize with initialConfig if editing
   const [durationMinutes, setDurationMinutes] = useState(initialConfig?.durationMinutes || 15);
@@ -334,7 +385,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
   };
 
   return (
-    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+    <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -343,20 +394,20 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
         {/* Header */}
         <View style={styles.header}>
           <Pressable onPress={onBack} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={theme.colors.text.primary} />
+            <Ionicons name="arrow-back" size={24} color={dynamicStyles.backIcon} />
           </Pressable>
           <View style={styles.headerText}>
-            <Text style={styles.title}>{t('custom.title')}</Text>
-            <Text style={styles.subtitle}>{t('custom.subtitle')}</Text>
+            <Text style={[styles.title, dynamicStyles.title]}>{t('custom.title')}</Text>
+            <Text style={[styles.subtitle, dynamicStyles.subtitle]}>{t('custom.subtitle')}</Text>
           </View>
         </View>
 
         {/* My Saved Sessions */}
         {savedSessions.length > 0 && (
-          <GradientCard gradient={gradients.card.lightCard} style={styles.savedSessionsSection}>
+          <GradientCard gradient={themeGradients.card.lightCard} style={styles.savedSessionsSection}>
             <View style={styles.savedSessionsHeader}>
-              <Ionicons name="bookmark" size={24} color={theme.colors.accent.blue[600]} />
-              <Text style={styles.savedSessionsTitle}>
+              <Ionicons name="bookmark" size={24} color={dynamicStyles.savedSessionsIconColor} />
+              <Text style={[styles.savedSessionsTitle, dynamicStyles.savedSessionsTitle]}>
                 {t('custom.mySavedSessions')}
               </Text>
             </View>
@@ -373,35 +424,27 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                   style={styles.savedSessionCard}
                 >
                   <LinearGradient
-                    colors={gradients.card.blueCard.colors}
-                    start={gradients.card.blueCard.start}
-                    end={gradients.card.blueCard.end}
+                    colors={themeGradients.card.mintCard.colors}
+                    start={themeGradients.card.mintCard.start}
+                    end={themeGradients.card.mintCard.end}
                     style={styles.savedSessionGradient}
                   >
-                    <Text style={styles.savedSessionName} numberOfLines={2}>
-                      {session.title}
-                    </Text>
-                    <View style={styles.savedSessionMeta}>
-                      <View style={styles.savedSessionMetaRow}>
-                        <Ionicons name="time-outline" size={14} color={theme.colors.neutral.white} />
-                        <Text style={styles.savedSessionMetaText}>
-                          {session.config.durationMinutes} {t('custom.min')}
-                        </Text>
-                      </View>
-                      <View style={styles.savedSessionMetaRow}>
-                        <Ionicons
-                          name={session.config.ambientSound === 'silence' ? 'volume-mute' : 'musical-notes'}
-                          size={14}
-                          color={theme.colors.neutral.white}
-                        />
-                        <Text style={styles.savedSessionMetaText} numberOfLines={1}>
-                          {getAmbientSoundLabel(session.config.ambientSound)}
-                        </Text>
-                      </View>
+                    {/* Header with title and star */}
+                    <View style={styles.savedSessionHeader}>
+                      <Text style={[styles.savedSessionName, { color: colors.text.primary }]} numberOfLines={1}>
+                        {session.title}
+                      </Text>
+                      <Ionicons name="star" size={16} color={colors.accent.mint[500]} />
                     </View>
-                    <Text style={styles.savedSessionHint}>
-                      {t('custom.longPressToEdit') || 'Long press to edit'}
+                    {/* Duration and sound info */}
+                    <Text style={[styles.savedSessionDescription, { color: colors.text.secondary }]} numberOfLines={1}>
+                      {session.config.durationMinutes} {t('custom.min')} · {getAmbientSoundLabel(session.config.ambientSound)}
                     </Text>
+                    {/* Start button */}
+                    <View style={[styles.savedSessionStartBadge, { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.5)' }]}>
+                      <Ionicons name="play" size={12} color={colors.text.primary} />
+                      <Text style={[styles.savedSessionStartText, { color: colors.text.primary }]}>Start</Text>
+                    </View>
                   </LinearGradient>
                 </Pressable>
               ))}
@@ -410,21 +453,21 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
         )}
 
         {/* Session Name (Optional) */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('custom.sessionName')}</Text>
+        <GradientCard gradient={themeGradients.card.lightCard} style={styles.section}>
+          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.sessionName')}</Text>
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, dynamicStyles.textInput]}
             placeholder={t('custom.sessionNamePlaceholder')}
             value={sessionName}
             onChangeText={setSessionName}
-            placeholderTextColor={theme.colors.text.tertiary}
+            placeholderTextColor={colors.text.tertiary}
           />
         </GradientCard>
 
         {/* Duration Selection */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('custom.duration')}</Text>
-          <Text style={styles.sectionDescription}>{t('custom.durationDescription')}</Text>
+        <GradientCard gradient={themeGradients.card.lightCard} style={styles.section}>
+          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.duration')}</Text>
+          <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>{t('custom.durationDescription')}</Text>
 
           <View style={styles.durationPresets}>
             {DURATION_PRESETS.map((minutes) => {
@@ -441,9 +484,9 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                 >
                   {isActive ? (
                     <LinearGradient
-                      colors={gradients.button.primary.colors}
-                      start={gradients.button.primary.start}
-                      end={gradients.button.primary.end}
+                      colors={themeGradients.button.success.colors}
+                      start={themeGradients.button.success.start}
+                      end={themeGradients.button.success.end}
                       style={styles.presetButton}
                     >
                       <Text style={styles.presetButtonTextActive}>
@@ -451,8 +494,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                       </Text>
                     </LinearGradient>
                   ) : (
-                    <View style={styles.presetButtonInactive}>
-                      <Text style={styles.presetButtonText}>
+                    <View style={[styles.presetButtonInactive, dynamicStyles.presetButtonInactive]}>
+                      <Text style={[styles.presetButtonText, dynamicStyles.presetButtonText]}>
                         {minutes} {t('custom.min')}
                       </Text>
                     </View>
@@ -463,28 +506,28 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           </View>
 
           <View style={styles.customDurationRow}>
-            <Text style={styles.label}>{t('custom.customDuration')}</Text>
+            <Text style={[styles.label, dynamicStyles.label]}>{t('custom.customDuration')}</Text>
             <TextInput
-              style={styles.durationInput}
+              style={[styles.durationInput, dynamicStyles.durationInput]}
               placeholder="0"
               value={customDuration}
               onChangeText={handleCustomDurationChange}
               keyboardType="number-pad"
               maxLength={3}
-              placeholderTextColor={theme.colors.text.tertiary}
+              placeholderTextColor={colors.text.tertiary}
             />
-            <Text style={styles.label}>{t('custom.min')}</Text>
+            <Text style={[styles.label, dynamicStyles.label]}>{t('custom.min')}</Text>
           </View>
 
-          <Text style={styles.currentValue}>
+          <Text style={[styles.currentValue, dynamicStyles.currentValue]}>
             {t('custom.selected')}: {durationMinutes} {t('custom.min')}
           </Text>
         </GradientCard>
 
         {/* Ambient Sound Selection */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('custom.ambientSound')}</Text>
-          <Text style={styles.sectionDescription}>{t('custom.ambientDescription')}</Text>
+        <GradientCard gradient={themeGradients.card.lightCard} style={styles.section}>
+          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.ambientSound')}</Text>
+          <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>{t('custom.ambientDescription')}</Text>
 
           <View style={styles.ambientGrid}>
             {ambientSoundOptions.map((option) => {
@@ -500,29 +543,30 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                   style={styles.ambientOptionContainer}
                 >
                   {isActive ? (
-                    <LinearGradient
-                      colors={gradients.card.blueCard.colors}
-                      start={gradients.card.blueCard.start}
-                      end={gradients.card.blueCard.end}
-                      style={styles.ambientOption}
-                    >
+                    <View style={[
+                      styles.ambientOptionActive,
+                      {
+                        backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+                        borderColor: colors.accent.mint[500],
+                      }
+                    ]}>
                       <Ionicons
                         name={option.icon}
                         size={32}
-                        color={theme.colors.neutral.white}
+                        color={colors.accent.mint[500]}
                       />
-                      <Text style={styles.ambientOptionTextActive}>
+                      <Text style={[styles.ambientOptionTextActive, { color: colors.accent.mint[600] }]}>
                         {option.label}
                       </Text>
-                    </LinearGradient>
+                    </View>
                   ) : (
-                    <View style={styles.ambientOptionInactive}>
+                    <View style={[styles.ambientOptionInactive, dynamicStyles.ambientOptionInactive]}>
                       <Ionicons
                         name={option.icon}
                         size={32}
-                        color={theme.colors.text.primary}
+                        color={dynamicStyles.ambientIconColor}
                       />
-                      <Text style={styles.ambientOptionText}>
+                      <Text style={[styles.ambientOptionText, dynamicStyles.ambientOptionText]}>
                         {option.label}
                       </Text>
                     </View>
@@ -534,11 +578,11 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
         </GradientCard>
 
         {/* Interval Bell */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
+        <GradientCard gradient={themeGradients.card.lightCard} style={styles.section}>
           <View style={styles.switchRow}>
             <View style={styles.switchLabel}>
-              <Text style={styles.sectionTitle}>{t('custom.intervalBell')}</Text>
-              <Text style={styles.sectionDescription}>
+              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.intervalBell')}</Text>
+              <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>
                 {t('custom.intervalBellDescription')}
               </Text>
             </View>
@@ -549,16 +593,16 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                 setIntervalBellEnabled(value);
               }}
               trackColor={{
-                false: theme.colors.neutral.gray[200],
-                true: theme.colors.accent.blue[500],
+                false: dynamicStyles.switchTrackColorFalse,
+                true: dynamicStyles.switchTrackColorTrue,
               }}
-              thumbColor={theme.colors.neutral.white}
+              thumbColor={colors.neutral.white}
             />
           </View>
 
           {intervalBellEnabled && (
-            <View style={styles.intervalOptions}>
-              <Text style={styles.label}>{t('custom.intervalEvery')}</Text>
+            <View style={[styles.intervalOptions, dynamicStyles.intervalOptionsContainer]}>
+              <Text style={[styles.label, dynamicStyles.label]}>{t('custom.intervalEvery')}</Text>
               <View style={styles.intervalPresets}>
                 {INTERVAL_PRESETS.map((minutes) => {
                   const isActive = intervalBellMinutes === minutes && !customInterval;
@@ -574,9 +618,9 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                     >
                       {isActive ? (
                         <LinearGradient
-                          colors={gradients.button.secondary.colors}
-                          start={gradients.button.secondary.start}
-                          end={gradients.button.secondary.end}
+                          colors={themeGradients.button.secondary.colors}
+                          start={themeGradients.button.secondary.start}
+                          end={themeGradients.button.secondary.end}
                           style={styles.smallPresetButton}
                         >
                           <Text style={styles.smallPresetButtonTextActive}>
@@ -584,8 +628,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                           </Text>
                         </LinearGradient>
                       ) : (
-                        <View style={styles.smallPresetButtonInactive}>
-                          <Text style={styles.smallPresetButtonText}>
+                        <View style={[styles.smallPresetButtonInactive, dynamicStyles.smallPresetButtonInactive]}>
+                          <Text style={[styles.smallPresetButtonText, dynamicStyles.smallPresetButtonText]}>
                             {minutes} {t('custom.min')}
                           </Text>
                         </View>
@@ -596,28 +640,28 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               </View>
 
               <View style={styles.customIntervalRow}>
-                <Text style={styles.label}>{t('custom.customInterval')}</Text>
+                <Text style={[styles.label, dynamicStyles.label]}>{t('custom.customInterval')}</Text>
                 <TextInput
-                  style={styles.durationInput}
+                  style={[styles.durationInput, dynamicStyles.durationInput]}
                   placeholder="0"
                   value={customInterval}
                   onChangeText={handleCustomIntervalChange}
                   keyboardType="number-pad"
                   maxLength={2}
-                  placeholderTextColor={theme.colors.text.tertiary}
+                  placeholderTextColor={colors.text.tertiary}
                 />
-                <Text style={styles.label}>{t('custom.min')}</Text>
+                <Text style={[styles.label, dynamicStyles.label]}>{t('custom.min')}</Text>
               </View>
             </View>
           )}
         </GradientCard>
 
         {/* Wake-up Chime */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
+        <GradientCard gradient={themeGradients.card.lightCard} style={styles.section}>
           <View style={styles.switchRow}>
             <View style={styles.switchLabel}>
-              <Text style={styles.sectionTitle}>{t('custom.wakeUpChime')}</Text>
-              <Text style={styles.sectionDescription}>
+              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.wakeUpChime')}</Text>
+              <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>
                 {t('custom.wakeUpChimeDescription')}
               </Text>
             </View>
@@ -628,10 +672,10 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                 setWakeUpChimeEnabled(value);
               }}
               trackColor={{
-                false: theme.colors.neutral.gray[200],
-                true: theme.colors.accent.blue[500],
+                false: dynamicStyles.switchTrackColorFalse,
+                true: dynamicStyles.switchTrackColorTrue,
               }}
-              thumbColor={theme.colors.neutral.white}
+              thumbColor={colors.neutral.white}
             />
           </View>
         </GradientCard>
@@ -667,7 +711,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
             <GradientButton
               title={t('custom.updateSession') || 'Update Session'}
               onPress={handleSaveSession}
-              gradient={gradients.button.primary}
+              gradient={themeGradients.button.success}
               style={styles.actionButton}
             />
           ) : (
@@ -676,13 +720,13 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               <GradientButton
                 title={t('custom.saveSession') || 'Save Session'}
                 onPress={handleSaveSession}
-                gradient={gradients.button.secondary}
+                gradient={themeGradients.button.secondary}
                 style={styles.actionButton}
               />
               <GradientButton
                 title={t('custom.saveAndStart') || 'Save & Start'}
                 onPress={handleSaveAndStart}
-                gradient={gradients.button.primary}
+                gradient={themeGradients.button.success}
                 style={styles.actionButton}
               />
             </>
@@ -691,7 +735,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
 
         {/* Quick Start Button (without saving) */}
         <Pressable onPress={handleStartSession} style={styles.quickStartButton}>
-          <Text style={styles.quickStartText}>
+          <Text style={[styles.quickStartText, dynamicStyles.quickStartText]}>
             {t('custom.startWithoutSaving') || 'Start without saving'}
           </Text>
         </Pressable>
@@ -818,7 +862,7 @@ const styles = StyleSheet.create({
   },
   currentValue: {
     fontSize: theme.typography.fontSizes.md,
-    color: theme.colors.accent.blue[600],
+    color: theme.colors.accent.mint[600],
     fontWeight: theme.typography.fontWeights.semiBold,
     textAlign: 'center',
     marginTop: theme.spacing.sm,
@@ -841,6 +885,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing.sm,
+  },
+  ambientOptionActive: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing.sm,
+    borderWidth: 2,
+    borderRadius: theme.borderRadius.xl,
   },
   ambientOptionInactive: {
     width: '100%',
@@ -962,40 +1015,43 @@ const styles = StyleSheet.create({
     paddingRight: theme.spacing.md,
   },
   savedSessionCard: {
-    borderRadius: theme.borderRadius.xl,
+    borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
-    ...theme.shadows.md,
+    width: 140,
+    ...theme.shadows.sm,
   },
   savedSessionGradient: {
-    width: 160,
-    height: 140,
     padding: theme.spacing.md,
+    minHeight: 100,
     justifyContent: 'space-between',
   },
-  savedSessionName: {
-    fontSize: theme.typography.fontSizes.md,
-    fontWeight: theme.typography.fontWeights.bold,
-    color: theme.colors.neutral.white,
+  savedSessionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     marginBottom: theme.spacing.xs,
   },
-  savedSessionMeta: {
-    gap: theme.spacing.xs,
+  savedSessionName: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: theme.typography.fontWeights.bold,
+    flex: 1,
+    marginRight: theme.spacing.xs,
   },
-  savedSessionMetaRow: {
+  savedSessionDescription: {
+    fontSize: theme.typography.fontSizes.xs,
+    marginBottom: theme.spacing.sm,
+  },
+  savedSessionStartBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing.xs,
+    alignSelf: 'flex-start',
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: theme.spacing.xxs,
+    borderRadius: theme.borderRadius.md,
+    gap: theme.spacing.xxs,
   },
-  savedSessionMetaText: {
+  savedSessionStartText: {
     fontSize: theme.typography.fontSizes.xs,
-    color: theme.colors.neutral.white,
-    opacity: 0.9,
-  },
-  savedSessionHint: {
-    fontSize: theme.typography.fontSizes.xs,
-    color: theme.colors.neutral.white,
-    opacity: 0.7,
-    fontStyle: 'italic',
-    marginTop: theme.spacing.xs,
+    fontWeight: theme.typography.fontWeights.semiBold,
   },
 });

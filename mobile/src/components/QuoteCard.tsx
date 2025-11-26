@@ -1,17 +1,16 @@
 import { logger } from '../utils/logger';
 import React from 'react';
-import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Quote } from '../services/api';
 import theme from '../theme';
 
 interface QuoteCardProps {
   quote: Quote;
+  isDark?: boolean;
 }
 
-export const QuoteCard: React.FC<QuoteCardProps> = ({ quote }) => {
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+export const QuoteCard: React.FC<QuoteCardProps> = ({ quote, isDark = false }) => {
   const { i18n } = useTranslation();
 
   const userLanguage = i18n.language;

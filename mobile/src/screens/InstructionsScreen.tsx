@@ -4,7 +4,7 @@ import { logger } from '../utils/logger';
  * Meditation techniques and session building guides
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import theme from '../theme';
+import theme, { getThemeColors, getThemeGradients } from '../theme';
 
 interface Technique {
   id: string;
@@ -113,39 +113,68 @@ const SESSION_GUIDES = [
 ];
 
 interface Props {
+  isDark?: boolean;
   navigation: any;
 }
 
-const InstructionsScreen: React.FC<Props> = ({ navigation }) => {
+const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => {
+  // Theme-aware colors and gradients
+  const colors = useMemo(() => getThemeColors(isDark), [isDark]);
+  const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
+
+  // Dynamic styles based on theme
+  const dynamicStyles = useMemo(() => ({
+    title: { color: colors.text.primary },
+    subtitle: { color: colors.text.secondary },
+    sectionTitle: { color: colors.text.primary },
+    card: {
+      backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+      shadowColor: isDark ? '#000' : '#000',
+      shadowOpacity: isDark ? 0.3 : 0.1,
+    },
+    cardTitle: { color: colors.accent.blue[600] },
+    cardDescription: { color: colors.text.secondary },
+    duration: { color: colors.text.tertiary },
+    stepNumber: {
+      backgroundColor: isDark ? colors.accent.blue[900] : colors.accent.blue[100],
+    },
+    stepNumberText: { color: colors.accent.blue[600] },
+    stepText: { color: colors.text.primary },
+    buildingIntro: { color: colors.text.secondary },
+    structureText: { color: colors.text.primary },
+  }), [colors, isDark]);
+
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={[theme.colors.neutral.white, theme.colors.neutral.offWhite]}
+        colors={themeGradients.screen.home.colors}
+        start={themeGradients.screen.home.start}
+        end={themeGradients.screen.home.end}
         style={styles.gradient}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.header}>
-            <Text style={styles.title}>Meditation Guides</Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.title, dynamicStyles.title]}>Meditation Guides</Text>
+            <Text style={[styles.subtitle, dynamicStyles.subtitle]}>
               Learn techniques and how to build your practice
             </Text>
           </View>
 
           {/* Techniques Section */}
-          <Text style={styles.sectionTitle}>Techniques</Text>
+          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>Techniques</Text>
           {MEDITATION_TECHNIQUES.map((technique) => (
-            <View key={technique.id} style={styles.card}>
-              <Text style={styles.cardTitle}>{technique.name}</Text>
-              <Text style={styles.cardDescription}>{technique.description}</Text>
-              <Text style={styles.duration}>Duration: {technique.duration}</Text>
+            <View key={technique.id} style={[styles.card, dynamicStyles.card]}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>{technique.name}</Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>{technique.description}</Text>
+              <Text style={[styles.duration, dynamicStyles.duration]}>Duration: {technique.duration}</Text>
 
               <View style={styles.stepsContainer}>
                 {technique.steps.map((step, index) => (
                   <View key={index} style={styles.stepRow}>
-                    <View style={styles.stepNumber}>
-                      <Text style={styles.stepNumberText}>{index + 1}</Text>
+                    <View style={[styles.stepNumber, dynamicStyles.stepNumber]}>
+                      <Text style={[styles.stepNumberText, dynamicStyles.stepNumberText]}>{index + 1}</Text>
                     </View>
-                    <Text style={styles.stepText}>{step}</Text>
+                    <Text style={[styles.stepText, dynamicStyles.stepText]}>{step}</Text>
                   </View>
                 ))}
               </View>
@@ -153,22 +182,22 @@ const InstructionsScreen: React.FC<Props> = ({ navigation }) => {
           ))}
 
           {/* Session Building Section */}
-          <Text style={[styles.sectionTitle, { marginTop: theme.spacing.xl }]}>
+          <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle, { marginTop: theme.spacing.xl }]}>
             How to Build a Session
           </Text>
-          <Text style={styles.buildingIntro}>
+          <Text style={[styles.buildingIntro, dynamicStyles.buildingIntro]}>
             Combine techniques to create a complete meditation session.
             Start with settling, move through a main technique, and end with integration.
           </Text>
 
           {SESSION_GUIDES.map((guide, index) => (
-            <View key={index} style={styles.card}>
-              <Text style={styles.cardTitle}>{guide.title}</Text>
-              <Text style={styles.cardDescription}>{guide.description}</Text>
+            <View key={index} style={[styles.card, dynamicStyles.card]}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>{guide.title}</Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>{guide.description}</Text>
 
               {guide.structure.map((item, idx) => (
                 <View key={idx} style={styles.structureItem}>
-                  <Text style={styles.structureText}>• {item}</Text>
+                  <Text style={[styles.structureText, dynamicStyles.structureText]}>• {item}</Text>
                 </View>
               ))}
             </View>

@@ -22,11 +22,12 @@ import { QuotesScreen } from './src/screens/QuotesScreen';
 import { SettingsScreen, THEME_STORAGE_KEY, ThemeMode } from './src/screens/SettingsScreen';
 import { CustomSessionBuilderScreen, CustomSessionConfig } from './src/screens/CustomSessionBuilderScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
+import InstructionsScreen from './src/screens/InstructionsScreen';
 import { MeditationSession } from './src/services/api';
 import { SplashScreen as CustomSplashScreen } from './src/components/SplashScreen';
 import { ensureStorageSchema } from './src/services/storage';
 
-type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile';
+type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile' | 'instructions';
 
 // Meditation session state for persistence across navigation
 export interface ActiveMeditationState {
@@ -171,22 +172,26 @@ export default function App() {
       case 'home':
         return (
           <HomeScreen
+            isDark={isDark}
             onNavigateToMeditation={() => setCurrentScreen('meditation')}
             onNavigateToQuotes={() => setCurrentScreen('quotes')}
             onNavigateToCustom={() => setCurrentScreen('custom')}
             onNavigateToProfile={() => setCurrentScreen('profile')}
+            onNavigateToInstructions={() => setCurrentScreen('instructions')}
           />
         );
       case 'meditation':
         return (
           <MeditationScreen
+            isDark={isDark}
             onEditSession={handleEditSession}
+            onNavigateToCustom={() => setCurrentScreen('custom')}
             activeMeditationState={activeMeditationState}
             onMeditationStateChange={setActiveMeditationState}
           />
         );
       case 'quotes':
-        return <QuotesScreen />;
+        return <QuotesScreen isDark={isDark} />;
       case 'settings':
         return (
           <SettingsScreen
@@ -197,10 +202,13 @@ export default function App() {
           />
         );
       case 'profile':
-        return <ProfileScreen onNavigateToCustom={() => setCurrentScreen('custom')} />;
+        return <ProfileScreen isDark={isDark} onNavigateToCustom={() => setCurrentScreen('custom')} />;
+      case 'instructions':
+        return <InstructionsScreen isDark={isDark} navigation={{ goBack: () => setCurrentScreen('home') }} />;
       case 'custom':
         return (
           <CustomSessionBuilderScreen
+            isDark={isDark}
             onStartSession={handleStartCustomSession}
             onBack={handleBackFromCustomBuilder}
             editSessionId={editSessionId}
@@ -335,7 +343,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   darkContainer: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: '#1C1C1E', // Consistent with darkBackgrounds.primary
   },
   mainContent: {
     flex: 1,
@@ -366,9 +374,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeButtonLight: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#3A3A3C', // Charcoal - minimal, professional
   },
   activeButtonDark: {
-    backgroundColor: '#0A84FF',
+    backgroundColor: '#48484A', // Lighter charcoal for dark mode
   },
 });

@@ -1,5 +1,5 @@
 import { logger } from '../utils/logger';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -12,6 +12,7 @@ interface FeatureTileProps {
   gradient: GradientDefinition;
   onPress: () => void;
   style?: ViewStyle;
+  isDark?: boolean;
 }
 
 export const FeatureTile: React.FC<FeatureTileProps> = ({
@@ -21,15 +22,36 @@ export const FeatureTile: React.FC<FeatureTileProps> = ({
   gradient,
   onPress,
   style,
+  isDark = false,
 }) => {
   const [pressed, setPressed] = React.useState(false);
+
+  // Dynamic shadow based on theme
+  const shadowStyle = useMemo(() => {
+    if (isDark) {
+      return {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.4,
+        shadowRadius: 10,
+        elevation: 6,
+      };
+    }
+    return {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.18,
+      shadowRadius: 20,
+      elevation: 10,
+    };
+  }, [isDark]);
 
   return (
     <Pressable
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       onPress={onPress}
-      style={[styles.container, style]}
+      style={[styles.container, shadowStyle, style]}
     >
       <LinearGradient
         colors={gradient.colors}
@@ -67,7 +89,6 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: theme.borderRadius.xl,
     overflow: 'hidden',
-    ...theme.shadows.lg,
   },
   gradient: {
     flexDirection: 'row',

@@ -1,6 +1,6 @@
 import { logger } from '../utils/logger';
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, StyleSheet, useColorScheme } from 'react-native';
+import React, { useEffect, useState, useMemo } from 'react';
+import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { QuoteCard } from '../components/QuoteCard';
@@ -8,15 +8,30 @@ import { GradientButton } from '../components/GradientButton';
 import { api, Quote } from '../services/api';
 import { getUniqueRandomQuote, markQuoteAsShown } from '../services/quoteHistory';
 import { GradientBackground } from '../components/GradientBackground';
-import theme, { gradients } from '../theme';
+import theme, { gradients, getThemeColors, getThemeGradients } from '../theme';
 
-export const QuotesScreen: React.FC = () => {
+interface QuotesScreenProps {
+  isDark?: boolean;
+}
+
+export const QuotesScreen: React.FC<QuotesScreenProps> = ({ isDark = false }) => {
   const { t, i18n } = useTranslation();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+
+  // Theme-aware colors and gradients
+  const colors = useMemo(() => getThemeColors(isDark), [isDark]);
+  const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
+
+  // Dynamic styles based on theme
+  const dynamicStyles = useMemo(() => ({
+    title: { color: colors.text.primary },
+    iconButton: {
+      backgroundColor: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.7)',
+    },
+    iconColor: colors.text.primary,
+  }), [colors, isDark]);
 
   useEffect(() => {
     loadQuotes();
@@ -78,13 +93,13 @@ export const QuotesScreen: React.FC = () => {
   };
 
   return (
-    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+    <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>
+        <Text style={[styles.title, dynamicStyles.title]}>
           {t('quotes.title')}
         </Text>
 
@@ -92,18 +107,19 @@ export const QuotesScreen: React.FC = () => {
           <View style={styles.loader}>
             <ActivityIndicator
               size="large"
-              color={isDark ? theme.colors.accent.blue[500] : theme.colors.accent.blue[600]}
+              color={colors.accent.blue[600]}
             />
           </View>
         ) : quotes.length > 0 ? (
           <>
-            <QuoteCard quote={quotes[currentIndex]} />
+            <QuoteCard quote={quotes[currentIndex]} isDark={isDark} />
 
             {/* Navigation - Compact Icon Buttons */}
             <View style={styles.navigation}>
               <TouchableOpacity
                 style={[
                   styles.iconButton,
+                  dynamicStyles.iconButton,
                   quotes.length <= 1 && styles.disabledButton
                 ]}
                 onPress={handlePrevious}
@@ -112,13 +128,13 @@ export const QuotesScreen: React.FC = () => {
                 <Ionicons
                   name="chevron-back"
                   size={24}
-                  color={theme.colors.text.primary}
+                  color={dynamicStyles.iconColor}
                 />
               </TouchableOpacity>
 
               <GradientButton
                 title={t('quotes.random')}
-                gradient={gradients.button.primary}
+                gradient={themeGradients.button.primary}
                 onPress={loadRandomQuote}
                 style={styles.randomButton}
                 size="md"
@@ -127,6 +143,7 @@ export const QuotesScreen: React.FC = () => {
               <TouchableOpacity
                 style={[
                   styles.iconButton,
+                  dynamicStyles.iconButton,
                   quotes.length <= 1 && styles.disabledButton
                 ]}
                 onPress={handleNext}
@@ -135,7 +152,7 @@ export const QuotesScreen: React.FC = () => {
                 <Ionicons
                   name="chevron-forward"
                   size={24}
-                  color={theme.colors.text.primary}
+                  color={dynamicStyles.iconColor}
                 />
               </TouchableOpacity>
             </View>

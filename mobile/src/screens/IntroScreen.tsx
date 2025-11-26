@@ -34,7 +34,7 @@ const slides: Slide[] = [
     textKey: 'onboarding.slide1.text',
     icon: 'flower-outline',
     gradient: {
-      colors: ['#667eea', '#764ba2'],
+      colors: [theme.colors.accent.blue[500], theme.colors.accent.purple[500]],
       start: { x: 0, y: 0 },
       end: { x: 1, y: 1 },
     },
@@ -45,7 +45,7 @@ const slides: Slide[] = [
     textKey: 'onboarding.slide2.text',
     icon: 'construct-outline',
     gradient: {
-      colors: ['#f093fb', '#f5576c'],
+      colors: [theme.colors.accent.rose[400], theme.colors.accent.rose[600]],
       start: { x: 0, y: 0 },
       end: { x: 1, y: 1 },
     },
@@ -56,7 +56,7 @@ const slides: Slide[] = [
     textKey: 'onboarding.slide3.text',
     icon: 'trending-up-outline',
     gradient: {
-      colors: ['#4facfe', '#00f2fe'],
+      colors: [theme.colors.accent.teal[400], theme.colors.accent.mint[400]],
       start: { x: 0, y: 0 },
       end: { x: 1, y: 1 },
     },

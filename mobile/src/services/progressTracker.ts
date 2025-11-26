@@ -16,6 +16,7 @@ export interface CompletedSession {
   durationSeconds: number;
   languageCode: string;
   mood?: 1 | 2 | 3 | 4 | 5; // Optional mood rating after session
+  notes?: string; // Optional session notes/reflections
 }
 
 export interface ProgressStats {
@@ -34,7 +35,8 @@ export const saveSessionCompletion = async (
   title: string,
   durationSeconds: number,
   languageCode: string,
-  mood?: 1 | 2 | 3 | 4 | 5
+  mood?: 1 | 2 | 3 | 4 | 5,
+  notes?: string
 ): Promise<void> => {
   try {
     const sessionsJson = await AsyncStorage.getItem(SESSIONS_KEY);
@@ -49,6 +51,7 @@ export const saveSessionCompletion = async (
       durationSeconds,
       languageCode,
       ...(mood !== undefined && { mood }), // Only add mood if provided
+      ...(notes && notes.trim() && { notes: notes.trim() }), // Only add notes if provided
     };
 
     sessions.push(newSession);

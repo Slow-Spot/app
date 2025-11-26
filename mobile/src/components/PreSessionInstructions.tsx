@@ -4,7 +4,7 @@ import { logger } from '../utils/logger';
 // Ultra-Modern Design Following CelebrationScreen Patterns
 // ══════════════════════════════════════════════════════════════
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable, Animated, TextInput, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -21,7 +21,7 @@ import { PreSessionInstruction, ChecklistItem } from '../types/instructions';
 import { GradientBackground } from './GradientBackground';
 import { GradientCard } from './GradientCard';
 import { GradientButton } from './GradientButton';
-import theme, { gradients } from '../theme';
+import theme, { gradients, getThemeColors, getThemeGradients } from '../theme';
 import { userPreferences } from '../services/userPreferences';
 
 // ══════════════════════════════════════════════════════════════
@@ -34,7 +34,7 @@ interface IconProps {
   color?: string;
 }
 
-const Icon: React.FC<IconProps> = ({ name, size = 24, color = theme.colors.accent.blue[600] }) => {
+const Icon: React.FC<IconProps> = ({ name, size = 24, color = theme.colors.accent.mint[600] }) => {
   const iconMap: Record<string, string> = {
     // Physical setup icons
     chair: 'chair',
@@ -72,14 +72,63 @@ interface PreSessionInstructionsProps {
   instruction: PreSessionInstruction;
   onComplete: (intention: string) => void;
   onSkip: () => void;
+  isDark?: boolean;
 }
 
 export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
   instruction,
   onComplete,
   onSkip,
+  isDark = false,
 }) => {
   const { t } = useTranslation();
+
+  // Theme-aware colors and gradients
+  const colors = useMemo(() => getThemeColors(isDark), [isDark]);
+  const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
+
+  // Dynamic styles based on theme - using mint accent for consistency with app
+  const dynamicStyles = useMemo(() => ({
+    title: { color: colors.text.primary },
+    subtitle: { color: colors.text.secondary },
+    cardTitle: { color: colors.text.primary },
+    cardDescription: { color: colors.text.secondary },
+    listBullet: { color: colors.accent.mint[600] },
+    listText: { color: colors.text.secondary },
+    skipButtonText: { color: colors.text.secondary },
+    inputLabel: { color: colors.text.secondary },
+    textInput: {
+      borderColor: isDark ? colors.neutral.charcoal[100] : theme.colors.border.default,
+      color: colors.text.primary,
+      backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+    },
+    timerText: { color: colors.accent.mint[600] },
+    breathingText: { color: colors.accent.mint[600] },
+    checklistTitle: { color: colors.text.primary },
+    checklistDescription: { color: colors.text.secondary },
+    optionalBadge: { color: colors.text.tertiary },
+    skipCheckboxContainer: {
+      backgroundColor: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.9)',
+    },
+    skipCheckboxTitle: { color: isDark ? colors.neutral.white : '#1a1a2e' },
+    skipCheckboxNote: { color: isDark ? colors.text.secondary : '#6b7280' },
+    // Card shadow for consistency with HomeScreen
+    cardShadow: isDark ? {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 6,
+    } : {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.1,
+      shadowRadius: 16,
+      elevation: 8,
+    },
+    cardBg: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+    iconColor: colors.accent.mint[500],
+  }), [colors, isDark]);
   const [currentStep, setCurrentStep] = useState<'overview' | 'setup' | 'breathing' | 'intention'>('overview');
   const [setupChecklist, setSetupChecklist] = useState<ChecklistItem[]>([]);
   const [breathingPrepComplete, setBreathingPrepComplete] = useState(false);
@@ -109,7 +158,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
 
   const handleContinueToSession = async () => {
     if (alwaysSkip) {
-      await userPreferences.set('skipInstructions', true);
+      await userPreferences.setSkipPreSessionInstructions(true);
     }
     onComplete(userIntention);
   };
@@ -128,19 +177,19 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
   };
 
   return (
-    <GradientBackground gradient={gradients.primary.subtleBlue} style={styles.container}>
+    <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>{t(`instructions.${instruction.id}.title`)}</Text>
-          <Text style={styles.subtitle}>{t(`instructions.${instruction.id}.subtitle`)}</Text>
+          <Text style={[styles.title, dynamicStyles.title]}>{t(`instructions.${instruction.id}.title`)}</Text>
+          <Text style={[styles.subtitle, dynamicStyles.subtitle]}>{t(`instructions.${instruction.id}.subtitle`)}</Text>
         </View>
 
         {/* Progress Indicator */}
-        <StepProgress currentStep={currentStep} t={t} />
+        <StepProgress currentStep={currentStep} t={t} isDark={isDark} />
 
         {/* Content based on current step */}
         {currentStep === 'overview' && (
@@ -150,6 +199,9 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
             onNext={() => setCurrentStep('setup')}
             onSkip={onSkip}
             t={t}
+            isDark={isDark}
+            themeGradients={themeGradients}
+            dynamicStyles={dynamicStyles}
           />
         )}
 
@@ -162,6 +214,9 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
             onNext={() => setCurrentStep(instruction.breathingPrep ? 'breathing' : 'intention')}
             canContinue={allRequiredComplete}
             t={t}
+            isDark={isDark}
+            themeGradients={themeGradients}
+            dynamicStyles={dynamicStyles}
           />
         )}
 
@@ -175,6 +230,9 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
             }}
             onSkip={() => setCurrentStep('intention')}
             t={t}
+            isDark={isDark}
+            themeGradients={themeGradients}
+            dynamicStyles={dynamicStyles}
           />
         )}
 
@@ -189,6 +247,9 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
             alwaysSkip={alwaysSkip}
             onToggleSkip={toggleAlwaysSkip}
             t={t}
+            isDark={isDark}
+            themeGradients={themeGradients}
+            dynamicStyles={dynamicStyles}
           />
         )}
       </ScrollView>
@@ -206,58 +267,73 @@ interface OverviewStepProps {
   onNext: () => void;
   onSkip: () => void;
   t: any;
+  isDark?: boolean;
+  themeGradients: any;
+  dynamicStyles: any;
 }
 
-const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, onNext, onSkip, t }) => {
+const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, onNext, onSkip, t, isDark, themeGradients, dynamicStyles }) => {
   return (
     <View style={styles.stepContainer}>
       {/* Time of Day Insight */}
-      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Icon name="sunrise" size={32} />
-          <Text style={styles.cardTitle}>{timeGreeting}</Text>
+      <GradientCard gradient={themeGradients.card.whiteCard} style={[styles.card, dynamicStyles.cardShadow]} isDark={isDark}>
+        <View style={styles.cardRow}>
+          <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)' }]}>
+            <Icon name="sunrise" size={24} />
+          </View>
+          <View style={styles.cardTextContainer}>
+            <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>{timeGreeting}</Text>
+            <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+              {t('instructions.preparation.greeting', {
+                technique: instruction.technique.replace('_', ' '),
+              }) || `You're about to practice ${instruction.technique.replace('_', ' ')}. Let's prepare mindfully.`}
+            </Text>
+          </View>
         </View>
-        <Text style={styles.cardDescription}>
-          {t('instructions.preparation.greeting', {
-            technique: instruction.technique.replace('_', ' '),
-          }) || `You're about to practice ${instruction.technique.replace('_', ' ')}. Let's prepare mindfully.`}
-        </Text>
       </GradientCard>
 
       {/* Mental Preparation */}
-      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Icon name="target" size={32} />
-          <Text style={styles.cardTitle}>
-            {t('instructions.preparation.focusToday') || 'Your Focus Today'}
-          </Text>
+      <GradientCard gradient={themeGradients.card.whiteCard} style={[styles.card, dynamicStyles.cardShadow]} isDark={isDark}>
+        <View style={styles.cardRow}>
+          <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)' }]}>
+            <Icon name="target" size={24} />
+          </View>
+          <View style={styles.cardTextContainer}>
+            <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+              {t('instructions.preparation.focusToday') || 'Your Focus Today'}
+            </Text>
+            <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+              {t(`instructions.${instruction.id}.intention`)}
+            </Text>
+          </View>
         </View>
-        <Text style={styles.cardDescription}>
-          {t(`instructions.${instruction.id}.intention`)}
-        </Text>
       </GradientCard>
 
       {/* Common Challenges */}
-      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Icon name="lightbulb" size={32} />
-          <Text style={styles.cardTitle}>
-            {t('instructions.preparation.remember') || 'Remember'}
-          </Text>
+      <GradientCard gradient={themeGradients.card.whiteCard} style={[styles.card, dynamicStyles.cardShadow]} isDark={isDark}>
+        <View style={styles.cardRow}>
+          <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)' }]}>
+            <Icon name="lightbulb" size={24} />
+          </View>
+          <View style={styles.cardTextContainer}>
+            <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+              {t('instructions.preparation.remember') || 'Remember'}
+            </Text>
+            <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+              {t('instructions.preparation.reminders') || 'Some reminders to keep in mind:'}
+            </Text>
+            {[1, 2, 3].map((num) => {
+              const challengeText = t(`instructions.${instruction.id}.challenges.${num}`, { defaultValue: '' });
+              if (!challengeText) return null;
+              return (
+                <View key={num} style={styles.listItem}>
+                  <Text style={[styles.listBullet, dynamicStyles.listBullet]}>•</Text>
+                  <Text style={[styles.listText, dynamicStyles.listText]}>{challengeText}</Text>
+                </View>
+              );
+            })}
+          </View>
         </View>
-        <Text style={styles.cardDescription}>
-          {t('instructions.preparation.reminders') || 'Some reminders to keep in mind:'}
-        </Text>
-        {[1, 2, 3].map((num) => {
-          const challengeText = t(`instructions.${instruction.id}.challenges.${num}`, { defaultValue: '' });
-          if (!challengeText) return null;
-          return (
-            <View key={num} style={styles.listItem}>
-              <Text style={styles.listBullet}>•</Text>
-              <Text style={styles.listText}>{challengeText}</Text>
-            </View>
-          );
-        })}
       </GradientCard>
 
       {/* Actions */}
@@ -265,11 +341,11 @@ const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, 
         <GradientButton
           title={t('instructions.preparation.prepareMySpace') || 'Prepare My Space'}
           onPress={onNext}
-          gradient={gradients.button.primary}
+          gradient={themeGradients.button.success}
           style={styles.primaryButton}
         />
         <Pressable onPress={onSkip} style={styles.skipButton}>
-          <Text style={styles.skipButtonText}>
+          <Text style={[styles.skipButtonText, dynamicStyles.skipButtonText]}>
             {t('instructions.preparation.skip') || 'Skip'}
           </Text>
         </Pressable>
@@ -290,6 +366,9 @@ interface PhysicalSetupStepProps {
   onNext: () => void;
   canContinue: boolean;
   t: any;
+  isDark?: boolean;
+  themeGradients: any;
+  dynamicStyles: any;
 }
 
 const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
@@ -300,19 +379,26 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
   onNext,
   canContinue,
   t,
+  isDark,
+  themeGradients,
+  dynamicStyles,
 }) => {
   return (
     <View style={styles.stepContainer}>
-      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Icon name="clipboard" size={32} />
-          <Text style={styles.cardTitle}>
-            {t('instructions.preparation.physicalSetup') || 'Physical Setup'}
-          </Text>
+      <GradientCard gradient={themeGradients.card.whiteCard} style={[styles.card, dynamicStyles.cardShadow]} isDark={isDark}>
+        <View style={styles.cardRow}>
+          <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)' }]}>
+            <Icon name="clipboard" size={24} />
+          </View>
+          <View style={styles.cardTextContainer}>
+            <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+              {t('instructions.preparation.physicalSetup') || 'Physical Setup'}
+            </Text>
+            <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+              {t('instructions.preparation.checkOffItems') || 'Check off each item as you set up your meditation space:'}
+            </Text>
+          </View>
         </View>
-        <Text style={styles.cardDescription}>
-          {t('instructions.preparation.checkOffItems') || 'Check off each item as you set up your meditation space:'}
-        </Text>
       </GradientCard>
 
       {setup.map((step) => {
@@ -334,6 +420,9 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
             isCompleted={isCompleted}
             onToggle={() => onToggle(step.order.toString())}
             t={t}
+            isDark={isDark}
+            themeGradients={themeGradients}
+            dynamicStyles={dynamicStyles}
           />
         );
       })}
@@ -345,7 +434,7 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
             : t('instructions.preparation.completeRequired') || 'Complete Required Steps'
         }
         onPress={onNext}
-        gradient={canContinue ? gradients.button.primary : gradients.button.disabled}
+        gradient={canContinue ? themeGradients.button.success : themeGradients.button.disabled}
         style={styles.primaryButton}
         disabled={!canContinue}
       />
@@ -363,6 +452,9 @@ interface BreathingPrepStepProps {
   onComplete: () => void;
   onSkip: () => void;
   t: any;
+  isDark?: boolean;
+  themeGradients: any;
+  dynamicStyles: any;
 }
 
 const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
@@ -371,6 +463,9 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
   onComplete,
   onSkip,
   t,
+  isDark,
+  themeGradients,
+  dynamicStyles,
 }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(breathingPrep.duration);
@@ -407,14 +502,18 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
 
   return (
     <View style={styles.stepContainer}>
-      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Icon name="wind" size={32} />
-          <Text style={styles.cardTitle}>
-            {t('instructions.preparation.breathingExercise') || 'Quick Breathing Exercise'}
-          </Text>
+      <GradientCard gradient={themeGradients.card.whiteCard} style={[styles.card, dynamicStyles.cardShadow]} isDark={isDark}>
+        <View style={styles.cardRow}>
+          <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)' }]}>
+            <Icon name="wind" size={24} />
+          </View>
+          <View style={styles.cardTextContainer}>
+            <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+              {t('instructions.preparation.breathingExercise') || 'Quick Breathing Exercise'}
+            </Text>
+            <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>{t(`instructions.${instructionId}.breathingPrep.instruction`)}</Text>
+          </View>
         </View>
-        <Text style={styles.cardDescription}>{t(`instructions.${instructionId}.breathingPrep.instruction`)}</Text>
       </GradientCard>
 
       {/* Animated Breathing Circle */}
@@ -422,11 +521,13 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
         isRunning={isRunning}
         pattern={breathingPrep.pattern}
         t={t}
+        isDark={isDark}
+        dynamicStyles={dynamicStyles}
       />
 
       {/* Timer */}
       {isRunning && (
-        <Text style={styles.timerText}>
+        <Text style={[styles.timerText, dynamicStyles.timerText]}>
           {Math.floor(timeRemaining / 60)}:{(timeRemaining % 60).toString().padStart(2, '0')}
         </Text>
       )}
@@ -437,18 +538,18 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
           <GradientButton
             title={t('instructions.preparation.startBreathing') || 'Start Breathing Prep'}
             onPress={handleStart}
-            gradient={gradients.button.primary}
+            gradient={themeGradients.button.success}
             style={styles.primaryButton}
           />
           <Pressable onPress={onSkip} style={styles.skipButton}>
-            <Text style={styles.skipButtonText}>
+            <Text style={[styles.skipButtonText, dynamicStyles.skipButtonText]}>
               {t('instructions.preparation.skip') || 'Skip'}
             </Text>
           </Pressable>
         </View>
       ) : (
         <Pressable onPress={onComplete} style={styles.skipButton}>
-          <Text style={styles.skipButtonText}>
+          <Text style={[styles.skipButtonText, dynamicStyles.skipButtonText]}>
             {t('instructions.preparation.finishEarly') || 'Finish Early'}
           </Text>
         </Pressable>
@@ -471,6 +572,9 @@ interface IntentionStepProps {
   alwaysSkip: boolean;
   onToggleSkip: () => void;
   t: any;
+  isDark?: boolean;
+  themeGradients: any;
+  dynamicStyles: any;
 }
 
 const IntentionStep: React.FC<IntentionStepProps> = ({
@@ -483,28 +587,35 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
   alwaysSkip,
   onToggleSkip,
   t,
+  isDark,
+  themeGradients,
+  dynamicStyles,
 }) => {
   return (
     <View style={styles.stepContainer}>
-      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Icon name="target" size={32} />
-          <Text style={styles.cardTitle}>
-            {t('instructions.preparation.setIntention') || 'Set Your Intention'}
-          </Text>
+      <GradientCard gradient={themeGradients.card.whiteCard} style={[styles.card, dynamicStyles.cardShadow]} isDark={isDark}>
+        <View style={styles.cardRow}>
+          <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)' }]}>
+            <Icon name="target" size={24} />
+          </View>
+          <View style={styles.cardTextContainer}>
+            <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+              {t('instructions.preparation.setIntention') || 'Set Your Intention'}
+            </Text>
+            <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+              {t('instructions.preparation.intentionPrompt') || 'What would you like to cultivate in this session?'}
+            </Text>
+          </View>
         </View>
-        <Text style={styles.cardDescription}>
-          {t('instructions.preparation.intentionPrompt') || 'What would you like to cultivate in this session?'}
-        </Text>
       </GradientCard>
 
       {/* Intention Input */}
-      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
-        <Text style={styles.inputLabel}>
+      <GradientCard gradient={themeGradients.card.whiteCard} style={[styles.card, dynamicStyles.cardShadow]} isDark={isDark}>
+        <Text style={[styles.inputLabel, dynamicStyles.inputLabel]}>
           {t('instructions.preparation.yourIntention') || 'Your Intention (Optional)'}
         </Text>
         <TextInput
-          style={styles.textInput}
+          style={[styles.textInput, dynamicStyles.textInput]}
           placeholder={t('instructions.preparation.intentionPlaceholder') || 'e.g., "Stay present with my breath"'}
           placeholderTextColor={theme.colors.text.tertiary}
           value={intention}
@@ -514,50 +625,53 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
       </GradientCard>
 
       {/* Session Tips */}
-      <GradientCard gradient={gradients.card.whiteCard} style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Icon name="sparkles" size={32} />
-          <Text style={styles.cardTitle}>
-            {t('instructions.preparation.duringSession') || 'During Your Session'}
-          </Text>
+      <GradientCard gradient={themeGradients.card.whiteCard} style={[styles.card, dynamicStyles.cardShadow]} isDark={isDark}>
+        <View style={styles.cardRow}>
+          <View style={[styles.iconBox, { backgroundColor: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)' }]}>
+            <Icon name="sparkles" size={24} />
+          </View>
+          <View style={styles.cardTextContainer}>
+            <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+              {t('instructions.preparation.duringSession') || 'During Your Session'}
+            </Text>
+            <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+              {t('instructions.preparation.keepInMind') || 'Keep these tips in mind:'}
+            </Text>
+            {[1, 2, 3, 4].map((num) => {
+              const tipText = t(`instructions.${instructionId}.sessionTips.${num}`, { defaultValue: '' });
+              if (!tipText) return null;
+              return (
+                <View key={num} style={styles.listItem}>
+                  <Text style={[styles.listBullet, dynamicStyles.listBullet]}>•</Text>
+                  <Text style={[styles.listText, dynamicStyles.listText]}>{tipText}</Text>
+                </View>
+              );
+            })}
+          </View>
         </View>
-        <Text style={styles.cardDescription}>
-          {t('instructions.preparation.keepInMind') || 'Keep these tips in mind:'}
-        </Text>
-        {[1, 2, 3, 4].map((num) => {
-          const tipText = t(`instructions.${instructionId}.sessionTips.${num}`, { defaultValue: '' });
-          if (!tipText) return null;
-          return (
-            <View key={num} style={styles.listItem}>
-              <Text style={styles.listBullet}>•</Text>
-              <Text style={styles.listText}>{tipText}</Text>
-            </View>
-          );
-        })}
       </GradientCard>
 
       {/* Skip Instructions Checkbox */}
       <TouchableOpacity
         onPress={onToggleSkip}
-        style={{
-          backgroundColor: 'rgba(255,255,255,0.9)',
+        style={[{
           padding: 16,
           borderRadius: 12,
           flexDirection: 'row',
           alignItems: 'center',
-        }}
+        }, dynamicStyles.skipCheckboxContainer]}
       >
         <Ionicons
           name={alwaysSkip ? 'checkbox' : 'square-outline'}
           size={24}
-          color="#667eea"
+          color={theme.colors.accent.mint[500]}
           style={{ marginRight: 12 }}
         />
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: '#1a1a2e' }}>
+          <Text style={[{ fontSize: 14, fontWeight: '600' }, dynamicStyles.skipCheckboxTitle]}>
             {t('instructions.preparation.alwaysSkipInstructions')}
           </Text>
-          <Text style={{ fontSize: 12, color: '#6b7280', marginTop: 4 }}>
+          <Text style={[{ fontSize: 12, marginTop: 4 }, dynamicStyles.skipCheckboxNote]}>
             {t('instructions.preparation.skipInstructionsNote')}
           </Text>
         </View>
@@ -567,7 +681,7 @@ const IntentionStep: React.FC<IntentionStepProps> = ({
       <GradientButton
         title={t('instructions.preparation.beginMeditation') || 'Begin Meditation'}
         onPress={onBegin}
-        gradient={gradients.button.primary}
+        gradient={themeGradients.button.success}
         style={[styles.primaryButton, styles.beginButton]}
       />
     </View>
@@ -586,36 +700,46 @@ const ChecklistItemCard: React.FC<{
   isCompleted: boolean;
   onToggle: () => void;
   t: any;
-}> = ({ icon, title, description, isOptional, isCompleted, onToggle, t }) => {
+  isDark?: boolean;
+  themeGradients: any;
+  dynamicStyles: any;
+}> = ({ icon, title, description, isOptional, isCompleted, onToggle, t, isDark, themeGradients, dynamicStyles }) => {
   return (
     <Pressable onPress={onToggle}>
       <GradientCard
-        gradient={isCompleted ? gradients.card.blueCard : gradients.card.whiteCard}
-        style={[styles.checklistCard, isCompleted && styles.checklistCardCompleted]}
+        gradient={themeGradients.card.whiteCard}
+        style={[styles.checklistCard, dynamicStyles.cardShadow, isCompleted && styles.checklistCardCompleted]}
+        isDark={isDark}
       >
-        <View style={styles.checklistContent}>
-          <View style={styles.checklistLeft}>
-            <Icon name={icon} size={24} color={isCompleted ? theme.colors.neutral.white : theme.colors.accent.blue[600]} />
-            <View style={styles.checklistText}>
-              <View style={styles.checklistTitleRow}>
-                <Text style={[styles.checklistTitle, isCompleted && styles.checklistTitleCompleted]}>
-                  {title}
-                </Text>
-                {isOptional && (
-                  <Text style={[styles.optionalBadge, isCompleted && styles.optionalBadgeCompleted]}>
-                    {t('instructions.preparation.optional') || '(optional)'}
-                  </Text>
-                )}
-              </View>
-              <Text style={[styles.checklistDescription, isCompleted && styles.checklistDescriptionCompleted]}>
-                {description}
+        <View style={styles.cardRow}>
+          <View style={[
+            styles.iconBox,
+            { backgroundColor: isCompleted
+              ? theme.colors.accent.mint[500]
+              : (isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)')
+            }
+          ]}>
+            <Icon name={icon} size={22} color={isCompleted ? theme.colors.neutral.white : theme.colors.accent.mint[600]} />
+          </View>
+          <View style={styles.cardTextContainer}>
+            <View style={styles.checklistTitleRow}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {title}
               </Text>
+              {isOptional && (
+                <Text style={[styles.optionalBadge, dynamicStyles.optionalBadge]}>
+                  {t('instructions.preparation.optional') || '(opcjonalne)'}
+                </Text>
+              )}
             </View>
+            <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+              {description}
+            </Text>
           </View>
           <Ionicons
             name={isCompleted ? 'checkmark-circle' : 'ellipse-outline'}
             size={28}
-            color={isCompleted ? theme.colors.neutral.white : theme.colors.accent.blue[400]}
+            color={isCompleted ? theme.colors.accent.mint[500] : theme.colors.accent.mint[400]}
           />
         </View>
       </GradientCard>
@@ -627,7 +751,9 @@ const AnimatedBreathingCircle: React.FC<{
   isRunning: boolean;
   pattern: 'box' | '4-7-8' | 'equal' | 'calm';
   t: any;
-}> = ({ isRunning, pattern, t }) => {
+  isDark?: boolean;
+  dynamicStyles: any;
+}> = ({ isRunning, pattern, t, isDark, dynamicStyles }) => {
   const scale = useSharedValue(1);
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'rest'>('inhale');
 
@@ -721,7 +847,7 @@ const AnimatedBreathingCircle: React.FC<{
         <View style={styles.breathingCircle} />
       </Reanimated.View>
       {isRunning && (
-        <Text style={styles.breathingText}>
+        <Text style={[styles.breathingText, dynamicStyles.breathingText]}>
           {getPhaseText()}
         </Text>
       )}
@@ -729,7 +855,7 @@ const AnimatedBreathingCircle: React.FC<{
   );
 };
 
-const StepProgress: React.FC<{ currentStep: string; t: any }> = ({ currentStep, t }) => {
+const StepProgress: React.FC<{ currentStep: string; t: any; isDark?: boolean }> = ({ currentStep, t, isDark }) => {
   const steps = ['overview', 'setup', 'breathing', 'intention'];
   const currentIndex = steps.indexOf(currentStep);
 
@@ -792,15 +918,30 @@ const styles = StyleSheet.create({
     fontWeight: theme.typography.fontWeights.medium,
   },
   stepContainer: {
-    gap: theme.spacing.md,
+    gap: theme.spacing.sm,
   },
   card: {
-    padding: theme.spacing.lg,
+    // padding handled by GradientCard
+  },
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+  },
+  iconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardTextContainer: {
+    flex: 1,
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
     gap: theme.spacing.sm,
   },
   iconLarge: {
@@ -810,15 +951,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   cardTitle: {
-    fontSize: theme.typography.fontSizes.xl,
-    fontWeight: theme.typography.fontWeights.semiBold,
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: '600',
     color: theme.colors.text.primary,
-    flex: 1,
+    marginBottom: 2,
   },
   cardDescription: {
-    fontSize: theme.typography.fontSizes.md,
+    fontSize: theme.typography.fontSizes.xs,
     color: theme.colors.text.secondary,
-    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.md,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.xs,
   },
   listItem: {
     flexDirection: 'row',
@@ -826,7 +967,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.xs,
   },
   listBullet: {
-    color: theme.colors.accent.blue[600],
+    color: theme.colors.accent.mint[600],
     fontWeight: theme.typography.fontWeights.semiBold,
     fontSize: theme.typography.fontSizes.md,
   },
@@ -861,7 +1002,7 @@ const styles = StyleSheet.create({
   },
   checklistCardCompleted: {
     borderWidth: 2,
-    borderColor: theme.colors.accent.blue[500],
+    borderColor: theme.colors.accent.mint[500],
   },
   checklistContent: {
     flexDirection: 'row',
@@ -938,20 +1079,20 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 70,
-    backgroundColor: `${theme.colors.accent.blue[500]}30`,
+    backgroundColor: `${theme.colors.accent.mint[500]}30`,
     borderWidth: 3,
-    borderColor: theme.colors.accent.blue[500],
+    borderColor: theme.colors.accent.mint[500],
   },
   breathingText: {
     position: 'absolute',
     fontSize: theme.typography.fontSizes.lg,
     fontWeight: theme.typography.fontWeights.semiBold,
-    color: theme.colors.accent.blue[600],
+    color: theme.colors.accent.mint[600],
   },
   timerText: {
     fontSize: 48,
     fontWeight: theme.typography.fontWeights.bold,
-    color: theme.colors.accent.blue[600],
+    color: theme.colors.accent.mint[600],
     marginVertical: theme.spacing.md,
     textAlign: 'center',
   },
@@ -969,7 +1110,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.neutral.gray[300],
   },
   progressDotActive: {
-    backgroundColor: theme.colors.accent.blue[500],
+    backgroundColor: theme.colors.accent.mint[500],
   },
   progressLine: {
     flex: 1,
@@ -978,6 +1119,6 @@ const styles = StyleSheet.create({
     marginHorizontal: theme.spacing.xxs,
   },
   progressLineActive: {
-    backgroundColor: theme.colors.accent.blue[500],
+    backgroundColor: theme.colors.accent.mint[500],
   },
 });

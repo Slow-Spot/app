@@ -5,7 +5,7 @@
  * Designed to create a peaceful, clean, and modern aesthetic.
  */
 
-import { neutralColors, accentColors } from './colors';
+import { neutralColors, accentColors, darkBackgrounds } from './colors';
 
 export interface GradientDefinition {
   colors: string[];
@@ -85,9 +85,15 @@ export const cardGradients = {
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
-  // Mint card
+  // Mint card (light)
   mintCard: {
     colors: [accentColors.mint[100], accentColors.mint[200]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Mint card strong (vivid) - for active states and session cards
+  mintCardStrong: {
+    colors: [accentColors.mint[400], accentColors.mint[500]],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
@@ -97,33 +103,33 @@ export const cardGradients = {
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
-  // Beginner session card
+  // Beginner session card - more visible gradient
   beginner: {
-    colors: [accentColors.blue[100], neutralColors.offWhite],
+    colors: [accentColors.blue[200], accentColors.blue[100]],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
   // Intermediate session card
   intermediate: {
-    colors: [accentColors.lavender[100], neutralColors.offWhite],
+    colors: [accentColors.lavender[200], accentColors.lavender[100]],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
   // Advanced session card
   advanced: {
-    colors: [accentColors.mint[100], neutralColors.offWhite],
+    colors: [accentColors.mint[200], accentColors.mint[100]],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
   // Expert session card
   expert: {
-    colors: [accentColors.blue[200], accentColors.lavender[200]],
+    colors: [accentColors.blue[300], accentColors.lavender[200]],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
   // Master session card
   master: {
-    colors: [accentColors.lavender[200], accentColors.mint[200]],
+    colors: [accentColors.lavender[300], accentColors.mint[200]],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
@@ -327,7 +333,297 @@ export const getGradientForLevel = (level: string): GradientDefinition => {
   return levelGradients[level.toLowerCase()] || cardGradients.beginner;
 };
 
-// Export all gradients
+// ============================================
+// DARK MODE GRADIENTS
+// ============================================
+// Professional dark theme gradients using dark surfaces with subtle color tints
+
+/**
+ * Dark mode primary gradients - Main app backgrounds
+ */
+export const darkPrimaryGradients = {
+  // Clean dark gradient (default)
+  clean: {
+    colors: [darkBackgrounds.primary, darkBackgrounds.secondary],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+  // Soft gray gradient
+  softGray: {
+    colors: [darkBackgrounds.secondary, darkBackgrounds.tertiary],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+  // Subtle blue gradient - dark tinted
+  subtleBlue: {
+    colors: ['#1A2633', darkBackgrounds.primary],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+  // Soft lavender gradient - dark tinted
+  softLavender: {
+    colors: ['#1F1A2E', darkBackgrounds.primary],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+  // Calm mint gradient - dark tinted
+  calmMint: {
+    colors: ['#1A2926', darkBackgrounds.primary],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+};
+
+/**
+ * Dark mode card gradients
+ */
+export const darkCardGradients = {
+  // Dark card
+  whiteCard: {
+    colors: [darkBackgrounds.card, darkBackgrounds.card],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Light card
+  lightCard: {
+    colors: [darkBackgrounds.card, darkBackgrounds.secondary],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Blue card - subtle blue tint
+  blueCard: {
+    colors: ['#1A3A5F', '#1E4470'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Purple card
+  purpleCard: {
+    colors: ['#2D2547', '#382E54'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Lavender card
+  lavenderCard: {
+    colors: ['#252040', '#2A2545'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Mint card
+  mintCard: {
+    colors: ['#1E3D35', '#234540'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Mint card strong (vivid) - for active states and session cards
+  mintCardStrong: {
+    colors: [accentColors.mint[500], accentColors.mint[600]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Rose card
+  roseCard: {
+    colors: ['#3D1E2A', '#452330'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Beginner session card
+  beginner: {
+    colors: ['#1A3A5F', darkBackgrounds.secondary],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Intermediate session card
+  intermediate: {
+    colors: ['#2D2547', darkBackgrounds.secondary],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Advanced session card
+  advanced: {
+    colors: ['#1E3D35', darkBackgrounds.secondary],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Expert session card
+  expert: {
+    colors: ['#1A3A5F', '#2D2547'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Master session card
+  master: {
+    colors: ['#2D2547', '#1E3D35'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+};
+
+/**
+ * Dark mode screen gradients
+ */
+export const darkScreenGradients = {
+  // Home screen background
+  home: {
+    colors: [darkBackgrounds.primary, darkBackgrounds.secondary],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+  // Meditation timer background
+  timer: {
+    colors: ['#1A3A5F', '#1E4470'],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+  // Preparation screen
+  preparation: {
+    colors: ['#2D2547', '#382E54'],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+  // Celebration screen
+  celebration: {
+    colors: ['#3D1E2A', '#452330'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Quotes screen
+  quotes: {
+    colors: ['#1E3D35', '#234540'],
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 1 },
+  },
+};
+
+/**
+ * Dark mode button gradients
+ */
+export const darkButtonGradients = {
+  // Primary CTA button
+  primary: {
+    colors: [accentColors.blue[400], accentColors.blue[500]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+  // Secondary button
+  secondary: {
+    colors: [accentColors.lavender[400], accentColors.lavender[500]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+  // Success button
+  success: {
+    colors: [accentColors.mint[400], accentColors.mint[500]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+  // Accent button
+  accent: {
+    colors: [accentColors.rose[400], accentColors.rose[500]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+  // Subtle button
+  subtle: {
+    colors: [darkBackgrounds.tertiary, neutralColors.gray[700]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+  // Disabled button
+  disabled: {
+    colors: [neutralColors.gray[800], neutralColors.gray[700]],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+};
+
+/**
+ * Dark mode shimmer gradients
+ */
+export const darkShimmerGradients = {
+  light: {
+    colors: [
+      'rgba(255, 255, 255, 0)',
+      'rgba(255, 255, 255, 0.1)',
+      'rgba(255, 255, 255, 0)',
+    ],
+    locations: [0, 0.5, 1],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+  subtle: {
+    colors: [
+      darkBackgrounds.secondary,
+      darkBackgrounds.tertiary,
+      darkBackgrounds.secondary,
+    ],
+    locations: [0, 0.5, 1],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+  blue: {
+    colors: [
+      '#1A3A5F',
+      '#1E4470',
+      '#1A3A5F',
+    ],
+    locations: [0, 0.5, 1],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+  },
+};
+
+/**
+ * Dark mode session gradients
+ */
+export const darkSessionGradients = {
+  // Streak counter
+  streak: {
+    colors: ['#5D2E3D', '#6E3548'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Duration counter
+  duration: {
+    colors: ['#3D3560', '#4A4070'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+  // Sessions completed
+  completions: {
+    colors: ['#2E5D4D', '#386E5A'],
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 1 },
+  },
+};
+
+/**
+ * Combined dark mode gradients
+ */
+export const darkGradients = {
+  primary: darkPrimaryGradients,
+  card: darkCardGradients,
+  screen: darkScreenGradients,
+  button: darkButtonGradients,
+  overlay: overlayGradients, // Same overlays work for both modes
+  shimmer: darkShimmerGradients,
+  session: darkSessionGradients,
+  getGradientForLevel: (level: string): GradientDefinition => {
+    const levelGradients: Record<string, GradientDefinition> = {
+      beginner: darkCardGradients.beginner,
+      intermediate: darkCardGradients.intermediate,
+      advanced: darkCardGradients.advanced,
+      expert: darkCardGradients.expert,
+      master: darkCardGradients.master,
+    };
+    return levelGradients[level.toLowerCase()] || darkCardGradients.beginner;
+  },
+};
+
+// ============================================
+// LIGHT MODE GRADIENTS (default)
+// ============================================
+
+// Export all gradients (light mode)
 export const gradients = {
   primary: primaryGradients,
   card: cardGradients,
@@ -338,5 +634,8 @@ export const gradients = {
   session: sessionGradients,
   getGradientForLevel,
 };
+
+// Helper function to get gradients based on theme
+export const getThemeGradients = (isDark: boolean) => isDark ? darkGradients : gradients;
 
 export default gradients;

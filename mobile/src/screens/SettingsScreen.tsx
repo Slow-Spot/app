@@ -1,5 +1,12 @@
+/**
+ * SettingsScreen
+ *
+ * Beautiful settings screen with consistent app styling.
+ * Uses white cards with icon boxes and mint accents.
+ */
+
 import { logger } from '../utils/logger';
-import React from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ScrollView,
@@ -9,16 +16,18 @@ import {
   StyleSheet,
   Share,
   Alert,
+  Switch,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
-import theme, { gradients } from '../theme';
+import theme, { getThemeColors, getThemeGradients } from '../theme';
 import { exportAllData, clearAllData } from '../services/storage';
 import { clearAllCustomSessions } from '../services/customSessionStorage';
 import { clearProgress } from '../services/progressTracker';
 import { clearAllQuoteHistory } from '../services/quoteHistory';
+import { userPreferences } from '../services/userPreferences';
 
 export const LANGUAGE_STORAGE_KEY = 'user_language_preference';
 export const THEME_STORAGE_KEY = 'user_theme_preference';
@@ -26,12 +35,18 @@ export const THEME_STORAGE_KEY = 'user_theme_preference';
 export type ThemeMode = 'light' | 'dark' | 'system';
 
 const LANGUAGES = [
-  { code: 'en', name: 'English' },
-  { code: 'pl', name: 'Polski' },
-  { code: 'es', name: 'Español' },
-  { code: 'de', name: 'Deutsch' },
-  { code: 'fr', name: 'Français' },
-  { code: 'hi', name: 'हिन्दी' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'pl', name: 'Polski', flag: '🇵🇱' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+];
+
+const THEME_OPTIONS = [
+  { mode: 'light' as ThemeMode, icon: 'sunny' as const, labelKey: 'settings.light' },
+  { mode: 'dark' as ThemeMode, icon: 'moon' as const, labelKey: 'settings.dark' },
+  { mode: 'system' as ThemeMode, icon: 'phone-portrait' as const, labelKey: 'settings.system' },
 ];
 
 interface SettingsScreenProps {
@@ -45,9 +60,55 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   isDark,
   themeMode,
   onThemeChange,
-  onNavigateToProfile
+  onNavigateToProfile,
 }) => {
   const { t, i18n } = useTranslation();
+  const [skipInstructions, setSkipInstructions] = useState(false);
+
+  // Load user preferences
+  useEffect(() => {
+    const loadPreferences = async () => {
+      const skip = await userPreferences.shouldSkipPreSessionInstructions();
+      setSkipInstructions(skip);
+    };
+    loadPreferences();
+  }, []);
+
+  // Get theme-aware colors and gradients
+  const colors = useMemo(() => getThemeColors(isDark), [isDark]);
+  const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
+
+  // Dynamic styles based on theme
+  const dynamicStyles = useMemo(() => ({
+    title: { color: colors.text.primary },
+    cardTitle: { color: colors.text.primary },
+    cardDescription: { color: colors.text.secondary },
+    cardShadow: isDark ? {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 6,
+    } : {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.1,
+      shadowRadius: 16,
+      elevation: 8,
+    },
+    iconBoxBg: isDark ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)',
+    iconBoxBgBlue: isDark ? 'rgba(59, 130, 246, 0.2)' : 'rgba(59, 130, 246, 0.1)',
+    iconBoxBgRed: isDark ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.1)',
+    optionBg: isDark ? colors.neutral.charcoal[200] : colors.neutral.lightGray[50],
+    optionBorder: isDark ? colors.neutral.charcoal[100] : colors.neutral.lightGray[200],
+    optionText: { color: colors.text.primary },
+    optionSelectedBg: colors.accent.mint[500],
+    optionSelectedText: { color: colors.neutral.white },
+    switchTrackFalse: isDark ? colors.neutral.charcoal[100] : colors.neutral.lightGray[300],
+    switchTrackTrue: colors.accent.mint[400],
+    switchThumbFalse: isDark ? colors.neutral.gray[400] : colors.neutral.white,
+    switchThumbTrue: colors.neutral.white,
+  }), [colors, isDark]);
 
   const handleLanguageChange = async (languageCode: string) => {
     try {
@@ -55,6 +116,15 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, languageCode);
     } catch (error) {
       logger.error('Failed to save language preference:', error);
+    }
+  };
+
+  const handleSkipInstructionsChange = async (value: boolean) => {
+    try {
+      setSkipInstructions(value);
+      await userPreferences.setSkipPreSessionInstructions(value);
+    } catch (error) {
+      logger.error('Failed to save skip instructions preference:', error);
     }
   };
 
@@ -105,182 +175,294 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   };
 
   return (
-    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+    <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>
+        <Text style={[styles.title, dynamicStyles.title]}>
           {t('settings.title')}
         </Text>
 
-        {/* Profile Navigation */}
+        {/* Profile Card */}
         {onNavigateToProfile && (
-          <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
-            <TouchableOpacity
-              style={styles.profileButton}
-              onPress={onNavigateToProfile}
-              accessibilityLabel={t('settings.viewProfile') || 'View Profile'}
-              accessibilityRole="button"
-            >
-              <View style={styles.profileButtonContent}>
-                <Ionicons
-                  name="person-circle"
-                  size={32}
-                  color={theme.colors.accent.blue[600]}
-                />
-                <View style={styles.profileButtonText}>
-                  <Text style={styles.profileButtonTitle}>
-                    {t('settings.viewProfile') || 'View Profile'}
-                  </Text>
-                  <Text style={styles.profileButtonSubtitle}>
-                    {t('settings.viewProfileDescription') || 'See your progress and statistics'}
-                  </Text>
-                </View>
+          <GradientCard
+            gradient={themeGradients.card.whiteCard}
+            style={[styles.card, dynamicStyles.cardShadow]}
+            onPress={onNavigateToProfile}
+            isDark={isDark}
+          >
+            <View style={styles.cardRow}>
+              <View style={[styles.iconBox, { backgroundColor: dynamicStyles.iconBoxBgBlue }]}>
+                <Ionicons name="person" size={24} color={colors.accent.blue[500]} />
               </View>
-              <Ionicons
-                name="chevron-forward"
-                size={24}
-                color={theme.colors.text.tertiary}
-              />
-            </TouchableOpacity>
+              <View style={styles.cardTextContainer}>
+                <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                  {t('settings.viewProfile', 'Zobacz Profil')}
+                </Text>
+                <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                  {t('settings.viewProfileDescription', 'Zobacz swój postęp i statystyki')}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={22} color={colors.text.tertiary} />
+            </View>
           </GradientCard>
         )}
 
-        {/* Language Selection */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            {t('settings.language')}
-          </Text>
-          <View style={styles.languageButtons}>
-            {LANGUAGES.map((lang) => (
-              <TouchableOpacity
-                key={lang.code}
-                style={[
-                  styles.languageButton,
-                  i18n.language === lang.code && styles.languageButtonActive,
-                ]}
-                onPress={() => handleLanguageChange(lang.code)}
-              >
-                <Text
+        {/* Language Selection Card */}
+        <GradientCard
+          gradient={themeGradients.card.whiteCard}
+          style={[styles.card, dynamicStyles.cardShadow]}
+          isDark={isDark}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconBox, { backgroundColor: dynamicStyles.iconBoxBg }]}>
+              <Ionicons name="globe" size={24} color={colors.accent.mint[500]} />
+            </View>
+            <View style={styles.cardTextContainer}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {t('settings.language', 'Język')}
+              </Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                {t('settings.languageDescription', 'Wybierz język aplikacji')}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.optionsGrid}>
+            {LANGUAGES.map((lang) => {
+              const isSelected = i18n.language === lang.code;
+              return (
+                <TouchableOpacity
+                  key={lang.code}
                   style={[
-                    styles.languageButtonText,
-                    i18n.language === lang.code && styles.languageButtonTextActive,
+                    styles.optionButton,
+                    {
+                      backgroundColor: isSelected ? dynamicStyles.optionSelectedBg : dynamicStyles.optionBg,
+                      borderColor: isSelected ? colors.accent.mint[500] : dynamicStyles.optionBorder,
+                    },
                   ]}
+                  onPress={() => handleLanguageChange(lang.code)}
+                  activeOpacity={0.7}
                 >
-                  {lang.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text style={styles.optionFlag}>{lang.flag}</Text>
+                  <Text
+                    style={[
+                      styles.optionText,
+                      isSelected ? dynamicStyles.optionSelectedText : dynamicStyles.optionText,
+                    ]}
+                  >
+                    {lang.name}
+                  </Text>
+                  {isSelected && (
+                    <Ionicons name="checkmark-circle" size={18} color={colors.neutral.white} />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </GradientCard>
 
-        {/* Theme Selection */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            {t('settings.theme')}
-          </Text>
-          <View style={styles.themeButtons}>
+        {/* Theme Selection Card */}
+        <GradientCard
+          gradient={themeGradients.card.whiteCard}
+          style={[styles.card, dynamicStyles.cardShadow]}
+          isDark={isDark}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconBox, { backgroundColor: dynamicStyles.iconBoxBg }]}>
+              <Ionicons name="color-palette" size={24} color={colors.accent.mint[500]} />
+            </View>
+            <View style={styles.cardTextContainer}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {t('settings.theme', 'Motyw')}
+              </Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                {t('settings.themeDescription', 'Dostosuj wygląd aplikacji')}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.themeOptions}>
+            {THEME_OPTIONS.map((option) => {
+              const isSelected = themeMode === option.mode;
+              return (
+                <TouchableOpacity
+                  key={option.mode}
+                  style={[
+                    styles.themeOption,
+                    {
+                      backgroundColor: isSelected ? dynamicStyles.optionSelectedBg : dynamicStyles.optionBg,
+                      borderColor: isSelected ? colors.accent.mint[500] : dynamicStyles.optionBorder,
+                    },
+                  ]}
+                  onPress={() => onThemeChange(option.mode)}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={option.icon}
+                    size={24}
+                    color={isSelected ? colors.neutral.white : colors.text.secondary}
+                  />
+                  <Text
+                    style={[
+                      styles.themeOptionText,
+                      isSelected ? dynamicStyles.optionSelectedText : dynamicStyles.optionText,
+                    ]}
+                  >
+                    {t(option.labelKey, option.mode)}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </GradientCard>
+
+        {/* Meditation Preferences Card */}
+        <GradientCard
+          gradient={themeGradients.card.whiteCard}
+          style={[styles.card, dynamicStyles.cardShadow]}
+          isDark={isDark}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconBox, { backgroundColor: dynamicStyles.iconBoxBg }]}>
+              <Ionicons name="leaf" size={24} color={colors.accent.mint[500]} />
+            </View>
+            <View style={styles.cardTextContainer}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {t('settings.meditation', 'Medytacja')}
+              </Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                {t('settings.meditationDescription', 'Preferencje sesji medytacyjnych')}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.switchContainer}>
             <TouchableOpacity
               style={[
-                styles.themeButton,
-                themeMode === 'light' && styles.themeButtonActive,
+                styles.switchRow,
+                {
+                  backgroundColor: dynamicStyles.optionBg,
+                  borderColor: dynamicStyles.optionBorder,
+                },
               ]}
-              onPress={() => onThemeChange('light')}
+              onPress={() => handleSkipInstructionsChange(!skipInstructions)}
+              activeOpacity={0.8}
             >
-              <Text
-                style={[
-                  styles.themeButtonText,
-                  themeMode === 'light' && styles.themeButtonTextActive,
-                ]}
-              >
-                {t('settings.light') || 'Light'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.themeButton,
-                themeMode === 'dark' && styles.themeButtonActive,
-              ]}
-              onPress={() => onThemeChange('dark')}
-            >
-              <Text
-                style={[
-                  styles.themeButtonText,
-                  themeMode === 'dark' && styles.themeButtonTextActive,
-                ]}
-              >
-                {t('settings.dark') || 'Dark'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.themeButton,
-                themeMode === 'system' && styles.themeButtonActive,
-              ]}
-              onPress={() => onThemeChange('system')}
-            >
-              <Text
-                style={[
-                  styles.themeButtonText,
-                  themeMode === 'system' && styles.themeButtonTextActive,
-                ]}
-              >
-                {t('settings.system') || 'System'}
-              </Text>
+              <View style={styles.switchContent}>
+                <Ionicons
+                  name="flash"
+                  size={20}
+                  color={skipInstructions ? colors.accent.mint[500] : colors.text.tertiary}
+                />
+                <View style={styles.switchTextContainer}>
+                  <Text style={[styles.switchLabel, dynamicStyles.optionText]}>
+                    {t('settings.skipInstructions', 'Pomijaj instrukcje')}
+                  </Text>
+                  <Text style={[styles.switchDescription, dynamicStyles.cardDescription]}>
+                    {t('settings.skipInstructionsDescription', 'Dla doświadczonych medytujących')}
+                  </Text>
+                </View>
+              </View>
+              <Switch
+                value={skipInstructions}
+                onValueChange={handleSkipInstructionsChange}
+                trackColor={{
+                  false: dynamicStyles.switchTrackFalse,
+                  true: dynamicStyles.switchTrackTrue,
+                }}
+                thumbColor={skipInstructions ? dynamicStyles.switchThumbTrue : dynamicStyles.switchThumbFalse}
+                ios_backgroundColor={dynamicStyles.switchTrackFalse}
+              />
             </TouchableOpacity>
           </View>
         </GradientCard>
 
-        {/* Data & Privacy */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            {t('settings.dataPrivacy', 'Data & Privacy')}
-          </Text>
-          <Text style={styles.helperText}>
-            {t(
-              'settings.dataPrivacyDescription',
-              'All data stays on this device. No cloud sync or analytics are used.'
-            )}
-          </Text>
+        {/* Data & Privacy Card */}
+        <GradientCard
+          gradient={themeGradients.card.whiteCard}
+          style={[styles.card, dynamicStyles.cardShadow]}
+          isDark={isDark}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconBox, { backgroundColor: dynamicStyles.iconBoxBg }]}>
+              <Ionicons name="shield-checkmark" size={24} color={colors.accent.mint[500]} />
+            </View>
+            <View style={styles.cardTextContainer}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {t('settings.dataPrivacy', 'Dane i Prywatność')}
+              </Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                {t('settings.dataPrivacyDescription', 'Wszystkie dane pozostają na tym urządzeniu')}
+              </Text>
+            </View>
+          </View>
           <View style={styles.dataButtons}>
             <TouchableOpacity
-              style={[styles.actionButton, styles.exportButton]}
+              style={[styles.dataButton, { backgroundColor: colors.accent.blue[500] }]}
               onPress={handleExportData}
-              accessibilityRole="button"
+              activeOpacity={0.8}
             >
-              <Text style={styles.actionButtonText}>
-                {t('settings.exportData', 'Export data (JSON)')}
+              <Ionicons name="download" size={20} color={colors.neutral.white} />
+              <Text style={styles.dataButtonText}>
+                {t('settings.exportData', 'Eksportuj dane')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.actionButton, styles.dangerButton]}
+              style={[styles.dataButton, styles.dangerButton]}
               onPress={handleClearData}
-              accessibilityRole="button"
+              activeOpacity={0.8}
             >
-              <Text style={styles.actionButtonText}>
-                {t('settings.clearData', 'Clear local data')}
+              <Ionicons name="trash" size={20} color={colors.neutral.white} />
+              <Text style={styles.dataButtonText}>
+                {t('settings.clearData', 'Wyczyść dane')}
               </Text>
             </TouchableOpacity>
           </View>
         </GradientCard>
 
-        {/* About Section */}
-        <GradientCard gradient={gradients.card.lightCard} style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            {t('settings.about')}
-          </Text>
-          <View style={styles.aboutContainer}>
-            <Text style={styles.appName}>
-              {t('app.name')}
-            </Text>
-            <Text style={styles.appTagline}>
+        {/* About Card */}
+        <GradientCard
+          gradient={themeGradients.card.whiteCard}
+          style={[styles.card, dynamicStyles.cardShadow]}
+          isDark={isDark}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconBox, { backgroundColor: dynamicStyles.iconBoxBg }]}>
+              <Ionicons name="information-circle" size={24} color={colors.accent.mint[500]} />
+            </View>
+            <View style={styles.cardTextContainer}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {t('settings.about', 'O aplikacji')}
+              </Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                {t('app.name')} • v1.0.0
+              </Text>
+            </View>
+          </View>
+          <View style={[styles.aboutContent, { backgroundColor: dynamicStyles.optionBg }]}>
+            <Text style={[styles.aboutTagline, dynamicStyles.cardDescription]}>
               {t('app.tagline')}
             </Text>
-            <Text style={styles.appVersion}>
-              Version 1.0.0
-            </Text>
+            <View style={styles.aboutFeatures}>
+              <View style={styles.aboutFeature}>
+                <Ionicons name="checkmark-circle" size={16} color={colors.accent.mint[500]} />
+                <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
+                  {t('settings.featureOffline', 'Działa offline')}
+                </Text>
+              </View>
+              <View style={styles.aboutFeature}>
+                <Ionicons name="checkmark-circle" size={16} color={colors.accent.mint[500]} />
+                <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
+                  {t('settings.featurePrivacy', 'Bez reklam i śledzenia')}
+                </Text>
+              </View>
+              <View style={styles.aboutFeature}>
+                <Ionicons name="checkmark-circle" size={16} color={colors.accent.mint[500]} />
+                <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
+                  {t('settings.featureLocal', 'Dane na urządzeniu')}
+                </Text>
+              </View>
+            </View>
           </View>
         </GradientCard>
       </ScrollView>
@@ -296,151 +478,156 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: theme.layout.screenPadding,
-    gap: theme.spacing.lg,
+    padding: theme.spacing.lg,
     paddingBottom: theme.spacing.xxxl,
+    gap: theme.spacing.md,
   },
   title: {
     fontSize: theme.typography.fontSizes.hero,
     fontWeight: theme.typography.fontWeights.light,
-    color: theme.colors.text.primary,
-    paddingTop: theme.spacing.md,
+    paddingTop: theme.spacing.lg,
     marginBottom: theme.spacing.sm,
   },
-  section: {
-    padding: theme.spacing.lg,
+  card: {
+    // padding handled by GradientCard
   },
-  sectionTitle: {
-    fontSize: theme.typography.fontSizes.xl,
-    fontWeight: theme.typography.fontWeights.semiBold,
-    color: theme.colors.text.primary,
-    marginBottom: theme.spacing.md,
-  },
-  languageButtons: {
+  cardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: theme.spacing.sm,
   },
-  languageButton: {
-    padding: theme.spacing.md,
-    backgroundColor: theme.colors.background.tertiary,
-    borderWidth: 1,
-    borderColor: theme.colors.border.light,
-    borderRadius: theme.borderRadius.md,
-    justifyContent: 'flex-start',
-  },
-  languageButtonActive: {
-    backgroundColor: theme.colors.accent.blue[600],
-    borderColor: theme.colors.accent.blue[600],
-  },
-  languageButtonText: {
-    fontSize: theme.typography.fontSizes.md,
-    color: theme.colors.text.primary,
-    fontWeight: theme.typography.fontWeights.regular,
-  },
-  languageButtonTextActive: {
-    color: theme.colors.neutral.white,
-    fontWeight: theme.typography.fontWeights.semiBold,
-  },
-  helperText: {
-    marginTop: theme.spacing.xs,
-    color: theme.colors.text.secondary,
-    fontSize: theme.typography.fontSizes.sm,
-    lineHeight: 20,
-  },
-  dataButtons: {
-    marginTop: theme.spacing.sm,
-    gap: theme.spacing.sm,
-  },
-  actionButton: {
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
+  iconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  exportButton: {
-    backgroundColor: theme.colors.accent.blue[600],
+  cardTextContainer: {
+    flex: 1,
   },
-  dangerButton: {
-    backgroundColor: '#d9534f',
-  },
-  actionButtonText: {
-    color: theme.colors.neutral.white,
-    fontWeight: theme.typography.fontWeights.semiBold,
-  },
-  themeButtons: {
-    gap: theme.spacing.sm,
-  },
-  themeButton: {
-    padding: theme.spacing.md,
-    backgroundColor: theme.colors.background.tertiary,
-    borderWidth: 1,
-    borderColor: theme.colors.border.light,
-    borderRadius: theme.borderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  themeButtonActive: {
-    backgroundColor: theme.colors.accent.blue[600],
-    borderColor: theme.colors.accent.blue[600],
-  },
-  themeButtonText: {
+  cardTitle: {
     fontSize: theme.typography.fontSizes.md,
-    color: theme.colors.text.primary,
-    fontWeight: theme.typography.fontWeights.regular,
+    fontWeight: '600',
+    marginBottom: 2,
   },
-  themeButtonTextActive: {
-    color: theme.colors.neutral.white,
-    fontWeight: theme.typography.fontWeights.semiBold,
-  },
-  aboutContainer: {
-    padding: theme.spacing.md,
-    backgroundColor: theme.colors.background.tertiary,
-    gap: theme.spacing.sm,
-    borderWidth: 1,
-    borderColor: theme.colors.border.light,
-    borderRadius: theme.borderRadius.md,
-  },
-  appName: {
-    fontSize: theme.typography.fontSizes.md,
-    fontWeight: theme.typography.fontWeights.semiBold,
-    color: theme.colors.text.primary,
-  },
-  appTagline: {
-    fontSize: theme.typography.fontSizes.sm,
-    color: theme.colors.text.secondary,
-  },
-  appVersion: {
+  cardDescription: {
     fontSize: theme.typography.fontSizes.xs,
-    color: theme.colors.text.tertiary,
-    marginTop: theme.spacing.sm,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.xs,
   },
-  profileButton: {
+  // Language options
+  optionsGrid: {
+    marginTop: theme.spacing.lg,
+    gap: theme.spacing.sm,
+  },
+  optionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1.5,
+    gap: theme.spacing.sm,
+  },
+  optionFlag: {
+    fontSize: 20,
+  },
+  optionText: {
+    flex: 1,
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: '500',
+  },
+  // Theme options
+  themeOptions: {
+    flexDirection: 'row',
+    marginTop: theme.spacing.lg,
+    gap: theme.spacing.sm,
+  },
+  themeOption: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.sm,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1.5,
+    gap: theme.spacing.xs,
+  },
+  themeOptionText: {
+    fontSize: theme.typography.fontSizes.xs,
+    fontWeight: '600',
+  },
+  // Switch
+  switchContainer: {
+    marginTop: theme.spacing.md,
+  },
+  switchRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: theme.spacing.md,
-    backgroundColor: theme.colors.background.tertiary,
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 1,
-    borderColor: theme.colors.border.light,
-    borderRadius: theme.borderRadius.md,
   },
-  profileButtonContent: {
+  switchContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing.md,
+    flex: 1,
+    gap: theme.spacing.sm,
+  },
+  switchTextContainer: {
     flex: 1,
   },
-  profileButtonText: {
+  switchLabel: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: '600',
+  },
+  switchDescription: {
+    fontSize: theme.typography.fontSizes.xs,
+    marginTop: 2,
+  },
+  // Data buttons
+  dataButtons: {
+    flexDirection: 'row',
+    marginTop: theme.spacing.lg,
+    gap: theme.spacing.sm,
+  },
+  dataButton: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
     gap: theme.spacing.xs,
   },
-  profileButtonTitle: {
-    fontSize: theme.typography.fontSizes.md,
-    fontWeight: theme.typography.fontWeights.semiBold,
-    color: theme.colors.text.primary,
+  dangerButton: {
+    backgroundColor: '#ef4444',
   },
-  profileButtonSubtitle: {
+  dataButtonText: {
+    color: theme.colors.neutral.white,
     fontSize: theme.typography.fontSizes.sm,
-    color: theme.colors.text.secondary,
+    fontWeight: '600',
+  },
+  // About section
+  aboutContent: {
+    marginTop: theme.spacing.md,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+  },
+  aboutTagline: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginBottom: theme.spacing.md,
+  },
+  aboutFeatures: {
+    gap: theme.spacing.sm,
+  },
+  aboutFeature: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+  },
+  aboutFeatureText: {
+    fontSize: theme.typography.fontSizes.sm,
   },
 });

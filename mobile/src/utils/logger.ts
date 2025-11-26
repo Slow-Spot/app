@@ -13,7 +13,7 @@ export const logger = {
    */
   log: (...args: any[]) => {
     if (isDevelopment) {
-      logger.log('[INFO]', ...args);
+      console.log('[INFO]', ...args);
     }
   },
 

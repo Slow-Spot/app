@@ -1,6 +1,6 @@
 import { logger } from '../utils/logger';
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, ActivityIndicator, FlatList, StyleSheet, Alert, Pressable } from 'react-native';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { View, Text, ActivityIndicator, FlatList, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { SessionCard } from '../components/SessionCard';
@@ -13,16 +13,19 @@ import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
 import { getInstructionForSession } from '../data/instructions';
 import { getAllCustomSessions, deleteCustomSession, SavedCustomSession } from '../services/customSessionStorage';
+import { userPreferences } from '../services/userPreferences';
 import { ChimePoint } from '../types/customSession';
 import { CustomSessionConfig } from './CustomSessionBuilderScreen';
-import theme, { gradients } from '../theme';
+import theme, { getThemeColors, getThemeGradients } from '../theme';
 import * as Haptics from 'expo-haptics';
 import { ActiveMeditationState } from '../../App';
 
 type FlowState = 'list' | 'instructions' | 'meditation' | 'celebration';
 
 interface MeditationScreenProps {
+  isDark?: boolean;
   onEditSession?: (sessionId: string, sessionConfig: CustomSessionConfig) => void;
+  onNavigateToCustom?: () => void;
   activeMeditationState: ActiveMeditationState | null;
   onMeditationStateChange: (state: ActiveMeditationState | null) => void;
 }
@@ -51,11 +54,40 @@ const getChimePointsFromSession = (session: MeditationSession | SavedCustomSessi
 };
 
 export const MeditationScreen: React.FC<MeditationScreenProps> = ({
+  isDark = false,
   onEditSession,
+  onNavigateToCustom,
   activeMeditationState,
   onMeditationStateChange
 }) => {
   const { t, i18n } = useTranslation();
+
+  // Theme-aware colors and gradients
+  const colors = useMemo(() => getThemeColors(isDark), [isDark]);
+  const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
+
+  // Dynamic styles based on theme
+  const dynamicStyles = useMemo(() => ({
+    title: { color: colors.text.primary },
+    subtitle: { color: colors.text.secondary },
+    customBadgeText: { color: colors.accent.blue[600] },
+    customBadgeIconColor: colors.accent.blue[600],
+    loaderColor: colors.accent.blue[500],
+    createButtonBg: isDark ? colors.neutral.charcoal[200] : colors.neutral.white,
+    createButtonShadow: isDark ? {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 12,
+      elevation: 6,
+    } : {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.15,
+      shadowRadius: 20,
+      elevation: 8,
+    },
+  }), [colors, isDark]);
   const [sessions, setSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | SavedCustomSession | null>(null);
@@ -84,16 +116,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     try {
       setLoading(true);
 
-      // Load preset sessions from API
-      const presetSessions = await api.sessions.getAll(i18n.language);
-
-      // Load custom sessions from storage
+      // Load only custom sessions from storage (no presets)
       const customSessions = await getAllCustomSessions();
 
-      // Combine sessions: custom first, then preset
-      const allSessions = [...customSessions, ...presetSessions];
-
-      setSessions(allSessions);
+      setSessions(customSessions);
     } catch (error) {
       logger.error('Failed to load sessions:', error);
     } finally {
@@ -103,7 +129,15 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   const handleStartSession = async (session: MeditationSession) => {
     setSelectedSession(session);
-    setFlowState('instructions');
+
+    // Check if user wants to skip pre-session instructions (for experienced meditators)
+    const skipInstructions = await userPreferences.shouldSkipPreSessionInstructions();
+    if (skipInstructions) {
+      // Skip instructions and go directly to meditation
+      setFlowState('meditation');
+    } else {
+      setFlowState('instructions');
+    }
   };
 
   const handleLongPressSession = (session: MeditationSession) => {
@@ -197,20 +231,20 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
       // Load audio tracks if available - with graceful error handling
       if (selectedSession.voiceUrl) {
         logger.log('Loading voice track:', selectedSession.voiceUrl);
-        await audioEngine.loadTrack('voice', String(selectedSession.voiceUrl), 0.8);
+        await audioEngine.loadTrack('voice', selectedSession.voiceUrl, 0.8);
       }
 
       // Only load ambient if URL is provided and not 'silence'
       if (selectedSession.ambientUrl && selectedSession.ambientUrl !== 'silence') {
         logger.log('Loading ambient track:', selectedSession.ambientUrl);
-        await audioEngine.loadTrack('ambient', String(selectedSession.ambientUrl), 0.4);
+        await audioEngine.loadTrack('ambient', selectedSession.ambientUrl, 0.4);
       } else {
         logger.log('Skipping ambient track (silence mode or no URL)');
       }
 
       if (selectedSession.chimeUrl) {
         logger.log('Loading chime track:', selectedSession.chimeUrl);
-        await audioEngine.loadTrack('chime', String(selectedSession.chimeUrl), 0.6);
+        await audioEngine.loadTrack('chime', selectedSession.chimeUrl, 0.6);
       }
 
       // Start with chime, then fade in ambient
@@ -291,16 +325,17 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     }
   };
 
-  const handleCelebrationContinue = async (mood?: 1 | 2 | 3 | 4 | 5) => {
+  const handleCelebrationContinue = async (mood?: 1 | 2 | 3 | 4 | 5, notes?: string) => {
     try {
-      // Save session completion with mood for progress tracking
+      // Save session completion with mood and notes for progress tracking
       if (selectedSession) {
         await saveSessionCompletion(
           selectedSession.id,
           selectedSession.title,
           selectedSession.durationSeconds,
           selectedSession.languageCode,
-          mood
+          mood,
+          notes
         );
       }
 
@@ -326,42 +361,85 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           onPress={() => handleStartSession(item)}
           onLongPress={customSession.isCustom ? () => handleLongPressSession(item) : undefined}
           isCustom={customSession.isCustom || false}
+          isDark={isDark}
         />
       );
     },
-    []
+    [isDark]
   );
 
   const keyExtractor = useCallback((item: MeditationSession) => item.id.toString(), []);
 
   const renderListHeader = useCallback(
     () => {
-      const customCount = sessions.filter((s) => (s as SavedCustomSession).isCustom).length;
       return (
         <View style={styles.header}>
-          <Text style={styles.title}>{t('meditation.title')}</Text>
-          <Text style={styles.subtitle}>{t('meditation.subtitle')}</Text>
-          {customCount > 0 && (
-            <View style={styles.customBadge}>
-              <Ionicons name="star" size={16} color={theme.colors.accent.blue[600]} />
-              <Text style={styles.customBadgeText}>
-                {customCount} {customCount === 1 ? t('custom.customSession') || 'custom session' : t('custom.customSessions') || 'custom sessions'}
+          <Text style={[styles.title, dynamicStyles.title]}>{t('meditation.title')}</Text>
+          <Text style={[styles.subtitle, dynamicStyles.subtitle]}>{t('meditation.subtitle')}</Text>
+
+          {/* Create custom session button - white card style */}
+          <TouchableOpacity
+            style={[
+              styles.createButton,
+              dynamicStyles.createButtonShadow,
+              { backgroundColor: dynamicStyles.createButtonBg }
+            ]}
+            onPress={onNavigateToCustom}
+            activeOpacity={0.8}
+          >
+            <View style={[styles.createButtonIcon, { backgroundColor: isDark ? 'rgba(52, 211, 153, 0.2)' : 'rgba(52, 211, 153, 0.15)' }]}>
+              <Ionicons name="add" size={32} color={colors.accent.mint[500]} />
+            </View>
+            <View style={styles.createButtonTextContainer}>
+              <Text style={[styles.createButtonTitle, { color: colors.text.primary }]}>
+                {t('meditation.createSession') || 'Stwórz sesję'}
+              </Text>
+              <Text style={[styles.createButtonSubtitle, { color: colors.text.secondary }]}>
+                {t('meditation.createSessionDesc') || 'Dostosuj czas, dźwięki i interwały'}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={22} color={colors.text.secondary} />
+          </TouchableOpacity>
+
+          {sessions.length > 0 && (
+            <View style={styles.sessionsHeader}>
+              <Text style={[styles.sessionsHeaderText, dynamicStyles.subtitle]}>
+                {t('meditation.yourSessions') || 'Twoje sesje'}
+              </Text>
+              <Text style={[styles.sessionsHeaderHint, { color: colors.text.secondary }]}>
+                {t('custom.longPressToEdit') || 'Przytrzymaj, aby edytować'}
               </Text>
             </View>
           )}
         </View>
       );
     },
-    [t, sessions]
+    [t, sessions, dynamicStyles, colors, onNavigateToCustom]
   );
 
   const renderListEmpty = useCallback(
-    () => (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color={theme.colors.accent.blue[500]} />
-      </View>
-    ),
-    []
+    () => {
+      if (loading) {
+        return (
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color={dynamicStyles.loaderColor} />
+          </View>
+        );
+      }
+
+      return (
+        <View style={styles.emptyState}>
+          <Ionicons name="leaf-outline" size={64} color={colors.text.secondary} />
+          <Text style={[styles.emptyStateTitle, { color: colors.text.primary }]}>
+            {t('meditation.noSessions') || 'Brak sesji'}
+          </Text>
+          <Text style={[styles.emptyStateSubtitle, { color: colors.text.secondary }]}>
+            {t('meditation.noSessionsDesc') || 'Stwórz swoją pierwszą własną sesję medytacji'}
+          </Text>
+        </View>
+      );
+    },
+    [loading, dynamicStyles, colors, t]
   );
 
   // Show pre-session instructions
@@ -377,6 +455,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           instruction={instruction}
           onComplete={handleInstructionsComplete}
           onSkip={handleSkipInstructions}
+          isDark={isDark}
         />
       </View>
     );
@@ -402,7 +481,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     };
 
     return (
-      <GradientBackground gradient={gradients.primary.subtleBlue} style={styles.container}>
+      <GradientBackground gradient={themeGradients.primary.clean} style={styles.container}>
         <MeditationTimer
           totalSeconds={selectedSession.durationSeconds}
           onComplete={handleComplete}
@@ -410,6 +489,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           chimePoints={chimePoints}
           onAudioToggle={handleAudioToggle}
           ambientSoundName={getAmbientSoundName()}
+          isDark={isDark}
         />
       </GradientBackground>
     );
@@ -422,19 +502,20 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         durationMinutes={Math.ceil(selectedSession.durationSeconds / 60)}
         sessionTitle={selectedSession.title}
         onContinue={handleCelebrationContinue}
+        isDark={isDark}
       />
     );
   }
 
   // Default: show session list
   return (
-    <GradientBackground gradient={gradients.screen.home} style={styles.container}>
+    <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
       <FlatList
-        data={loading ? [] : sessions}
+        data={sessions}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={renderListHeader}
-        ListEmptyComponent={loading ? renderListEmpty : null}
+        ListEmptyComponent={renderListEmpty}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         initialNumToRender={5}
@@ -488,5 +569,64 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: theme.spacing.md,
+  },
+  // Create session button
+  createButton: {
+    marginTop: theme.spacing.lg,
+    borderRadius: theme.borderRadius.xl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.lg,
+    gap: theme.spacing.md,
+  },
+  createButtonIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  createButtonTextContainer: {
+    flex: 1,
+  },
+  createButtonTitle: {
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    marginBottom: 2,
+  },
+  createButtonSubtitle: {
+    fontSize: theme.typography.fontSizes.sm,
+  },
+  // Sessions header
+  sessionsHeader: {
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  sessionsHeaderText: {
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: theme.typography.fontWeights.semiBold,
+  },
+  sessionsHeaderHint: {
+    fontSize: theme.typography.fontSizes.xs,
+  },
+  // Empty state
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.xxl,
+    paddingHorizontal: theme.spacing.lg,
+  },
+  emptyStateTitle: {
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: theme.typography.fontWeights.semiBold,
+    marginTop: theme.spacing.lg,
+    marginBottom: theme.spacing.sm,
+  },
+  emptyStateSubtitle: {
+    fontSize: theme.typography.fontSizes.md,
+    textAlign: 'center',
+    lineHeight: 24,
   },
 });

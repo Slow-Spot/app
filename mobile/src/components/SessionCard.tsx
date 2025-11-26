@@ -1,18 +1,20 @@
 import { logger } from '../utils/logger';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { MeditationSession } from '../services/api';
+import { SavedCustomSession } from '../services/customSessionStorage';
 import { GradientCard } from './GradientCard';
-import { getGradientForLevel } from '../theme/gradients';
-import theme from '../theme';
+import { getThemeGradients } from '../theme/gradients';
+import theme, { getThemeColors } from '../theme';
 
 interface SessionCardProps {
   session: MeditationSession;
   onPress: () => void;
   onLongPress?: () => void;
   isCustom?: boolean;
+  isDark?: boolean;
 }
 
 const getLevelLabel = (level: number): string => {
@@ -38,41 +40,86 @@ const formatDuration = (seconds: number): string => {
   return `${minutes} min`;
 };
 
+/**
+ * Generate localized description for custom sessions
+ */
+const getCustomSessionDescription = (session: SavedCustomSession, t: any): string => {
+  const minutes = Math.floor(session.durationSeconds / 60);
+  const ambientSound = session.config?.ambientSound || 'silence';
+
+  // Get translated ambient sound name
+  const soundKey = `custom.ambient${ambientSound.charAt(0).toUpperCase() + ambientSound.slice(1)}`;
+  const soundName = t(soundKey) || ambientSound;
+
+  // Use translation template: "X min meditation with Y"
+  return t('custom.sessionDescription', {
+    minutes,
+    ambientSound: soundName
+  }) || `${minutes} min meditation with ${soundName}`;
+};
+
 // ✨ React.memo for performance optimization - Prevents unnecessary re-renders
-export const SessionCard = React.memo<SessionCardProps>(({ session, onPress, onLongPress, isCustom }) => {
+export const SessionCard = React.memo<SessionCardProps>(({ session, onPress, onLongPress, isCustom, isDark = false }) => {
   const { t } = useTranslation();
-  const gradient = getGradientForLevel(getLevelLabel(session.level));
+
+  // Theme-aware colors and gradients
+  const colors = useMemo(() => getThemeColors(isDark), [isDark]);
+  const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
+  const gradient = themeGradients.getGradientForLevel(getLevelLabel(session.level));
+
+  // Dynamic styles based on theme
+  const dynamicStyles = useMemo(() => ({
+    title: { color: colors.text.primary },
+    description: { color: colors.text.secondary },
+    guidanceText: { color: colors.text.primary },
+    minimalGuidance: { color: colors.text.secondary },
+    label: { color: colors.text.secondary },
+    value: { color: colors.text.primary },
+    startBadgeText: { color: colors.text.primary },
+    customBadgeIconColor: colors.accent.blue[600],
+    // Theme-aware semi-transparent backgrounds
+    guidanceBoxBg: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.3)',
+    startBadgeBg: isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 0.4)',
+    customBadgeBg: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.5)',
+  }), [colors, isDark]);
 
   // Use translation keys if available, otherwise fall back to direct values
   const title = session.titleKey ? t(session.titleKey) : session.title;
-  const description = session.descriptionKey ? t(session.descriptionKey) : session.description;
+
+  // For custom sessions, generate localized description dynamically
+  const description = useMemo(() => {
+    if (isCustom && (session as SavedCustomSession).config) {
+      return getCustomSessionDescription(session as SavedCustomSession, t);
+    }
+    return session.descriptionKey ? t(session.descriptionKey) : session.description;
+  }, [session, isCustom, t]);
 
   return (
-    <GradientCard gradient={gradient} onPress={onPress} onLongPress={onLongPress} style={styles.card}>
+    <GradientCard gradient={gradient} onPress={onPress} onLongPress={onLongPress} style={styles.card} isDark={isDark}>
       {/* Card Header */}
       <View style={styles.header}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={[styles.title, dynamicStyles.title]}>{title}</Text>
           {isCustom && (
-            <View style={styles.customBadge}>
-              <Ionicons name="star" size={16} color={theme.colors.accent.blue[600]} />
+            <View style={[styles.customBadge, { backgroundColor: dynamicStyles.customBadgeBg }]}>
+              <Ionicons name="star" size={16} color={dynamicStyles.customBadgeIconColor} />
             </View>
           )}
         </View>
         {description && (
-          <Text style={styles.description}>{description}</Text>
+          <Text style={[styles.description, dynamicStyles.description]}>{description}</Text>
         )}
 
         {/* Guidance for beginners */}
         {session.level === 1 && (
-          <View style={styles.guidanceBox}>
-            <Text style={styles.guidanceText}>{getGuidanceText(session.level, t)}</Text>
+          <View style={[styles.guidanceBox, { backgroundColor: dynamicStyles.guidanceBoxBg }]}>
+            <Text style={[styles.guidanceText, dynamicStyles.guidanceText]}>{getGuidanceText(session.level, t)}</Text>
           </View>
         )}
 
         {/* Minimal guidance for intermediate+ */}
         {session.level > 1 && (
-          <Text style={styles.minimalGuidance}>{getGuidanceText(session.level, t)}</Text>
+          <Text style={[styles.minimalGuidance, dynamicStyles.minimalGuidance]}>{getGuidanceText(session.level, t)}</Text>
         )}
       </View>
 
@@ -80,17 +127,17 @@ export const SessionCard = React.memo<SessionCardProps>(({ session, onPress, onL
       <View style={styles.footer}>
         <View style={styles.detailsContainer}>
           <View style={styles.detailRow}>
-            <Text style={styles.label}>{t('meditation.duration')}:</Text>
-            <Text style={styles.value}>{formatDuration(session.durationSeconds)}</Text>
+            <Text style={[styles.label, dynamicStyles.label]}>{t('meditation.duration')}:</Text>
+            <Text style={[styles.value, dynamicStyles.value]}>{formatDuration(session.durationSeconds)}</Text>
           </View>
           <View style={styles.detailRow}>
-            <Text style={styles.label}>{t('meditation.level')}:</Text>
-            <Text style={styles.value}>{t(`meditation.${getLevelLabel(session.level)}`)}</Text>
+            <Text style={[styles.label, dynamicStyles.label]}>{t('meditation.level')}:</Text>
+            <Text style={[styles.value, dynamicStyles.value]}>{t(`meditation.${getLevelLabel(session.level)}`)}</Text>
           </View>
         </View>
 
-        <View style={styles.startBadge}>
-          <Text style={styles.startBadgeText}>▶ {t('meditation.start')}</Text>
+        <View style={[styles.startBadge, { backgroundColor: dynamicStyles.startBadgeBg }]}>
+          <Text style={[styles.startBadgeText, dynamicStyles.startBadgeText]}>▶ {t('meditation.start')}</Text>
         </View>
       </View>
     </GradientCard>
@@ -117,7 +164,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   customBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: theme.borderRadius.full,
     padding: theme.spacing.xs,
   },
@@ -130,7 +176,6 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.md,
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
   guidanceText: {
     fontSize: theme.typography.fontSizes.sm,
@@ -168,7 +213,6 @@ const styles = StyleSheet.create({
     fontWeight: theme.typography.fontWeights.semiBold,
   },
   startBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
     paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
     borderRadius: theme.borderRadius.lg,

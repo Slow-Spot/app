@@ -4,13 +4,15 @@ import { logger } from '../utils/logger';
 const PREFERENCES_KEY = '@user_preferences';
 
 export interface UserPreferences {
-  skipInstructions: boolean;
+  skipPreSessionIntro: boolean; // Skip the "Welcome to your first meditation" intro screen
+  skipPreSessionInstructions: boolean; // Skip entire pre-session instructions (for experienced meditators)
   language?: string;
   theme?: 'light' | 'dark' | 'system';
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
-  skipInstructions: false,
+  skipPreSessionIntro: false,
+  skipPreSessionInstructions: false,
   theme: 'system',
 };
 
@@ -65,18 +67,32 @@ export const userPreferences = {
   },
 
   /**
-   * Check if user wants to skip instructions
+   * Check if user wants to skip pre-session intro
    */
-  shouldSkipInstructions: async (): Promise<boolean> => {
-    return await userPreferences.get('skipInstructions');
+  shouldSkipPreSessionIntro: async (): Promise<boolean> => {
+    return await userPreferences.get('skipPreSessionIntro');
   },
 
   /**
-   * Toggle skip instructions preference
+   * Toggle skip pre-session intro preference
    */
-  toggleSkipInstructions: async (): Promise<boolean> => {
-    const current = await userPreferences.shouldSkipInstructions();
-    await userPreferences.set('skipInstructions', !current);
+  toggleSkipPreSessionIntro: async (): Promise<boolean> => {
+    const current = await userPreferences.shouldSkipPreSessionIntro();
+    await userPreferences.set('skipPreSessionIntro', !current);
     return !current;
+  },
+
+  /**
+   * Check if user wants to skip pre-session instructions entirely (for experienced meditators)
+   */
+  shouldSkipPreSessionInstructions: async (): Promise<boolean> => {
+    return await userPreferences.get('skipPreSessionInstructions');
+  },
+
+  /**
+   * Set skip pre-session instructions preference
+   */
+  setSkipPreSessionInstructions: async (value: boolean): Promise<void> => {
+    await userPreferences.set('skipPreSessionInstructions', value);
   },
 };

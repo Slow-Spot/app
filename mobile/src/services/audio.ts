@@ -47,18 +47,33 @@ class AudioEngine {
     }
   }
 
-  async loadTrack(layer: AudioLayer, uri: string, volume: number = 1.0) {
+  async loadTrack(layer: AudioLayer, uri: string | number, volume: number = 1.0) {
     await this.initialize();
 
     try {
       // Unload existing track if present
       await this.unloadTrack(layer);
 
-      // Create sound from URI or require()
+      // Determine source type:
+      // - number = require() result (local asset)
+      // - string starting with http = remote URL
+      // - other string = invalid, skip
+      let source: { uri: string } | number;
+
+      if (typeof uri === 'number') {
+        // Local asset from require()
+        source = uri;
+      } else if (typeof uri === 'string' && uri.startsWith('http')) {
+        // Remote URL
+        source = { uri };
+      } else {
+        logger.warn(`Invalid audio source for ${layer}: ${uri}`);
+        return;
+      }
+
+      // Create sound from source
       const { sound } = await Audio.Sound.createAsync(
-        typeof uri === 'string' && uri.startsWith('http')
-          ? { uri }
-          : uri as any, // For local files passed as require()
+        source,
         {
           shouldPlay: false,
           isLooping: layer === 'ambient', // Only ambient loops

@@ -35,7 +35,8 @@ export const ScheduleReminderModal: React.FC<ScheduleReminderModalProps> = ({
   onSave,
   initialTime,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLocale = i18n.language;
 
   // Initialize time from initialTime or default to 9:00 AM
   const getInitialDate = () => {
@@ -66,10 +67,10 @@ export const ScheduleReminderModal: React.FC<ScheduleReminderModalProps> = ({
   };
 
   /**
-   * Format time for display (e.g., "9:00 AM")
+   * Format time for display (e.g., "9:00 AM" or "9:00")
    */
   const formatTimeDisplay = (date: Date): string => {
-    return date.toLocaleTimeString([], {
+    return date.toLocaleTimeString(currentLocale, {
       hour: '2-digit',
       minute: '2-digit',
     });
