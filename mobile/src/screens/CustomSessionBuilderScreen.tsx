@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet, Switch, TextInput, Pressable, Animated, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradient from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { Audio } from 'expo-av';
 import { GradientBackground } from '../components/GradientBackground';

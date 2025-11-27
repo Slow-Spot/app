@@ -2,7 +2,7 @@ import { logger } from '../utils/logger';
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Pressable, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradient from 'expo-linear-gradient';
 import theme, { GradientDefinition } from '../theme';
 
 interface FeatureTileProps {

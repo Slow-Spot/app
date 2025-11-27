@@ -12,7 +12,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradient from 'expo-linear-gradient';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 
 interface Technique {

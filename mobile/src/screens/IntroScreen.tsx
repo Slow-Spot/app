@@ -9,7 +9,7 @@ import { logger } from '../utils/logger';
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradient from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';

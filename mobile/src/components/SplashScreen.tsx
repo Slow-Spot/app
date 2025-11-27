@@ -1,7 +1,7 @@
 import { logger } from '../utils/logger';
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Dimensions, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradient from 'expo-linear-gradient';
 import { useTranslation } from 'react-i18next';
 import { accentColors } from '../theme/colors';
 import { ZenLogo } from './ZenLogo';

@@ -10,6 +10,7 @@ export const neutralColors = {
   white: '#FFFFFF',
   offWhite: '#FAFAFA',
   lightGray: {
+    50: '#FAFAFA',
     100: '#F5F5F7',
     200: '#ECECEE',
     300: '#E5E5EA',
@@ -28,6 +29,7 @@ export const neutralColors = {
     900: '#2C2C2E',
   },
   charcoal: {
+    50: '#38383D',
     100: '#28282D',
     200: '#1C1C1E',
     300: '#121214',
@@ -50,6 +52,7 @@ export const accentColors = {
     600: '#1976D2', // ✨ UPDATED - WCAG AA (6.36:1) - was #3B8FDB
     700: '#1565C0', // ✨ NEW - Extra contrast (7.5:1)
     800: '#0D47A1', // ✨ NEW - Maximum contrast (9.2:1)
+    900: '#0A3470', // ✨ NEW - Darkest blue for dark mode
   },
   // Purple/Lavender - secondary accent
   purple: {

@@ -1,7 +1,7 @@
 import { logger } from '../utils/logger';
 import React from 'react';
 import { Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import LinearGradient from 'expo-linear-gradient';
 import theme from '../theme';
 
 export type BadgeVariant =
