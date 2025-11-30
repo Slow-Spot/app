@@ -194,8 +194,8 @@ export default function TermsOfService() {
           <h2>15. Contact Information</h2>
           <p>If you have any questions about these Terms, please contact us:</p>
           <ul>
-            <li><strong>Email:</strong> <a href="mailto:legal@slowspot.app">legal@slowspot.app</a></li>
-            <li><strong>Website:</strong> <a href="https://slowspot.app">https://slowspot.app</a></li>
+            <li><strong>Email:</strong> <a href="mailto:legal@slowspot.me">legal@slowspot.me</a></li>
+            <li><strong>Website:</strong> <a href="https://slowspot.me">https://slowspot.me</a></li>
           </ul>
 
           <h2>16. App Store Terms</h2>

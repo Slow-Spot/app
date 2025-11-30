@@ -193,8 +193,8 @@ export default function PrivacyPolicy() {
           <h2>Contact Us</h2>
           <p>If you have questions or concerns about this Privacy Policy:</p>
           <ul>
-            <li><strong>Email:</strong> <a href="mailto:privacy@slowspot.app">privacy@slowspot.app</a></li>
-            <li><strong>Website:</strong> <a href="https://slowspot.app">https://slowspot.app</a></li>
+            <li><strong>Email:</strong> <a href="mailto:privacy@slowspot.me">privacy@slowspot.me</a></li>
+            <li><strong>Website:</strong> <a href="https://slowspot.me">https://slowspot.me</a></li>
           </ul>
           <p><strong>Response Time:</strong> We aim to respond to all privacy inquiries within 48 hours.</p>
 

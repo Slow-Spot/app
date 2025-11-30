@@ -39,8 +39,8 @@ export default function Support() {
               </div>
               <div>
                 <p className="subpage-contact-label">Email</p>
-                <a href="mailto:support@slowspot.app" className="subpage-contact-link">
-                  support@slowspot.app
+                <a href="mailto:support@slowspot.me" className="subpage-contact-link">
+                  support@slowspot.me
                 </a>
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function Support() {
               <p className="subpage-faq-answer">
                 Try these steps: 1) Close and reopen the app, 2) Restart your device,
                 3) Make sure you have the latest version from App Store or Google Play.
-                If the problem persists, please contact us at support@slowspot.app with
+                If the problem persists, please contact us at support@slowspot.me with
                 details about the issue.
               </p>
             </div>
@@ -137,7 +137,7 @@ export default function Support() {
             We love hearing from our users! If you have suggestions for new features,
             improvements, or just want to share your meditation experience, please reach out:
           </p>
-          <a href="mailto:feedback@slowspot.app" className="subpage-feedback-button">
+          <a href="mailto:feedback@slowspot.me" className="subpage-feedback-button">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>

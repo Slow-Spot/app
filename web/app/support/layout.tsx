@@ -4,7 +4,7 @@ const siteUrl = 'https://slowspot.me'
 
 export const metadata: Metadata = {
   title: 'Support & FAQ - Get Help with Meditation',
-  description: 'Get help with Slow Spot meditation app. FAQ, troubleshooting, feature guides. Contact us at support@slowspot.app. Response within 48 hours.',
+  description: 'Get help with Slow Spot meditation app. FAQ, troubleshooting, feature guides. Contact us at support@slowspot.me. Response within 48 hours.',
   keywords: [
     'meditation app support',
     'slow spot help',

@@ -418,7 +418,7 @@ export default function Home() {
                 <a href="/support" className="block text-gray-500 hover:text-violet-400 transition-colors text-sm">
                   {t.footer.columns.support.links.help}
                 </a>
-                <a href="mailto:support@slowspot.app" className="block text-gray-500 hover:text-violet-400 transition-colors text-sm">
+                <a href="mailto:support@slowspot.me" className="block text-gray-500 hover:text-violet-400 transition-colors text-sm">
                   {t.footer.columns.support.links.contact}
                 </a>
               </div>
