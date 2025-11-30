@@ -68,12 +68,15 @@ export default function HeaderWithControls({
   useEffect(() => {
     const stored = localStorage.getItem('theme');
     if (stored) {
-      setIsDark(stored === 'dark');
-      document.documentElement.classList.toggle('light', stored === 'light');
+      const isDarkMode = stored === 'dark';
+      setIsDark(isDarkMode);
+      document.documentElement.classList.toggle('light', !isDarkMode);
+      document.documentElement.classList.toggle('dark', isDarkMode);
     } else {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setIsDark(prefersDark);
       document.documentElement.classList.toggle('light', !prefersDark);
+      document.documentElement.classList.toggle('dark', prefersDark);
     }
   }, []);
 
@@ -83,6 +86,7 @@ export default function HeaderWithControls({
     setIsDark(newIsDark);
     localStorage.setItem('theme', newIsDark ? 'dark' : 'light');
     document.documentElement.classList.toggle('light', !newIsDark);
+    document.documentElement.classList.toggle('dark', newIsDark);
   };
 
   // Close dropdown when clicking outside
