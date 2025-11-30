@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="50%" style="stop-color:#16213e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+    <linearGradient id="lotusGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#f8fafc"/>
+      <stop offset="100%" style="stop-color:#e2e8f0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Decorative circles -->
+  <circle cx="900" cy="315" r="250" fill="none" stroke="rgba(102,126,234,0.1)" stroke-width="1"/>
+  <circle cx="900" cy="315" r="200" fill="none" stroke="rgba(102,126,234,0.15)" stroke-width="1"/>
+  <circle cx="900" cy="315" r="150" fill="none" stroke="rgba(102,126,234,0.2)" stroke-width="1"/>
+
+  <!-- Meditation Icon -->
+  <g transform="translate(800, 215)">
+    <circle cx="100" cy="100" r="95" fill="url(#accentGrad)"/>
+    <!-- Meditation figure -->
+    <g fill="url(#lotusGrad)" transform="scale(0.38) translate(50, 50)">
+      <circle cx="256" cy="160" r="45"/>
+      <ellipse cx="256" cy="260" rx="55" ry="70"/>
+      <ellipse cx="256" cy="340" rx="90" ry="35"/>
+      <ellipse cx="175" cy="280" rx="35" ry="20" transform="rotate(-20 175 280)"/>
+      <ellipse cx="337" cy="280" rx="35" ry="20" transform="rotate(20 337 280)"/>
+      <circle cx="165" cy="310" r="18"/>
+      <circle cx="347" cy="310" r="18"/>
+    </g>
+  </g>
+
+  <!-- Text Content -->
+  <text x="80" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="300" fill="#f8fafc">
+    <tspan>Slow</tspan>
+    <tspan fill="url(#accentGrad)" font-weight="600"> Spot</tspan>
+  </text>
+
+  <text x="80" y="330" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#94a3b8">
+    Meditation Made Simple
+  </text>
+
+  <!-- Features -->
+  <g font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#cbd5e1">
+    <text x="80" y="420">
+      <tspan fill="#667eea">✓</tspan> No account required
+    </text>
+    <text x="80" y="455">
+      <tspan fill="#667eea">✓</tspan> 100% offline
+    </text>
+    <text x="80" y="490">
+      <tspan fill="#667eea">✓</tspan> Complete privacy
+    </text>
+    <text x="350" y="420">
+      <tspan fill="#667eea">✓</tspan> Guided sessions
+    </text>
+    <text x="350" y="455">
+      <tspan fill="#667eea">✓</tspan> Ambient sounds
+    </text>
+    <text x="350" y="490">
+      <tspan fill="#667eea">✓</tspan> Progress tracking
+    </text>
+  </g>
+
+  <!-- URL -->
+  <text x="80" y="580" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#667eea">
+    slowspot.me
+  </text>
+</svg>

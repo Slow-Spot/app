@@ -1,0 +1,20 @@
+# Slow Spot - Meditation App
+# https://slowspot.me
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap
+Sitemap: https://slowspot.me/sitemap.xml
+
+# Host
+Host: https://slowspot.me

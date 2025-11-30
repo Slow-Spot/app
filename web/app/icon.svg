@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+    <linearGradient id="lotusGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#f8fafc"/>
+      <stop offset="100%" style="stop-color:#e2e8f0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGrad)"/>
+
+  <!-- Meditation figure (lotus position) -->
+  <g fill="url(#lotusGrad)">
+    <!-- Head -->
+    <circle cx="256" cy="160" r="45"/>
+
+    <!-- Body -->
+    <ellipse cx="256" cy="260" rx="55" ry="70"/>
+
+    <!-- Crossed legs (lotus position) -->
+    <ellipse cx="256" cy="340" rx="90" ry="35"/>
+
+    <!-- Arms in meditation pose -->
+    <ellipse cx="175" cy="280" rx="35" ry="20" transform="rotate(-20 175 280)"/>
+    <ellipse cx="337" cy="280" rx="35" ry="20" transform="rotate(20 337 280)"/>
+
+    <!-- Hands resting on knees -->
+    <circle cx="165" cy="310" r="18"/>
+    <circle cx="347" cy="310" r="18"/>
+  </g>
+
+  <!-- Aura/glow circles -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  <circle cx="256" cy="256" r="200" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+  <circle cx="256" cy="256" r="220" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+</svg>
