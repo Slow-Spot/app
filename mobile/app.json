@@ -52,7 +52,8 @@
       },
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "buildNumber": "10000"
     },
     "android": {
       "package": "com.slowspot.app",
@@ -69,7 +70,8 @@
       "permissions": [
         "READ_CALENDAR",
         "WRITE_CALENDAR"
-      ]
+      ],
+      "versionCode": 10000
     },
     "web": {
       "favicon": "./assets/favicon.png"
