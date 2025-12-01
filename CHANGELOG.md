@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/Slow-Spot/app/compare/v1.0.1...v1.1.0) (2025-12-01)
+
+### Features
+
+* **release:** add i18n version sync to release process ([2739448](https://github.com/Slow-Spot/app/commit/2739448543abb7c032838a2f1dc043a949c95fa3))
+
 ## [1.0.1](https://github.com/Slow-Spot/app/compare/v1.0.0...v1.0.1) (2025-12-01)
 
 ### Bug Fixes
