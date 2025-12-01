@@ -60,4 +60,18 @@ console.log(`  - version: ${version}`);
 console.log(`  - iOS buildNumber: ${buildNumber}`);
 console.log(`  - Android versionCode: ${buildNumber}`);
 
+// Update web i18n locale files
+const locales = ['en', 'pl'];
+locales.forEach(locale => {
+  const localePath = path.join(__dirname, '..', 'web', 'app', 'i18n', 'locales', `${locale}.json`);
+  if (fs.existsSync(localePath)) {
+    const localeData = JSON.parse(fs.readFileSync(localePath, 'utf8'));
+    if (localeData.supportPage && localeData.supportPage.appInfo) {
+      localeData.supportPage.appInfo.versionNumber = version;
+      fs.writeFileSync(localePath, JSON.stringify(localeData, null, 2) + '\n');
+      console.log(`[OK] Updated ${localePath}`);
+    }
+  }
+});
+
 console.log('\nAll versions updated successfully!');
