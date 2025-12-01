@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slow Spot",
     "slug": "slow-spot",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -53,7 +53,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "10100"
+      "buildNumber": "10200"
     },
     "android": {
       "package": "com.slowspot.app",
@@ -71,7 +71,7 @@
         "READ_CALENDAR",
         "WRITE_CALENDAR"
       ],
-      "versionCode": 10100
+      "versionCode": 10200
     },
     "web": {
       "favicon": "./assets/favicon.png"

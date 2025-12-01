@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/Slow-Spot/app/compare/v1.1.0...v1.2.0) (2025-12-01)
+
+### Features
+
+* add breathing pattern support to MeditationScreen ([793e0a0](https://github.com/Slow-Spot/app/commit/793e0a0884a05ceb8dcc1860567abc4f5aa6b577))
+
 ## [1.1.0](https://github.com/Slow-Spot/app/compare/v1.0.1...v1.1.0) (2025-12-01)
 
 ### Features
