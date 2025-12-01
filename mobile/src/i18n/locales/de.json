@@ -336,7 +336,12 @@
     "dataClearedBody": "Du kannst deine Einstellungen und Sitzungen jederzeit neu aufbauen. Keine Daten verlassen dieses Gerät.",
     "featureOffline": "Funktioniert offline",
     "featurePrivacy": "Keine Werbung oder Tracking",
-    "featureLocal": "Daten auf dem Gerät"
+    "featureLocal": "Daten auf dem Gerät",
+    "legalTitle": "Rechtliche Informationen",
+    "legalDescription": "AGB, Datenschutz und Support",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "termsOfService": "Nutzungsbedingungen",
+    "support": "Support"
   },
   "navigation": {
     "home": "Startseite",

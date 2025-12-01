@@ -389,7 +389,12 @@
     "dataClearedBody": "Możesz odbudować swoje preferencje i sesje w dowolnym momencie. Żadne dane nie opuszczają tego urządzenia.",
     "featureOffline": "Działa offline",
     "featurePrivacy": "Bez reklam i śledzenia",
-    "featureLocal": "Dane na urządzeniu"
+    "featureLocal": "Dane na urządzeniu",
+    "legalTitle": "Informacje prawne",
+    "legalDescription": "Regulamin, polityka prywatności i wsparcie",
+    "privacyPolicy": "Polityka prywatności",
+    "termsOfService": "Regulamin",
+    "support": "Wsparcie"
   },
   "navigation": {
     "home": "Główna",

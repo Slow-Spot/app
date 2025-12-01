@@ -378,7 +378,12 @@
     "dataClearedBody": "You can rebuild your preferences and sessions anytime. No data leaves this device.",
     "featureOffline": "Works offline",
     "featurePrivacy": "No ads or tracking",
-    "featureLocal": "Data on device"
+    "featureLocal": "Data on device",
+    "legalTitle": "Legal Information",
+    "legalDescription": "Terms, privacy policy and support",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "support": "Support"
   },
   "navigation": {
     "home": "Home",

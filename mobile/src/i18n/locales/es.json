@@ -336,7 +336,12 @@
     "dataClearedBody": "Puedes reconstruir tus preferencias y sesiones en cualquier momento. Ningún dato sale de este dispositivo.",
     "featureOffline": "Funciona sin conexión",
     "featurePrivacy": "Sin anuncios ni seguimiento",
-    "featureLocal": "Datos en el dispositivo"
+    "featureLocal": "Datos en el dispositivo",
+    "legalTitle": "Información legal",
+    "legalDescription": "Términos, política de privacidad y soporte",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio",
+    "support": "Soporte"
   },
   "navigation": {
     "home": "Inicio",

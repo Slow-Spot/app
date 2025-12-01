@@ -17,6 +17,7 @@ import {
   Share,
   Alert,
   Switch,
+  Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -124,6 +125,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     iconAmber: isDark ? featureColorPalettes.amber.darkIcon : featureColorPalettes.amber.lightIcon,
     iconTeal: isDark ? featureColorPalettes.teal.darkIcon : featureColorPalettes.teal.lightIcon,
     iconRose: isDark ? featureColorPalettes.rose.darkIcon : featureColorPalettes.rose.lightIcon,
+    // For legal section
+    iconBoxBg: isDark ? primaryColor.transparent[20] : primaryColor.transparent[10],
+    chevronColor: isDark ? colors.neutral.gray[400] : colors.neutral.gray[500],
   }), [colors, isDark, featureColors]);
 
   const handleLanguageChange = async (languageCode: string) => {
@@ -481,6 +485,77 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
           </View>
         </GradientCard>
+
+        {/* Legal & Support Card - Required for App Store / Google Play */}
+        <GradientCard
+          gradient={themeGradients.card.whiteCard}
+          style={[styles.card, dynamicStyles.cardShadow]}
+          isDark={isDark}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconBox, { backgroundColor: dynamicStyles.iconBoxBg }]}>
+              <Ionicons name="document-text" size={24} color={brandColors.purple.primary} />
+            </View>
+            <View style={styles.cardTextContainer}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {t('settings.legalTitle', 'Informacje prawne')}
+              </Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                {t('settings.legalDescription', 'Regulamin, polityka prywatności i wsparcie')}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.legalLinks}>
+            <TouchableOpacity
+              style={[styles.legalLink, { backgroundColor: dynamicStyles.optionBg }]}
+              onPress={() => {
+                const locale = i18n.language === 'pl' ? 'pl' : 'en';
+                Linking.openURL(`https://slowspot.me/${locale}/privacy`);
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={styles.legalLinkContent}>
+                <Ionicons name="shield-checkmark" size={20} color={brandColors.purple.primary} />
+                <Text style={[styles.legalLinkText, dynamicStyles.cardTitle]}>
+                  {t('settings.privacyPolicy', 'Polityka prywatności')}
+                </Text>
+              </View>
+              <Ionicons name="open-outline" size={18} color={dynamicStyles.chevronColor} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.legalLink, { backgroundColor: dynamicStyles.optionBg }]}
+              onPress={() => {
+                const locale = i18n.language === 'pl' ? 'pl' : 'en';
+                Linking.openURL(`https://slowspot.me/${locale}/terms`);
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={styles.legalLinkContent}>
+                <Ionicons name="document" size={20} color={brandColors.purple.primary} />
+                <Text style={[styles.legalLinkText, dynamicStyles.cardTitle]}>
+                  {t('settings.termsOfService', 'Regulamin')}
+                </Text>
+              </View>
+              <Ionicons name="open-outline" size={18} color={dynamicStyles.chevronColor} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.legalLink, { backgroundColor: dynamicStyles.optionBg }]}
+              onPress={() => {
+                const locale = i18n.language === 'pl' ? 'pl' : 'en';
+                Linking.openURL(`https://slowspot.me/${locale}/support`);
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={styles.legalLinkContent}>
+                <Ionicons name="help-circle" size={20} color={brandColors.purple.primary} />
+                <Text style={[styles.legalLinkText, dynamicStyles.cardTitle]}>
+                  {t('settings.support', 'Wsparcie')}
+                </Text>
+              </View>
+              <Ionicons name="open-outline" size={18} color={dynamicStyles.chevronColor} />
+            </TouchableOpacity>
+          </View>
+        </GradientCard>
       </ScrollView>
     </GradientBackground>
   );
@@ -645,5 +720,26 @@ const styles = StyleSheet.create({
   },
   aboutFeatureText: {
     fontSize: theme.typography.fontSizes.sm,
+  },
+  // Legal links section
+  legalLinks: {
+    marginTop: theme.spacing.md,
+    gap: theme.spacing.sm,
+  },
+  legalLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+  },
+  legalLinkContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+  },
+  legalLinkText: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: '500',
   },
 });
