@@ -35,8 +35,8 @@ jobs:
           REPO: ${{ github.repository }}
           KEEP_COUNT: ${{ github.event.inputs.keep_count || '5' }}
         run: |
-          echo "🧹 Cleaning up old workflow runs..."
-          echo "📊 Keeping the ${KEEP_COUNT} most recent runs for each workflow"
+          echo "Cleaning up old workflow runs..."
+          echo "Keeping the ${KEEP_COUNT} most recent runs for each workflow"
 
           # Get all workflows
           workflows=$(gh api repos/${REPO}/actions/workflows --jq '.workflows[] | .id')
@@ -44,7 +44,7 @@ jobs:
           for workflow_id in $workflows; do
             workflow_name=$(gh api repos/${REPO}/actions/workflows/${workflow_id} --jq '.name')
             echo ""
-            echo "📋 Processing workflow: ${workflow_name}"
+            echo "Processing workflow: ${workflow_name}"
 
             # Get all runs for this workflow, sorted by creation date (newest first)
             run_ids=$(gh api \
@@ -61,7 +61,7 @@ jobs:
             delete_count=$(echo "$to_delete" | grep -c . || echo 0)
 
             if [ "$delete_count" -gt 0 ]; then
-              echo "   🗑️  Deleting ${delete_count} old runs..."
+              echo "   Deleting ${delete_count} old runs..."
 
               # Delete each old run
               echo "$to_delete" | while read -r run_id; do
@@ -69,16 +69,16 @@ jobs:
                   gh api \
                     --method DELETE \
                     "repos/${REPO}/actions/runs/${run_id}" \
-                    2>/dev/null && echo "      ✅ Deleted run ${run_id}" || echo "      ❌ Failed to delete run ${run_id}"
+                    2>/dev/null && echo "      [OK] Deleted run ${run_id}" || echo "      [FAIL] Failed to delete run ${run_id}"
                 fi
               done
             else
-              echo "   ✨ No runs to delete (${total} runs, keeping ${KEEP_COUNT})"
+              echo "   No runs to delete (${total} runs, keeping ${KEEP_COUNT})"
             fi
           done
 
           echo ""
-          echo "✅ Cleanup complete!"
+          echo "Cleanup complete!"
 
   cleanup-artifacts:
     name: Cleanup Old Artifacts
@@ -89,11 +89,31 @@ jobs:
 
     steps:
       - name: Delete old artifacts
-        uses: c-hive/gha-remove-artifacts@v1
-        with:
-          age: '7 days'
-          skip-recent: 5
-          GITHUB_TOKEN: ${{ github.token }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Cleaning up artifacts older than 7 days..."
+
+          # Get all artifacts
+          artifacts=$(gh api repos/${REPO}/actions/artifacts --paginate --jq '.artifacts[] | select(.created_at < (now - 7*24*60*60 | strftime("%Y-%m-%dT%H:%M:%SZ"))) | .id' 2>/dev/null || echo "")
+
+          if [ -z "$artifacts" ]; then
+            echo "No old artifacts to delete"
+          else
+            count=$(echo "$artifacts" | wc -l | xargs)
+            echo "Found ${count} artifacts to delete"
+
+            echo "$artifacts" | while read -r artifact_id; do
+              if [ -n "$artifact_id" ]; then
+                gh api --method DELETE "repos/${REPO}/actions/artifacts/${artifact_id}" 2>/dev/null \
+                  && echo "   [OK] Deleted artifact ${artifact_id}" \
+                  || echo "   [FAIL] Failed to delete artifact ${artifact_id}"
+              fi
+            done
+          fi
+
+          echo "Artifact cleanup complete!"
 
   cleanup-cache:
     name: Cleanup Old Cache
@@ -106,6 +126,6 @@ jobs:
           # GitHub automatically removes cache entries older than 7 days
           # or when total cache size exceeds 10GB
           # This step serves as documentation
-          echo "✅ Cache cleanup is handled automatically by GitHub"
+          echo "Cache cleanup is handled automatically by GitHub"
           echo "   - Removes entries older than 7 days"
           echo "   - Maintains max 10GB total cache size"
