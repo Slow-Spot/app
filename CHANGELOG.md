@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/Slow-Spot/app/compare/v1.0.0...v1.0.1) (2025-12-01)
+
+### Bug Fixes
+
+* **ci:** skip husky in CI and use consistent FTP_PASS secret name ([63807dd](https://github.com/Slow-Spot/app/commit/63807dd3d12de8b9c725dd8634a0624c16867804))
+
 ## 1.0.0 (2025-12-01)
 
 ### Features
