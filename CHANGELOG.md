@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/Slow-Spot/app/compare/v1.2.0...v1.3.0) (2025-12-03)
+
+### Features
+
+* add PersonalizationContext and PersonalizationScreen for user customization options ([a6a98ad](https://github.com/Slow-Spot/app/commit/a6a98ad5b7e70a9738c4186975c45196fc59e91e))
+
 ## [1.2.0](https://github.com/Slow-Spot/app/compare/v1.1.0...v1.2.0) (2025-12-01)
 
 ### Features
