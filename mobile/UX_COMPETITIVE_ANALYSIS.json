@@ -1,0 +1,163 @@
+{
+  "analysisDate": "2025-12-05",
+  "appName": "Slow Spot",
+  "brandPhilosophy": {
+    "core": "PROSTOTA I PERSONALIZACJA BEZ PRESJI",
+    "vision": "Aplikacja która NIE przytłacza, NIE wywiera presji, NIE gamifikuje - tylko wspiera użytkownika w powrocie do spokoju",
+    "antiCompetitive": "Konkurencja przegrywa przez nadmiar funkcji, notification spam i streak anxiety - my wygrywamy przez minimalizm"
+  },
+  "UserExperience": {
+    "Usability": {
+      "score": "8.5/10",
+      "strengths": [
+        "Intuicyjna nawigacja tab-based z 4 głównymi ekranami",
+        "Swipe gestures między ekranami - naturalny flow",
+        "Płynne przejścia (350ms fade-in) - nie rozpraszają",
+        "CELOWO mała liczba opcji - brak choice paralysis"
+      ],
+      "improvements_needed": [
+        "Upewnić się że każdy ekran ma MAKSYMALNIE 3-4 główne akcje",
+        "Sprawdzić czy opisy funkcji są zrozumiałe dla początkujących"
+      ]
+    },
+    "UserGuidance": {
+      "score": "8/10",
+      "strengths": [
+        "4-slajdowy onboarding - krótki, nie męczący",
+        "IntentionScreen przed sesją - fokus na użytkownika",
+        "Kontekstowe hinty bez nachalności"
+      ],
+      "improvements_needed": [
+        "Dodać krótkie wyjaśnienia breathing patterns (1 zdanie każdy)",
+        "Wyjaśnić po co są 432Hz/528Hz dla tych co nie wiedzą"
+      ]
+    },
+    "ColorScheme": {
+      "score": "9/10",
+      "strengths": [
+        "25+ motywów - użytkownik czuje się 'u siebie'",
+        "Relaksacyjna paleta bez krzykliwych kolorów",
+        "Dark mode równej jakości"
+      ]
+    },
+    "RelaxationEffects": {
+      "score": "9/10",
+      "strengths": [
+        "UNIKALNA haptyka oddechowa - narastająca/malejąca intensywność",
+        "Wolne, naturalne animacje breathing visualization",
+        "Brak nagłych dźwięków czy przejść"
+      ]
+    },
+    "PopUpExperience": {
+      "score": "8.5/10",
+      "strengths": [
+        "Modals TYLKO gdy konieczne (exit, delete)",
+        "Automatyczne znikanie success messages",
+        "Brak nachalnych popupów z ofertami/upgrade"
+      ]
+    }
+  },
+  "FunctionDescriptions": {
+    "score": "7.5/10",
+    "priority_fixes": [
+      "Breathing patterns - dodać 1-zdaniowe wyjaśnienie różnic",
+      "Ambient sounds - wyjaśnić 432Hz/528Hz prostym językiem",
+      "Upewnić się że KAŻDA opcja ma hint co robi"
+    ]
+  },
+  "CompetitiveAdvantage": {
+    "whyUsersLeaveCompetitors": [
+      "Calm/Headspace: Agresywny paywall, wszystko za płatne",
+      "Insight Timer: 220,000 medytacji = paraliż wyboru",
+      "Wszystkie: Notification spam (10-20 dziennie)",
+      "Wszystkie: Streak anxiety - presja codziennego użycia",
+      "Wszystkie: Celebrity overload - marketing zamiast spokoju"
+    ],
+    "SlowSpot_Wins_By": [
+      "PROSTOTA - mała, starannie dobrana biblioteka treści",
+      "ZERO PRESJI - brak nachalnych powiadomień i streak guilt",
+      "PERSONALIZACJA - 25+ motywów, custom sessions",
+      "UNIKALNA HAPTYKA - oddychanie przez dotyk",
+      "ETYKA - brak ukrytych opłat i dark patterns"
+    ]
+  },
+  "PRIORITY_TODO_LIST": [
+    {
+      "rank": 1,
+      "task": "Dodać krótkie opisy breathing patterns",
+      "why": "Użytkownik musi wiedzieć którą technikę wybrać bez googlowania",
+      "effort": "2-4h",
+      "details": "Box: równowaga i skupienie | 4-7-8: zasypianie | Equal: podstawowa relaksacja | Calm: szybkie uspokojenie"
+    },
+    {
+      "rank": 2,
+      "task": "Wyjaśnić 432Hz i 528Hz w opisach ambient sounds",
+      "why": "Użytkownik nie wie po co to - może pominąć wartościową funkcję",
+      "effort": "1-2h",
+      "details": "432Hz: harmonia i spokój | 528Hz: redukcja stresu i regeneracja"
+    },
+    {
+      "rank": 3,
+      "task": "Sprawdzić accessibility - labels na wszystkich buttonach",
+      "why": "Osoby niewidome/słabowidzące = wasza nisza z haptyką!",
+      "effort": "3-4h",
+      "details": "Przejść wszystkie komponenty, dodać accessibilityLabel i accessibilityHint"
+    },
+    {
+      "rank": 4,
+      "task": "Upewnić się że powiadomienia są MAX 1 dziennie i user-controlled",
+      "why": "Notification spam to #1 skarga na konkurencję",
+      "effort": "2-3h",
+      "details": "Sprawdzić obecną implementację, dodać clear settings"
+    },
+    {
+      "rank": 5,
+      "task": "Dodać opcję 'Zen Mode' - ultra minimalistyczny interfejs podczas sesji",
+      "why": "Dla zaawansowanych którzy chcą ZERO rozpraszaczy",
+      "effort": "4-6h",
+      "details": "Ukryć wszystko oprócz breathing animation, timer opcjonalny"
+    },
+    {
+      "rank": 6,
+      "task": "Przejrzeć wszystkie teksty UI - czy są ciepłe i bez presji",
+      "why": "Ton komunikacji buduje zaufanie i chęć powrotu",
+      "effort": "2-3h",
+      "details": "Zamienić 'Musisz' na 'Możesz', usunąć guilt-tripping"
+    },
+    {
+      "rank": 7,
+      "task": "Dodać 'Mindful Moment' - 1-minutowa mikro-medytacja na home",
+      "why": "Niski próg wejścia, buduje nawyk bez presji",
+      "effort": "4-6h",
+      "details": "Jeden przycisk, 60 sekund, bez setup"
+    },
+    {
+      "rank": 8,
+      "task": "Przetestować flow z zamkniętymi oczami (voice + haptics only)",
+      "why": "Wasze USP - medytacja bez patrzenia na ekran",
+      "effort": "2-3h testing",
+      "details": "Czy można przeprowadzić całą sesję bez otwierania oczu?"
+    }
+  ],
+  "antiPatterns_CRITICAL": [
+    "NIGDY nie dodawać streak counter z presją",
+    "NIGDY nie wysyłać więcej niż 1 powiadomienie dziennie",
+    "NIGDY nie dodawać paywall który blokuje podstawowe funkcje",
+    "NIGDY nie dodawać gamification (punkty, poziomy, odznaki za streak)",
+    "NIGDY nie kopiować celebrytów/influencerów - to nie wasza nisza",
+    "NIGDY nie rozbudowywać biblioteki do 1000+ medytacji - prostota > ilość"
+  ],
+  "futureConsiderations": {
+    "maybeUseful": [
+      "Sleep sounds/stories - ALE proste, bez narracji celebrytów",
+      "Widget iOS/Android - szybki dostęp do 1-min medytacji",
+      "Apple Watch - haptics na nadgarstku dla oddychania"
+    ],
+    "avoidCopying": [
+      "Live group sessions - dodaje complexity",
+      "Social features - medytacja to prywatność",
+      "AI personalization - może być creepy",
+      "Wearables integration - Apple Health nie ma medytacji, zbędne"
+    ]
+  }
+}

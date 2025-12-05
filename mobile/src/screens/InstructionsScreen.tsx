@@ -238,10 +238,10 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                 </View>
                 <View style={styles.featuredTextContainer}>
                   <Text style={styles.featuredTitle}>
-                    {t('instructionsScreen.featuredIntro.title', 'Wprowadzenie do Medytacji')}
+                    {t('instructionsScreen.featuredIntro.title', 'Introduction to Meditation')}
                   </Text>
                   <Text style={styles.featuredDescription}>
-                    {t('instructionsScreen.featuredIntro.description', 'Interaktywny przewodnik krok po kroku. Idealny dla początkujących lub gdy chcesz odświeżyć podstawy.')}
+                    {t('instructionsScreen.featuredIntro.description', 'Interactive step-by-step guide. Perfect for beginners or when you want to refresh the basics.')}
                   </Text>
                 </View>
                 <View style={styles.featuredArrow}>
@@ -317,7 +317,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                 >
                   <Ionicons name="play-circle" size={20} color={currentTheme.primary} />
                   <Text style={[styles.tryButtonText, { color: currentTheme.primary }]}>
-                    {t('instructionsScreen.tryExercise', 'Wypróbuj')}
+                    {t('instructionsScreen.tryExercise', 'Try it')}
                   </Text>
                   <Ionicons name="chevron-forward" size={16} color={currentTheme.primary} />
                 </TouchableOpacity>
@@ -333,15 +333,15 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
               </View>
               <View style={styles.breathingTitleContainer}>
                 <Text style={[styles.cardTitle, { color: '#0284C7' }]}>
-                  {t('settings.breathingScience', 'Nauka o oddychaniu')}
+                  {t('settings.breathingScience', 'Breathing Science')}
                 </Text>
                 <Text style={[styles.breathingPattern, dynamicStyles.duration]}>
-                  {t('settings.breathingScienceDescription', 'Badania nad technikami oddychania')}
+                  {t('settings.breathingScienceDescription', 'Research on breathing techniques')}
                 </Text>
               </View>
             </View>
             <Text style={[styles.cardDescription, dynamicStyles.cardDescription, { marginTop: theme.spacing.sm }]}>
-              {t('settings.breathingIntro', 'Kontrolowany oddech wpływa na autonomiczny układ nerwowy. Badania pokazują, że wolne, rytmiczne oddychanie aktywuje reakcję przywspółczulną, ale optymalne wzorce różnią się w zależności od osoby.')}
+              {t('settings.breathingIntro', 'Controlled breathing affects the autonomic nervous system. Research shows that slow, rhythmic breathing activates the parasympathetic response, but optimal patterns vary by individual.')}
             </Text>
 
             <View style={styles.sourcesList}>
@@ -354,7 +354,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                       onPress={() => toggleSource(index)}
                       activeOpacity={0.7}
                       accessibilityLabel={t(source.titleKey)}
-                      accessibilityHint={isExpanded ? t('common.tapToCollapse', 'Stuknij, aby zwinąć') : t('common.tapToExpand', 'Stuknij, aby rozwinąć')}
+                      accessibilityHint={isExpanded ? t('common.tapToCollapse', 'Tap to collapse') : t('common.tapToExpand', 'Tap to expand')}
                     >
                       <View style={styles.sourceHeader}>
                         <Ionicons
@@ -390,7 +390,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                         >
                           <Ionicons name="open-outline" size={16} color="#0284C7" />
                           <Text style={[styles.learnMoreText, { color: '#0284C7' }]}>
-                            {t('settings.learnMore', 'Przeczytaj badanie')}
+                            {t('settings.learnMore', 'Read study')}
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -409,15 +409,15 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
               </View>
               <View style={styles.breathingTitleContainer}>
                 <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                  {t('settings.scientificSources', 'Źródła naukowe')}
+                  {t('settings.scientificSources', 'Scientific Sources')}
                 </Text>
                 <Text style={[styles.breathingPattern, dynamicStyles.duration]}>
-                  {t('settings.scientificSourcesDescription', 'Badania nad medytacją')}
+                  {t('settings.scientificSourcesDescription', 'Research on meditation')}
                 </Text>
               </View>
             </View>
             <Text style={[styles.cardDescription, dynamicStyles.cardDescription, { marginTop: theme.spacing.sm }]}>
-              {t('settings.scienceIntro', 'Korzyści z medytacji zostały potwierdzone w licznych badaniach naukowych. Oto kilka kluczowych publikacji:')}
+              {t('settings.scienceIntro', 'The benefits of meditation have been confirmed in numerous scientific studies. Here are some key publications:')}
             </Text>
 
             <View style={styles.sourcesList}>
@@ -430,7 +430,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                       onPress={() => toggleMeditationSource(index)}
                       activeOpacity={0.7}
                       accessibilityLabel={t(source.titleKey)}
-                      accessibilityHint={isExpanded ? t('common.tapToCollapse', 'Stuknij, aby zwinąć') : t('common.tapToExpand', 'Stuknij, aby rozwinąć')}
+                      accessibilityHint={isExpanded ? t('common.tapToCollapse', 'Tap to collapse') : t('common.tapToExpand', 'Tap to expand')}
                     >
                       <View style={styles.sourceHeader}>
                         <Ionicons
@@ -466,7 +466,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                         >
                           <Ionicons name="open-outline" size={16} color={currentTheme.primary} />
                           <Text style={[styles.learnMoreText, { color: currentTheme.primary }]}>
-                            {t('settings.learnMore', 'Przeczytaj badanie')}
+                            {t('settings.learnMore', 'Read study')}
                           </Text>
                         </TouchableOpacity>
                       </View>
@@ -601,7 +601,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                       >
                         <Ionicons name="play" size={24} color={neutralColors.white} />
                         <Text style={styles.modalButtonText}>
-                          {t('intention.breathing.start', 'Rozpocznij')}
+                          {t('intention.breathing.start', 'Start')}
                         </Text>
                       </LinearGradient>
                     </TouchableOpacity>
@@ -612,7 +612,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                     >
                       <Ionicons name="stop" size={24} color={colors.text.primary} />
                       <Text style={[styles.modalStopButtonText, { color: colors.text.primary }]}>
-                        {t('intention.breathing.stop', 'Zakończ')}
+                        {t('intention.breathing.stop', 'Stop')}
                       </Text>
                     </TouchableOpacity>
                   )}
@@ -1128,15 +1128,15 @@ const AnimatedBreathingCircle: React.FC<{
   const getPhaseText = () => {
     switch (breathingPhase) {
       case 'inhale':
-        return t('meditation.breatheIn', 'Wdech');
+        return t('meditation.breatheIn', 'Inhale');
       case 'hold':
-        return t('instructions.breathingPrep.hold', 'Trzymaj');
+        return t('instructions.breathingPrep.hold', 'Hold');
       case 'exhale':
-        return t('meditation.breatheOut', 'Wydech');
+        return t('meditation.breatheOut', 'Exhale');
       case 'rest':
-        return t('instructions.breathingPrep.hold', 'Trzymaj');
+        return t('instructions.breathingPrep.hold', 'Hold');
       default:
-        return t('instructions.breathingPrep.breathe', 'Oddychaj');
+        return t('instructions.breathingPrep.breathe', 'Breathe');
     }
   };
 

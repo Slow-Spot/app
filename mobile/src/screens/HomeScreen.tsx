@@ -113,7 +113,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             {userName ? (
               <>
                 <Text style={[styles.greetingTextSmall, dynamicStyles.greetingText]}>
-                  {t(greetingKey, 'Witaj')},
+                  {t(greetingKey, 'Hello')},
                 </Text>
                 <MaskedView
                   maskElement={
@@ -136,7 +136,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </>
             ) : (
               <Text style={[styles.greetingText, dynamicStyles.greetingText]}>
-                {t(greetingKey, 'Witaj')}
+                {t(greetingKey, 'Hello')}
               </Text>
             )}
           </View>
@@ -176,7 +176,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               style={[styles.mainCard, dynamicStyles.mainCardShadow]}
               pressScale={0.98}
               hapticType="medium"
-              accessibilityLabel={t('home.meditate', 'Medytuj')}
+              accessibilityLabel={t('home.meditate', 'Meditate')}
             >
               <LinearGradient
                 colors={[...currentTheme.gradient]}
@@ -187,14 +187,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <View style={styles.mainCardContent}>
                   <View style={styles.mainCardTextSection}>
                     <Text style={styles.mainCardLabel}>
-                      {t('home.readyToMeditate', 'Gotowy na medytację?')}
+                      {t('home.readyToMeditate', 'Ready to meditate?')}
                     </Text>
                     <Text style={styles.mainCardTitle}>
-                      {t('home.meditate', 'Medytuj')}
+                      {t('home.meditate', 'Meditate')}
                     </Text>
                     <View style={styles.mainCardCta}>
                       <Text style={styles.mainCardCtaText}>
-                        {t('home.startNow', 'Rozpocznij')}
+                        {t('home.startNow', 'Start')}
                       </Text>
                       <Ionicons name="arrow-forward" size={16} color="rgba(255,255,255,0.9)" />
                     </View>
@@ -221,7 +221,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           style={styles.sectionHeader}
         >
           <Text style={[styles.sectionTitle, { color: colors.text.secondary }]}>
-            {t('home.explore', 'Odkrywaj')}
+            {t('home.explore', 'Explore')}
           </Text>
         </Animated.View>
 
@@ -236,13 +236,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={[styles.secondaryCard, globalCardStyles.secondary]}
             pressScale={0.98}
             hapticType="light"
-            accessibilityLabel={t('home.instructions', 'Instrukcje')}
+            accessibilityLabel={t('home.instructions', 'Instructions')}
           >
             <View style={[styles.secondaryCardIcon, { backgroundColor: sectionThemeColors.instructions.background }]}>
               <Ionicons name="book-outline" size={22} color={sectionThemeColors.instructions.icon} />
             </View>
             <Text style={[styles.secondaryCardTitle, { color: colors.text.primary }]}>
-              {t('home.instructions', 'Instrukcje')}
+              {t('home.instructions', 'Instructions')}
             </Text>
             <Ionicons name="chevron-forward" size={18} color={colors.text.tertiary} />
           </AnimatedPressable>
@@ -253,13 +253,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={[styles.secondaryCard, globalCardStyles.secondary]}
             pressScale={0.98}
             hapticType="light"
-            accessibilityLabel={t('home.inspirations', 'Inspiracje')}
+            accessibilityLabel={t('home.inspirations', 'Inspirations')}
           >
             <View style={[styles.secondaryCardIcon, { backgroundColor: sectionThemeColors.inspirations.background }]}>
               <Ionicons name="sparkles-outline" size={22} color={sectionThemeColors.inspirations.icon} />
             </View>
             <Text style={[styles.secondaryCardTitle, { color: colors.text.primary }]}>
-              {t('home.inspirations', 'Inspiracje')}
+              {t('home.inspirations', 'Inspirations')}
             </Text>
             <Ionicons name="chevron-forward" size={18} color={colors.text.tertiary} />
           </AnimatedPressable>

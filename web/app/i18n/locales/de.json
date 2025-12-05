@@ -135,5 +135,372 @@
       "hi": "Hindi",
       "zh": "Chinese"
     }
+  },
+  "supportPage": {
+    "title": "Support",
+    "subtitle": "Wir sind hier, um Ihnen auf Ihrer Meditationsreise zu helfen.",
+    "contact": {
+      "title": "Kontaktieren Sie uns",
+      "email": "E-Mail",
+      "emailAddress": "contact@slowspot.me",
+      "responseTime": "Antwortzeit: Wir bemühen uns, innerhalb von 48 Stunden zu antworten."
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "items": [
+        {
+          "question": "Wie beginne ich mit der Meditation?",
+          "answer": "Öffnen Sie einfach die App und tippen Sie auf die Schaltfläche \"Meditieren\" auf dem Startbildschirm. Wählen Sie eine voreingestellte Sitzung oder erstellen Sie Ihre eigene. Die App führt Sie durch die Meditation mit optionalen Glocken und Umgebungsgeräuschen."
+        },
+        {
+          "question": "Funktioniert die App offline?",
+          "answer": "Ja! Slow Spot ist für 100% Offline-Nutzung konzipiert. Alle Meditationssitzungen, Sounds und Funktionen sind ohne Internetverbindung verfügbar. Ihre Daten werden lokal auf Ihrem Gerät gespeichert."
+        },
+        {
+          "question": "Wie richte ich Meditationserinnerungen ein?",
+          "answer": "Gehen Sie zum Profilbildschirm und tippen Sie auf \"Erinnerung planen\". Sie können Ihre bevorzugte Zeit für tägliche Meditationserinnerungen wählen. Die App fordert die Kalenderberechtigung an, um diese Erinnerungen zu erstellen."
+        },
+        {
+          "question": "Kann ich benutzerdefinierte Meditationssitzungen erstellen?",
+          "answer": "Ja! Tippen Sie auf die \"+\"-Schaltfläche im Meditationsbildschirm, um eine benutzerdefinierte Sitzung zu erstellen. Sie können die Dauer, Umgebungsgeräusche, Intervallglocken und mehr anpassen."
+        },
+        {
+          "question": "Wie ändere ich die App-Sprache?",
+          "answer": "Gehen Sie zu den Einstellungen und finden Sie den Abschnitt Sprache. Slow Spot unterstützt Englisch, Polnisch, Spanisch, Deutsch, Französisch, Hindi und Chinesisch."
+        },
+        {
+          "question": "Wie lösche ich meine Daten?",
+          "answer": "Gehen Sie zu Einstellungen > Daten & Datenschutz > \"Daten löschen\", um alle lokalen Daten zu löschen. Alternativ werden durch Deinstallation der App alle Daten von Ihrem Gerät entfernt. Da wir keine Daten auf Servern speichern, gibt es nichts anderes zu löschen."
+        },
+        {
+          "question": "Sind meine Daten privat?",
+          "answer": "Absolut. Slow Spot sammelt, überträgt oder speichert keine Ihrer persönlichen Daten auf externen Servern. Ihr gesamter Meditationsverlauf, Ihre Einstellungen und Ihr Fortschritt bleiben nur auf Ihrem Gerät."
+        },
+        {
+          "question": "Die App funktioniert nicht richtig. Was soll ich tun?",
+          "answer": "Versuchen Sie diese Schritte: 1) Schließen Sie die App und öffnen Sie sie erneut, 2) Starten Sie Ihr Gerät neu, 3) Stellen Sie sicher, dass Sie die neueste Version aus dem App Store oder Google Play haben. Wenn das Problem weiterhin besteht, kontaktieren Sie uns bitte mit Details zum Problem."
+        }
+      ]
+    },
+    "feedback": {
+      "title": "Feedback & Vorschläge",
+      "text": "Wir lieben es, von unseren Nutzern zu hören! Wenn Sie Vorschläge für neue Funktionen, Verbesserungen haben oder einfach nur Ihre Meditationserfahrung teilen möchten, kontaktieren Sie uns bitte:",
+      "button": "Feedback senden"
+    },
+    "appInfo": {
+      "title": "App-Informationen",
+      "version": "Version",
+      "versionNumber": "1.5.0",
+      "platform": "Plattform",
+      "platformValue": "iOS & Android"
+    }
+  },
+  "privacyPage": {
+    "title": "Datenschutzrichtlinie",
+    "lastUpdated": "Letzte Aktualisierung: 27. November 2024",
+    "summary": {
+      "title": "Zusammenfassung (TL;DR)",
+      "items": [
+        "Ihre Daten bleiben auf Ihrem Gerät",
+        "Keine Konten, keine Anmeldung, kein Tracking",
+        "Keine Analysen, keine Werbung, keine Drittanbieterdienste",
+        "Optionale Kalenderberechtigung nur für Erinnerungen",
+        "Jederzeit durch Deinstallation der App löschbar",
+        "100% offline-kompatibel"
+      ]
+    },
+    "sections": {
+      "introduction": {
+        "title": "Einleitung",
+        "content": "Slow Spot (\"wir\", \"uns\" oder \"unser\") verpflichtet sich zum Schutz Ihrer Privatsphäre. Diese Datenschutzrichtlinie erklärt, wie unsere mobile Meditations-App mit Ihren Informationen umgeht."
+      },
+      "philosophy": {
+        "title": "Unsere Datenschutz-Philosophie",
+        "simple": "Einfache Wahrheit:",
+        "simpleText": "Ihre Daten bleiben auf Ihrem Gerät. Wir sammeln, übertragen oder speichern keine Ihrer persönlichen Informationen auf externen Servern.",
+        "offline": "Slow Spot ist für 100% Offline-Betrieb konzipiert. Alle Ihre Meditationssitzungen, Einstellungen und persönlichen Daten bleiben privat und werden lokal auf Ihrem Gerät gespeichert."
+      },
+      "notCollect": {
+        "title": "Informationen, die wir NICHT sammeln",
+        "intro": "Wir möchten absolut klar machen, was wir NICHT tun:",
+        "items": [
+          "Wir sammeln NICHT Ihren Namen, E-Mail oder persönliche Kennungen",
+          "Wir verfolgen NICHT Ihren Standort",
+          "Wir sammeln NICHT Ihre Meditationsabsichten oder persönlichen Notizen",
+          "Wir verwenden KEINE Analyse- oder Tracking-Dienste",
+          "Wir teilen KEINE Ihrer Daten mit Dritten",
+          "Wir übertragen KEINE Daten an externe Server",
+          "Wir verwenden KEINE Cookies oder ähnliche Tracking-Technologien",
+          "Wir zeigen KEINE Werbung"
+        ]
+      },
+      "localStorage": {
+        "title": "Lokal auf Ihrem Gerät gespeicherte Informationen",
+        "intro": "Die folgenden Informationen werden NUR auf Ihrem Gerät mit sicherem lokalem Speicher gespeichert:",
+        "preferences": {
+          "title": "Benutzereinstellungen",
+          "items": [
+            "Sprachauswahl (Englisch, Polnisch, Spanisch, Deutsch, Französisch, Hindi, Chinesisch)",
+            "Theme-Einstellung (Hell, Dunkel oder System)"
+          ],
+          "purpose": "Um ein personalisiertes Erlebnis zu bieten"
+        },
+        "history": {
+          "title": "Meditationssitzungs-Verlauf",
+          "items": [
+            "Sitzungsdauer und Abschlussdatum",
+            "Sitzungstyp (z.B. Morgenerwachen, Liebende Güte)",
+            "Benutzerdefinierte Sitzungskonfigurationen (wenn Sie eigene Sitzungen erstellen)"
+          ],
+          "purpose": "Um Ihren Meditationsfortschritt zu verfolgen und Serien zu pflegen"
+        },
+        "statistics": {
+          "title": "Fortschrittsstatistiken",
+          "items": [
+            "Gesamtzahl abgeschlossener Sitzungen",
+            "Gesamtminuten meditiert",
+            "Aktuelle und längste Meditationsserien",
+            "Erfolgsfortschritt (z.B. Abzeichen \"10 Sitzungen abgeschlossen\")"
+          ],
+          "purpose": "Um Ihre Meditationsreise zu motivieren und zu feiern"
+        },
+        "calendar": {
+          "title": "Kalenderereignisse (Optional)",
+          "items": [
+            "Meditationserinnerungen (wenn Sie die Kalenderintegration aktivieren)",
+            "Gespeichert in: Der nativen Kalender-App Ihres Geräts"
+          ],
+          "purpose": "Um Ihnen zu helfen, eine regelmäßige Meditationspraxis beizubehalten"
+        }
+      },
+      "permissions": {
+        "title": "Berechtigungen, die wir anfordern",
+        "required": {
+          "title": "Erforderliche Berechtigungen",
+          "content": "Keine. Die App funktioniert ohne erforderliche Berechtigungen."
+        },
+        "optional": {
+          "title": "Optionale Berechtigungen",
+          "intro": "Die folgenden Berechtigungen sind optional und werden nur verwendet, wenn Sie bestimmte Funktionen aktivieren:",
+          "calendar": {
+            "title": "Kalenderzugriff",
+            "why": "Um Meditationserinnerungen in Ihrem Gerätekalender zu planen",
+            "when": "Nur wenn Sie \"Erinnerung planen\" im Profilbildschirm antippen",
+            "what": "Erstellt wiederkehrende Meditationserinnerungen zu Ihrer gewählten Zeit",
+            "disable": "Deaktivieren Sie dies jederzeit durch Löschen der Kalenderereignisse oder Verweigern der Berechtigung"
+          }
+        }
+      },
+      "protection": {
+        "title": "Wie Ihre Daten geschützt werden",
+        "local": {
+          "title": "Nur lokale Speicherung",
+          "content": "Alle Daten werden mit dem sicheren lokalen Speicher Ihres Geräts gespeichert."
+        },
+        "network": {
+          "title": "Keine Netzwerkübertragung",
+          "content": "Die App funktioniert im Flugmodus. Ihre Meditationsdaten verlassen niemals Ihr Gerät."
+        },
+        "noAccount": {
+          "title": "Kein Konto erforderlich",
+          "content": "Sie müssen kein Konto erstellen, keine E-Mail angeben oder sich anmelden. Beginnen Sie sofort mit der Meditation."
+        }
+      },
+      "children": {
+        "title": "Datenschutz für Kinder",
+        "content": "Slow Spot sammelt keine Daten von niemandem, einschließlich Kindern unter 13 Jahren (oder 16 in der EU). Die App ist familienfreundlich und für alle Altersgruppen geeignet."
+      },
+      "rights": {
+        "title": "Ihre Rechte",
+        "access": {
+          "title": "Zugriffsrecht",
+          "intro": "Alle Ihre Daten sind in der App sichtbar:",
+          "items": [
+            "Sehen Sie Ihren Meditationsverlauf im Profilbildschirm",
+            "Sehen Sie Ihre Statistiken und Fortschritte im Profilbildschirm",
+            "Sehen Sie Ihre benutzerdefinierten Sitzungen im Meditationsbildschirm"
+          ]
+        },
+        "delete": {
+          "title": "Recht auf Löschung",
+          "intro": "Sie können Ihre Daten jederzeit löschen:",
+          "items": [
+            "Einzelne Sitzungen: Halten Sie eine benutzerdefinierte Sitzung gedrückt und wählen Sie \"Löschen\"",
+            "Alle App-Daten: Verwenden Sie \"Daten löschen\" in den Einstellungen oder deinstallieren Sie die App"
+          ],
+          "note": "Es gibt kein \"Konto\" zu löschen, da wir Ihre Daten nirgendwo außer auf Ihrem Gerät speichern."
+        }
+      },
+      "thirdParty": {
+        "title": "Drittanbieterdienste",
+        "notUse": {
+          "title": "Wir verwenden NICHT:",
+          "items": [
+            "Analysedienste (kein Google Analytics, Firebase Analytics usw.)",
+            "Werbenetzwerke",
+            "Social Media SDKs",
+            "Cloud-Speicherdienste",
+            "Backend-Server oder APIs"
+          ]
+        },
+        "audio": {
+          "title": "Audio-Inhaltsquellen:",
+          "content": "Die in der App enthaltenen Meditationsglocken und Umgebungsgeräusche stammen aus lizenzfreien Creative Commons (CC0) lizenzierten Inhalten. Diese Dienste haben KEINEN Zugriff auf Ihre App-Nutzung oder persönlichen Daten."
+        }
+      },
+      "legal": {
+        "title": "Rechtliche Konformität",
+        "intro": "Diese Datenschutzrichtlinie entspricht:",
+        "items": [
+          "DSGVO (Datenschutz-Grundverordnung - EU)",
+          "CCPA (California Consumer Privacy Act - USA)",
+          "COPPA (Children's Online Privacy Protection Act - USA)",
+          "Apple App Store Review-Richtlinien",
+          "Google Play Store Entwicklerrichtlinien"
+        ]
+      },
+      "changes": {
+        "title": "Änderungen dieser Datenschutzrichtlinie",
+        "intro": "Wir können diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Wenn wir das tun:",
+        "items": [
+          "Aktualisieren wir das Datum \"Letzte Aktualisierung\" oben",
+          "Benachrichtigen wir Sie bei größeren Änderungen per In-App-Nachricht"
+        ]
+      },
+      "contact": {
+        "title": "Kontaktieren Sie uns",
+        "intro": "Wenn Sie Fragen oder Bedenken zu dieser Datenschutzrichtlinie haben:",
+        "email": "E-Mail:",
+        "website": "Website:",
+        "responseTime": "Antwortzeit: Wir bemühen uns, alle Datenschutzanfragen innerhalb von 48 Stunden zu beantworten."
+      },
+      "trust": {
+        "title": "Ihr Vertrauen",
+        "content": "Wir haben Slow Spot mit Datenschutz als Kernprinzip gebaut, nicht als Nachgedanken. Ihre Meditationspraxis ist persönlich und heilig. Wir werden niemals Ihre Privatsphäre für Profit oder Analysen kompromittieren.",
+        "thanks": "Vielen Dank, dass Sie Slow Spot auf Ihrer Meditationsreise vertrauen."
+      }
+    }
+  },
+  "termsPage": {
+    "title": "Nutzungsbedingungen",
+    "lastUpdated": "Letzte Aktualisierung: 27. November 2024",
+    "summary": {
+      "title": "Kurze Zusammenfassung",
+      "items": [
+        "Kostenlos für persönliche Meditationspraxis",
+        "Kein Konto erforderlich",
+        "Ihre Inhalte bleiben auf Ihrem Gerät",
+        "Verantwortungsvoll und nach eigenem Ermessen nutzen",
+        "Kein Ersatz für professionellen medizinischen Rat"
+      ]
+    },
+    "sections": {
+      "acceptance": {
+        "title": "1. Annahme der Bedingungen",
+        "content": "Durch das Herunterladen, Installieren oder Verwenden der mobilen Anwendung Slow Spot (\"App\") erklären Sie sich mit diesen Nutzungsbedingungen (\"Bedingungen\") einverstanden. Wenn Sie diesen Bedingungen nicht zustimmen, verwenden Sie die App bitte nicht."
+      },
+      "description": {
+        "title": "2. Beschreibung des Dienstes",
+        "intro": "Slow Spot ist eine Meditations- und Achtsamkeitsanwendung, die bietet:",
+        "items": [
+          "Geführte und ungeführte Meditationssitzungen",
+          "Umgebungsgeräusche zur Entspannung",
+          "Fortschrittsverfolgung und Statistiken",
+          "Anpassbarer Meditationstimer",
+          "Inspirierende Zitate und Weisheitslehren",
+          "Meditationserinnerungen (optional)"
+        ],
+        "offline": "Die App funktioniert vollständig offline und erfordert keine Internetverbindung oder Benutzerkonto."
+      },
+      "license": {
+        "title": "3. Nutzungslizenz",
+        "intro": "Vorbehaltlich dieser Bedingungen gewähren wir Ihnen eine begrenzte, nicht-exklusive, nicht übertragbare, widerrufliche Lizenz zur Nutzung der App für Ihre persönliche, nicht-kommerzielle Meditationspraxis.",
+        "restrictions": "Sie dürfen NICHT:",
+        "items": [
+          "Die App kopieren, modifizieren oder verteilen",
+          "Die App reverse-engineeren, dekompilieren oder disassemblieren",
+          "Die App ohne Genehmigung für kommerzielle Zwecke nutzen",
+          "Urheberrechts- oder Eigentumshinweise entfernen",
+          "Die Lizenz an eine andere Person übertragen"
+        ]
+      },
+      "userContent": {
+        "title": "4. Benutzerinhalte",
+        "content": "Alle Inhalte, die Sie in der App erstellen (benutzerdefinierte Sitzungen, persönliche Notizen usw.), bleiben Ihr Eigentum und werden nur auf Ihrem Gerät gespeichert. Wir greifen nicht auf Ihre persönlichen Inhalte zu, sammeln oder speichern sie nicht."
+      },
+      "health": {
+        "title": "5. Gesundheitshaftungsausschluss",
+        "important": "Wichtige Gesundheitsinformationen",
+        "intro": "Slow Spot ist nur für allgemeines Wohlbefinden und Entspannung konzipiert. Die App ist NICHT dazu bestimmt:",
+        "items": [
+          "Krankheiten oder Gesundheitszustände zu diagnostizieren, behandeln, heilen oder verhindern",
+          "Professionellen medizinischen Rat, Diagnose oder Behandlung zu ersetzen",
+          "Therapie, Beratung oder psychische Gesundheitsbehandlung zu ersetzen"
+        ],
+        "consult": "Wenn Sie gesundheitliche Probleme, psychische Beschwerden haben oder Medikamente einnehmen, konsultieren Sie bitte vor der Anwendung von Meditationspraktiken einen qualifizierten Arzt.",
+        "stop": "Wenn Sie während der Meditation Unbehagen, Angst oder negative Auswirkungen verspüren, hören Sie sofort auf und konsultieren Sie einen Arzt."
+      },
+      "ip": {
+        "title": "6. Geistiges Eigentum",
+        "ownership": "Die App, einschließlich aller Inhalte, Funktionen und Funktionalitäten (einschließlich, aber nicht beschränkt auf Text, Grafiken, Logos, Audioclips und Software), ist Eigentum von Slow Spot und durch Urheberrecht, Markenrecht und andere geistige Eigentumsgesetze geschützt.",
+        "audio": "Audioinhalte (Meditationsglocken, Umgebungsgeräusche) stammen aus lizenzfreien Creative Commons-lizenzierten Quellen und werden gemäß deren jeweiligen Lizenzen verwendet."
+      },
+      "disclaimer": {
+        "title": "7. Gewährleistungsausschluss",
+        "intro": "DIE APP WIRD \"WIE BESEHEN\" UND \"WIE VERFÜGBAR\" OHNE JEGLICHE GEWÄHRLEISTUNG BEREITGESTELLT, WEDER AUSDRÜCKLICH NOCH STILLSCHWEIGEND, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF:",
+        "items": [
+          "Stillschweigende Gewährleistung der Marktgängigkeit",
+          "Eignung für einen bestimmten Zweck",
+          "Nichtverletzung von Rechten Dritter",
+          "Genauigkeit oder Zuverlässigkeit der Inhalte"
+        ],
+        "note": "Wir garantieren nicht, dass die App ununterbrochen, fehlerfrei oder frei von Viren oder anderen schädlichen Komponenten ist."
+      },
+      "liability": {
+        "title": "8. Haftungsbeschränkung",
+        "intro": "IM MAXIMAL GESETZLICH ZULÄSSIGEN UMFANG HAFTEN SLOW SPOT UND SEINE ENTWICKLER NICHT FÜR INDIREKTE, ZUFÄLLIGE, BESONDERE, FOLGE- ODER STRAFSCHÄDEN, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF:",
+        "items": [
+          "Verlust von Gewinnen, Daten oder Geschäftswert",
+          "Dienstunterbrechung oder Geräteschäden",
+          "Personenschäden oder emotionale Belastung",
+          "Sonstige immaterielle Verluste"
+        ],
+        "limit": "Unsere Gesamthaftung für Ansprüche aus der Nutzung der App übersteigt nicht den Betrag, den Sie für die App bezahlt haben (falls überhaupt)."
+      },
+      "indemnification": {
+        "title": "9. Freistellung",
+        "content": "Sie erklären sich damit einverstanden, Slow Spot, seine Entwickler und verbundene Unternehmen von allen Ansprüchen, Schäden, Verlusten oder Kosten freizustellen, die aus Ihrer Nutzung der App oder Verletzung dieser Bedingungen entstehen."
+      },
+      "modifications": {
+        "title": "10. Änderungen der App",
+        "content": "Wir behalten uns das Recht vor, die App jederzeit ohne Vorankündigung zu ändern, auszusetzen oder einzustellen. Wir können diese Bedingungen auch von Zeit zu Zeit aktualisieren. Die weitere Nutzung der App nach Änderungen gilt als Annahme der geänderten Bedingungen."
+      },
+      "termination": {
+        "title": "11. Kündigung",
+        "content": "Sie können die Nutzung der App jederzeit durch Deinstallation von Ihrem Gerät beenden. Wir können Ihren Zugang zur App nach eigenem Ermessen und ohne Vorankündigung beenden oder aussetzen, wenn wir der Meinung sind, dass Ihr Verhalten gegen diese Bedingungen verstößt oder anderen Nutzern oder uns schadet."
+      },
+      "governing": {
+        "title": "12. Anwendbares Recht",
+        "content": "Diese Bedingungen unterliegen dem polnischen Recht und werden nach diesem ausgelegt, ohne Berücksichtigung von Kollisionsnormen. Streitigkeiten aus diesen Bedingungen oder der Nutzung der App werden vor polnischen Gerichten beigelegt."
+      },
+      "severability": {
+        "title": "13. Salvatorische Klausel",
+        "content": "Sollte eine Bestimmung dieser Bedingungen für undurchsetzbar oder ungültig befunden werden, wird diese Bestimmung auf das erforderliche Minimum beschränkt oder beseitigt, und die übrigen Bestimmungen bleiben in vollem Umfang wirksam."
+      },
+      "entireAgreement": {
+        "title": "14. Vollständige Vereinbarung",
+        "content": "Diese Bedingungen bilden zusammen mit unserer Datenschutzrichtlinie die gesamte Vereinbarung zwischen Ihnen und Slow Spot bezüglich der Nutzung der App."
+      },
+      "contact": {
+        "title": "15. Kontaktinformationen",
+        "intro": "Wenn Sie Fragen zu diesen Bedingungen haben, kontaktieren Sie uns bitte:",
+        "email": "E-Mail:",
+        "website": "Website:"
+      },
+      "appStore": {
+        "title": "16. App Store Bedingungen",
+        "content": "Wenn Sie die App aus dem Apple App Store oder Google Play Store heruntergeladen haben, stimmen Sie auch deren jeweiligen Nutzungsbedingungen zu. Bei Konflikten zwischen diesen Bedingungen und den App-Store-Bedingungen gelten die App-Store-Bedingungen für Fragen der App-Verteilung."
+      }
+    }
   }
 }

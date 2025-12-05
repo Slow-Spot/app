@@ -518,7 +518,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
             activeOpacity={0.7}
           >
             <Text style={[styles.showMoreText, { color: currentTheme.primary }]}>
-              {t('profile.showMore') || 'Pokaż więcej'} ({sessions.length - visibleSessionsCount})
+              {t('profile.showMore') || 'Show more'} ({sessions.length - visibleSessionsCount})
             </Text>
             <Ionicons name="chevron-down" size={18} color={currentTheme.primary} />
           </TouchableOpacity>

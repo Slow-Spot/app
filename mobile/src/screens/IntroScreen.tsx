@@ -582,7 +582,7 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
           >
             <Ionicons name="chevron-back" size={20} color={primaryColor} />
             <Text style={[styles.backText, { color: primaryColor }]}>
-              {t('onboarding.back', 'Wstecz')}
+              {t('onboarding.back', 'Back')}
             </Text>
           </AnimatedPressable>
         </Animated.View>
@@ -600,7 +600,7 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
             hapticType="light"
           >
             <Text style={[styles.skipText, { color: primaryColor }]}>
-              {t('onboarding.skip', 'Pomiń')}
+              {t('onboarding.skip', 'Skip')}
             </Text>
           </AnimatedPressable>
         </Animated.View>
@@ -664,14 +664,14 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
               {isLastSlide ? (
                 <>
                   <Text style={styles.buttonText}>
-                    {t('onboarding.getStarted', 'Rozpocznij')}
+                    {t('onboarding.getStarted', 'Get Started')}
                   </Text>
                   <Ionicons name="arrow-forward" size={20} color="#FFF" style={styles.buttonIcon} />
                 </>
               ) : (
                 <>
                   <Text style={styles.buttonText}>
-                    {t('onboarding.next', 'Dalej')}
+                    {t('onboarding.next', 'Next')}
                   </Text>
                   <Ionicons name="chevron-forward" size={20} color="#FFF" style={styles.buttonIcon} />
                 </>

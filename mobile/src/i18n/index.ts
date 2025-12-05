@@ -11,6 +11,7 @@ import es from './locales/es.json';
 import de from './locales/de.json';
 import fr from './locales/fr.json';
 import hi from './locales/hi.json';
+import zh from './locales/zh.json';
 
 const resources = {
   en: { translation: en },
@@ -19,6 +20,7 @@ const resources = {
   de: { translation: de },
   fr: { translation: fr },
   hi: { translation: hi },
+  zh: { translation: zh },
 };
 
 // Get system language safely

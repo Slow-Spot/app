@@ -64,23 +64,23 @@ const getTimeBasedGreeting = (t: any): { greeting: string; context: string } => 
 
   if (hour >= 5 && hour < 12) {
     return {
-      greeting: t('introGuide.greetings.morning', 'Dzień dobry'),
-      context: t('introGuide.greetings.morningContext', 'Świetny moment na poranną medytację'),
+      greeting: t('introGuide.greetings.morning', 'Good morning'),
+      context: t('introGuide.greetings.morningContext', 'Great time for morning meditation'),
     };
   } else if (hour >= 12 && hour < 17) {
     return {
-      greeting: t('introGuide.greetings.afternoon', 'Dobre popołudnie'),
-      context: t('introGuide.greetings.afternoonContext', 'Czas na chwilę wyciszenia'),
+      greeting: t('introGuide.greetings.afternoon', 'Good afternoon'),
+      context: t('introGuide.greetings.afternoonContext', 'Time for a moment of calm'),
     };
   } else if (hour >= 17 && hour < 21) {
     return {
-      greeting: t('introGuide.greetings.evening', 'Dobry wieczór'),
-      context: t('introGuide.greetings.eveningContext', 'Idealny czas na relaksację'),
+      greeting: t('introGuide.greetings.evening', 'Good evening'),
+      context: t('introGuide.greetings.eveningContext', 'Perfect time to relax'),
     };
   } else {
     return {
-      greeting: t('introGuide.greetings.night', 'Dobranoc'),
-      context: t('introGuide.greetings.nightContext', 'Przygotuj się do spokojnego snu'),
+      greeting: t('introGuide.greetings.night', 'Good night'),
+      context: t('introGuide.greetings.nightContext', 'Prepare for peaceful sleep'),
     };
   }
 };
@@ -223,7 +223,7 @@ export const MeditationIntroGuide: React.FC<MeditationIntroGuideProps> = ({
               >
                 <Ionicons name="play-circle" size={24} color={neutralColors.white} />
                 <Text style={styles.ctaText}>
-                  {t('introGuide.startMeditation', 'Rozpocznij Medytację')}
+                  {t('introGuide.startMeditation', 'Start Meditation')}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -239,10 +239,10 @@ export const MeditationIntroGuide: React.FC<MeditationIntroGuideProps> = ({
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.headerLeft}>
           <Text style={[styles.headerTitle, dynamicStyles.headerTitle]}>
-            {t('introGuide.title', 'Wprowadzenie do Medytacji')}
+            {t('introGuide.title', 'Introduction to Meditation')}
           </Text>
           <Text style={[styles.headerSubtitle, dynamicStyles.slideText]}>
-            {t('introGuide.subtitle', 'Poznaj podstawy uważności')}
+            {t('introGuide.subtitle', 'Learn the basics of mindfulness')}
           </Text>
         </View>
         <TouchableOpacity
@@ -299,7 +299,7 @@ export const MeditationIntroGuide: React.FC<MeditationIntroGuideProps> = ({
             >
               <Ionicons name="chevron-back" size={20} color={colors.text.secondary} />
               <Text style={[styles.navButtonText, { color: colors.text.secondary }]}>
-                {t('common.back', 'Wstecz')}
+                {t('common.back', 'Back')}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -318,7 +318,7 @@ export const MeditationIntroGuide: React.FC<MeditationIntroGuideProps> = ({
                 style={styles.navButtonGradient}
               >
                 <Text style={styles.navButtonTextPrimary}>
-                  {t('common.next', 'Dalej')}
+                  {t('common.next', 'Next')}
                 </Text>
                 <Ionicons name="chevron-forward" size={20} color={neutralColors.white} />
               </LinearGradient>
@@ -329,7 +329,7 @@ export const MeditationIntroGuide: React.FC<MeditationIntroGuideProps> = ({
               onPress={onClose}
             >
               <Text style={[styles.navButtonText, { color: colors.text.secondary }]}>
-                {t('common.close', 'Zamknij')}
+                {t('common.close', 'Close')}
               </Text>
             </TouchableOpacity>
           )}

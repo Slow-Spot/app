@@ -48,15 +48,15 @@ const getBreathingPatternName = (pattern: string | undefined, t: any): string =>
  * Get ambient sound display name
  */
 const getAmbientSoundName = (sound: string | undefined, t: any): string => {
-  if (!sound || sound === 'silence') return t('custom.ambientSilence', 'Cisza');
+  if (!sound || sound === 'silence') return t('custom.ambientSilence', 'Silence');
   const sounds: Record<string, string> = {
-    'nature': t('custom.ambientNature', 'Natura'),
+    'nature': t('custom.ambientNature', 'Nature'),
     'ocean': t('custom.ambientOcean', 'Ocean'),
-    'forest': t('custom.ambientForest', 'Las'),
-    'rain': t('custom.ambientRain', 'Deszcz'),
-    'fire': t('custom.ambientFire', 'Ogień'),
-    'wind': t('custom.ambientWind', 'Wiatr'),
-    'custom': t('custom.ambientCustom', 'Własny'),
+    'forest': t('custom.ambientForest', 'Forest'),
+    'rain': t('custom.ambientRain', 'Rain'),
+    'fire': t('custom.ambientFire', 'Fire'),
+    'wind': t('custom.ambientWind', 'Wind'),
+    'custom': t('custom.ambientCustom', 'Custom'),
   };
   return sounds[sound] || sound;
 };
@@ -155,7 +155,7 @@ export const SessionCard = React.memo<SessionCardProps>(({
             accessibilityHint={t('accessibility.editSessionHint', 'Edit this meditation session')}
           >
             <Ionicons name="pencil" size={20} color={swipeColors.edit.icon} />
-            <Text style={[styles.actionText, { color: swipeColors.edit.text }]}>{t('custom.edit', 'Edytuj')}</Text>
+            <Text style={[styles.actionText, { color: swipeColors.edit.text }]}>{t('custom.edit', 'Edit')}</Text>
           </TouchableOpacity>
         )}
         {onDelete && (
@@ -168,7 +168,7 @@ export const SessionCard = React.memo<SessionCardProps>(({
             accessibilityHint={t('accessibility.deleteSessionHint', 'Delete this meditation session')}
           >
             <Ionicons name="trash-outline" size={20} color={swipeColors.delete.icon} />
-            <Text style={[styles.actionText, { color: swipeColors.delete.text }]}>{t('custom.delete', 'Usuń')}</Text>
+            <Text style={[styles.actionText, { color: swipeColors.delete.text }]}>{t('custom.delete', 'Delete')}</Text>
           </TouchableOpacity>
         )}
       </RNAnimated.View>

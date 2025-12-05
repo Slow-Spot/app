@@ -34,13 +34,13 @@
       "choosePattern": "Elige un patrón:",
       "patterns": {
         "box": "Para el Estrés",
-        "boxDesc": "4-4-4-4 • Calma y enfoca la mente",
+        "boxDesc": "Calma y enfoca la mente",
         "478": "Para Dormir",
-        "478Desc": "4-7-8 • Relajación profunda antes de dormir",
+        "478Desc": "Relajación profunda antes de dormir",
         "equal": "Para Principiantes",
-        "equalDesc": "4-4 • Patrón simple para principiantes",
-        "calm": "Para Energía",
-        "calmDesc": "2-2 • Rápido y energizante"
+        "equalDesc": "Patrón simple para principiantes",
+        "calm": "Para Relajación",
+        "calmDesc": "La exhalación más larga calma el sistema nervioso"
       },
       "inhale": "Inhala",
       "hold": "Mantén",
@@ -479,7 +479,18 @@
     "metric": "Métrico",
     "imperial": "Imperial",
     "timeFormat": "Formato de hora",
-    "textDirection": "Dirección del texto"
+    "textDirection": "Dirección del texto",
+    "personalization": "Personalización",
+    "personalizationDescription": "Personalizar colores de la aplicación",
+    "customSounds": "Sonidos Personalizados",
+    "customSoundsDescription": "Usa tus propios archivos de audio",
+    "customBell": "Campana de Sesión",
+    "customAmbient": "Ambiente Personalizado",
+    "defaultSound": "Predeterminado",
+    "notSet": "No establecido",
+    "soundPickError": "Error",
+    "soundPickErrorBody": "No se pudo cargar el archivo de audio seleccionado.",
+    "customSoundsHint": "Selecciona archivos de audio de tu dispositivo. Formatos soportados: MP3, WAV, M4A."
   },
   "navigation": {
     "home": "Inicio",
@@ -631,7 +642,7 @@
       "title": "Zazen - Sentada Zen",
       "description": "Meditación Zen tradicional. Solo sentarse, observando la respiración y los pensamientos."
     },
-    "kinthinZenWalking": {
+    "kinhinZenWalking": {
       "title": "Kinhin - Caminata Zen",
       "description": "Caminata lenta y consciente entre períodos de sentada."
     },
@@ -768,6 +779,8 @@
       "customDesc": "Tu sonido personal",
       "customHint": "Puedes personalizar los sonidos en ajustes de la app"
     },
+    "guidingVoice": "Voz Guía",
+    "guidingVoiceSubtitle": "Guía vocal suave durante la práctica",
     "voiceGuidance": "Guía de Voz",
     "voiceGuidanceDescription": "Guía hablada durante la meditación",
     "startSession": "Iniciar Sesión",
@@ -818,17 +831,17 @@
       "none": "Sin Guía",
       "noneDesc": "Medita sin patrón de respiración",
       "box": "Respiración Cuadrada",
-      "boxDesc": "4-4-4-4 • Equilibrio y enfoque con estrés",
+      "boxDesc": "Equilibrio y enfoque con estrés",
       "boxBenefit": "Usado por Navy SEALs para manejar el estrés",
       "478": "4-7-8",
-      "478Desc": "4-7-8 • Ayuda natural para dormir",
+      "478Desc": "Ayuda natural para dormir",
       "478Benefit": "Calma pensamientos acelerados antes de dormir",
       "equal": "Respiración Igual",
-      "equalDesc": "4-4 • Simple y calmante para principiantes",
+      "equalDesc": "Simple y calmante para principiantes",
       "equalBenefit": "Fácil de aprender, punto de inicio perfecto",
       "calm": "Respiración Calmante",
-      "calmDesc": "2-2 • Impulso rápido de energía y alerta",
-      "calmBenefit": "Cuando necesitas un reinicio rápido"
+      "calmDesc": "Exhalación prolongada activa la relajación",
+      "calmBenefit": "Reduce la ansiedad y promueve la calma"
     },
     "breathingTitle": "Patrón de Respiración",
     "breathingDescription": "Elige una técnica de respiración respaldada por la ciencia (opcional)"
@@ -1102,7 +1115,7 @@
       "title": "Explorador Zen",
       "description": "Completa 5 sesiones de meditación Zen"
     },
-    "vipassanaExplorer": {
+    "vipassanaPractitioner": {
       "title": "Explorador de Vipassana",
       "description": "Completa 5 sesiones de meditación Vipassana"
     },

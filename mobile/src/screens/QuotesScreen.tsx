@@ -151,7 +151,7 @@ export const QuotesScreen: React.FC<QuotesScreenProps> = ({ isDark = false }) =>
               {t('quotes.title')}
             </Text>
             <Text style={[styles.subtitle, dynamicStyles.subtitle]}>
-              {t('quotes.subtitle', 'Inspiracje na każdy dzień')}
+              {t('quotes.subtitle', 'Inspiration for every day')}
             </Text>
           </View>
 
@@ -219,7 +219,7 @@ export const QuotesScreen: React.FC<QuotesScreenProps> = ({ isDark = false }) =>
           >
             <Ionicons name="book-outline" size={64} color={colors.text.tertiary} />
             <Text style={[styles.emptyText, { color: colors.text.secondary }]}>
-              {t('quotes.empty', 'Brak cytatów do wyświetlenia')}
+              {t('quotes.empty', 'No quotes to display')}
             </Text>
           </Animated.View>
         )}

@@ -34,13 +34,13 @@
       "choosePattern": "Wybierz wzorzec:",
       "patterns": {
         "box": "Na stres",
-        "boxDesc": "4-4-4-4 • Uspokaja i skupia umysł",
+        "boxDesc": "Uspokaja i skupia umysł",
         "478": "Na spokój",
-        "478Desc": "4-7-8 • Głęboka relaksacja przed snem",
+        "478Desc": "Głęboka relaksacja przed snem",
         "equal": "Na początek",
-        "equalDesc": "4-4 • Prosty wzorzec dla początkujących",
-        "calm": "Na energię",
-        "calmDesc": "2-2 • Szybki i pobudzający"
+        "equalDesc": "Prosty wzorzec dla początkujących",
+        "calm": "Na relaks",
+        "calmDesc": "Dłuższy wydech uspokaja układ nerwowy"
       },
       "inhale": "Wdech",
       "hold": "Trzymaj",
@@ -483,7 +483,18 @@
     "metric": "Metryczne",
     "imperial": "Imperialne",
     "timeFormat": "Format czasu",
-    "textDirection": "Kierunek tekstu"
+    "textDirection": "Kierunek tekstu",
+    "personalization": "Personalizacja",
+    "personalizationDescription": "Dostosuj kolory aplikacji",
+    "customSounds": "Własne dźwięki",
+    "customSoundsDescription": "Używaj własnych plików audio",
+    "customBell": "Dzwonek sesji",
+    "customAmbient": "Własny ambient",
+    "defaultSound": "Domyślny",
+    "notSet": "Nie ustawiono",
+    "soundPickError": "Błąd",
+    "soundPickErrorBody": "Nie udało się załadować wybranego pliku audio.",
+    "customSoundsHint": "Wybierz pliki audio z urządzenia. Obsługiwane formaty: MP3, WAV, M4A."
   },
   "navigation": {
     "home": "Główna",
@@ -836,6 +847,8 @@
     "awakeningChimeSubtitle": "Delikatny dźwięk sygnalizujący koniec sesji",
     "guidingVoice": "Głos prowadzący",
     "guidingVoiceSubtitle": "Łagodne wskazówki głosowe podczas sesji",
+    "voiceGuidance": "Przewodnik głosowy",
+    "voiceGuidanceDescription": "Wskazówki głosowe podczas medytacji",
     "ambientSilence": "Cisza",
     "ambientNature": "Natura",
     "ambientOcean": "Ocean",
@@ -894,27 +907,20 @@
       "none": "Bez instrukcji",
       "noneDesc": "Medytuj bez wzorca oddechowego",
       "box": "Box Breathing",
-      "boxDesc": "4-4-4-4 • Równowaga i skupienie przy stresie",
+      "boxDesc": "Równowaga i skupienie przy stresie",
       "boxBenefit": "Używany przez Navy SEALs do radzenia ze stresem",
       "478": "4-7-8",
-      "478Desc": "4-7-8 • Naturalna pomoc na sen",
+      "478Desc": "Naturalna pomoc na sen",
       "478Benefit": "Uspokaja goniące myśli przed snem",
       "equal": "Equal Breathing",
-      "equalDesc": "4-4 • Prosty i uspokajający dla początkujących",
+      "equalDesc": "Prosty i uspokajający dla początkujących",
       "equalBenefit": "Łatwy do nauki, idealny punkt startowy",
-      "calm": "Calm Breathing",
-      "calmDesc": "2-2 • Szybki zastrzyk energii",
-      "calmBenefit": "Gdy potrzebujesz szybkiego resetu"
+      "calm": "Spokojny Oddech",
+      "calmDesc": "Dłuższy wydech aktywuje relaksację",
+      "calmBenefit": "Redukuje niepokój i wprowadza spokój"
     },
     "breathingTitle": "Wzorzec oddechowy",
-    "breathingDescription": "Wybierz technikę wspieraną badaniami naukowymi (opcjonalne)",
-    "sounds": {
-      "nature": "Natura",
-      "rain": "Deszcz",
-      "ocean": "Ocean",
-      "forest": "Las",
-      "silence": "Cisza"
-    }
+    "breathingDescription": "Wybierz technikę wspieraną badaniami naukowymi (opcjonalne)"
   },
   "instructionsScreen": {
     "title": "Przewodniki medytacji",

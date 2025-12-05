@@ -404,14 +404,14 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
                 <View style={styles.mainCardContent}>
                   <View style={styles.mainCardTextSection}>
                     <Text style={styles.mainCardLabel}>
-                      {t('meditation.customize', 'Spersonalizuj')}
+                      {t('meditation.customize', 'Customize')}
                     </Text>
                     <Text style={styles.mainCardTitle}>
-                      {t('meditation.createSession', 'Stwórz sesję')}
+                      {t('meditation.createSession', 'Create Session')}
                     </Text>
                     <View style={styles.mainCardCta}>
                       <Text style={styles.mainCardCtaText}>
-                        {t('meditation.createSessionDesc', 'Dostosuj czas, dźwięki i interwały')}
+                        {t('meditation.createSessionDesc', 'Adjust time, sounds and intervals')}
                       </Text>
                     </View>
                   </View>
@@ -435,10 +435,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
               style={styles.sessionsHeader}
             >
               <Text style={[styles.sessionsHeaderText, { color: colors.text.secondary }]}>
-                {t('meditation.yourSessions', 'Twoje sesje')}
+                {t('meditation.yourSessions', 'Your Sessions')}
               </Text>
               <Text style={[styles.sessionsHeaderHint, { color: colors.text.tertiary }]}>
-                {t('custom.swipeToEdit', 'Przesuń w lewo, aby edytować')}
+                {t('custom.swipeToEdit', 'Swipe left to edit')}
               </Text>
             </Animated.View>
           )}
@@ -462,10 +462,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         <View style={styles.emptyState}>
           <Ionicons name="leaf-outline" size={64} color={colors.text.secondary} />
           <Text style={[styles.emptyStateTitle, { color: colors.text.primary }]}>
-            {t('meditation.noSessions') || 'Brak sesji'}
+            {t('meditation.noSessions') || 'No Sessions'}
           </Text>
           <Text style={[styles.emptyStateSubtitle, { color: colors.text.secondary }]}>
-            {t('meditation.noSessionsDesc') || 'Stwórz swoją pierwszą własną sesję medytacji'}
+            {t('meditation.noSessionsDesc') || 'Create your first custom meditation session'}
           </Text>
         </View>
       );

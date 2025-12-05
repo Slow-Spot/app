@@ -163,15 +163,15 @@ const AnimatedBreathingCircle: React.FC<AnimatedBreathingCircleProps> = ({
   const getPhaseText = () => {
     switch (breathingPhase) {
       case 'inhale':
-        return t('intention.breathing.inhale', 'Wdech');
+        return t('intention.breathing.inhale', 'Inhale');
       case 'hold':
-        return t('intention.breathing.hold', 'Trzymaj');
+        return t('intention.breathing.hold', 'Hold');
       case 'exhale':
-        return t('intention.breathing.exhale', 'Wydech');
+        return t('intention.breathing.exhale', 'Exhale');
       case 'rest':
-        return t('intention.breathing.hold', 'Trzymaj');
+        return t('intention.breathing.hold', 'Hold');
       default:
-        return t('intention.breathing.breathe', 'Oddychaj');
+        return t('intention.breathing.breathe', 'Breathe');
     }
   };
 
@@ -329,10 +329,10 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
     // Debug: Log the hour to verify timezone
     console.log('[IntentionScreen] Current hour:', hour, 'Timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-    if (hour >= 5 && hour < 12) return t('intention.greeting.morning', 'Dzień dobry');
-    if (hour >= 12 && hour < 17) return t('intention.greeting.afternoon', 'Dzień dobry');
-    if (hour >= 17 && hour < 21) return t('intention.greeting.evening', 'Dobry wieczór');
-    return t('intention.greeting.night', 'Dobranoc');
+    if (hour >= 5 && hour < 12) return t('intention.greeting.morning', 'Good Morning');
+    if (hour >= 12 && hour < 17) return t('intention.greeting.afternoon', 'Good Afternoon');
+    if (hour >= 17 && hour < 21) return t('intention.greeting.evening', 'Good Evening');
+    return t('intention.greeting.night', 'Good Night');
   };
 
   const formatTime = (seconds: number) => {
@@ -344,26 +344,26 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
   const breathingPatterns = [
     {
       id: 'box' as const,
-      name: t('intention.breathing.patterns.box', 'Na stres'),
-      description: t('intention.breathing.patterns.boxDesc', 'Box 4-4-4-4 • Uspokaja i skupia umysł'),
+      name: t('intention.breathing.patterns.box', 'For Stress'),
+      description: t('intention.breathing.patterns.boxDesc', 'Box 4-4-4-4 • Calms and focuses the mind'),
       icon: 'shield-checkmark' as const,
     },
     {
       id: '4-7-8' as const,
-      name: t('intention.breathing.patterns.478', 'Na spokój'),
-      description: t('intention.breathing.patterns.478Desc', '4-7-8 • Głęboka relaksacja przed snem'),
+      name: t('intention.breathing.patterns.478', 'For Peace'),
+      description: t('intention.breathing.patterns.478Desc', '4-7-8 • Deep relaxation before sleep'),
       icon: 'moon' as const,
     },
     {
       id: 'equal' as const,
-      name: t('intention.breathing.patterns.equal', 'Na początek'),
-      description: t('intention.breathing.patterns.equalDesc', '4-4 • Prosty wzorzec dla początkujących'),
+      name: t('intention.breathing.patterns.equal', 'For Beginners'),
+      description: t('intention.breathing.patterns.equalDesc', '4-4 • Simple pattern for beginners'),
       icon: 'leaf' as const,
     },
     {
       id: 'calm' as const,
-      name: t('intention.breathing.patterns.calm', 'Na energię'),
-      description: t('intention.breathing.patterns.calmDesc', '4-4 szybki • Pobudza i dodaje energii'),
+      name: t('intention.breathing.patterns.calm', 'For Energy'),
+      description: t('intention.breathing.patterns.calmDesc', '4-4 fast • Energizes and boosts'),
       icon: 'flash' as const,
     },
   ];
@@ -403,10 +403,10 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
                 <Ionicons name="close" size={24} color={colors.text.primary} />
               </TouchableOpacity>
               <Text style={[modalStyles.title, { color: colors.text.primary }]}>
-                {t('intention.breathing.title', 'Ćwiczenie oddechowe')}
+                {t('intention.breathing.title', 'Breathing Exercise')}
               </Text>
               <Text style={[modalStyles.subtitle, { color: colors.text.secondary }]}>
-                {t('intention.breathing.subtitle', 'Przygotuj się do medytacji')}
+                {t('intention.breathing.subtitle', 'Prepare for meditation')}
               </Text>
             </View>
 
@@ -414,7 +414,7 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
             {!breathingActive && (
               <View style={modalStyles.patternsContainer}>
                 <Text style={[modalStyles.sectionTitle, { color: colors.text.secondary }]}>
-                  {t('intention.breathing.choosePattern', 'Wybierz wzorzec:')}
+                  {t('intention.breathing.choosePattern', 'Choose pattern:')}
                 </Text>
                 {breathingPatterns.map((pattern) => (
                   <TouchableOpacity
@@ -484,7 +484,7 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
             <View style={modalStyles.actions}>
               {!breathingActive ? (
                 <GradientButton
-                  title={t('intention.breathing.start', 'Rozpocznij')}
+                  title={t('intention.breathing.start', 'Start')}
                   onPress={handleStartBreathing}
                   gradient={themeGradients.button.primary}
                   style={modalStyles.actionButton}
@@ -495,7 +495,7 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
                   onPress={handleStopBreathing}
                 >
                   <Text style={[modalStyles.stopButtonText, { color: colors.text.primary }]}>
-                    {t('intention.breathing.stop', 'Zakończ')}
+                    {t('intention.breathing.stop', 'Stop')}
                   </Text>
                 </TouchableOpacity>
               )}
@@ -521,10 +521,10 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
             </View>
             <Text style={[styles.greeting, dynamicStyles.subtitle]}>{getTimeGreeting()}</Text>
             <Text style={[styles.title, dynamicStyles.title]}>
-              {t('intention.title', 'Ustaw Swoją Intencję')}
+              {t('intention.title', 'Set Your Intention')}
             </Text>
             <Text style={[styles.subtitle, dynamicStyles.subtitle]}>
-              {t('intention.subtitle', 'Co chciałbyś kultywować w tej sesji?')}
+              {t('intention.subtitle', 'What would you like to cultivate in this session?')}
             </Text>
           </View>
 
@@ -540,10 +540,10 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
               </View>
               <View style={styles.breathingButtonText}>
                 <Text style={[styles.breathingButtonTitle, { color: colors.text.primary }]}>
-                  {t('introGuide.title', 'Wprowadzenie do Medytacji')}
+                  {t('introGuide.title', 'Introduction to Meditation')}
                 </Text>
                 <Text style={[styles.breathingButtonSubtitle, { color: colors.text.secondary }]}>
-                  {t('introGuide.subtitle', 'Poznaj podstawy uważności')}
+                  {t('introGuide.subtitle', 'Learn the basics of mindfulness')}
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={20} color={colors.text.secondary} />
@@ -558,11 +558,11 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
             isDark={isDark}
           >
             <Text style={[styles.inputLabel, dynamicStyles.inputLabel]}>
-              {t('intention.inputLabel', 'Twoja Intencja (Opcjonalnie)')}
+              {t('intention.inputLabel', 'Your Intention (Optional)')}
             </Text>
             <TextInput
               style={[styles.textInput, dynamicStyles.textInput]}
-              placeholder={t('intention.placeholder', 'np. "Pozostań obecny z moim oddechem"')}
+              placeholder={t('intention.placeholder', 'e.g. "Stay present with my breath"')}
               placeholderTextColor={isDark ? colors.text.tertiary : theme.colors.text.tertiary}
               value={intention}
               onChangeText={setIntention}
@@ -588,14 +588,14 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
               color={dynamicStyles.checkboxColor}
             />
             <Text style={[styles.skipCheckboxText, dynamicStyles.skipText]}>
-              {t('intention.skipForever', 'Nie pokazuj tego ekranu przed medytacją')}
+              {t('intention.skipForever', 'Do not show this screen before meditation')}
             </Text>
           </TouchableOpacity>
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
             <GradientButton
-              title={t('intention.begin', 'Rozpocznij Medytację')}
+              title={t('intention.begin', 'Begin Meditation')}
               onPress={handleBegin}
               gradient={themeGradients.button.primary}
               style={styles.primaryButton}
@@ -608,7 +608,7 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
               accessibilityHint={t('accessibility.skipIntentionHint', 'Skips intention setting and starts meditation')}
             >
               <Text style={[styles.skipButtonText, dynamicStyles.skipText]}>
-                {t('intention.skip', 'Pomiń')}
+                {t('intention.skip', 'Skip')}
               </Text>
             </TouchableOpacity>
           </View>

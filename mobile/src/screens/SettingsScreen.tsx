@@ -6,7 +6,7 @@
  */
 
 import { logger } from '../utils/logger';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ScrollView,
@@ -17,9 +17,22 @@ import {
   Share,
   Linking,
   Switch,
+  Alert,
+  Dimensions,
 } from 'react-native';
-import Animated from 'react-native-reanimated';
+import * as DocumentPicker from 'expo-document-picker';
+import { Paths, Directory } from 'expo-file-system';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withDelay,
+  Easing,
+  runOnJS,
+} from 'react-native-reanimated';
 import { screenElementAnimation } from '../utils/animations';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,17 +40,36 @@ import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { AppModal, AppModalButton } from '../components/AppModal';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
+import Constants from 'expo-constants';
 import { brandColors, primaryColor, featureColorPalettes, semanticColors, getFeatureIconColors } from '../theme/colors';
 import { exportAllData, clearAllData, resetOnboarding } from '../services/storage';
-import { clearAllCustomSessions } from '../services/customSessionStorage';
+import { clearAllSessions } from '../services/customSessionStorage';
 import { clearProgress } from '../services/progressTracker';
 import { clearAllQuoteHistory } from '../services/quoteHistory';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
 export const LANGUAGE_STORAGE_KEY = 'user_language_preference';
 export const THEME_STORAGE_KEY = 'user_theme_preference';
+export const CUSTOM_SOUNDS_STORAGE_KEY = '@slow_spot_custom_sounds';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
+
+/** Custom sound configuration for user-selected audio files */
+export interface CustomSoundsConfig {
+  /** Custom bell/chime sound file URI */
+  customBellUri?: string;
+  customBellName?: string;
+  /** Custom ambient sounds URIs */
+  customAmbientUris: {
+    nature?: { uri: string; name: string };
+    ocean?: { uri: string; name: string };
+    forest?: { uri: string; name: string };
+    rain?: { uri: string; name: string };
+    fire?: { uri: string; name: string };
+    wind?: { uri: string; name: string };
+    custom?: { uri: string; name: string };
+  };
+}
 
 const LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -53,6 +85,88 @@ const THEME_OPTIONS = [
   { mode: 'dark' as ThemeMode, icon: 'moon' as const, labelKey: 'settings.dark' },
   { mode: 'system' as ThemeMode, icon: 'phone-portrait' as const, labelKey: 'settings.system' },
 ];
+
+// Easter egg confetti colors
+const CONFETTI_COLORS = [
+  '#7C3AED', '#A855F7', '#C084FC', // purples
+  '#3B82F6', '#60A5FA', '#93C5FD', // blues
+  '#10B981', '#34D399', '#6EE7B7', // greens
+  '#F59E0B', '#FBBF24', '#FCD34D', // ambers
+  '#EC4899', '#F472B6', '#F9A8D4', // pinks
+];
+
+// Easter egg confetti particle component
+const EasterEggConfetti = React.memo<{
+  delay: number;
+  color: string;
+  startX: number;
+}>(({ delay, color, startX }) => {
+  const translateY = useSharedValue(-20);
+  const translateX = useSharedValue(startX);
+  const rotate = useSharedValue(0);
+  const opacity = useSharedValue(1);
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    translateY.value = withDelay(
+      delay,
+      withTiming(SCREEN_HEIGHT + 50, {
+        duration: 2500 + Math.random() * 1000,
+        easing: Easing.out(Easing.quad),
+      })
+    );
+    translateX.value = withDelay(
+      delay,
+      withTiming(startX + (Math.random() - 0.5) * 150, {
+        duration: 2500,
+        easing: Easing.inOut(Easing.ease),
+      })
+    );
+    rotate.value = withDelay(
+      delay,
+      withTiming(Math.random() * 720 - 360, {
+        duration: 2500,
+        easing: Easing.linear,
+      })
+    );
+    scale.value = withDelay(
+      delay,
+      withTiming(0.3, {
+        duration: 2500,
+        easing: Easing.out(Easing.quad),
+      })
+    );
+    opacity.value = withDelay(
+      delay + 1800,
+      withTiming(0, { duration: 700 })
+    );
+  }, []);
+
+  const particleStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: translateY.value },
+      { translateX: translateX.value },
+      { rotate: `${rotate.value}deg` },
+      { scale: scale.value },
+    ],
+    opacity: opacity.value,
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        {
+          position: 'absolute',
+          width: 12,
+          height: 12,
+          borderRadius: 3,
+          backgroundColor: color,
+        },
+        particleStyle,
+      ]}
+    />
+  );
+});
 
 interface SettingsScreenProps {
   isDark: boolean;
@@ -90,6 +204,184 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [showDataClearedModal, setShowDataClearedModal] = useState(false);
   const [showExportErrorModal, setShowExportErrorModal] = useState(false);
   const [showClearErrorModal, setShowClearErrorModal] = useState(false);
+
+  // Easter egg state - tap 7 times on About section for confetti!
+  const [easterEggTaps, setEasterEggTaps] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const easterEggTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const EASTER_EGG_TAPS_REQUIRED = 7;
+
+  // Generate confetti particles when triggered
+  const confettiParticles = useMemo(() => {
+    if (!showConfetti) return [];
+    return Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      delay: Math.random() * 300,
+      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+      startX: Math.random() * SCREEN_WIDTH,
+    }));
+  }, [showConfetti]);
+
+  // Handle Easter egg tap
+  const handleEasterEggTap = useCallback(() => {
+    // Clear previous timeout
+    if (easterEggTimeoutRef.current) {
+      clearTimeout(easterEggTimeoutRef.current);
+    }
+
+    const newTaps = easterEggTaps + 1;
+    setEasterEggTaps(newTaps);
+
+    // Subtle haptic feedback for each tap
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    if (newTaps >= EASTER_EGG_TAPS_REQUIRED) {
+      // Trigger confetti!
+      setShowConfetti(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setEasterEggTaps(0);
+
+      // Hide confetti after animation
+      setTimeout(() => {
+        setShowConfetti(false);
+      }, 3500);
+    } else {
+      // Reset taps after 2 seconds of inactivity
+      easterEggTimeoutRef.current = setTimeout(() => {
+        setEasterEggTaps(0);
+      }, 2000);
+    }
+  }, [easterEggTaps]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (easterEggTimeoutRef.current) {
+        clearTimeout(easterEggTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Custom sounds state
+  const [customSounds, setCustomSounds] = useState<CustomSoundsConfig>({
+    customAmbientUris: {},
+  });
+  const [isLoadingSound, setIsLoadingSound] = useState(false);
+
+  // Load custom sounds from storage on mount
+  React.useEffect(() => {
+    const loadCustomSounds = async () => {
+      try {
+        const data = await AsyncStorage.getItem(CUSTOM_SOUNDS_STORAGE_KEY);
+        if (data) {
+          setCustomSounds(JSON.parse(data));
+        }
+      } catch (error) {
+        logger.error('Failed to load custom sounds:', error);
+      }
+    };
+    loadCustomSounds();
+  }, []);
+
+  // Save custom sounds to storage
+  const saveCustomSounds = async (newConfig: CustomSoundsConfig) => {
+    try {
+      await AsyncStorage.setItem(CUSTOM_SOUNDS_STORAGE_KEY, JSON.stringify(newConfig));
+      setCustomSounds(newConfig);
+    } catch (error) {
+      logger.error('Failed to save custom sounds:', error);
+    }
+  };
+
+  // Handle picking a custom sound file
+  const handlePickSound = useCallback(async (type: 'bell' | 'ambient', ambientKey?: string) => {
+    try {
+      setIsLoadingSound(true);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'audio/*',
+        copyToCacheDirectory: true,
+      });
+
+      if (result.canceled || !result.assets?.[0]) {
+        setIsLoadingSound(false);
+        return;
+      }
+
+      const asset = result.assets[0];
+
+      // Copy file to permanent location using new expo-file-system API
+      const soundsDir = new Directory(Paths.document, 'custom_sounds');
+      await soundsDir.create();
+
+      const fileName = `${type}_${ambientKey || 'bell'}_${Date.now()}.${asset.name.split('.').pop()}`;
+      const destUri = `${soundsDir.uri}${fileName}`;
+
+      // Copy from source to destination
+      const response = await fetch(asset.uri);
+      const blob = await response.blob();
+      const reader = new FileReader();
+
+      await new Promise<void>((resolve, reject) => {
+        reader.onloadend = async () => {
+          try {
+            // For simplicity, store the URI directly - expo-document-picker already copies to cache
+            resolve();
+          } catch (e) {
+            reject(e);
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+
+      // Update config - use the cached URI from DocumentPicker
+      const newConfig = { ...customSounds };
+      if (type === 'bell') {
+        newConfig.customBellUri = asset.uri;
+        newConfig.customBellName = asset.name;
+      } else if (ambientKey) {
+        newConfig.customAmbientUris = {
+          ...newConfig.customAmbientUris,
+          [ambientKey]: { uri: asset.uri, name: asset.name },
+        };
+      }
+
+      await saveCustomSounds(newConfig);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (error) {
+      logger.error('Failed to pick sound:', error);
+      Alert.alert(
+        t('settings.soundPickError', 'Error'),
+        t('settings.soundPickErrorBody', 'Could not load the selected audio file.')
+      );
+    } finally {
+      setIsLoadingSound(false);
+    }
+  }, [customSounds, t]);
+
+  // Handle removing a custom sound
+  const handleRemoveSound = useCallback(async (type: 'bell' | 'ambient', ambientKey?: string) => {
+    try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      const newConfig = { ...customSounds };
+
+      if (type === 'bell') {
+        newConfig.customBellUri = undefined;
+        newConfig.customBellName = undefined;
+      } else if (ambientKey) {
+        newConfig.customAmbientUris = {
+          ...newConfig.customAmbientUris,
+          [ambientKey]: undefined,
+        };
+      }
+
+      await saveCustomSounds(newConfig);
+    } catch (error) {
+      logger.error('Failed to remove sound:', error);
+    }
+  }, [customSounds]);
 
   // Get theme-aware colors and gradients
   const colors = useMemo(() => getThemeColors(isDark), [isDark]);
@@ -170,7 +462,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     try {
       await Promise.all([
         clearAllData(),
-        clearAllCustomSessions(),
+        clearAllSessions(),
         clearProgress(),
         clearAllQuoteHistory(),
         AsyncStorage.removeItem('@wellbeing_assessments'),
@@ -229,10 +521,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </View>
               <View style={styles.cardTextContainer}>
                 <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                  {t('settings.viewProfile', 'Zobacz Profil')}
+                  {t('settings.viewProfile', 'View Profile')}
                 </Text>
                 <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                  {t('settings.viewProfileDescription', 'Zobacz swój postęp i statystyki')}
+                  {t('settings.viewProfileDescription', 'View your progress and statistics')}
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={22} color={colors.text.tertiary} />
@@ -256,10 +548,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </View>
               <View style={styles.cardTextContainer}>
                 <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                  {t('settings.personalization', 'Personalizacja')}
+                  {t('settings.personalization', 'Personalization')}
                 </Text>
                 <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                  {t('settings.personalizationDescription', 'Dostosuj kolory aplikacji')}
+                  {t('settings.personalizationDescription', 'Customize app colors')}
                 </Text>
               </View>
               <Ionicons name="chevron-forward" size={22} color={colors.text.tertiary} />
@@ -268,8 +560,102 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </Animated.View>
         )}
 
-        {/* Language Selection Card */}
+        {/* Custom Sounds Card */}
         <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(3) : undefined}>
+        <GradientCard
+          gradient={themeGradients.card.whiteCard}
+          style={[styles.card, dynamicStyles.cardShadow]}
+          isDark={isDark}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconBox, { backgroundColor: `${currentTheme.primary}20` }]}>
+              <Ionicons name="musical-notes" size={24} color={currentTheme.primary} />
+            </View>
+            <View style={styles.cardTextContainer}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {t('settings.customSounds', 'Custom Sounds')}
+              </Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                {t('settings.customSoundsDescription', 'Use your own audio files')}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.customSoundsSection}>
+            {/* Custom Bell Sound */}
+            <View style={[styles.soundItem, { backgroundColor: dynamicStyles.optionBg }]}>
+              <View style={styles.soundItemInfo}>
+                <Ionicons name="notifications" size={20} color={currentTheme.primary} />
+                <View style={styles.soundItemText}>
+                  <Text style={[styles.soundItemTitle, dynamicStyles.cardTitle]}>
+                    {t('settings.customBell', 'Session Bell')}
+                  </Text>
+                  <Text style={[styles.soundItemDesc, dynamicStyles.cardDescription]} numberOfLines={1}>
+                    {customSounds.customBellName || t('settings.defaultSound', 'Default')}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.soundItemActions}>
+                {customSounds.customBellUri && (
+                  <TouchableOpacity
+                    onPress={() => handleRemoveSound('bell')}
+                    style={styles.soundActionButton}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  >
+                    <Ionicons name="close-circle" size={22} color={semanticColors.error.default} />
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  onPress={() => handlePickSound('bell')}
+                  style={[styles.soundPickButton, { backgroundColor: `${currentTheme.primary}20` }]}
+                  disabled={isLoadingSound}
+                >
+                  <Ionicons name="folder-open" size={18} color={currentTheme.primary} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {/* Custom Ambient Sound */}
+            <View style={[styles.soundItem, { backgroundColor: dynamicStyles.optionBg }]}>
+              <View style={styles.soundItemInfo}>
+                <Ionicons name="musical-note" size={20} color={currentTheme.primary} />
+                <View style={styles.soundItemText}>
+                  <Text style={[styles.soundItemTitle, dynamicStyles.cardTitle]}>
+                    {t('settings.customAmbient', 'Custom Ambient')}
+                  </Text>
+                  <Text style={[styles.soundItemDesc, dynamicStyles.cardDescription]} numberOfLines={1}>
+                    {customSounds.customAmbientUris.custom?.name || t('settings.notSet', 'Not set')}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.soundItemActions}>
+                {customSounds.customAmbientUris.custom && (
+                  <TouchableOpacity
+                    onPress={() => handleRemoveSound('ambient', 'custom')}
+                    style={styles.soundActionButton}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  >
+                    <Ionicons name="close-circle" size={22} color={semanticColors.error.default} />
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity
+                  onPress={() => handlePickSound('ambient', 'custom')}
+                  style={[styles.soundPickButton, { backgroundColor: `${currentTheme.primary}20` }]}
+                  disabled={isLoadingSound}
+                >
+                  <Ionicons name="folder-open" size={18} color={currentTheme.primary} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <Text style={[styles.soundHintText, dynamicStyles.cardDescription]}>
+              {t('settings.customSoundsHint', 'Select audio files from your device. Supported formats: MP3, WAV, M4A.')}
+            </Text>
+          </View>
+        </GradientCard>
+        </Animated.View>
+
+        {/* Language Selection Card */}
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(4) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -281,10 +667,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
             <View style={styles.cardTextContainer}>
               <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                {t('settings.language', 'Język')}
+                {t('settings.language', 'Language')}
               </Text>
               <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                {t('settings.languageDescription', 'Wybierz język aplikacji')}
+                {t('settings.languageDescription', 'Choose app language')}
               </Text>
             </View>
           </View>
@@ -324,7 +710,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Theme Selection Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(4) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(5) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -336,10 +722,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
             <View style={styles.cardTextContainer}>
               <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                {t('settings.theme', 'Motyw')}
+                {t('settings.theme', 'Theme')}
               </Text>
               <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                {t('settings.themeDescription', 'Dostosuj wygląd aplikacji')}
+                {t('settings.themeDescription', 'Customize app appearance')}
               </Text>
             </View>
           </View>
@@ -380,7 +766,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Accessibility Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(5) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(6) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -512,7 +898,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* System Info Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(6) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(7) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -533,7 +919,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </View>
           <View style={styles.systemInfoGrid}>
             <View style={[styles.systemInfoItem, { backgroundColor: dynamicStyles.optionBg }]}>
-              <Ionicons name="time" size={18} color={currentTheme.primary} />
+              <View style={[styles.systemInfoIconBox, { backgroundColor: `${currentTheme.primary}15` }]}>
+                <Ionicons name="time-outline" size={20} color={currentTheme.primary} />
+              </View>
               <View style={styles.systemInfoText}>
                 <Text style={[styles.systemInfoLabel, dynamicStyles.cardDescription]}>
                   {t('settings.timezone', 'Timezone')}
@@ -544,7 +932,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </View>
             </View>
             <View style={[styles.systemInfoItem, { backgroundColor: dynamicStyles.optionBg }]}>
-              <Ionicons name="globe" size={18} color={currentTheme.primary} />
+              <View style={[styles.systemInfoIconBox, { backgroundColor: `${currentTheme.primary}15` }]}>
+                <Ionicons name="globe-outline" size={20} color={currentTheme.primary} />
+              </View>
               <View style={styles.systemInfoText}>
                 <Text style={[styles.systemInfoLabel, dynamicStyles.cardDescription]}>
                   {t('settings.region', 'Region')}
@@ -555,7 +945,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </View>
             </View>
             <View style={[styles.systemInfoItem, { backgroundColor: dynamicStyles.optionBg }]}>
-              <Ionicons name="thermometer" size={18} color={currentTheme.primary} />
+              <View style={[styles.systemInfoIconBox, { backgroundColor: `${currentTheme.primary}15` }]}>
+                <Ionicons name="thermometer-outline" size={20} color={currentTheme.primary} />
+              </View>
               <View style={styles.systemInfoText}>
                 <Text style={[styles.systemInfoLabel, dynamicStyles.cardDescription]}>
                   {t('settings.temperatureUnit', 'Temperature')}
@@ -566,7 +958,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </View>
             </View>
             <View style={[styles.systemInfoItem, { backgroundColor: dynamicStyles.optionBg }]}>
-              <Ionicons name="speedometer" size={18} color={currentTheme.primary} />
+              <View style={[styles.systemInfoIconBox, { backgroundColor: `${currentTheme.primary}15` }]}>
+                <Ionicons name="resize-outline" size={20} color={currentTheme.primary} />
+              </View>
               <View style={styles.systemInfoText}>
                 <Text style={[styles.systemInfoLabel, dynamicStyles.cardDescription]}>
                   {t('settings.measurementSystem', 'Units')}
@@ -577,7 +971,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </View>
             </View>
             <View style={[styles.systemInfoItem, { backgroundColor: dynamicStyles.optionBg }]}>
-              <Ionicons name="time-outline" size={18} color={currentTheme.primary} />
+              <View style={[styles.systemInfoIconBox, { backgroundColor: `${currentTheme.primary}15` }]}>
+                <Ionicons name="alarm-outline" size={20} color={currentTheme.primary} />
+              </View>
               <View style={styles.systemInfoText}>
                 <Text style={[styles.systemInfoLabel, dynamicStyles.cardDescription]}>
                   {t('settings.timeFormat', 'Time Format')}
@@ -589,7 +985,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
             {systemSettings.isRTL && (
               <View style={[styles.systemInfoItem, { backgroundColor: dynamicStyles.optionBg }]}>
-                <Ionicons name="swap-horizontal" size={18} color={currentTheme.primary} />
+                <View style={[styles.systemInfoIconBox, { backgroundColor: `${currentTheme.primary}15` }]}>
+                  <Ionicons name="swap-horizontal-outline" size={20} color={currentTheme.primary} />
+                </View>
                 <View style={styles.systemInfoText}>
                   <Text style={[styles.systemInfoLabel, dynamicStyles.cardDescription]}>
                     {t('settings.textDirection', 'Text Direction')}
@@ -605,7 +1003,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Data & Privacy Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(7) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(8) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -617,32 +1015,32 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
             <View style={styles.cardTextContainer}>
               <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                {t('settings.dataPrivacy', 'Dane i Prywatność')}
+                {t('settings.dataPrivacy', 'Data & Privacy')}
               </Text>
               <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                {t('settings.dataPrivacyDescription', 'Wszystkie dane pozostają na tym urządzeniu')}
+                {t('settings.dataPrivacyDescription', 'All data stays on this device')}
               </Text>
             </View>
           </View>
           <View style={styles.dataButtons}>
             <TouchableOpacity
-              style={[styles.dataButton, { backgroundColor: currentTheme.primary }]}
+              style={[styles.dataButton, { backgroundColor: `${currentTheme.primary}15` }]}
               onPress={handleExportData}
-              activeOpacity={0.8}
+              activeOpacity={0.7}
             >
-              <Ionicons name="download" size={20} color={colors.neutral.white} />
-              <Text style={styles.dataButtonText}>
-                {t('settings.exportData', 'Eksportuj dane')}
+              <Ionicons name="download" size={20} color={currentTheme.primary} />
+              <Text style={[styles.dataButtonText, { color: currentTheme.primary }]}>
+                {t('settings.exportData', 'Export data')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.dataButton, styles.dangerButton]}
+              style={[styles.dataButton, { backgroundColor: `${semanticColors.error.default}12` }]}
               onPress={handleClearData}
-              activeOpacity={0.8}
+              activeOpacity={0.7}
             >
-              <Ionicons name="trash" size={20} color={colors.neutral.white} />
-              <Text style={styles.dataButtonText}>
-                {t('settings.clearData', 'Wyczyść dane')}
+              <Ionicons name="trash" size={20} color={semanticColors.error.default} />
+              <Text style={[styles.dataButtonText, { color: semanticColors.error.default }]}>
+                {t('settings.clearData', 'Clear data')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -650,7 +1048,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Legal & Support Card - Required for App Store / Google Play */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(8) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(9) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -662,10 +1060,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             </View>
             <View style={styles.cardTextContainer}>
               <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                {t('settings.legalTitle', 'Informacje prawne')}
+                {t('settings.legalTitle', 'Legal information')}
               </Text>
               <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                {t('settings.legalDescription', 'Regulamin, polityka prywatności i wsparcie')}
+                {t('settings.legalDescription', 'Terms, privacy policy and support')}
               </Text>
             </View>
           </View>
@@ -681,7 +1079,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               <View style={styles.legalLinkContent}>
                 <Ionicons name="shield-checkmark" size={20} color={currentTheme.primary} />
                 <Text style={[styles.legalLinkText, dynamicStyles.cardTitle]}>
-                  {t('settings.privacyPolicy', 'Polityka prywatności')}
+                  {t('settings.privacyPolicy', 'Privacy policy')}
                 </Text>
               </View>
               <Ionicons name="open-outline" size={18} color={dynamicStyles.chevronColor} />
@@ -697,7 +1095,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               <View style={styles.legalLinkContent}>
                 <Ionicons name="document" size={20} color={currentTheme.primary} />
                 <Text style={[styles.legalLinkText, dynamicStyles.cardTitle]}>
-                  {t('settings.termsOfService', 'Regulamin')}
+                  {t('settings.termsOfService', 'Terms of Service')}
                 </Text>
               </View>
               <Ionicons name="open-outline" size={18} color={dynamicStyles.chevronColor} />
@@ -713,7 +1111,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               <View style={styles.legalLinkContent}>
                 <Ionicons name="help-circle" size={20} color={currentTheme.primary} />
                 <Text style={[styles.legalLinkText, dynamicStyles.cardTitle]}>
-                  {t('settings.support', 'Wsparcie')}
+                  {t('settings.support', 'Support')}
                 </Text>
               </View>
               <Ionicons name="open-outline" size={18} color={dynamicStyles.chevronColor} />
@@ -723,25 +1121,30 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* About Card - At the very bottom */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(9) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(10) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
           isDark={isDark}
         >
-          <View style={styles.cardRow}>
+          {/* Easter egg: tap 7 times for confetti! */}
+          <TouchableOpacity
+            onPress={handleEasterEggTap}
+            activeOpacity={1}
+            style={styles.cardRow}
+          >
             <View style={[styles.iconBox, { backgroundColor: `${currentTheme.primary}20` }]}>
               <Ionicons name="information-circle" size={24} color={currentTheme.primary} />
             </View>
             <View style={styles.cardTextContainer}>
               <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                {t('settings.about', 'O aplikacji')}
+                {t('settings.about', 'About the app')}
               </Text>
               <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                {t('app.name')} • v1.0.0
+                {t('app.name')} • v{Constants.expoConfig?.version || '1.0.0'}
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={[styles.aboutContent, { backgroundColor: dynamicStyles.optionBg }]}>
             <Text style={[styles.aboutTagline, dynamicStyles.cardDescription]}>
               {t('app.tagline')}
@@ -750,19 +1153,19 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               <View style={styles.aboutFeature}>
                 <Ionicons name="checkmark-circle" size={16} color={currentTheme.primary} />
                 <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
-                  {t('settings.featureOffline', 'Działa offline')}
+                  {t('settings.featureOffline', 'Works offline')}
                 </Text>
               </View>
               <View style={styles.aboutFeature}>
                 <Ionicons name="checkmark-circle" size={16} color={currentTheme.primary} />
                 <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
-                  {t('settings.featurePrivacy', 'Bez reklam i śledzenia')}
+                  {t('settings.featurePrivacy', 'No ads or tracking')}
                 </Text>
               </View>
               <View style={styles.aboutFeature}>
                 <Ionicons name="checkmark-circle" size={16} color={currentTheme.primary} />
                 <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
-                  {t('settings.featureLocal', 'Dane na urządzeniu')}
+                  {t('settings.featureLocal', 'Data on device')}
                 </Text>
               </View>
             </View>
@@ -776,7 +1179,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <View style={styles.legalLinkContent}>
               <Ionicons name="refresh" size={20} color={currentTheme.primary} />
               <Text style={[styles.legalLinkText, dynamicStyles.cardTitle]}>
-                {t('settings.restartOnboarding', 'Uruchom ponownie onboarding')}
+                {t('settings.restartOnboarding', 'Restart onboarding')}
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={dynamicStyles.chevronColor} />
@@ -788,12 +1191,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       {/* Restart Onboarding Modal */}
       <AppModal
         visible={showOnboardingModal}
-        title={t('settings.restartOnboardingTitle', 'Uruchomić ponownie onboarding?')}
-        message={t('settings.restartOnboardingBody', 'Zobaczysz ekran powitalny ponownie.')}
+        title={t('settings.restartOnboardingTitle', 'Restart onboarding?')}
+        message={t('settings.restartOnboardingBody', 'You will see the welcome screen again.')}
         icon="refresh"
         buttons={[
-          { text: t('common.cancel', 'Anuluj'), style: 'cancel' },
-          { text: t('common.confirm', 'Potwierdź'), onPress: confirmRestartOnboarding },
+          { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+          { text: t('common.confirm', 'Confirm'), onPress: confirmRestartOnboarding },
         ]}
         onDismiss={() => setShowOnboardingModal(false)}
       />
@@ -801,13 +1204,13 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       {/* Clear Data Confirmation Modal */}
       <AppModal
         visible={showClearDataModal}
-        title={t('settings.clearDataTitle', 'Wyczyścić dane lokalne?')}
-        message={t('settings.clearDataBody', 'Usunie to wszystkie sesje, postęp, przypomnienia i preferencje z tego urządzenia.')}
+        title={t('settings.clearDataTitle', 'Clear local data?')}
+        message={t('settings.clearDataBody', 'This will remove all sessions, progress, reminders and preferences from this device.')}
         icon="trash"
         iconColor={semanticColors.error.default}
         buttons={[
-          { text: t('common.cancel', 'Anuluj'), style: 'cancel' },
-          { text: t('common.confirm', 'Potwierdź'), style: 'destructive', onPress: confirmClearData },
+          { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+          { text: t('common.confirm', 'Confirm'), style: 'destructive', onPress: confirmClearData },
         ]}
         onDismiss={() => setShowClearDataModal(false)}
       />
@@ -815,8 +1218,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       {/* Data Cleared Success Modal */}
       <AppModal
         visible={showDataClearedModal}
-        title={t('settings.dataCleared', 'Dane lokalne wyczyszczone')}
-        message={t('settings.dataClearedBody', 'Możesz odbudować swoje preferencje i sesje w dowolnym momencie. Żadne dane nie opuściły tego urządzenia.')}
+        title={t('settings.dataCleared', 'Local data cleared')}
+        message={t('settings.dataClearedBody', 'You can rebuild your preferences and sessions at any time. No data has left this device.')}
         icon="checkmark-circle"
         buttons={[{ text: 'OK' }]}
         onDismiss={() => setShowDataClearedModal(false)}
@@ -825,8 +1228,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       {/* Export Error Modal */}
       <AppModal
         visible={showExportErrorModal}
-        title={t('settings.exportFailed', 'Eksport nie powiódł się')}
-        message={t('settings.exportFailedBody', 'Nie można wyeksportować danych. Spróbuj ponownie.')}
+        title={t('settings.exportFailed', 'Export failed')}
+        message={t('settings.exportFailedBody', 'Unable to export data. Please try again.')}
         icon="warning"
         iconColor={semanticColors.error.default}
         buttons={[{ text: 'OK' }]}
@@ -836,13 +1239,27 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       {/* Clear Error Modal */}
       <AppModal
         visible={showClearErrorModal}
-        title={t('settings.clearError', 'Błąd')}
-        message={t('settings.clearErrorBody', 'Nie można wyczyścić wszystkich danych lokalnych.')}
+        title={t('settings.clearError', 'Error')}
+        message={t('settings.clearErrorBody', 'Unable to clear all local data.')}
         icon="warning"
         iconColor={semanticColors.error.default}
         buttons={[{ text: 'OK' }]}
         onDismiss={() => setShowClearErrorModal(false)}
       />
+
+      {/* Easter egg confetti overlay */}
+      {showConfetti && (
+        <View style={styles.confettiContainer} pointerEvents="none">
+          {confettiParticles.map((particle) => (
+            <EasterEggConfetti
+              key={particle.id}
+              delay={particle.delay}
+              color={particle.color}
+              startX={particle.startX}
+            />
+          ))}
+        </View>
+      )}
     </GradientBackground>
   );
 };
@@ -850,6 +1267,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  confettiContainer: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 1000,
+    overflow: 'hidden',
   },
   scrollView: {
     flex: 1,
@@ -1110,10 +1532,21 @@ const styles = StyleSheet.create({
   },
   systemInfoItem: {
     width: '48%',
-    padding: theme.spacing.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+    gap: theme.spacing.sm,
+  },
+  systemInfoIconBox: {
+    width: 36,
+    height: 36,
     borderRadius: theme.borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   systemInfoText: {
+    flex: 1,
     gap: 2,
   },
   systemInfoLabel: {
@@ -1121,7 +1554,55 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   systemInfoValue: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: '600',
+  },
+  // Custom sounds section
+  customSoundsSection: {
+    marginTop: theme.spacing.md,
+    gap: theme.spacing.sm,
+  },
+  soundItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+  },
+  soundItemInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: theme.spacing.sm,
+  },
+  soundItemText: {
+    flex: 1,
+  },
+  soundItemTitle: {
     fontSize: theme.typography.fontSizes.sm,
     fontWeight: '500',
+  },
+  soundItemDesc: {
+    fontSize: theme.typography.fontSizes.xs,
+    marginTop: 2,
+  },
+  soundItemActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+  },
+  soundActionButton: {
+    padding: 2,
+  },
+  soundPickButton: {
+    padding: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
+  },
+  soundHintText: {
+    fontSize: theme.typography.fontSizes.xs,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginTop: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.sm,
   },
 });

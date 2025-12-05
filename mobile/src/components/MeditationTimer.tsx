@@ -25,12 +25,13 @@ import { BreathingPattern, BreathingTiming } from '../services/customSessionStor
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // Predefined breathing patterns in seconds [inhale, hold1, exhale, hold2]
+// Based on scientific research on breathing techniques
 const BREATHING_PATTERNS_CONFIG: Record<BreathingPattern, [number, number, number, number]> = {
-  'none': [0, 0, 0, 0], // No breathing
-  'box': [4, 4, 4, 4], // Box breathing
-  '4-7-8': [4, 7, 8, 0], // 4-7-8 relaxation
-  'equal': [4, 0, 4, 0], // Equal breathing
-  'calm': [2, 0, 2, 0], // Calming breathing
+  'none': [0, 0, 0, 0], // No breathing guidance
+  'box': [4, 4, 4, 4], // Box breathing: 4s inhale, 4s hold, 4s exhale, 4s hold - activates parasympathetic system
+  '4-7-8': [4, 7, 8, 0], // 4-7-8 relaxation: natural sedative for nervous system (Dr. Andrew Weil)
+  'equal': [4, 0, 4, 0], // Equal breathing (Sama Vritti): balances nervous system, increases focus
+  'calm': [4, 0, 6, 0], // Calm breathing: longer exhale (1:1.5 ratio) activates relaxation response
   'custom': [4, 4, 4, 4], // Will be overridden by customBreathing
 };
 
@@ -630,22 +631,22 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       {showBreathingGuide ? (
         <View style={styles.breathingSection}>
           <Text style={[styles.instructionLabel, dynamicStyles.instructionLabel]}>
-            {t('meditation.focusOnBreath', 'SKUP SIĘ NA ODDECHU')}
+            {t('meditation.focusOnBreath', 'FOCUS ON YOUR BREATH')}
           </Text>
           <Animated.Text style={[styles.breathingText, dynamicStyles.breathingText]}>
-            {breathingPhase === 'inhale' && t('meditation.breatheIn', 'Wdech')}
-            {breathingPhase === 'hold' && t('meditation.hold', 'Trzymaj')}
-            {breathingPhase === 'exhale' && t('meditation.breatheOut', 'Wydech')}
-            {breathingPhase === 'rest' && t('meditation.hold', 'Trzymaj')}
+            {breathingPhase === 'inhale' && t('meditation.breatheIn', 'Inhale')}
+            {breathingPhase === 'hold' && t('meditation.hold', 'Hold')}
+            {breathingPhase === 'exhale' && t('meditation.breatheOut', 'Exhale')}
+            {breathingPhase === 'rest' && t('meditation.hold', 'Hold')}
           </Animated.Text>
         </View>
       ) : (
         <View style={styles.breathingSection}>
           <Text style={[styles.instructionLabel, dynamicStyles.instructionLabel]}>
-            {t('meditation.meditationInProgress', 'MEDYTACJA W TRAKCIE')}
+            {t('meditation.meditationInProgress', 'MEDITATION IN PROGRESS')}
           </Text>
           <Text style={[styles.breathingText, dynamicStyles.breathingText]}>
-            {t('meditation.breatheNaturally', 'Oddychaj naturalnie')}
+            {t('meditation.breatheNaturally', 'Breathe naturally')}
           </Text>
         </View>
       )}
@@ -804,10 +805,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       {/* End Session Confirmation Modal */}
       <ConfirmationModal
         visible={showEndConfirmation}
-        title={t('meditation.endSessionTitle', 'Zakończyć sesję?')}
-        message={t('meditation.endSessionMessage', 'Twój postęp zostanie zapisany. Czy na pewno chcesz zakończyć medytację?')}
-        confirmText={t('meditation.endSessionConfirm', 'Zakończ')}
-        cancelText={t('meditation.endSessionCancel', 'Kontynuuj')}
+        title={t('meditation.endSessionTitle', 'End session?')}
+        message={t('meditation.endSessionMessage', 'Your progress will be saved. Are you sure you want to end the meditation?')}
+        confirmText={t('meditation.endSessionConfirm', 'End')}
+        cancelText={t('meditation.endSessionCancel', 'Continue')}
         onConfirm={handleConfirmEnd}
         onCancel={handleCancelEnd}
         icon="pause-circle-outline"

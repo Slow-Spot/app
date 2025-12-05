@@ -226,10 +226,10 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
               <Ionicons name="rocket" size={28} color={dynamicStyles.iconColor} />
             </View>
             <Text style={[styles.modalTitle, dynamicStyles.cardTitle]}>
-              {t('instructions.skipModal.title', 'Przejdź do medytacji')}
+              {t('instructions.skipModal.title', 'Go to meditation')}
             </Text>
             <Text style={[styles.modalDescription, dynamicStyles.cardDescription]}>
-              {t('instructions.skipModal.description', 'Możesz pominąć przygotowanie i od razu rozpocząć medytację.')}
+              {t('instructions.skipModal.description', 'You can skip the preparation and start meditation right away.')}
             </Text>
 
             {/* Don't show again checkbox */}
@@ -243,7 +243,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
                 color={dynamicStyles.checkboxColor}
               />
               <Text style={[styles.modalCheckboxText, dynamicStyles.cardDescription]}>
-                {t('instructions.skipModal.dontShowAgain', 'Nie pokazuj więcej tego wstępu')}
+                {t('instructions.skipModal.dontShowAgain', "Don't show this introduction anymore")}
               </Text>
             </TouchableOpacity>
 
@@ -253,7 +253,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
                 style={[styles.modalButton, styles.modalButtonSecondary]}
               >
                 <Text style={[styles.modalButtonText, dynamicStyles.skipButtonText]}>
-                  {t('common.cancel', 'Anuluj')}
+                  {t('common.cancel', 'Cancel')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -267,7 +267,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
                   style={styles.modalButtonGradient}
                 >
                   <Text style={styles.modalButtonTextPrimary}>
-                    {t('instructions.skipModal.startMeditation', 'Rozpocznij')}
+                    {t('instructions.skipModal.startMeditation', 'Begin')}
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
@@ -543,7 +543,7 @@ const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
         />
         <Pressable onPress={onSkip} style={styles.skipButton}>
           <Text style={[styles.skipButtonText, dynamicStyles.skipButtonText]}>
-            {t('instructions.preparation.skipAll') || 'Pomiń przygotowanie'}
+            {t('instructions.preparation.skipAll') || 'Skip preparation'}
           </Text>
         </Pressable>
       </View>
@@ -655,13 +655,13 @@ const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
           <View style={styles.skipButtonsRow}>
             <Pressable onPress={onSkipStep} style={styles.skipButton}>
               <Text style={[styles.skipButtonText, dynamicStyles.skipButtonText]}>
-                {t('instructions.preparation.skipStep') || 'Pomiń krok'}
+                {t('instructions.preparation.skipStep') || 'Skip step'}
               </Text>
             </Pressable>
             <Text style={[styles.skipDivider, dynamicStyles.skipButtonText]}>•</Text>
             <Pressable onPress={onSkipAll} style={styles.skipButton}>
               <Text style={[styles.skipButtonText, dynamicStyles.skipButtonText]}>
-                {t('instructions.preparation.skipAll') || 'Pomiń wszystko'}
+                {t('instructions.preparation.skipAll') || 'Skip all'}
               </Text>
             </Pressable>
           </View>
@@ -847,7 +847,7 @@ const ChecklistItemCard: React.FC<{
               </Text>
               {isOptional && (
                 <Text style={[styles.optionalBadge, dynamicStyles.optionalBadge]}>
-                  {t('instructions.preparation.optional') || '(opcjonalne)'}
+                  {t('instructions.preparation.optional') || '(optional)'}
                 </Text>
               )}
             </View>
@@ -948,15 +948,15 @@ const AnimatedBreathingCircle: React.FC<{
   const getPhaseText = () => {
     switch (breathingPhase) {
       case 'inhale':
-        return t('meditation.breatheIn', 'Wdech');
+        return t('meditation.breatheIn', 'Breathe in');
       case 'hold':
-        return t('instructions.breathingPrep.hold', 'Trzymaj');
+        return t('instructions.breathingPrep.hold', 'Hold');
       case 'exhale':
-        return t('meditation.breatheOut', 'Wydech');
+        return t('meditation.breatheOut', 'Breathe out');
       case 'rest':
-        return t('instructions.breathingPrep.hold', 'Trzymaj');
+        return t('instructions.breathingPrep.hold', 'Hold');
       default:
-        return t('instructions.breathingPrep.breathe', 'Oddychaj');
+        return t('instructions.breathingPrep.breathe', 'Breathe');
     }
   };
 

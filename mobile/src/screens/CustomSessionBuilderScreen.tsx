@@ -146,14 +146,14 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
   };
 
   const ambientSoundOptions = [
-    { id: 'silence', icon: 'volume-mute-outline' as const, label: t('custom.sounds.silence'), color: iconColors.purple },
-    { id: 'nature', icon: 'leaf-outline' as const, label: t('custom.sounds.nature'), color: iconColors.emerald },
-    { id: 'ocean', icon: 'water-outline' as const, label: t('custom.sounds.ocean'), color: iconColors.sky },
-    { id: 'forest', icon: 'flower-outline' as const, label: t('custom.sounds.forest'), color: iconColors.teal },
-    { id: 'rain', icon: 'rainy-outline' as const, label: t('custom.sounds.rain'), color: iconColors.sky },
-    { id: 'fire', icon: 'flame-outline' as const, label: t('custom.sounds.fire'), color: iconColors.amber },
-    { id: 'wind', icon: 'cloudy-outline' as const, label: t('custom.sounds.wind'), color: iconColors.slate },
-    { id: 'custom', icon: 'musical-note-outline' as const, label: t('custom.sounds.custom'), color: iconColors.rose },
+    { id: 'silence', icon: 'volume-mute-outline' as const, label: t('custom.sounds.silence', 'Silence'), color: iconColors.purple },
+    { id: 'nature', icon: 'leaf-outline' as const, label: t('custom.sounds.nature', 'Nature'), color: iconColors.emerald },
+    { id: 'ocean', icon: 'water-outline' as const, label: t('custom.sounds.ocean', 'Ocean'), color: iconColors.sky },
+    { id: 'forest', icon: 'flower-outline' as const, label: t('custom.sounds.forest', 'Forest'), color: iconColors.teal },
+    { id: 'rain', icon: 'rainy-outline' as const, label: t('custom.sounds.rain', 'Rain'), color: iconColors.sky },
+    { id: 'fire', icon: 'flame-outline' as const, label: t('custom.sounds.fire', 'Fire'), color: iconColors.amber },
+    { id: 'wind', icon: 'cloudy-outline' as const, label: t('custom.sounds.wind', 'Wind'), color: iconColors.slate },
+    { id: 'custom', icon: 'musical-note-outline' as const, label: t('custom.sounds.custom', 'Custom'), color: iconColors.rose },
   ];
 
   // Breathing pattern options with scientific descriptions
@@ -168,8 +168,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
     {
       id: 'none',
       icon: 'pause-outline',
-      label: t('custom.breathing.none', 'Bez instrukcji'),
-      description: t('custom.breathing.noneDesc', 'Medytuj bez wzorca oddechowego'),
+      label: t('custom.breathing.none', 'No guidance'),
+      description: t('custom.breathing.noneDesc', 'Meditate without breathing pattern'),
       timing: '',
       color: iconColors.purple,
     },
@@ -177,7 +177,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       id: 'box',
       icon: 'square-outline',
       label: t('custom.breathing.box', 'Box Breathing'),
-      description: t('custom.breathing.boxDesc', 'Aktywuje układ przywspółczulny, redukuje kortyzol'),
+      description: t('custom.breathing.boxDesc', 'Activates parasympathetic system, reduces cortisol'),
       timing: '4-4-4-4',
       color: iconColors.emerald,
     },
@@ -185,7 +185,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       id: '4-7-8',
       icon: 'moon-outline',
       label: t('custom.breathing.478', '4-7-8'),
-      description: t('custom.breathing.478Desc', 'Naturalny środek uspokajający dla układu nerwowego'),
+      description: t('custom.breathing.478Desc', 'Natural sedative for nervous system'),
       timing: '4-7-8',
       color: iconColors.indigo,
     },
@@ -193,7 +193,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       id: 'equal',
       icon: 'swap-horizontal-outline',
       label: t('custom.breathing.equal', 'Equal Breathing'),
-      description: t('custom.breathing.equalDesc', 'Równoważy układ nerwowy, zwiększa skupienie'),
+      description: t('custom.breathing.equalDesc', 'Balances nervous system, increases focus'),
       timing: '4-4',
       color: iconColors.teal,
     },
@@ -201,7 +201,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       id: 'calm',
       icon: 'water-outline',
       label: t('custom.breathing.calm', 'Calm Breathing'),
-      description: t('custom.breathing.calmDesc', 'Dłuższy wydech aktywuje reakcję relaksacyjną'),
+      description: t('custom.breathing.calmDesc', 'Longer exhale activates relaxation response'),
       timing: '4-6',
       color: iconColors.sky,
     },
@@ -232,9 +232,9 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
 
     if (!config.name || config.name.trim().length === 0) {
       Alert.alert(
-        t('custom.saveError') || 'Error',
-        t('custom.sessionNameRequired') || 'Please enter a session name before saving.',
-        [{ text: t('common.ok') || 'OK' }]
+        t('custom.saveError', 'Error'),
+        t('custom.sessionNameRequired', 'Please enter a session name before saving.'),
+        [{ text: t('common.ok', 'OK') }]
       );
       return;
     }
@@ -256,9 +256,9 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       logger.error('Error saving custom session:', error);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       Alert.alert(
-        t('custom.saveError') || 'Error',
-        t('custom.saveFailed') || 'Failed to save session. Please try again.',
-        [{ text: t('common.ok') || 'OK' }]
+        t('custom.saveError', 'Error'),
+        t('custom.saveFailed', 'Failed to save session. Please try again.'),
+        [{ text: t('common.ok', 'OK') }]
       );
     }
   };
@@ -283,8 +283,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
             <Ionicons name="arrow-back" size={24} color={dynamicStyles.backIcon} />
           </Pressable>
           <View style={styles.headerText}>
-            <Text style={[styles.title, dynamicStyles.title]}>{t('custom.title')}</Text>
-            <Text style={[styles.subtitle, dynamicStyles.subtitle]}>{t('custom.subtitle')}</Text>
+            <Text style={[styles.title, dynamicStyles.title]}>{t('custom.title', 'Build Your Session')}</Text>
+            <Text style={[styles.subtitle, dynamicStyles.subtitle]}>{t('custom.subtitle', 'Create a personalized meditation experience')}</Text>
           </View>
         </View>
 
@@ -293,15 +293,15 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           <View style={styles.sectionHeader}>
             {renderIconBox('create-outline', iconColors.indigo)}
             <View style={styles.sectionHeaderText}>
-              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.sessionName')}</Text>
+              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.sessionName', 'Session Name')}</Text>
               <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>
-                {t('custom.sessionNameHint') || 'Optional - for saving'}
+                {t('custom.sessionNameHint', 'Optional - for saving')}
               </Text>
             </View>
           </View>
           <TextInput
             style={[styles.textInput, dynamicStyles.textInput]}
-            placeholder={t('custom.sessionNamePlaceholder')}
+            placeholder={t('custom.sessionNamePlaceholder', 'e.g. Morning Calm')}
             value={sessionName}
             onChangeText={setSessionName}
             placeholderTextColor={colors.text.tertiary}
@@ -313,8 +313,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           <View style={styles.sectionHeader}>
             {renderIconBox('time-outline', iconColors.amber)}
             <View style={styles.sectionHeaderText}>
-              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.duration')}</Text>
-              <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>{t('custom.durationDescription')}</Text>
+              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.duration', 'Duration')}</Text>
+              <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>{t('custom.durationDescription', 'Set your meditation length')}</Text>
             </View>
           </View>
 
@@ -346,7 +346,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                     styles.durationLabel,
                     { color: isActive ? currentTheme.primary : colors.text.secondary }
                   ]}>
-                    {t('custom.min')}
+                    {t('custom.min', 'min')}
                   </Text>
                 </Pressable>
               );
@@ -356,7 +356,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           {/* Custom duration input */}
           <View style={styles.customDurationRow}>
             <Text style={[styles.customDurationLabel, { color: colors.text.secondary }]}>
-              {t('custom.customDuration')}
+              {t('custom.customDuration', 'Custom')}
             </Text>
             <View style={styles.customDurationInputContainer}>
               <TextInput
@@ -375,7 +375,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                 selectTextOnFocus
               />
               <Text style={[styles.customDurationUnit, { color: colors.text.secondary }]}>
-                {t('custom.min')}
+                {t('custom.min', 'min')}
               </Text>
             </View>
           </View>
@@ -386,8 +386,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           <View style={styles.sectionHeader}>
             {renderIconBox('musical-notes-outline', iconColors.rose)}
             <View style={styles.sectionHeaderText}>
-              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.ambientSound')}</Text>
-              <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>{t('custom.ambientDescription')}</Text>
+              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.ambientSound', 'Background Sound')}</Text>
+              <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>{t('custom.ambientDescription', 'Choose a soothing sound to help you focus')}</Text>
             </View>
           </View>
 
@@ -430,7 +430,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
 
           {/* Hint about custom sounds in settings */}
           <Text style={[styles.soundHint, { color: colors.text.tertiary }]}>
-            {t('custom.sounds.customHint')}
+            {t('custom.sounds.customHint', 'You can customize sounds in app settings')}
           </Text>
         </GradientCard>
 
@@ -439,9 +439,9 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           <View style={styles.sectionHeader}>
             {renderIconBox('notifications-outline', iconColors.teal)}
             <View style={styles.sectionHeaderText}>
-              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.bells')}</Text>
+              <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('custom.bells', 'Bells')}</Text>
               <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>
-                {t('custom.bellsDescription')}
+                {t('custom.bellsDescription', 'Configure session and interval chimes')}
               </Text>
             </View>
           </View>
@@ -449,8 +449,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           {/* End chime */}
           <View style={styles.toggleRow}>
             <View style={styles.toggleInfo}>
-              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.endChime')}</Text>
-              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.endChimeHint')}</Text>
+              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.endChime', 'End Chime')}</Text>
+              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.endChimeHint', 'Gentle sound to end your session')}</Text>
             </View>
             <Switch
               value={endChimeEnabled}
@@ -471,8 +471,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           {/* Session Haptics (start/end) */}
           <View style={styles.toggleRow}>
             <View style={styles.toggleInfo}>
-              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.sessionHaptics', 'Wibracja sesji')}</Text>
-              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.sessionHapticsHint', 'Wibracja przy starcie i końcu sesji')}</Text>
+              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.sessionHaptics', 'Session Haptics')}</Text>
+              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.sessionHapticsHint', 'Vibration at session start and end')}</Text>
             </View>
             <Switch
               value={sessionHaptics}
@@ -493,8 +493,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           {/* Hide timer */}
           <View style={styles.toggleRow}>
             <View style={styles.toggleInfo}>
-              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.hideTimer')}</Text>
-              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.hideTimerHint')}</Text>
+              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.hideTimer', 'Hide Timer')}</Text>
+              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.hideTimerHint', 'For distraction-free meditation')}</Text>
             </View>
             <Switch
               value={hideTimer}
@@ -515,8 +515,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
           {/* Interval bell */}
           <View style={styles.toggleRow}>
             <View style={styles.toggleInfo}>
-              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.intervalBell')}</Text>
-              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.intervalBellHint')}</Text>
+              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.intervalBell', 'Interval Bell')}</Text>
+              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.intervalBellHint', 'Periodic reminder during meditation')}</Text>
             </View>
             <Switch
               value={intervalBellEnabled}
@@ -560,7 +560,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                         styles.intervalText,
                         { color: isActive ? currentTheme.primary : colors.text.primary }
                       ]}>
-                        {minutes} {t('custom.min')}
+                        {minutes} {t('custom.min', 'min')}
                       </Text>
                     </Pressable>
                   );
@@ -570,7 +570,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               {/* Custom interval input */}
               <View style={styles.customIntervalRow}>
                 <Text style={[styles.customDurationLabel, { color: colors.text.secondary }]}>
-                  {t('custom.customInterval')}
+                  {t('custom.customInterval', 'Custom interval')}
                 </Text>
                 <View style={styles.customDurationInputContainer}>
                   <TextInput
@@ -593,7 +593,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                     selectTextOnFocus
                   />
                   <Text style={[styles.customDurationUnit, { color: colors.text.secondary }]}>
-                    {t('custom.min')}
+                    {t('custom.min', 'min')}
                   </Text>
                 </View>
               </View>
@@ -601,7 +601,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               {/* Validation warning */}
               {intervalBellMinutes >= durationMinutes && (
                 <Text style={styles.intervalWarning}>
-                  {t('custom.intervalWarning') || 'Interwał musi być krótszy niż czas sesji'}
+                  {t('custom.intervalWarning', 'Interval must be shorter than session duration')}
                 </Text>
               )}
 
@@ -610,8 +610,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               {/* Interval Bell Haptics */}
               <View style={styles.toggleRow}>
                 <View style={styles.toggleInfo}>
-                  <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.intervalBellHaptics', 'Wibracja dzwonków')}</Text>
-                  <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.intervalBellHapticsHint', 'Wibracja przy dzwonkach interwałowych')}</Text>
+                  <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.intervalBellHaptics', 'Bell Haptics')}</Text>
+                  <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.intervalBellHapticsHint', 'Vibration with interval bells')}</Text>
                 </View>
                 <Switch
                   value={intervalBellHaptics}
@@ -636,10 +636,10 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
             {renderIconBox('pulse-outline', iconColors.emerald)}
             <View style={styles.sectionHeaderText}>
               <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>
-                {t('custom.breathingTitle', 'Wzorzec oddechowy')}
+                {t('custom.breathingTitle', 'Breathing Pattern')}
               </Text>
               <Text style={[styles.sectionDescription, dynamicStyles.sectionDescription]}>
-                {t('custom.breathingDescription', 'Wybierz technikę wspieraną badaniami naukowymi')}
+                {t('custom.breathingDescription', 'Choose a science-backed technique')}
               </Text>
             </View>
           </View>
@@ -706,8 +706,8 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
 
               <View style={styles.toggleRow}>
                 <View style={styles.toggleInfo}>
-                  <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.breathingHaptics', 'Wibracja oddechowa')}</Text>
-                  <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.breathingHapticsHint', 'Pulsująca wibracja synchronizowana z oddechem')}</Text>
+                  <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.breathingHaptics', 'Breathing Haptics')}</Text>
+                  <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.breathingHapticsHint', 'Pulsing vibration synchronized with breathing')}</Text>
                 </View>
                 <Switch
                   value={breathingHaptics}
@@ -729,7 +729,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
         {/* Action Buttons */}
         <View style={styles.buttonContainer}>
           <GradientButton
-            title={t('custom.startSession')}
+            title={t('custom.startSession', 'Start Session')}
             onPress={handleStartSession}
             gradient={themeGradients.button.primary}
             style={styles.actionButton}
@@ -739,7 +739,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
             <Pressable onPress={handleSaveSession} style={styles.saveButton}>
               <Ionicons name="bookmark-outline" size={18} color={currentTheme.primary} />
               <Text style={[styles.saveButtonText, { color: currentTheme.primary }]}>
-                {(editSessionId || localEditSessionId) ? t('custom.updateSession') : t('custom.saveSession')}
+                {(editSessionId || localEditSessionId) ? t('custom.updateSession', 'Update Session') : t('custom.saveSession', 'Save Session')}
               </Text>
             </Pressable>
           )}

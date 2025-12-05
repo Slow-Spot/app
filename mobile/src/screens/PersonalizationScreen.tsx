@@ -107,7 +107,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
 
   const handleApplyCustomColor = async () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    await setCustomTheme(pickerColor, t('personalization.customThemeName', 'Własny'));
+    await setCustomTheme(pickerColor, t('personalization.customThemeName', 'Custom'));
     setShowColorPicker(false);
   };
 
@@ -135,7 +135,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
           />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, dynamicStyles.title]}>
-          {t('personalization.title', 'Personalizacja')}
+          {t('personalization.title', 'Personalization')}
         </Text>
         <View style={styles.headerSpacer} />
       </View>
@@ -152,7 +152,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
           isDark={isDark}
         >
           <Text style={[styles.sectionTitle, dynamicStyles.title]}>
-            {t('personalization.preview', 'Podgląd')}
+            {t('personalization.preview', 'Preview')}
           </Text>
 
           {/* Live Preview */}
@@ -168,7 +168,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
                   <Ionicons name="leaf" size={28} color="#FFFFFF" />
                 </View>
                 <Text style={styles.previewText}>
-                  {t('personalization.sampleButton', 'Medytuj')}
+                  {t('personalization.sampleButton', 'Meditate')}
                 </Text>
               </View>
             </LinearGradient>
@@ -187,7 +187,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
                   color={currentTheme.primary}
                 />
                 <Text style={[styles.previewChipText, { color: currentTheme.primary }]}>
-                  {t('personalization.active', 'Aktywny')}
+                  {t('personalization.active', 'Active')}
                 </Text>
               </View>
               <View
@@ -214,7 +214,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
         >
           <View style={styles.colorSectionHeader}>
             <Text style={[styles.sectionTitle, dynamicStyles.title]}>
-              {t('personalization.colorTheme', 'Motyw kolorystyczny')}
+              {t('personalization.colorTheme', 'Color Theme')}
             </Text>
             {/* Custom color picker button */}
             <TouchableOpacity
@@ -227,7 +227,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
             >
               <Ionicons name="color-palette" size={18} color={currentTheme.primary} />
               <Text style={[styles.pickerButtonText, { color: currentTheme.primary }]}>
-                {t('personalization.customColor', 'Własny')}
+                {t('personalization.customColor', 'Custom')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -288,7 +288,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
           isDark={isDark}
         >
           <Text style={[styles.sectionTitle, dynamicStyles.title]}>
-            {t('personalization.additionalSettings', 'Dodatkowe ustawienia')}
+            {t('personalization.additionalSettings', 'Additional Settings')}
           </Text>
 
           {/* Animations */}
@@ -299,10 +299,10 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
               </View>
               <View>
                 <Text style={[styles.settingTitle, dynamicStyles.title]}>
-                  {t('personalization.animations', 'Animacje')}
+                  {t('personalization.animations', 'Animations')}
                 </Text>
                 <Text style={[styles.settingDescription, dynamicStyles.subtitle]}>
-                  {t('personalization.animationsDesc', 'Płynne przejścia i efekty')}
+                  {t('personalization.animationsDesc', 'Smooth transitions and effects')}
                 </Text>
               </View>
             </View>
@@ -339,12 +339,12 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
             </View>
             <View style={styles.infoTextContainer}>
               <Text style={[styles.infoTitle, dynamicStyles.title]}>
-                {t('personalization.infoTitle', 'Jak to działa?')}
+                {t('personalization.infoTitle', 'How does it work?')}
               </Text>
               <Text style={[styles.infoDescription, dynamicStyles.subtitle]}>
                 {t(
                   'personalization.infoDescription',
-                  'Wybrany kolor będzie używany w przyciskach, ikonach i akcentach. Zmiana jest natychmiastowa i działa zarówno w jasnym jak i ciemnym trybie.'
+                  'The selected color will be used in buttons, icons, and accents. The change is instant and works in both light and dark modes.'
                 )}
               </Text>
             </View>
@@ -367,7 +367,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
             {/* Modal Header */}
             <View style={styles.modalHeader}>
               <Text style={[styles.modalTitle, dynamicStyles.title]}>
-                {t('personalization.pickColor', 'Wybierz kolor')}
+                {t('personalization.pickColor', 'Pick a color')}
               </Text>
               <TouchableOpacity
                 onPress={() => setShowColorPicker(false)}
@@ -410,7 +410,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
               activeOpacity={0.8}
             >
               <Text style={styles.applyButtonText}>
-                {t('personalization.apply', 'Zastosuj')}
+                {t('personalization.apply', 'Apply')}
               </Text>
             </TouchableOpacity>
           </View>

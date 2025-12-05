@@ -34,13 +34,13 @@
       "choosePattern": "Choose a pattern:",
       "patterns": {
         "box": "For Stress",
-        "boxDesc": "4-4-4-4 • Calms and focuses the mind",
+        "boxDesc": "Calms and focuses the mind",
         "478": "For Sleep",
-        "478Desc": "4-7-8 • Deep relaxation before sleep",
+        "478Desc": "Deep relaxation before sleep",
         "equal": "For Beginners",
-        "equalDesc": "4-4 • Simple pattern for beginners",
-        "calm": "For Energy",
-        "calmDesc": "2-2 • Fast and energizing"
+        "equalDesc": "Simple pattern for beginners",
+        "calm": "For Relaxation",
+        "calmDesc": "Longer exhale calms the nervous system"
       },
       "inhale": "Inhale",
       "hold": "Hold",
@@ -468,7 +468,18 @@
     "metric": "Metric",
     "imperial": "Imperial",
     "timeFormat": "Time Format",
-    "textDirection": "Text Direction"
+    "textDirection": "Text Direction",
+    "personalization": "Personalization",
+    "personalizationDescription": "Customize app colors",
+    "customSounds": "Custom Sounds",
+    "customSoundsDescription": "Use your own audio files",
+    "customBell": "Session Bell",
+    "customAmbient": "Custom Ambient",
+    "defaultSound": "Default",
+    "notSet": "Not set",
+    "soundPickError": "Error",
+    "soundPickErrorBody": "Could not load the selected audio file.",
+    "customSoundsHint": "Select audio files from your device. Supported formats: MP3, WAV, M4A."
   },
   "navigation": {
     "home": "Home",
@@ -620,7 +631,7 @@
       "title": "Zazen - Zen Sitting",
       "description": "Traditional Zen meditation. Just sitting, observing breath and thoughts."
     },
-    "kinthinZenWalking": {
+    "kinhinZenWalking": {
       "title": "Kinhin - Zen Walking",
       "description": "Slow, mindful walking between sitting periods."
     },
@@ -762,6 +773,8 @@
       "customDesc": "Your personal sound",
       "customHint": "You can customize sounds in app settings"
     },
+    "guidingVoice": "Guiding Voice",
+    "guidingVoiceSubtitle": "Gentle spoken guidance during practice",
     "voiceGuidance": "Voice Guidance",
     "voiceGuidanceDescription": "Spoken guidance during meditation",
     "startSession": "Start Session",
@@ -812,17 +825,17 @@
       "none": "No Guidance",
       "noneDesc": "Meditate without a breathing pattern",
       "box": "Box Breathing",
-      "boxDesc": "4-4-4-4 • Balance & focus when stressed",
+      "boxDesc": "Balance & focus through equal phases",
       "boxBenefit": "Used by Navy SEALs for stress management",
       "478": "4-7-8",
-      "478Desc": "4-7-8 • Natural sleep aid",
+      "478Desc": "Natural sedative for nervous system",
       "478Benefit": "Calms racing thoughts before sleep",
       "equal": "Equal Breathing",
-      "equalDesc": "4-4 • Simple & calming for beginners",
+      "equalDesc": "Simple & calming for beginners",
       "equalBenefit": "Easy to learn, perfect starting point",
       "calm": "Calm Breathing",
-      "calmDesc": "2-2 • Quick energy & alertness boost",
-      "calmBenefit": "Use when you need a quick reset"
+      "calmDesc": "Longer exhale activates relaxation",
+      "calmBenefit": "Reduces anxiety and promotes calmness"
     },
     "breathingTitle": "Breathing Pattern",
     "breathingDescription": "Choose a science-backed breathing technique (optional)"
@@ -1096,7 +1109,7 @@
       "title": "Zen Explorer",
       "description": "Complete 5 Zen meditation sessions"
     },
-    "vipassanaExplorer": {
+    "vipassanaPractitioner": {
       "title": "Vipassana Explorer",
       "description": "Complete 5 Vipassana meditation sessions"
     },

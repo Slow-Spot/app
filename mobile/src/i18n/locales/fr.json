@@ -34,13 +34,13 @@
       "choosePattern": "Choisissez un schéma :",
       "patterns": {
         "box": "Pour le Stress",
-        "boxDesc": "4-4-4-4 • Calme et concentre l'esprit",
+        "boxDesc": "Calme et concentre l'esprit",
         "478": "Pour le Sommeil",
-        "478Desc": "4-7-8 • Relaxation profonde avant le sommeil",
+        "478Desc": "Relaxation profonde avant le sommeil",
         "equal": "Pour Débutants",
-        "equalDesc": "4-4 • Schéma simple pour débutants",
-        "calm": "Pour l'Énergie",
-        "calmDesc": "2-2 • Rapide et énergisant"
+        "equalDesc": "Schéma simple pour débutants",
+        "calm": "Pour la Relaxation",
+        "calmDesc": "L'expiration prolongée calme le système nerveux"
       },
       "inhale": "Inspirez",
       "hold": "Retenez",
@@ -500,7 +500,18 @@
     "metric": "Métrique",
     "imperial": "Impérial",
     "timeFormat": "Format horaire",
-    "textDirection": "Direction du texte"
+    "textDirection": "Direction du texte",
+    "personalization": "Personnalisation",
+    "personalizationDescription": "Personnaliser les couleurs de l'application",
+    "customSounds": "Sons Personnalisés",
+    "customSoundsDescription": "Utilisez vos propres fichiers audio",
+    "customBell": "Cloche de Session",
+    "customAmbient": "Ambiance Personnalisée",
+    "defaultSound": "Par défaut",
+    "notSet": "Non défini",
+    "soundPickError": "Erreur",
+    "soundPickErrorBody": "Impossible de charger le fichier audio sélectionné.",
+    "customSoundsHint": "Sélectionnez des fichiers audio depuis votre appareil. Formats supportés : MP3, WAV, M4A."
   },
   "navigation": {
     "home": "Accueil",
@@ -1035,6 +1046,8 @@
       "customDesc": "Votre son personnel",
       "customHint": "Vous pouvez personnaliser les sons dans les paramètres"
     },
+    "guidingVoice": "Voix de Guidage",
+    "guidingVoiceSubtitle": "Guidage vocal doux pendant la pratique",
     "voiceGuidance": "Guidage Vocal",
     "voiceGuidanceDescription": "Conseils vocaux pendant la méditation",
     "saveSession": "Enregistrer la Session",
@@ -1102,17 +1115,17 @@
       "none": "Sans instructions",
       "noneDesc": "Méditez sans schéma respiratoire",
       "box": "Respiration Carrée",
-      "boxDesc": "4-4-4-4 • Équilibre et concentration en cas de stress",
+      "boxDesc": "Équilibre et concentration en cas de stress",
       "boxBenefit": "Utilisée par les Navy SEALs pour gérer le stress",
       "478": "4-7-8",
-      "478Desc": "4-7-8 • Aide naturelle au sommeil",
+      "478Desc": "Aide naturelle au sommeil",
       "478Benefit": "Calme les pensées avant le coucher",
       "equal": "Respiration Égale",
-      "equalDesc": "4-4 • Simple et apaisante pour débutants",
+      "equalDesc": "Simple et apaisante pour débutants",
       "equalBenefit": "Facile à apprendre, point de départ idéal",
       "calm": "Respiration Calme",
-      "calmDesc": "2-2 • Boost rapide d'énergie et d'alerte",
-      "calmBenefit": "Quand vous avez besoin d'un reset rapide"
+      "calmDesc": "L'expiration prolongée active la relaxation",
+      "calmBenefit": "Réduit l'anxiété et favorise le calme"
     },
     "breathingTitle": "Schéma Respiratoire",
     "breathingDescription": "Choisissez une technique de respiration scientifiquement prouvée (optionnel)"

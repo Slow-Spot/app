@@ -410,10 +410,10 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
               animationsEnabled={settings.animationsEnabled}
             />
             <Text style={[styles.title, dynamicStyles.title]}>
-              {t('meditation.wellDone', 'Świetna robota!')}
+              {t('meditation.wellDone', 'Well done!')}
             </Text>
             <Text style={[styles.subtitle, dynamicStyles.subtitle]}>
-              {t('meditation.completedSession', 'Ukończyłeś sesję medytacji')}
+              {t('meditation.completedSession', 'You completed a meditation session')}
             </Text>
 
             {/* Streak badge if applicable */}
@@ -447,7 +447,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                 </View>
                 <View style={styles.cardTextContainer}>
                   <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                    {t('meditation.sessionDetails', 'Szczegóły sesji')}
+                    {t('meditation.sessionDetails', 'Session details')}
                   </Text>
                   <View style={styles.statsRow}>
                     <View style={styles.statItem}>
@@ -455,7 +455,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                         {sessionTitle}
                       </Text>
                       <Text style={[styles.statLabel, dynamicStyles.statLabel]}>
-                        {t('meditation.session', 'Sesja')}
+                        {t('meditation.session', 'Session')}
                       </Text>
                     </View>
                     <View style={[styles.statDivider, { backgroundColor: `${currentTheme.primary}20` }]} />
@@ -464,7 +464,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                         {t('meditation.minutes', { count: durationMinutes })}
                       </Text>
                       <Text style={[styles.statLabel, dynamicStyles.statLabel]}>
-                        {t('meditation.duration', 'Czas trwania')}
+                        {t('meditation.duration', 'Duration')}
                       </Text>
                     </View>
                   </View>
@@ -489,10 +489,10 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                   </View>
                   <View style={styles.cardTextContainer}>
                     <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                      {t('meditation.yourIntention', 'Twoja intencja')}
+                      {t('meditation.yourIntention', 'Your intention')}
                     </Text>
                     <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                      {t('meditation.intentionDescription', 'To, co sobie założyłeś przed sesją')}
+                      {t('meditation.intentionDescription', 'What you set before the session')}
                     </Text>
                   </View>
                 </View>
@@ -520,10 +520,10 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                 </View>
                 <View style={styles.cardTextContainer}>
                   <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                    {t('meditation.howDoYouFeel', 'Jak się czujesz?')}
+                    {t('meditation.howDoYouFeel', 'How do you feel?')}
                   </Text>
                   <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                    {t('meditation.moodDescription', 'Oceń swoje samopoczucie po sesji')}
+                    {t('meditation.moodDescription', 'Rate your mood after the session')}
                   </Text>
                 </View>
               </View>
@@ -559,10 +559,10 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                 </View>
                 <View style={styles.cardTextContainer}>
                   <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                    {t('meditation.sessionNotes', 'Notatki z sesji')}
+                    {t('meditation.sessionNotes', 'Session notes')}
                   </Text>
                   <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                    {t('meditation.notesOptional', 'Zapisz swoje przemyślenia (opcjonalnie)')}
+                    {t('meditation.notesOptional', 'Write down your thoughts (optional)')}
                   </Text>
                 </View>
               </View>
@@ -575,7 +575,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                     color: dynamicStyles.inputText.color,
                   },
                 ]}
-                placeholder={t('meditation.notesPlaceholder', 'Jak się czujesz? Jakie masz przemyślenia?')}
+                placeholder={t('meditation.notesPlaceholder', 'How do you feel? What are your thoughts?')}
                 placeholderTextColor={dynamicStyles.inputPlaceholder}
                 value={notes}
                 onChangeText={setNotes}
@@ -603,7 +603,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                   </View>
                   <View style={styles.cardTextContainer}>
                     <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                      {t('meditation.inspiration', 'Inspiracja')}
+                      {t('meditation.inspiration', 'Inspiration')}
                     </Text>
                   </View>
                 </View>
@@ -642,7 +642,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                 style={styles.continueButtonGradient}
               >
                 <Text style={styles.continueButtonText}>
-                  {t('meditation.continue', 'Kontynuuj')}
+                  {t('meditation.continue', 'Continue')}
                 </Text>
                 <Ionicons name="arrow-forward" size={20} color="#FFF" />
               </LinearGradient>
