@@ -259,15 +259,33 @@ export const clearAllSessions = async (): Promise<void> => {
 // Initialization
 // ============================================================================
 
-/** Ensure default session exists on first app launch */
+/**
+ * Ensure default session exists
+ * - On first app launch: creates default session
+ * - When session list is empty: recreates default session (e.g., after user deletes all)
+ */
 export const initializeDefaultSession = async (): Promise<void> => {
   try {
-    const alreadyCreated = await AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_SESSION_CREATED);
-    if (alreadyCreated === 'true') {
+    const sessions = await getAllSessions();
+
+    // Always ensure at least one session exists
+    // This handles: first launch, clear data, or user manually deleted all sessions
+    if (sessions.length === 0) {
+      const defaultSession = createSessionObject(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
+      await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify([defaultSession]));
+      await AsyncStorage.setItem(STORAGE_KEYS.DEFAULT_SESSION_CREATED, 'true');
+      logger.log('Default session created (empty list)');
       return;
     }
 
-    const sessions = await getAllSessions();
+    // Check if this is first initialization (flag not set yet)
+    const alreadyCreated = await AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_SESSION_CREATED);
+    if (alreadyCreated === 'true') {
+      return; // Sessions exist and initialization was already done
+    }
+
+    // First launch with existing sessions (edge case: legacy data)
+    // Ensure default session exists in the list
     const existingIndex = sessions.findIndex((s) => s.id === DEFAULT_SESSION_ID);
 
     if (existingIndex >= 0) {
@@ -275,7 +293,7 @@ export const initializeDefaultSession = async (): Promise<void> => {
       sessions[existingIndex] = createSessionObject(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
       sessions[existingIndex].createdAt = sessions[existingIndex].createdAt;
     } else {
-      // Create new default session
+      // Add default session at the beginning
       const defaultSession = createSessionObject(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
       sessions.unshift(defaultSession);
     }
