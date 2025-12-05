@@ -993,9 +993,9 @@
     "intervalWarning": "L'intervalle doit être plus court que la durée de la session",
     "min": "min",
     "bellsDescription": "Signaux sonores pendant votre session",
-    "wakeUpChime": "Cloche de Fin",
-    "wakeUpChimeDescription": "Carillon doux à la fin de votre session",
-    "wakeUpChimeHint": "Signal doux à la fin",
+    "endChime": "Cloche de Fin",
+    "endChimeDescription": "Carillon doux à la fin de votre session",
+    "endChimeHint": "Signal doux à la fin",
     "intervalBells": "Cloches d'Intervalle",
     "intervalBellsDescription": "Jouer une cloche à intervalles réguliers",
     "intervalMinutes": "Intervalle (minutes)",
@@ -1006,15 +1006,27 @@
     "vibration": "Haptique (Vibration)",
     "vibrationHint": "Guidage tactile pour les phases de respiration",
     "vibrationDescription": "Vibrer à la fin de la session",
-    "hideCountdown": "Masquer le minuteur",
-    "hideCountdownHint": "Pour une méditation sans distraction",
+    "sessionHaptics": "Haptique de Session",
+    "sessionHapticsHint": "Vibration au début et à la fin de la session",
+    "breathingHaptics": "Haptique de Respiration",
+    "breathingHapticsHint": "Vibration pulsée synchronisée avec les phases de respiration",
+    "intervalBellHaptics": "Haptique de Cloche",
+    "intervalBellHapticsHint": "Vibration avec les cloches d'intervalle",
+    "hideTimer": "Masquer le minuteur",
+    "hideTimerHint": "Pour une méditation sans distraction",
     "sounds": {
       "silence": "Silence",
+      "silenceDesc": "Focus pur, sans distractions",
       "nature": "Nature",
+      "natureDesc": "Sons naturels apaisants",
       "ocean": "Océan",
+      "oceanDesc": "Vagues rythmiques pour relaxation profonde",
       "forest": "Forêt",
+      "forestDesc": "Ambiance forestière paisible",
       "432hz": "432 Hz",
-      "528hz": "528 Hz"
+      "432hzDesc": "Ton d'harmonie • Réduit l'anxiété naturellement",
+      "528hz": "528 Hz",
+      "528hzDesc": "Fréquence d'amour • Favorise la paix intérieure"
     },
     "voiceGuidance": "Guidage Vocal",
     "voiceGuidanceDescription": "Conseils vocaux pendant la méditation",
@@ -1083,13 +1095,17 @@
       "none": "Sans instructions",
       "noneDesc": "Méditez sans schéma respiratoire",
       "box": "Respiration Carrée",
-      "boxDesc": "Active le système parasympathique, réduit le cortisol",
+      "boxDesc": "4-4-4-4 • Équilibre et concentration en cas de stress",
+      "boxBenefit": "Utilisée par les Navy SEALs pour gérer le stress",
       "478": "4-7-8",
-      "478Desc": "Sédatif naturel pour le système nerveux",
+      "478Desc": "4-7-8 • Aide naturelle au sommeil",
+      "478Benefit": "Calme les pensées avant le coucher",
       "equal": "Respiration Égale",
-      "equalDesc": "Équilibre le système nerveux, augmente la concentration",
+      "equalDesc": "4-4 • Simple et apaisante pour débutants",
+      "equalBenefit": "Facile à apprendre, point de départ idéal",
       "calm": "Respiration Calme",
-      "calmDesc": "L'expiration plus longue active la réponse de relaxation"
+      "calmDesc": "2-2 • Boost rapide d'énergie et d'alerte",
+      "calmBenefit": "Quand vous avez besoin d'un reset rapide"
     },
     "breathingTitle": "Schéma Respiratoire",
     "breathingDescription": "Choisissez une technique de respiration scientifiquement prouvée (optionnel)"
@@ -1330,5 +1346,14 @@
       "amber": "Ambre Chaleureux",
       "emerald": "Émeraude Frais"
     }
+  },
+  "accessibility": {
+    "finishMeditationHint": "Termine la session de méditation en cours",
+    "pauseMeditationHint": "Met en pause le minuteur de méditation",
+    "resumeMeditationHint": "Reprend le minuteur de méditation",
+    "continueHint": "Retourne à l'écran d'accueil",
+    "skipIntentionHint": "Passe le réglage de l'intention et démarre la méditation",
+    "editSessionHint": "Modifier cette session de méditation",
+    "deleteSessionHint": "Supprimer cette session de méditation"
   }
 }

@@ -7,7 +7,7 @@ import * as Haptics from 'expo-haptics';
 import Animated from 'react-native-reanimated';
 import { screenElementAnimation } from '../utils/animations';
 import { MeditationSession } from '../services/api';
-import { SavedCustomSession } from '../services/customSessionStorage';
+import { CustomSession } from '../services/customSessionStorage';
 import { AnimatedPressable } from './AnimatedPressable';
 import theme, { getThemeColors, getCardStyles, getSwipeActionColors } from '../theme';
 import { getSectionColors } from '../theme/colors';
@@ -80,7 +80,7 @@ export const SessionCard = React.memo<SessionCardProps>(({
   const swipeColors = useMemo(() => getSwipeActionColors(isDark), [isDark]);
 
   // Get custom session config for displaying details
-  const customConfig = isCustom ? (session as SavedCustomSession).config : null;
+  const customConfig = isCustom ? (session as CustomSession).config : null;
 
   // Check if this is the default evidence-based session
   const isDefaultSession = session.id === 'default-mindful-breathing';
@@ -148,6 +148,9 @@ export const SessionCard = React.memo<SessionCardProps>(({
             style={[styles.actionButton, { backgroundColor: swipeColors.edit.background }]}
             onPress={handleEdit}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel={t('custom.edit', 'Edit')}
+            accessibilityHint={t('accessibility.editSessionHint', 'Edit this meditation session')}
           >
             <Ionicons name="pencil" size={20} color={swipeColors.edit.icon} />
             <Text style={[styles.actionText, { color: swipeColors.edit.text }]}>{t('custom.edit', 'Edytuj')}</Text>
@@ -158,6 +161,9 @@ export const SessionCard = React.memo<SessionCardProps>(({
             style={[styles.actionButton, { backgroundColor: swipeColors.delete.background }]}
             onPress={handleDelete}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel={t('custom.delete', 'Delete')}
+            accessibilityHint={t('accessibility.deleteSessionHint', 'Delete this meditation session')}
           >
             <Ionicons name="trash-outline" size={20} color={swipeColors.delete.icon} />
             <Text style={[styles.actionText, { color: swipeColors.delete.text }]}>{t('custom.delete', 'Usuń')}</Text>

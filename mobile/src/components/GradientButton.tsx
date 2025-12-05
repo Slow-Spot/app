@@ -30,6 +30,10 @@ interface GradientButtonProps {
   loading?: boolean;
   size?: 'sm' | 'md' | 'lg';
   icon?: any; // optional icon support when passed by callers
+  /** Accessibility label for screen readers. Defaults to title if not provided. */
+  accessibilityLabel?: string;
+  /** Accessibility hint describing what happens when the button is pressed. */
+  accessibilityHint?: string;
 }
 
 /**
@@ -56,6 +60,8 @@ export const GradientButton: React.FC<GradientButtonProps> = ({
   disabled,
   loading,
   size = 'md',
+  accessibilityLabel,
+  accessibilityHint,
 }) => {
   const sizeStyles = theme.buttonSizes[size];
 
@@ -65,6 +71,10 @@ export const GradientButton: React.FC<GradientButtonProps> = ({
       disabled={disabled || loading}
       activeOpacity={0.8}
       style={[styles.touchable, { opacity: disabled ? theme.opacity.disabled : 1 }]}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel || title}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ disabled: disabled || loading }}
     >
       <LinearGradient
         colors={gradient.colors}

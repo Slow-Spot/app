@@ -20,7 +20,7 @@ import { brandColors } from '../theme/colors';
 import { ChimePoint } from '../types/customSession';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { ConfirmationModal } from './ConfirmationModal';
-import { BreathingPattern, CustomBreathingPattern } from '../services/customSessionStorage';
+import { BreathingPattern, BreathingTiming } from '../services/customSessionStorage';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -43,14 +43,15 @@ interface MeditationTimerProps {
   ambientSoundName?: string;
   isDark?: boolean;
   breathingPattern?: BreathingPattern;
-  customBreathing?: CustomBreathingPattern;
-  vibrationEnabled?: boolean;
-  /**
-   * Hide the countdown timer for a distraction-free meditation experience.
-   * Research suggests that watching the clock can increase anxiety.
-   * When true, the timer is hidden but the session still tracks time.
-   */
-  hideCountdown?: boolean;
+  customBreathing?: BreathingTiming;
+  /** Hide the timer for a distraction-free meditation experience */
+  hideTimer?: boolean;
+  /** Haptic feedback at session start and end */
+  sessionHaptics?: boolean;
+  /** Haptic feedback synchronized with breathing phases */
+  breathingHaptics?: boolean;
+  /** Haptic feedback for interval bells */
+  intervalBellHaptics?: boolean;
 }
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({
@@ -61,17 +62,19 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   onAudioToggle,
   ambientSoundName,
   isDark = false,
-  breathingPattern = 'box', // Default to box breathing for backward compatibility
+  breathingPattern = 'box',
   customBreathing,
-  vibrationEnabled = true, // Default to enabled for backward compatibility
-  hideCountdown = false, // Show timer by default
+  hideTimer = true,
+  sessionHaptics = true,
+  breathingHaptics = true,
+  intervalBellHaptics = true,
 }) => {
   const { t } = useTranslation();
   const { currentTheme, settings } = usePersonalization();
 
   // Haptic feedback for breathing phase transitions
   // Uses both prop and global settings
-  const isHapticEnabled = vibrationEnabled && settings.hapticEnabled;
+  const isBreathingHapticEnabled = breathingHaptics && settings.hapticEnabled;
   const lastBreathingPhaseRef = useRef<string>('');
   const hapticIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const hapticPulseCountRef = useRef<number>(0);
@@ -103,7 +106,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   }, []);
 
   const startContinuousHaptic = useCallback((phase: string, phaseDuration: number) => {
-    if (!isHapticEnabled) return;
+    if (!isBreathingHapticEnabled) return;
 
     // Stop any existing haptic pattern
     stopContinuousHaptic();
@@ -173,10 +176,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         }
       }, pulseInterval);
     }
-  }, [isHapticEnabled, stopContinuousHaptic]);
+  }, [isBreathingHapticEnabled, stopContinuousHaptic]);
 
   const triggerBreathingHaptic = useCallback((phase: string, phaseDuration?: number) => {
-    if (!isHapticEnabled) return;
+    if (!isBreathingHapticEnabled) return;
 
     // Only trigger if phase actually changed
     if (phase === lastBreathingPhaseRef.current) return;
@@ -200,7 +203,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           break;
       }
     }
-  }, [isHapticEnabled, startContinuousHaptic]);
+  }, [isBreathingHapticEnabled, startContinuousHaptic]);
 
   // Cleanup haptic interval on unmount
   useEffect(() => {
@@ -511,10 +514,15 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     transform: [{ scale: breathingScale.value }],
   }));
 
-  // Play chime
-  const playChime = async () => {
-    // Only vibrate if vibration is enabled
-    if (vibrationEnabled) {
+  // Play chime with appropriate haptic feedback
+  // isIntervalChime: true for interval bells, false for session end chime
+  const playChime = async (isIntervalChime: boolean = true) => {
+    // Determine which haptic setting to use
+    const shouldVibrate = isIntervalChime
+      ? (intervalBellHaptics && settings.hapticEnabled)
+      : (sessionHaptics && settings.hapticEnabled);
+
+    if (shouldVibrate) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
 
@@ -528,7 +536,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     }
   };
 
-  // Check and play chimes
+  // Check and play interval chimes
   useEffect(() => {
     const elapsedSeconds = totalSeconds - remainingSeconds;
 
@@ -538,7 +546,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         !playedChimes.current.has(chime.timeInSeconds)
       ) {
         playedChimes.current.add(chime.timeInSeconds);
-        playChime();
+        playChime(true); // Interval bell - use intervalBellHaptics
       }
     }
   }, [remainingSeconds, adjustableChimes, totalSeconds]);
@@ -711,7 +719,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
         {/* Timer display in center - conditionally hidden for distraction-free meditation */}
         <View style={styles.timerCenter}>
-          {!hideCountdown && (
+          {!hideTimer && (
             <Text style={[styles.timerText, dynamicStyles.timerText]}>{formatTime(remainingSeconds)}</Text>
           )}
         </View>
@@ -751,6 +759,9 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             resetHideTimer();
             handleEndSessionPress();
           }}
+          accessibilityRole="button"
+          accessibilityLabel={t('meditation.finish')}
+          accessibilityHint={t('accessibility.finishMeditationHint', 'Ends the current meditation session')}
         >
           <Text style={[styles.secondaryButtonText, dynamicStyles.secondaryButtonText]}>{t('meditation.finish')}</Text>
         </TouchableOpacity>
@@ -762,6 +773,11 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             setIsRunning(!isRunning);
           }}
           activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel={isRunning ? t('meditation.pause') : t('meditation.resume')}
+          accessibilityHint={isRunning
+            ? t('accessibility.pauseMeditationHint', 'Pauses the meditation timer')
+            : t('accessibility.resumeMeditationHint', 'Resumes the meditation timer')}
         >
           <LinearGradient
             colors={currentTheme.gradient}

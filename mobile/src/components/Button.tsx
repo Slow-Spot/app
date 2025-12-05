@@ -35,6 +35,10 @@ interface ButtonProps {
   fullWidth?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  /** Accessibility label for screen readers. Defaults to title if not provided. */
+  accessibilityLabel?: string;
+  /** Accessibility hint describing what happens when the button is pressed. */
+  accessibilityHint?: string;
 }
 
 /**
@@ -62,6 +66,8 @@ export const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   leftIcon,
   rightIcon,
+  accessibilityLabel,
+  accessibilityHint,
 }) => {
   const sizeStyles = theme.buttonSizes[size];
   const { currentTheme } = usePersonalization();
@@ -146,6 +152,10 @@ export const Button: React.FC<ButtonProps> = ({
         fullWidth && styles.fullWidth,
         { opacity: disabled ? theme.opacity.disabled : 1 },
       ]}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel || title}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ disabled: disabled || loading }}
     >
       <View style={[styles.button, variantStyles.container, style]}>
         {loading ? (

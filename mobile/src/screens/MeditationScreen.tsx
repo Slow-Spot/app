@@ -17,10 +17,9 @@ import { GradientBackground } from '../components/GradientBackground';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
-import { getAllCustomSessions, deleteCustomSession, SavedCustomSession, BreathingPattern, CustomBreathingPattern, ensureDefaultSessionExists } from '../services/customSessionStorage';
+import { getAllSessions, deleteSession, CustomSession, BreathingPattern, BreathingTiming, initializeDefaultSession } from '../services/customSessionStorage';
 import { userPreferences } from '../services/userPreferences';
 import { ChimePoint } from '../types/customSession';
-import { CustomSessionConfig } from './CustomSessionBuilderScreen';
 import theme, { getThemeColors, getThemeGradients, getCardStyles } from '../theme';
 import { brandColors, primaryColor, getSectionColors } from '../theme/colors';
 import * as Haptics from 'expo-haptics';
@@ -31,15 +30,15 @@ type FlowState = 'list' | 'intention' | 'meditation' | 'celebration';
 
 interface MeditationScreenProps {
   isDark?: boolean;
-  onEditSession?: (sessionId: string, sessionConfig: CustomSessionConfig) => void;
+  onEditSession?: (sessionId: string, sessionConfig: CustomSession['config']) => void;
   onNavigateToCustom?: () => void;
   activeMeditationState: ActiveMeditationState | null;
   onMeditationStateChange: (state: ActiveMeditationState | null) => void;
 }
 
 // Helper function to generate chime points from custom session config
-const getChimePointsFromSession = (session: MeditationSession | SavedCustomSession): ChimePoint[] => {
-  const customSession = session as SavedCustomSession;
+const getChimePointsFromSession = (session: MeditationSession | CustomSession): ChimePoint[] => {
+  const customSession = session as CustomSession;
 
   // Check if it's a custom session with interval bells enabled
   if (!customSession.isCustom || !customSession.config?.intervalBellEnabled) {
@@ -92,11 +91,11 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   }), [colors, isDark, currentTheme, globalCardStyles]);
   const [sessions, setSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSession, setSelectedSession] = useState<MeditationSession | SavedCustomSession | null>(null);
+  const [selectedSession, setSelectedSession] = useState<MeditationSession | CustomSession | null>(null);
   const [flowState, setFlowState] = useState<FlowState>('list');
   const [userIntention, setUserIntention] = useState('');
   const [sessionMood, setSessionMood] = useState<1 | 2 | 3 | 4 | 5 | undefined>();
-  const [actionModalSession, setActionModalSession] = useState<SavedCustomSession | null>(null);
+  const [actionModalSession, setActionModalSession] = useState<CustomSession | null>(null);
 
   useEffect(() => {
     loadSessions();
@@ -126,11 +125,11 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     try {
       setLoading(true);
 
-      // Ensure default evidence-based session exists on first launch
-      await ensureDefaultSessionExists();
+      // Ensure default session exists on first launch
+      await initializeDefaultSession();
 
-      // Load only custom sessions from storage (no presets)
-      const customSessions = await getAllCustomSessions();
+      // Load all custom sessions from storage
+      const customSessions = await getAllSessions();
 
       setSessions(customSessions);
     } catch (error) {
@@ -157,7 +156,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   const handleLongPressSession = (session: MeditationSession) => {
     // Check if it's a custom session
-    const customSession = session as SavedCustomSession;
+    const customSession = session as CustomSession;
     if (!customSession.isCustom) {
       return; // Only handle custom sessions
     }
@@ -170,17 +169,17 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     setActionModalSession(null);
   };
 
-  const handleEditSession = (session: SavedCustomSession) => {
+  const handleEditSession = (session: CustomSession) => {
     if (!onEditSession) {
       logger.warn('onEditSession prop not provided');
       return;
     }
 
     // Use the existing config from the custom session
-    onEditSession(session.id as string, session.config);
+    onEditSession(session.id, session.config);
   };
 
-  const handleDeleteSession = async (session: SavedCustomSession) => {
+  const handleDeleteSession = async (session: CustomSession) => {
     Alert.alert(
       t('custom.deleteConfirmTitle') || 'Delete Session',
       t('custom.deleteConfirmMessage') || `Are you sure you want to delete "${session.title}"?`,
@@ -191,11 +190,11 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         },
         {
           text: t('custom.delete') || 'Delete',
-              style: 'destructive',
-              onPress: async () => {
-                try {
-                  await deleteCustomSession(String(session.id));
-                  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteSession(session.id);
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
               // Reload sessions
               await loadSessions();
             } catch (error) {
@@ -283,17 +282,17 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   const handleComplete = async () => {
     try {
-      const vibrationEnabled = getVibrationEnabled();
+      const sessionHapticsEnabled = getSessionHaptics() && settings.hapticEnabled;
 
       // Play ending chime with haptic feedback
       if (selectedSession?.chimeUrl) {
         await audioEngine.play('chime');
         // Strong haptic feedback to signal session completion (if enabled)
-        if (vibrationEnabled) {
+        if (sessionHapticsEnabled) {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         }
-      } else if (vibrationEnabled) {
-        // If no chime sound but vibration is enabled, provide haptic feedback as fallback
+      } else if (sessionHapticsEnabled) {
+        // If no chime sound but session haptics is enabled, provide haptic feedback as fallback
         // This is crucial for silent/vibration-only mode (e.g., in metro/crowded places)
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
@@ -354,7 +353,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   // FlatList optimization - Memoized render functions
   const renderItem = useCallback(
     ({ item, index }: { item: MeditationSession; index: number }) => {
-      const customSession = item as SavedCustomSession;
+      const customSession = item as CustomSession;
       return (
         <SessionCard
           session={item}
@@ -474,52 +473,60 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     [loading, dynamicStyles, colors, t]
   );
 
-  // Helper functions moved outside render blocks to be accessible everywhere
-  // Get vibration setting from custom session config
-  const getVibrationEnabled = (): boolean => {
-    if (selectedSession && 'config' in selectedSession && selectedSession.config?.vibrationEnabled !== undefined) {
-      return selectedSession.config.vibrationEnabled;
+  // Helper functions to extract settings from custom session config
+
+  const getSessionHaptics = (): boolean => {
+    if (selectedSession && 'config' in selectedSession) {
+      return selectedSession.config?.haptics?.session ?? true;
     }
-    return true; // Default to enabled for non-custom sessions
+    return true;
   };
 
-  // Get ambient sound name for display
+  const getBreathingHaptics = (): boolean => {
+    if (selectedSession && 'config' in selectedSession) {
+      return selectedSession.config?.haptics?.breathing ?? true;
+    }
+    return true;
+  };
+
+  const getIntervalBellHaptics = (): boolean => {
+    if (selectedSession && 'config' in selectedSession) {
+      return selectedSession.config?.haptics?.intervalBell ?? true;
+    }
+    return true;
+  };
+
   const getAmbientSoundName = (): string => {
     if (!selectedSession?.ambientUrl) return t('custom.ambientSilence');
 
-    // Check if it's a custom session with config
     if ('config' in selectedSession && selectedSession.config) {
       const sound = selectedSession.config.ambientSound;
       const key = `custom.ambient${sound.charAt(0).toUpperCase() + sound.slice(1)}`;
       return t(key);
     }
 
-    // For non-custom sessions, check the URL or return generic name
     return selectedSession.ambientUrl ? t('custom.ambientNature') : t('custom.ambientSilence');
   };
 
-  // Get breathing pattern from custom session config
   const getBreathingPattern = (): BreathingPattern => {
     if (selectedSession && 'config' in selectedSession && selectedSession.config?.breathingPattern) {
       return selectedSession.config.breathingPattern;
     }
-    return 'box'; // Default to box breathing for non-custom sessions
+    return 'box';
   };
 
-  // Get custom breathing pattern
-  const getCustomBreathing = (): CustomBreathingPattern | undefined => {
+  const getCustomBreathing = (): BreathingTiming | undefined => {
     if (selectedSession && 'config' in selectedSession && selectedSession.config?.customBreathing) {
       return selectedSession.config.customBreathing;
     }
     return undefined;
   };
 
-  // Get hide countdown setting from custom session config
-  const getHideCountdown = (): boolean => {
-    if (selectedSession && 'config' in selectedSession && selectedSession.config?.hideCountdown !== undefined) {
-      return selectedSession.config.hideCountdown;
+  const getHideTimer = (): boolean => {
+    if (selectedSession && 'config' in selectedSession && selectedSession.config?.hideTimer !== undefined) {
+      return selectedSession.config.hideTimer;
     }
-    return false; // Show timer by default for non-custom sessions
+    return false;
   };
 
   // Show intention screen before meditation
@@ -549,8 +556,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           isDark={isDark}
           breathingPattern={getBreathingPattern()}
           customBreathing={getCustomBreathing()}
-          vibrationEnabled={getVibrationEnabled()}
-          hideCountdown={getHideCountdown()}
+          hideTimer={getHideTimer()}
+          sessionHaptics={getSessionHaptics()}
+          breathingHaptics={getBreathingHaptics()}
+          intervalBellHaptics={getIntervalBellHaptics()}
         />
       </GradientBackground>
     );

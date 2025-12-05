@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import * as SplashScreen from 'expo-splash-screen';
 import './src/i18n';
+import { useTranslation } from 'react-i18next';
 import { logger } from './src/utils/logger';
 import { AnimatedScreenContainer } from './src/components/AnimatedScreenContainer';
 import { AppModal } from './src/components/AppModal';
@@ -60,6 +61,9 @@ function AppContent() {
   const [pendingScreen, setPendingScreen] = useState<Screen | null>(null);
   const systemColorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
+
+  // Translations
+  const { t } = useTranslation();
 
   // Get personalized colors from context
   const { currentTheme } = usePersonalization();
@@ -382,18 +386,18 @@ function AppContent() {
       {/* Exit Meditation Confirmation Modal */}
       <AppModal
         visible={showExitMeditationModal}
-        title="Active Meditation"
-        message="You have an active meditation session. Do you want to exit and end the session?"
-        icon="flower-outline"
+        title={t('meditation.endSessionTitle', 'Zakończyć sesję?')}
+        message={t('meditation.endSessionMessage', 'Twój postęp zostanie zapisany. Czy na pewno chcesz zakończyć medytację?')}
+        icon="pause-circle-outline"
         onDismiss={handleCancelExitMeditation}
         buttons={[
           {
-            text: 'Cancel',
+            text: t('meditation.endSessionCancel', 'Kontynuuj'),
             style: 'cancel',
             onPress: handleCancelExitMeditation,
           },
           {
-            text: 'Exit',
+            text: t('meditation.endSessionConfirm', 'Zakończ'),
             style: 'destructive',
             onPress: handleConfirmExitMeditation,
           },

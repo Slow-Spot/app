@@ -734,20 +734,32 @@
     "min": "min",
     "bells": "Campanas",
     "bellsDescription": "Señales sonoras durante tu sesión",
-    "wakeUpChime": "Campana Final",
-    "wakeUpChimeDescription": "Suave timbre al final de tu sesión",
-    "wakeUpChimeHint": "Señal suave al final",
+    "endChime": "Campana Final",
+    "endChimeDescription": "Suave timbre al final de tu sesión",
+    "endChimeHint": "Señal suave al final",
     "vibration": "Háptica (Vibración)",
     "vibrationHint": "Guía táctil para las fases de respiración",
-    "hideCountdown": "Ocultar temporizador",
-    "hideCountdownHint": "Para meditación sin distracciones",
+    "sessionHaptics": "Háptica de Sesión",
+    "sessionHapticsHint": "Vibración al inicio y final de la sesión",
+    "breathingHaptics": "Háptica de Respiración",
+    "breathingHapticsHint": "Vibración pulsante sincronizada con las fases de respiración",
+    "intervalBellHaptics": "Háptica de Campana",
+    "intervalBellHapticsHint": "Vibración con las campanas de intervalo",
+    "hideTimer": "Ocultar temporizador",
+    "hideTimerHint": "Para meditación sin distracciones",
     "sounds": {
       "silence": "Silencio",
+      "silenceDesc": "Enfoque puro, sin distracciones",
       "nature": "Naturaleza",
+      "natureDesc": "Sonidos naturales relajantes",
       "ocean": "Océano",
+      "oceanDesc": "Olas rítmicas para relajación profunda",
       "forest": "Bosque",
+      "forestDesc": "Ambiente forestal tranquilo",
       "432hz": "432 Hz",
-      "528hz": "528 Hz"
+      "432hzDesc": "Tono de armonía • Reduce la ansiedad naturalmente",
+      "528hz": "528 Hz",
+      "528hzDesc": "Frecuencia del amor • Promueve paz interior"
     },
     "voiceGuidance": "Guía de Voz",
     "voiceGuidanceDescription": "Guía hablada durante la meditación",
@@ -799,13 +811,17 @@
       "none": "Sin Guía",
       "noneDesc": "Medita sin patrón de respiración",
       "box": "Respiración Cuadrada",
-      "boxDesc": "Activa el sistema parasimpático, reduce el cortisol",
+      "boxDesc": "4-4-4-4 • Equilibrio y enfoque con estrés",
+      "boxBenefit": "Usado por Navy SEALs para manejar el estrés",
       "478": "4-7-8",
-      "478Desc": "Sedante natural para el sistema nervioso",
+      "478Desc": "4-7-8 • Ayuda natural para dormir",
+      "478Benefit": "Calma pensamientos acelerados antes de dormir",
       "equal": "Respiración Igual",
-      "equalDesc": "Equilibra el sistema nervioso, aumenta el enfoque",
+      "equalDesc": "4-4 • Simple y calmante para principiantes",
+      "equalBenefit": "Fácil de aprender, punto de inicio perfecto",
       "calm": "Respiración Calmante",
-      "calmDesc": "Exhalación más larga activa la respuesta de relajación"
+      "calmDesc": "2-2 • Impulso rápido de energía y alerta",
+      "calmBenefit": "Cuando necesitas un reinicio rápido"
     },
     "breathingTitle": "Patrón de Respiración",
     "breathingDescription": "Elige una técnica de respiración respaldada por la ciencia (opcional)"
@@ -1216,5 +1232,14 @@
       "amber": "Ámbar Cálido",
       "emerald": "Esmeralda Fresco"
     }
+  },
+  "accessibility": {
+    "finishMeditationHint": "Finaliza la sesión de meditación actual",
+    "pauseMeditationHint": "Pausa el temporizador de meditación",
+    "resumeMeditationHint": "Reanuda el temporizador de meditación",
+    "continueHint": "Vuelve a la pantalla de inicio",
+    "skipIntentionHint": "Omite la configuración de intención y comienza la meditación",
+    "editSessionHint": "Editar esta sesión de meditación",
+    "deleteSessionHint": "Eliminar esta sesión de meditación"
   }
 }

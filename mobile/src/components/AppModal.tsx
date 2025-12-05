@@ -20,12 +20,7 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInDown,
-  SlideOutDown,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import theme, { getThemeColors } from '../theme';
 import { usePersonalization } from '../contexts/PersonalizationContext';
@@ -133,8 +128,8 @@ export const AppModal: React.FC<AppModalProps> = ({
         </Pressable>
 
         <Animated.View
-          entering={SlideInDown.springify().damping(20).stiffness(200)}
-          exiting={SlideOutDown.duration(200)}
+          entering={FadeIn.duration(200)}
+          exiting={FadeOut.duration(150)}
           style={[
             styles.modalContainer,
             {

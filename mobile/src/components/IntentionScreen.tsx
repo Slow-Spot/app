@@ -394,7 +394,12 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
           <View style={[modalStyles.content, { backgroundColor: dynamicStyles.modalBg }]}>
             {/* Header */}
             <View style={modalStyles.header}>
-              <TouchableOpacity onPress={handleCloseBreathing} style={modalStyles.closeButton}>
+              <TouchableOpacity
+                onPress={handleCloseBreathing}
+                style={modalStyles.closeButton}
+                accessibilityRole="button"
+                accessibilityLabel={t('common.close', 'Close')}
+              >
                 <Ionicons name="close" size={24} color={colors.text.primary} />
               </TouchableOpacity>
               <Text style={[modalStyles.title, { color: colors.text.primary }]}>
@@ -428,6 +433,10 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
                       },
                     ]}
                     onPress={() => setSelectedPattern(pattern.id)}
+                    accessibilityRole="radio"
+                    accessibilityLabel={pattern.name}
+                    accessibilityHint={pattern.description}
+                    accessibilityState={{ selected: selectedPattern === pattern.id }}
                   >
                     <View style={[
                       modalStyles.patternIcon,
@@ -569,6 +578,9 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
           <TouchableOpacity
             onPress={() => setSkipForever(!skipForever)}
             style={styles.skipCheckbox}
+            accessibilityRole="checkbox"
+            accessibilityLabel={t('intention.skipForever', 'Do not show this screen before meditation')}
+            accessibilityState={{ checked: skipForever }}
           >
             <Ionicons
               name={skipForever ? 'checkbox' : 'square-outline'}
@@ -588,7 +600,13 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
               gradient={themeGradients.button.primary}
               style={styles.primaryButton}
             />
-            <TouchableOpacity onPress={handleSkipPress} style={styles.skipButton}>
+            <TouchableOpacity
+              onPress={handleSkipPress}
+              style={styles.skipButton}
+              accessibilityRole="button"
+              accessibilityLabel={t('intention.skip', 'Skip')}
+              accessibilityHint={t('accessibility.skipIntentionHint', 'Skips intention setting and starts meditation')}
+            >
               <Text style={[styles.skipButtonText, dynamicStyles.skipText]}>
                 {t('intention.skip', 'Pomiń')}
               </Text>

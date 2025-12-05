@@ -11,23 +11,23 @@ import { GradientButton } from '../components/GradientButton';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import { brandColors, primaryColor, featureColorPalettes } from '../theme/colors';
 import {
-  saveCustomSession,
-  updateCustomSession,
-  CustomSessionConfig,
+  saveSession,
+  updateSession,
+  SessionConfig,
   BreathingPattern,
-  CustomBreathingPattern
+  AmbientSound,
 } from '../services/customSessionStorage';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
 // Re-export types for external use
-export type { CustomSessionConfig, BreathingPattern, CustomBreathingPattern };
+export type { SessionConfig, BreathingPattern, AmbientSound };
 
 interface CustomSessionBuilderScreenProps {
   isDark?: boolean;
-  onStartSession: (config: CustomSessionConfig) => void;
+  onStartSession: (config: SessionConfig) => void;
   onBack: () => void;
   editSessionId?: string;
-  initialConfig?: CustomSessionConfig;
+  initialConfig?: SessionConfig;
 }
 
 const DURATION_PRESETS = [5, 10, 15, 20, 30, 45];
@@ -100,18 +100,19 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
     quickStartText: { color: colors.text.secondary },
   }), [colors, isDark, currentTheme]);
 
-  // Session configuration state - simplified
+  // Session configuration state
   const [durationMinutes, setDurationMinutes] = useState(initialConfig?.durationMinutes || 15);
-  const [ambientSound, setAmbientSound] = useState<CustomSessionConfig['ambientSound']>(
-    initialConfig?.ambientSound || 'silence'
-  );
+  const [ambientSound, setAmbientSound] = useState<AmbientSound>(initialConfig?.ambientSound || 'silence');
   const [intervalBellEnabled, setIntervalBellEnabled] = useState(initialConfig?.intervalBellEnabled ?? false);
   const [intervalBellMinutes, setIntervalBellMinutes] = useState(initialConfig?.intervalBellMinutes ?? 5);
-  const [wakeUpChimeEnabled, setWakeUpChimeEnabled] = useState(initialConfig?.wakeUpChimeEnabled ?? true);
-  const [vibrationEnabled, setVibrationEnabled] = useState(initialConfig?.vibrationEnabled ?? true);
+  const [endChimeEnabled, setEndChimeEnabled] = useState(initialConfig?.endChimeEnabled ?? true);
   const [breathingPattern, setBreathingPattern] = useState<BreathingPattern>(initialConfig?.breathingPattern || 'none');
   const [sessionName, setSessionName] = useState(initialConfig?.name || '');
-  const [hideCountdown, setHideCountdown] = useState(initialConfig?.hideCountdown ?? false);
+  const [hideTimer, setHideTimer] = useState(initialConfig?.hideTimer ?? true);
+  // Granular haptic controls (nested in config as haptics object)
+  const [sessionHaptics, setSessionHaptics] = useState(initialConfig?.haptics?.session ?? true);
+  const [breathingHaptics, setBreathingHaptics] = useState(initialConfig?.haptics?.breathing ?? true);
+  const [intervalBellHaptics, setIntervalBellHaptics] = useState(initialConfig?.haptics?.intervalBell ?? true);
 
   // Local editing state
   const [localEditSessionId, setLocalEditSessionId] = useState<string | number | undefined>(editSessionId);
@@ -200,17 +201,20 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
     },
   ];
 
-  const getCurrentConfig = (): CustomSessionConfig => ({
+  const getCurrentConfig = (): SessionConfig => ({
+    name: sessionName || 'Custom Session',
     durationMinutes,
     ambientSound,
+    breathingPattern,
+    endChimeEnabled,
     intervalBellEnabled,
     intervalBellMinutes,
-    wakeUpChimeEnabled,
-    voiceGuidanceEnabled: false,
-    vibrationEnabled,
-    breathingPattern,
-    name: sessionName || undefined,
-    hideCountdown,
+    hideTimer,
+    haptics: {
+      session: sessionHaptics,
+      breathing: breathingHaptics,
+      intervalBell: intervalBellHaptics,
+    },
   });
 
   const handleStartSession = () => {
@@ -233,15 +237,13 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
 
     try {
       if (currentEditId) {
-        await updateCustomSession(String(currentEditId), config);
+        await updateSession(String(currentEditId), config);
         setLocalEditSessionId(undefined);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        // After update, go back to list
         onBack();
       } else {
-        await saveCustomSession(config);
+        await saveSession(config);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        // After save, go back to list
         onBack();
       }
     } catch (error) {
@@ -391,7 +393,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                   key={option.id}
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setAmbientSound(option.id as CustomSessionConfig['ambientSound']);
+                    setAmbientSound(option.id as AmbientSound);
                   }}
                   style={[
                     styles.soundOption,
@@ -433,17 +435,17 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
             </View>
           </View>
 
-          {/* Wake-up chime */}
+          {/* End chime */}
           <View style={styles.toggleRow}>
             <View style={styles.toggleInfo}>
-              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.wakeUpChime')}</Text>
-              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.wakeUpChimeHint')}</Text>
+              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.endChime')}</Text>
+              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.endChimeHint')}</Text>
             </View>
             <Switch
-              value={wakeUpChimeEnabled}
+              value={endChimeEnabled}
               onValueChange={(value) => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                setWakeUpChimeEnabled(value);
+                setEndChimeEnabled(value);
               }}
               trackColor={{
                 false: dynamicStyles.switchTrackFalse,
@@ -455,17 +457,17 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
 
           <View style={styles.divider} />
 
-          {/* Vibration */}
+          {/* Session Haptics (start/end) */}
           <View style={styles.toggleRow}>
             <View style={styles.toggleInfo}>
-              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.vibration')}</Text>
-              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.vibrationHint')}</Text>
+              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.sessionHaptics', 'Wibracja sesji')}</Text>
+              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.sessionHapticsHint', 'Wibracja przy starcie i końcu sesji')}</Text>
             </View>
             <Switch
-              value={vibrationEnabled}
+              value={sessionHaptics}
               onValueChange={(value) => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                setVibrationEnabled(value);
+                setSessionHaptics(value);
               }}
               trackColor={{
                 false: dynamicStyles.switchTrackFalse,
@@ -477,17 +479,17 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
 
           <View style={styles.divider} />
 
-          {/* Hide countdown timer */}
+          {/* Hide timer */}
           <View style={styles.toggleRow}>
             <View style={styles.toggleInfo}>
-              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.hideCountdown')}</Text>
-              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.hideCountdownHint')}</Text>
+              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.hideTimer')}</Text>
+              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.hideTimerHint')}</Text>
             </View>
             <Switch
-              value={hideCountdown}
+              value={hideTimer}
               onValueChange={(value) => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                setHideCountdown(value);
+                setHideTimer(value);
               }}
               trackColor={{
                 false: dynamicStyles.switchTrackFalse,
@@ -591,6 +593,28 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
                   {t('custom.intervalWarning') || 'Interwał musi być krótszy niż czas sesji'}
                 </Text>
               )}
+
+              <View style={styles.divider} />
+
+              {/* Interval Bell Haptics */}
+              <View style={styles.toggleRow}>
+                <View style={styles.toggleInfo}>
+                  <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.intervalBellHaptics', 'Wibracja dzwonków')}</Text>
+                  <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.intervalBellHapticsHint', 'Wibracja przy dzwonkach interwałowych')}</Text>
+                </View>
+                <Switch
+                  value={intervalBellHaptics}
+                  onValueChange={(value) => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    setIntervalBellHaptics(value);
+                  }}
+                  trackColor={{
+                    false: dynamicStyles.switchTrackFalse,
+                    true: dynamicStyles.switchTrackTrue,
+                  }}
+                  thumbColor={colors.neutral.white}
+                />
+              </View>
             </>
           )}
         </GradientCard>
@@ -663,6 +687,32 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               );
             })}
           </View>
+
+          {/* Breathing Haptics - shown when a breathing pattern is selected */}
+          {breathingPattern !== 'none' && (
+            <>
+              <View style={styles.divider} />
+
+              <View style={styles.toggleRow}>
+                <View style={styles.toggleInfo}>
+                  <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.breathingHaptics', 'Wibracja oddechowa')}</Text>
+                  <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.breathingHapticsHint', 'Pulsująca wibracja synchronizowana z oddechem')}</Text>
+                </View>
+                <Switch
+                  value={breathingHaptics}
+                  onValueChange={(value) => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    setBreathingHaptics(value);
+                  }}
+                  trackColor={{
+                    false: dynamicStyles.switchTrackFalse,
+                    true: dynamicStyles.switchTrackTrue,
+                  }}
+                  thumbColor={colors.neutral.white}
+                />
+              </View>
+            </>
+          )}
         </GradientCard>
 
         {/* Action Buttons */}

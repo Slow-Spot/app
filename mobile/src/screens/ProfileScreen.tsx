@@ -37,7 +37,7 @@ import {
   ProgressStats,
   CompletedSession,
 } from '../services/progressTracker';
-import { getAllCustomSessions } from '../services/customSessionStorage';
+import { getAllSessions } from '../services/customSessionStorage';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { useUserProfile } from '../contexts/UserProfileContext';
 
@@ -203,7 +203,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
       const [progressStats, completedSessions, customSessions, weeklyData] = await Promise.all([
         getProgressStats(),
         getCompletedSessions(),
-        getAllCustomSessions(),
+        getAllSessions(),
         calculateWeeklyActivity(),
       ]);
 

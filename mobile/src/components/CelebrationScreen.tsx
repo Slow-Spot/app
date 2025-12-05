@@ -206,7 +206,14 @@ const MoodButton = React.memo<{
   }));
 
   return (
-    <Pressable onPress={handlePress} style={styles.moodOption}>
+    <Pressable
+      onPress={handlePress}
+      style={styles.moodOption}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ selected: isSelected }}
+      accessibilityHint={isSelected ? undefined : `Select ${label} mood`}
+    >
       <Animated.View style={buttonStyle}>
         {isSelected ? (
           <LinearGradient
@@ -624,6 +631,9 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
               style={styles.continueButton}
               pressScale={0.96}
               hapticType="medium"
+              accessibilityRole="button"
+              accessibilityLabel={t('meditation.continue', 'Continue')}
+              accessibilityHint={t('accessibility.continueHint', 'Returns to home screen')}
             >
               <LinearGradient
                 colors={currentTheme.gradient}

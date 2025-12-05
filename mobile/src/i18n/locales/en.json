@@ -728,20 +728,32 @@
     "min": "min",
     "bells": "Bells",
     "bellsDescription": "Sound signals during your session",
-    "wakeUpChime": "End Bell",
-    "wakeUpChimeDescription": "Gentle chime at the end of your session",
-    "wakeUpChimeHint": "Gentle signal at the end",
+    "endChime": "End Bell",
+    "endChimeDescription": "Gentle chime at the end of your session",
+    "endChimeHint": "Gentle signal at the end",
     "vibration": "Haptics (Vibration)",
     "vibrationHint": "Tactile guidance for breathing phases",
-    "hideCountdown": "Hide Timer",
-    "hideCountdownHint": "For distraction-free meditation",
+    "sessionHaptics": "Session Haptics",
+    "sessionHapticsHint": "Vibration at session start and end",
+    "breathingHaptics": "Breathing Haptics",
+    "breathingHapticsHint": "Pulsing vibration synchronized with breathing phases",
+    "intervalBellHaptics": "Bell Haptics",
+    "intervalBellHapticsHint": "Vibration with interval bells",
+    "hideTimer": "Hide Timer",
+    "hideTimerHint": "For distraction-free meditation",
     "sounds": {
       "silence": "Silence",
+      "silenceDesc": "Pure focus, no distractions",
       "nature": "Nature",
+      "natureDesc": "Calming natural sounds",
       "ocean": "Ocean",
+      "oceanDesc": "Rhythmic waves for deep relaxation",
       "forest": "Forest",
+      "forestDesc": "Peaceful woodland ambience",
       "432hz": "432 Hz",
-      "528hz": "528 Hz"
+      "432hzDesc": "Harmony tone • Reduces anxiety naturally",
+      "528hz": "528 Hz",
+      "528hzDesc": "Love frequency • Promotes inner peace"
     },
     "voiceGuidance": "Voice Guidance",
     "voiceGuidanceDescription": "Spoken guidance during meditation",
@@ -793,13 +805,17 @@
       "none": "No Guidance",
       "noneDesc": "Meditate without a breathing pattern",
       "box": "Box Breathing",
-      "boxDesc": "Activates parasympathetic system, reduces cortisol",
+      "boxDesc": "4-4-4-4 • Balance & focus when stressed",
+      "boxBenefit": "Used by Navy SEALs for stress management",
       "478": "4-7-8",
-      "478Desc": "Natural sedative for the nervous system",
+      "478Desc": "4-7-8 • Natural sleep aid",
+      "478Benefit": "Calms racing thoughts before sleep",
       "equal": "Equal Breathing",
-      "equalDesc": "Balances nervous system, increases focus",
+      "equalDesc": "4-4 • Simple & calming for beginners",
+      "equalBenefit": "Easy to learn, perfect starting point",
       "calm": "Calm Breathing",
-      "calmDesc": "Longer exhale activates relaxation response"
+      "calmDesc": "2-2 • Quick energy & alertness boost",
+      "calmBenefit": "Use when you need a quick reset"
     },
     "breathingTitle": "Breathing Pattern",
     "breathingDescription": "Choose a science-backed breathing technique (optional)"
@@ -1210,5 +1226,14 @@
       "amber": "Warm Amber",
       "emerald": "Fresh Emerald"
     }
+  },
+  "accessibility": {
+    "finishMeditationHint": "Ends the current meditation session",
+    "pauseMeditationHint": "Pauses the meditation timer",
+    "resumeMeditationHint": "Resumes the meditation timer",
+    "continueHint": "Returns to home screen",
+    "skipIntentionHint": "Skips intention setting and starts meditation",
+    "editSessionHint": "Edit this meditation session",
+    "deleteSessionHint": "Delete this meditation session"
   }
 }

@@ -1,339 +1,364 @@
 /**
  * Custom Session Storage Service
  * Manages custom meditation sessions created via CustomSessionBuilderScreen
- * Integrates with the existing MeditationSession format for seamless display
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MeditationSession } from './api';
 import { logger } from '../utils/logger';
 
-const CUSTOM_SESSIONS_KEY = '@slow_spot_custom_sessions';
+// ============================================================================
+// Constants
+// ============================================================================
 
-/**
- * Breathing pattern types for meditation sessions
- */
+const STORAGE_KEYS = {
+  SESSIONS: '@slow_spot_custom_sessions',
+  DEFAULT_SESSION_CREATED: '@slow_spot_default_session_v2',
+} as const;
+
+const DEFAULT_SESSION_ID = 'default-mindful-breathing';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+/** Available breathing pattern presets */
 export type BreathingPattern = 'none' | 'box' | '4-7-8' | 'equal' | 'calm' | 'custom';
 
-export interface CustomBreathingPattern {
+/** Custom breathing timing configuration (in seconds) */
+export interface BreathingTiming {
   inhale: number;
   hold1: number;
   exhale: number;
   hold2: number;
 }
 
-/**
- * Custom session configuration from the builder screen
- */
-export interface CustomSessionConfig {
+/** Available ambient sound options */
+export type AmbientSound = 'silence' | 'nature' | 'ocean' | 'forest' | '432hz' | '528hz';
+
+/** Haptic feedback configuration */
+export interface HapticSettings {
+  /** Vibration at session start and end */
+  session: boolean;
+  /** Pulsing vibration synchronized with breathing phases */
+  breathing: boolean;
+  /** Vibration with interval bells */
+  intervalBell: boolean;
+}
+
+/** Complete session configuration */
+export interface SessionConfig {
+  /** Session name for display */
+  name: string;
+  /** Duration in minutes */
   durationMinutes: number;
-  ambientSound: 'nature' | 'silence' | '432hz' | '528hz' | 'ocean' | 'forest';
+  /** Background ambient sound */
+  ambientSound: AmbientSound;
+  /** Breathing pattern type */
+  breathingPattern: BreathingPattern;
+  /** Custom breathing timing (when breathingPattern is 'custom') */
+  customBreathing?: BreathingTiming;
+  /** Play gentle chime at session end */
+  endChimeEnabled: boolean;
+  /** Play interval bells during session */
   intervalBellEnabled: boolean;
+  /** Interval between bells (in minutes) */
   intervalBellMinutes: number;
-  wakeUpChimeEnabled: boolean;
-  voiceGuidanceEnabled: boolean;
-  vibrationEnabled: boolean;
-  breathingPattern?: BreathingPattern;
-  customBreathing?: CustomBreathingPattern;
-  name?: string;
-  /**
-   * Hide countdown timer during meditation for a distraction-free experience.
-   * Research suggests that watching the clock can increase anxiety and reduce
-   * the quality of meditation practice. When enabled, the timer is hidden
-   * but the session still tracks time in the background.
-   */
-  hideCountdown?: boolean;
+  /** Hide countdown timer for distraction-free meditation */
+  hideTimer: boolean;
+  /** Haptic feedback settings */
+  haptics: HapticSettings;
 }
 
-/**
- * Saved custom session with metadata
- */
-export interface SavedCustomSession extends MeditationSession {
+/** Saved session with metadata */
+export interface CustomSession extends MeditationSession {
   isCustom: true;
-  config: CustomSessionConfig;
+  config: SessionConfig;
 }
 
+// ============================================================================
+// Audio Assets (Metro bundler requires static requires)
+// ============================================================================
+
+const AUDIO = {
+  BELL: require('../../assets/sounds/meditation-bell.mp3'),
+  AMBIENT: {
+    nature: require('../../assets/sounds/ambient/nature.mp3'),
+    ocean: require('../../assets/sounds/ambient/ocean.mp3'),
+    forest: require('../../assets/sounds/ambient/forest.mp3'),
+    '432hz': require('../../assets/sounds/ambient/432hz.mp3'),
+    '528hz': require('../../assets/sounds/ambient/528hz.mp3'),
+  },
+} as const;
+
+// ============================================================================
+// Default Configuration
+// ============================================================================
+
 /**
- * Generate unique UUID for custom sessions
+ * Evidence-based default session configuration
+ *
+ * Based on scientific research:
+ * - Duration: 10 min (Zeidan et al., 2010 - cognitive benefits)
+ * - Breathing: None - natural breathing, mindfulness-based approach
+ * - Timer: Hidden - reduces clock-watching anxiety
+ * - Ambient: Silence - traditional MBSR approach
  */
-const generateUUID = (): string => {
+export const DEFAULT_SESSION_CONFIG: SessionConfig = {
+  name: 'Mindful Breathing',
+  durationMinutes: 10,
+  ambientSound: 'silence',
+  breathingPattern: 'none',
+  endChimeEnabled: true,
+  intervalBellEnabled: false,
+  intervalBellMinutes: 5,
+  hideTimer: true,
+  haptics: {
+    session: true,
+    breathing: false,
+    intervalBell: true,
+  },
+};
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/** Generate unique session ID */
+const generateId = (): string => {
   return `custom-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 };
 
-/**
- * Reference to audio assets
- * Using static requires at module level for Metro bundler compatibility
- */
-const MEDITATION_BELL = require('../../assets/sounds/meditation-bell.mp3');
-
-// Ambient sound files - static requires for Metro bundler
-const AMBIENT_SOUNDS = {
-  nature: require('../../assets/sounds/ambient/nature.mp3'),
-  ocean: require('../../assets/sounds/ambient/ocean.mp3'),
-  forest: require('../../assets/sounds/ambient/forest.mp3'),
-  '432hz': require('../../assets/sounds/ambient/432hz.mp3'),
-  '528hz': require('../../assets/sounds/ambient/528hz.mp3'),
+/** Get ambient sound asset (or undefined for silence) */
+const getAmbientAsset = (sound: AmbientSound): number | undefined => {
+  return sound === 'silence' ? undefined : AUDIO.AMBIENT[sound];
 };
 
-/**
- * Map ambient sound to audio file path
- * Returns the appropriate ambient sound file or undefined for silence
- */
-const getAmbientUrl = (sound: CustomSessionConfig['ambientSound']): number | undefined => {
-  if (sound === 'silence') {
-    return undefined;
-  }
-
-  // Return the appropriate ambient sound file
-  return AMBIENT_SOUNDS[sound];
+/** Get frequency for ambient sound */
+const getAmbientFrequency = (sound: AmbientSound): number => {
+  if (sound === '432hz') return 432;
+  if (sound === '528hz') return 528;
+  return 432; // Default
 };
 
-/**
- * Convert CustomSessionConfig to MeditationSession format
- */
-const configToMeditationSession = (
-  config: CustomSessionConfig,
-  id?: string
-): SavedCustomSession => {
-  const sessionId = id || generateUUID();
-  const now = new Date().toISOString();
+/** Convert SessionConfig to full CustomSession object */
+const createSessionObject = (config: SessionConfig, id?: string): CustomSession => {
+  const sessionId = id || generateId();
+  const needsChime = config.endChimeEnabled || config.intervalBellEnabled;
 
   return {
     id: sessionId,
-    title: config.name || 'My Custom Session',
-    description: `${config.durationMinutes} min meditation with ${config.ambientSound} ambient sound`,
-    languageCode: 'en', // Default to English for custom sessions
+    title: config.name,
+    description: `${config.durationMinutes} min meditation`,
+    languageCode: 'en',
     durationSeconds: config.durationMinutes * 60,
-    level: 1, // Custom sessions are beginner-friendly
-    voiceUrl: undefined, // Custom sessions don't have voice guidance by default
-    ambientUrl: getAmbientUrl(config.ambientSound),
-    chimeUrl: config.wakeUpChimeEnabled || config.intervalBellEnabled
-      ? MEDITATION_BELL
-      : undefined,
-    ambientFrequency: config.ambientSound === '432hz' ? 432 : config.ambientSound === '528hz' ? 528 : 432,
+    level: 1,
+    voiceUrl: undefined,
+    ambientUrl: getAmbientAsset(config.ambientSound),
+    chimeUrl: needsChime ? AUDIO.BELL : undefined,
+    ambientFrequency: getAmbientFrequency(config.ambientSound),
     chimeFrequency: 528,
-    createdAt: now,
+    createdAt: new Date().toISOString(),
     isCustom: true,
     config,
   };
 };
 
-/**
- * Save a custom session
- */
-export const saveCustomSession = async (
-  config: CustomSessionConfig
-): Promise<SavedCustomSession> => {
+// ============================================================================
+// Storage Operations
+// ============================================================================
+
+/** Get all saved sessions */
+export const getAllSessions = async (): Promise<CustomSession[]> => {
   try {
-    const sessions = await getAllCustomSessions();
-    const newSession = configToMeditationSession(config);
-
-    sessions.push(newSession);
-    await AsyncStorage.setItem(CUSTOM_SESSIONS_KEY, JSON.stringify(sessions));
-
-    return newSession;
-  } catch (error) {
-    logger.error('Error saving custom session:', error);
-    throw error;
-  }
-};
-
-/**
- * Get all custom sessions
- */
-export const getAllCustomSessions = async (): Promise<SavedCustomSession[]> => {
-  try {
-    const data = await AsyncStorage.getItem(CUSTOM_SESSIONS_KEY);
+    const data = await AsyncStorage.getItem(STORAGE_KEYS.SESSIONS);
     return data ? JSON.parse(data) : [];
   } catch (error) {
-    logger.error('Error loading custom sessions:', error);
+    logger.error('Error loading sessions:', error);
     return [];
   }
 };
 
-/**
- * Get a custom session by ID
- */
-export const getCustomSessionById = async (
-  id: string
-): Promise<SavedCustomSession | null> => {
+/** Get session by ID */
+export const getSessionById = async (id: string): Promise<CustomSession | null> => {
   try {
-    const sessions = await getAllCustomSessions();
+    const sessions = await getAllSessions();
     return sessions.find((s) => s.id === id) || null;
   } catch (error) {
-    logger.error('Error getting custom session:', error);
+    logger.error('Error getting session:', error);
     return null;
   }
 };
 
-/**
- * Update a custom session
- */
-export const updateCustomSession = async (
-  id: string,
-  config: CustomSessionConfig
-): Promise<void> => {
+/** Save new session */
+export const saveSession = async (config: SessionConfig): Promise<CustomSession> => {
   try {
-    const sessions = await getAllCustomSessions();
+    const sessions = await getAllSessions();
+    const newSession = createSessionObject(config);
+    sessions.push(newSession);
+    await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
+    return newSession;
+  } catch (error) {
+    logger.error('Error saving session:', error);
+    throw error;
+  }
+};
+
+/** Update existing session */
+export const updateSession = async (id: string, config: SessionConfig): Promise<void> => {
+  try {
+    const sessions = await getAllSessions();
     const index = sessions.findIndex((s) => s.id === id);
 
     if (index === -1) {
-      throw new Error(`Custom session with id ${id} not found`);
+      throw new Error(`Session not found: ${id}`);
     }
 
-    // Update the session while preserving the ID and creation date
-    const updatedSession = configToMeditationSession(config, id);
+    const updatedSession = createSessionObject(config, id);
     updatedSession.createdAt = sessions[index].createdAt;
-
     sessions[index] = updatedSession;
-    await AsyncStorage.setItem(CUSTOM_SESSIONS_KEY, JSON.stringify(sessions));
+
+    await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
   } catch (error) {
-    logger.error('Error updating custom session:', error);
+    logger.error('Error updating session:', error);
     throw error;
   }
 };
 
-/**
- * Delete a custom session
- */
-export const deleteCustomSession = async (id: string): Promise<void> => {
+/** Delete session by ID */
+export const deleteSession = async (id: string): Promise<void> => {
   try {
-    const sessions = await getAllCustomSessions();
+    const sessions = await getAllSessions();
     const filtered = sessions.filter((s) => s.id !== id);
 
     if (filtered.length === sessions.length) {
-      throw new Error(`Custom session with id ${id} not found`);
+      throw new Error(`Session not found: ${id}`);
     }
 
-    await AsyncStorage.setItem(CUSTOM_SESSIONS_KEY, JSON.stringify(filtered));
+    await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(filtered));
   } catch (error) {
-    logger.error('Error deleting custom session:', error);
+    logger.error('Error deleting session:', error);
     throw error;
   }
 };
 
-/**
- * Clear all custom sessions (for testing/reset)
- */
-export const clearAllCustomSessions = async (): Promise<void> => {
+/** Clear all sessions (for testing/reset) */
+export const clearAllSessions = async (): Promise<void> => {
   try {
-    await AsyncStorage.removeItem(CUSTOM_SESSIONS_KEY);
+    await AsyncStorage.removeItem(STORAGE_KEYS.SESSIONS);
   } catch (error) {
-    logger.error('Error clearing custom sessions:', error);
+    logger.error('Error clearing sessions:', error);
     throw error;
   }
 };
 
-/**
- * Default session configuration based on scientific research and best mindfulness practices
- *
- * Evidence-based settings:
- *
- * DURATION: 10 minutes
- * - Research from MBSR (Mindfulness-Based Stress Reduction) programs shows that
- *   10 minutes provides meaningful benefits for beginners
- * - Studies by Zeidan et al. (2010) found significant improvements in mood and
- *   cognitive function with just 10 minutes of daily practice
- * - Short sessions increase adherence and habit formation (Creswell, 2017)
- *
- * BREATHING: Box Breathing (4-4-4-4)
- * - Used by Navy SEALs for stress management and focus
- * - Activates parasympathetic nervous system (Zaccaro et al., 2018)
- * - Reduces cortisol levels and heart rate variability improves
- * - Equal timing creates rhythm that's easy to follow
- *
- * AMBIENT SOUND: Silence
- * - Traditional mindfulness practice emphasizes working with natural silence
- * - Reduces external stimuli to develop internal awareness
- * - Kabat-Zinn's MBSR program primarily uses silence
- *
- * TIMER: Hidden
- * - Clock-watching increases anxiety and anticipation (Killingsworth & Gilbert, 2010)
- * - Removes goal-oriented thinking that interferes with present-moment awareness
- * - Promotes surrendering to the experience rather than "waiting for it to end"
- * - Professional meditation apps like Headspace recommend hiding timer for deeper practice
- *
- * WAKE-UP CHIME: Enabled
- * - Gentle acoustic signal allows gradual return from meditative state
- * - Prevents jarring transition that could negate benefits
- * - Tibetan singing bowl-style tones have calming frequencies
- *
- * VIBRATION: Enabled
- * - Provides subtle haptic feedback during breathing phases
- * - Helps maintain focus through gentle physical sensation
- * - Particularly useful for kinesthetic learners
- *
- * INTERVAL BELL: Disabled for default session
- * - For beginners, continuous practice without interruption is recommended
- * - Interval bells are more useful for longer sessions (20+ minutes)
- */
-export const DEFAULT_EVIDENCE_BASED_SESSION: CustomSessionConfig = {
-  durationMinutes: 10,
-  ambientSound: 'silence',
-  intervalBellEnabled: false, // No interruptions for focused beginner practice
-  intervalBellMinutes: 5,
-  wakeUpChimeEnabled: true,
-  voiceGuidanceEnabled: false,
-  vibrationEnabled: true,
-  breathingPattern: 'box',
-  name: 'custom.defaultSession.name', // Translation key
-  hideCountdown: true, // Hide timer for distraction-free, mindful practice
-};
+// ============================================================================
+// Initialization
+// ============================================================================
 
-const DEFAULT_SESSION_STORAGE_KEY = '@slow_spot_default_session_created_v4'; // v4: hideCountdown=true, intervalBell=false
-const DEFAULT_SESSION_ID = 'default-mindful-breathing';
-const CORRECT_DEFAULT_SESSION_NAME = 'Mindful Breathing';
-
-/**
- * Check if the default evidence-based session should be created
- * Creates a default session as an example for all users
- * Also migrates old sessions to remove emojis from name
- */
-export const ensureDefaultSessionExists = async (): Promise<void> => {
+/** Ensure default session exists on first app launch */
+export const initializeDefaultSession = async (): Promise<void> => {
   try {
-    // Check if we've already created the default session
-    const defaultCreated = await AsyncStorage.getItem(DEFAULT_SESSION_STORAGE_KEY);
-    if (defaultCreated === 'true') {
+    const alreadyCreated = await AsyncStorage.getItem(STORAGE_KEYS.DEFAULT_SESSION_CREATED);
+    if (alreadyCreated === 'true') {
       return;
     }
 
-    // Check if default session already exists (by ID)
-    const existingSessions = await getAllCustomSessions();
-    const existingDefaultIndex = existingSessions.findIndex(s => s.id === DEFAULT_SESSION_ID);
+    const sessions = await getAllSessions();
+    const existingIndex = sessions.findIndex((s) => s.id === DEFAULT_SESSION_ID);
 
-    if (existingDefaultIndex >= 0) {
-      // Default session exists - update its name to remove any emoji
-      const existingSession = existingSessions[existingDefaultIndex];
-      if (existingSession.title !== CORRECT_DEFAULT_SESSION_NAME ||
-          existingSession.config?.name !== CORRECT_DEFAULT_SESSION_NAME) {
-        existingSession.title = CORRECT_DEFAULT_SESSION_NAME;
-        if (existingSession.config) {
-          existingSession.config.name = CORRECT_DEFAULT_SESSION_NAME;
+    if (existingIndex >= 0) {
+      // Update existing default session to latest config
+      sessions[existingIndex] = createSessionObject(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
+      sessions[existingIndex].createdAt = sessions[existingIndex].createdAt;
+    } else {
+      // Create new default session
+      const defaultSession = createSessionObject(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
+      sessions.unshift(defaultSession);
+    }
+
+    await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
+    await AsyncStorage.setItem(STORAGE_KEYS.DEFAULT_SESSION_CREATED, 'true');
+    logger.log('Default session initialized');
+  } catch (error) {
+    logger.error('Error initializing default session:', error);
+  }
+};
+
+// ============================================================================
+// Legacy Compatibility (for existing user data migration)
+// ============================================================================
+
+/**
+ * Migrate old session format to new format
+ * Call this once on app startup to convert any legacy sessions
+ */
+export const migrateOldSessions = async (): Promise<void> => {
+  try {
+    const data = await AsyncStorage.getItem(STORAGE_KEYS.SESSIONS);
+    if (!data) return;
+
+    const sessions = JSON.parse(data);
+    let hasChanges = false;
+
+    for (const session of sessions) {
+      if (session.config) {
+        // Migrate old field names to new structure
+        const oldConfig = session.config as Record<string, unknown>;
+
+        // Migrate haptics from old vibrationEnabled to new haptics object
+        if (!oldConfig.haptics && oldConfig.vibrationEnabled !== undefined) {
+          const enabled = oldConfig.vibrationEnabled as boolean;
+          oldConfig.haptics = {
+            session: oldConfig.sessionHaptics ?? enabled,
+            breathing: oldConfig.breathingHaptics ?? enabled,
+            intervalBell: oldConfig.intervalBellHaptics ?? enabled,
+          };
+          // Clean up old fields
+          delete oldConfig.vibrationEnabled;
+          delete oldConfig.sessionHaptics;
+          delete oldConfig.breathingHaptics;
+          delete oldConfig.intervalBellHaptics;
+          hasChanges = true;
         }
-        await AsyncStorage.setItem(CUSTOM_SESSIONS_KEY, JSON.stringify(existingSessions));
-        logger.log('Updated default session name to remove emoji');
+
+        // Migrate wakeUpChimeEnabled to endChimeEnabled
+        if (oldConfig.wakeUpChimeEnabled !== undefined && oldConfig.endChimeEnabled === undefined) {
+          oldConfig.endChimeEnabled = oldConfig.wakeUpChimeEnabled;
+          delete oldConfig.wakeUpChimeEnabled;
+          hasChanges = true;
+        }
+
+        // Migrate hideCountdown to hideTimer
+        if (oldConfig.hideCountdown !== undefined && oldConfig.hideTimer === undefined) {
+          oldConfig.hideTimer = oldConfig.hideCountdown;
+          delete oldConfig.hideCountdown;
+          hasChanges = true;
+        }
+
+        // Ensure haptics object exists with defaults
+        if (!oldConfig.haptics) {
+          oldConfig.haptics = {
+            session: true,
+            breathing: true,
+            intervalBell: true,
+          };
+          hasChanges = true;
+        }
+
+        // Ensure hideTimer has a default
+        if (oldConfig.hideTimer === undefined) {
+          oldConfig.hideTimer = true;
+          hasChanges = true;
+        }
       }
-      await AsyncStorage.setItem(DEFAULT_SESSION_STORAGE_KEY, 'true');
-      return;
     }
 
-    // Create the default session with fixed ID so it's recognizable
-    const defaultSession = configToMeditationSession(
-      {
-        ...DEFAULT_EVIDENCE_BASED_SESSION,
-        name: CORRECT_DEFAULT_SESSION_NAME,
-      },
-      DEFAULT_SESSION_ID
-    );
-
-    // Prepend to beginning of sessions list
-    existingSessions.unshift(defaultSession);
-    await AsyncStorage.setItem(CUSTOM_SESSIONS_KEY, JSON.stringify(existingSessions));
-
-    // Mark as created
-    await AsyncStorage.setItem(DEFAULT_SESSION_STORAGE_KEY, 'true');
-    logger.log('Default evidence-based meditation session created');
+    if (hasChanges) {
+      await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
+      logger.log('Migrated old sessions to new format');
+    }
   } catch (error) {
-    logger.error('Error ensuring default session exists:', error);
+    logger.error('Error migrating old sessions:', error);
   }
 };

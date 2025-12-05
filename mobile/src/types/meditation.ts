@@ -5,7 +5,7 @@ export interface SessionConfiguration {
   ambientSound?: string;
   intervalBellMinutes?: number;
   voiceGuidanceEnabled?: boolean;
-  wakeUpChimeEnabled?: boolean;
+  endChimeEnabled?: boolean;
   usageCount?: number;
   lastUsedAt?: string;
   createdAt?: string;
