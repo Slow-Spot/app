@@ -739,6 +739,8 @@
     "wakeUpChimeHint": "Señal suave al final",
     "vibration": "Vibración",
     "vibrationHint": "Vibrar con las campanas",
+    "hideCountdown": "Ocultar temporizador",
+    "hideCountdownHint": "Para meditación sin distracciones",
     "sounds": {
       "silence": "Silencio",
       "nature": "Naturaleza",

@@ -1006,6 +1006,8 @@
     "vibration": "Vibration",
     "vibrationHint": "Vibrer avec les cloches",
     "vibrationDescription": "Vibrer à la fin de la session",
+    "hideCountdown": "Masquer le minuteur",
+    "hideCountdownHint": "Pour une méditation sans distraction",
     "sounds": {
       "silence": "Silence",
       "nature": "Nature",

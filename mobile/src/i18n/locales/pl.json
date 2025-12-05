@@ -805,6 +805,8 @@
     "wakeUpChimeHint": "Delikatny sygnał na koniec",
     "vibration": "Wibracje",
     "vibrationHint": "Wibracje przy dzwonkach",
+    "hideCountdown": "Ukryj zegar",
+    "hideCountdownHint": "Dla medytacji bez rozpraszania",
     "sounds": {
       "silence": "Cisza",
       "nature": "Natura",

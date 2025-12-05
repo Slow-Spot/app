@@ -45,6 +45,12 @@ interface MeditationTimerProps {
   breathingPattern?: BreathingPattern;
   customBreathing?: CustomBreathingPattern;
   vibrationEnabled?: boolean;
+  /**
+   * Hide the countdown timer for a distraction-free meditation experience.
+   * Research suggests that watching the clock can increase anxiety.
+   * When true, the timer is hidden but the session still tracks time.
+   */
+  hideCountdown?: boolean;
 }
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({
@@ -58,6 +64,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   breathingPattern = 'box', // Default to box breathing for backward compatibility
   customBreathing,
   vibrationEnabled = true, // Default to enabled for backward compatibility
+  hideCountdown = false, // Show timer by default
 }) => {
   const { t } = useTranslation();
   const { currentTheme, settings } = usePersonalization();
@@ -591,9 +598,11 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           })}
         </Svg>
 
-        {/* Timer display in center */}
+        {/* Timer display in center - conditionally hidden for distraction-free meditation */}
         <View style={styles.timerCenter}>
-          <Text style={[styles.timerText, dynamicStyles.timerText]}>{formatTime(remainingSeconds)}</Text>
+          {!hideCountdown && (
+            <Text style={[styles.timerText, dynamicStyles.timerText]}>{formatTime(remainingSeconds)}</Text>
+          )}
         </View>
       </View>
 

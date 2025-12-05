@@ -1001,6 +1001,8 @@
     "vibration": "कंपन",
     "vibrationHint": "घंटियों के साथ कंपन",
     "vibrationDescription": "सत्र के अंत में कंपन करें",
+    "hideCountdown": "टाइमर छिपाएं",
+    "hideCountdownHint": "विचलन-मुक्त ध्यान के लिए",
     "sounds": {
       "silence": "मौन",
       "nature": "प्रकृति",

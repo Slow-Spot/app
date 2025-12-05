@@ -514,6 +514,14 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     return undefined;
   };
 
+  // Get hide countdown setting from custom session config
+  const getHideCountdown = (): boolean => {
+    if (selectedSession && 'config' in selectedSession && selectedSession.config?.hideCountdown !== undefined) {
+      return selectedSession.config.hideCountdown;
+    }
+    return false; // Show timer by default for non-custom sessions
+  };
+
   // Show intention screen before meditation
   if (flowState === 'intention' && selectedSession) {
     return (
@@ -542,6 +550,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           breathingPattern={getBreathingPattern()}
           customBreathing={getCustomBreathing()}
           vibrationEnabled={getVibrationEnabled()}
+          hideCountdown={getHideCountdown()}
         />
       </GradientBackground>
     );

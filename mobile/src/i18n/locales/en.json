@@ -733,6 +733,8 @@
     "wakeUpChimeHint": "Gentle signal at the end",
     "vibration": "Vibration",
     "vibrationHint": "Vibrate with bells",
+    "hideCountdown": "Hide Timer",
+    "hideCountdownHint": "For distraction-free meditation",
     "sounds": {
       "silence": "Silence",
       "nature": "Nature",

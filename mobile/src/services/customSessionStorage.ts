@@ -36,6 +36,13 @@ export interface CustomSessionConfig {
   breathingPattern?: BreathingPattern;
   customBreathing?: CustomBreathingPattern;
   name?: string;
+  /**
+   * Hide countdown timer during meditation for a distraction-free experience.
+   * Research suggests that watching the clock can increase anxiety and reduce
+   * the quality of meditation practice. When enabled, the timer is hidden
+   * but the session still tracks time in the background.
+   */
+  hideCountdown?: boolean;
 }
 
 /**
@@ -237,6 +244,7 @@ export const DEFAULT_EVIDENCE_BASED_SESSION: CustomSessionConfig = {
   vibrationEnabled: true,
   breathingPattern: 'box',
   name: 'custom.defaultSession.name', // Translation key
+  hideCountdown: false, // Show timer by default for new users
 };
 
 const DEFAULT_SESSION_STORAGE_KEY = '@slow_spot_default_session_created_v3';

@@ -111,6 +111,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
   const [vibrationEnabled, setVibrationEnabled] = useState(initialConfig?.vibrationEnabled ?? true);
   const [breathingPattern, setBreathingPattern] = useState<BreathingPattern>(initialConfig?.breathingPattern || 'none');
   const [sessionName, setSessionName] = useState(initialConfig?.name || '');
+  const [hideCountdown, setHideCountdown] = useState(initialConfig?.hideCountdown ?? false);
 
   // Local editing state
   const [localEditSessionId, setLocalEditSessionId] = useState<string | number | undefined>(editSessionId);
@@ -209,6 +210,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
     vibrationEnabled,
     breathingPattern,
     name: sessionName || undefined,
+    hideCountdown,
   });
 
   const handleStartSession = () => {
@@ -464,6 +466,28 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               onValueChange={(value) => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 setVibrationEnabled(value);
+              }}
+              trackColor={{
+                false: dynamicStyles.switchTrackFalse,
+                true: dynamicStyles.switchTrackTrue,
+              }}
+              thumbColor={colors.neutral.white}
+            />
+          </View>
+
+          <View style={styles.divider} />
+
+          {/* Hide countdown timer */}
+          <View style={styles.toggleRow}>
+            <View style={styles.toggleInfo}>
+              <Text style={[styles.toggleLabel, { color: colors.text.primary }]}>{t('custom.hideCountdown')}</Text>
+              <Text style={[styles.toggleHint, { color: colors.text.tertiary }]}>{t('custom.hideCountdownHint')}</Text>
+            </View>
+            <Switch
+              value={hideCountdown}
+              onValueChange={(value) => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setHideCountdown(value);
               }}
               trackColor={{
                 false: dynamicStyles.switchTrackFalse,

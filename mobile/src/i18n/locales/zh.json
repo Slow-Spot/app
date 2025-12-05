@@ -957,6 +957,8 @@
     "wakeUpChimeHint": "结束时的温柔信号",
     "vibration": "振动",
     "vibrationHint": "钟声时振动",
+    "hideCountdown": "隐藏计时器",
+    "hideCountdownHint": "无干扰冥想",
     "guidingVoice": "引导语音",
     "guidingVoiceSubtitle": "练习期间的温柔语音指导",
     "voiceGuidance": "语音引导",

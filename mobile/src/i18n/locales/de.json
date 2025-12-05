@@ -957,6 +957,8 @@
     "wakeUpChimeHint": "Sanftes Signal am Ende",
     "vibration": "Vibration",
     "vibrationHint": "Vibration mit Glocken",
+    "hideCountdown": "Timer ausblenden",
+    "hideCountdownHint": "Für ablenkungsfreie Meditation",
     "guidingVoice": "Führende Stimme",
     "guidingVoiceSubtitle": "Sanfte Sprachanleitung während der Übung",
     "voiceGuidance": "Sprachführung",
