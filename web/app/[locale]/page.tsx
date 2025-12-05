@@ -444,7 +444,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="footer-gradient py-16 border-t border-white/5">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
+          <div className="grid md:grid-cols-3 gap-12 mb-12">
             {/* Brand */}
             <div className="md:col-span-1 space-y-4">
               <h3 className="text-2xl font-bold text-gradient">{t('footer.brand.name')}</h3>
@@ -461,30 +461,12 @@ export default function HomePage() {
                 >
                   {t('footer.columns.product.links.features')}
                 </a>
-                <a
-                  href="#download"
-                  className="block text-gray-500 hover:text-violet-400 transition-colors text-sm"
-                >
-                  {t('footer.columns.product.links.download')}
-                </a>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h4 className="font-semibold text-white">{t('footer.columns.support.title')}</h4>
-              <div className="space-y-2">
                 <Link
                   href="/support"
                   className="block text-gray-500 hover:text-violet-400 transition-colors text-sm"
                 >
                   {t('footer.columns.support.links.help')}
                 </Link>
-                <a
-                  href="mailto:contact@slowspot.me"
-                  className="block text-gray-500 hover:text-violet-400 transition-colors text-sm"
-                >
-                  {t('footer.columns.support.links.contact')}
-                </a>
               </div>
             </div>
 
@@ -512,7 +494,10 @@ export default function HomePage() {
             <p className="text-gray-600 text-sm">
               {t('footer.bottom.copyright', { year: new Date().getFullYear() })}
             </p>
-            <p className="text-gray-600 text-sm">{t('footer.bottom.tagline')}</p>
+            <div className="flex items-center gap-4">
+              <span className="text-gray-700 text-xs">v1.6.0</span>
+              <p className="text-gray-600 text-sm">{t('footer.bottom.tagline')}</p>
+            </div>
           </div>
         </div>
       </footer>

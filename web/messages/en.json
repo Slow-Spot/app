@@ -2,17 +2,17 @@
   "hero": {
     "badge": "Meditation Made Simple",
     "title": "Find Your Inner Peace",
-    "subtitle": "A meditation app designed with privacy in mind. No accounts, no tracking, no barriers. Just you and your practice.",
+    "subtitle": "A meditation app designed with privacy in mind. No accounts, no tracking, no barriers. Just you and your peace.",
     "ctaPrimary": "Download Free",
     "ctaSecondary": "See Features"
   },
   "appPreview": {
     "title": "Your Personal Meditation Companion",
-    "subtitle": "Built for real life. Practice anywhere, anytime, in your own language. Everything stays private on your device.",
+    "subtitle": "Built for real life. Meditate anywhere, anytime, in your own language. Everything stays private on your device.",
     "features": {
       "instant": {
         "title": "Start Instantly",
-        "description": "No sign-up required. Open the app and begin your practice."
+        "description": "No sign-up required. Open the app and start meditating."
       },
       "language": {
         "title": "Your Language",
@@ -52,7 +52,7 @@
       },
       "cultural": {
         "title": "Diverse Traditions",
-        "description": "Explore Zen, Mindfulness, Vipassana, and practices from around the world."
+        "description": "Explore Zen, Mindfulness, Vipassana, and traditions from around the world."
       },
       "theme": {
         "title": "Light & Dark Mode",
@@ -79,7 +79,7 @@
     ]
   },
   "download": {
-    "sectionTitle": "Start Your Practice Today",
+    "sectionTitle": "Start Meditating Today",
     "sectionSubtitle": "Available free on iOS and Android. No account required.",
     "appStore": {
       "label": "Download on the",
@@ -210,7 +210,7 @@
     "sections": {
       "core": {
         "title": "Our Promise",
-        "content": "Slow Spot is built with privacy at its core. Your meditation practice is personal, and we respect that completely."
+        "content": "Slow Spot is built with privacy at its core. Your meditation is personal, and we respect that completely."
       },
       "whatWeCollect": {
         "title": "What We Collect",

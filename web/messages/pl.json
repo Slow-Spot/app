@@ -2,7 +2,7 @@
   "hero": {
     "badge": "Medytacja bez komplikacji",
     "title": "Odnajdź wewnętrzny spokój",
-    "subtitle": "Aplikacja do medytacji zaprojektowana z myślą o prywatności. Bez kont, bez śledzenia, bez przeszkód. Tylko Ty i Twoja praktyka.",
+    "subtitle": "Aplikacja do medytacji zaprojektowana z myślą o prywatności. Bez kont, bez śledzenia, bez przeszkód. Tylko Ty i Twój spokój.",
     "ctaPrimary": "Pobierz za darmo",
     "ctaSecondary": "Zobacz funkcje"
   },
@@ -12,7 +12,7 @@
     "features": {
       "instant": {
         "title": "Zacznij od razu",
-        "description": "Bez rejestracji. Otwórz aplikację i rozpocznij praktykę."
+        "description": "Bez rejestracji. Otwórz aplikację i zacznij medytować."
       },
       "language": {
         "title": "W Twoim języku",
@@ -32,7 +32,7 @@
   },
   "features": {
     "sectionTitle": "Wszystko, czego potrzebujesz",
-    "sectionSubtitle": "Przemyślane funkcje wspierające Twoją praktykę medytacji",
+    "sectionSubtitle": "Przemyślane funkcje wspierające Twoją medytację",
     "cards": {
       "progressive": {
         "title": "Progresywna nauka",
@@ -52,7 +52,7 @@
       },
       "cultural": {
         "title": "Różnorodne tradycje",
-        "description": "Odkrywaj Zen, Mindfulness, Vipassanę i praktyki z całego świata."
+        "description": "Odkrywaj Zen, Mindfulness, Vipassanę i tradycje z całego świata."
       },
       "theme": {
         "title": "Tryb jasny i ciemny",
@@ -79,7 +79,7 @@
     ]
   },
   "download": {
-    "sectionTitle": "Zacznij praktykę już dziś",
+    "sectionTitle": "Zacznij medytować już dziś",
     "sectionSubtitle": "Dostępna za darmo na iOS i Android. Bez wymaganego konta.",
     "appStore": {
       "label": "Pobierz z",
@@ -210,7 +210,7 @@
     "sections": {
       "core": {
         "title": "Nasza obietnica",
-        "content": "Slow Spot jest zbudowana z prywatnością jako fundamentem. Twoja praktyka medytacyjna jest osobista i w pełni to szanujemy."
+        "content": "Slow Spot jest zbudowana z prywatnością jako fundamentem. Twoja medytacja jest osobista i w pełni to szanujemy."
       },
       "whatWeCollect": {
         "title": "Co zbieramy",

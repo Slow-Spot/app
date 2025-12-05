@@ -2,17 +2,17 @@
   "hero": {
     "badge": "La méditation simplifiée",
     "title": "Trouvez votre paix intérieure",
-    "subtitle": "Une application de méditation conçue avec la confidentialité à l'esprit. Sans compte, sans suivi, sans barrières. Juste vous et votre pratique.",
+    "subtitle": "Une application de méditation conçue avec la confidentialité à l'esprit. Sans compte, sans suivi, sans barrières. Juste vous et votre paix.",
     "ctaPrimary": "Télécharger gratuitement",
     "ctaSecondary": "Voir les fonctionnalités"
   },
   "appPreview": {
     "title": "Votre compagnon de méditation personnel",
-    "subtitle": "Conçue pour la vie réelle. Pratiquez partout, à tout moment, dans votre langue. Tout reste privé sur votre appareil.",
+    "subtitle": "Conçue pour la vie réelle. Méditez partout, à tout moment, dans votre langue. Tout reste privé sur votre appareil.",
     "features": {
       "instant": {
         "title": "Commencez instantanément",
-        "description": "Sans inscription. Ouvrez l'application et commencez votre pratique."
+        "description": "Sans inscription. Ouvrez l'application et commencez à méditer."
       },
       "language": {
         "title": "Dans votre langue",
@@ -32,7 +32,7 @@
   },
   "features": {
     "sectionTitle": "Tout ce dont vous avez besoin",
-    "sectionSubtitle": "Des fonctionnalités réfléchies pour soutenir votre pratique de méditation",
+    "sectionSubtitle": "Des fonctionnalités réfléchies pour soutenir votre méditation",
     "cards": {
       "progressive": {
         "title": "Apprentissage progressif",
@@ -52,7 +52,7 @@
       },
       "cultural": {
         "title": "Traditions diverses",
-        "description": "Explorez le Zen, la Pleine Conscience, le Vipassana et des pratiques du monde entier."
+        "description": "Explorez le Zen, la Pleine Conscience, le Vipassana et des traditions du monde entier."
       },
       "theme": {
         "title": "Mode clair et sombre",
@@ -79,7 +79,7 @@
     ]
   },
   "download": {
-    "sectionTitle": "Commencez votre pratique aujourd'hui",
+    "sectionTitle": "Commencez à méditer aujourd'hui",
     "sectionSubtitle": "Disponible gratuitement sur iOS et Android. Sans compte requis.",
     "appStore": {
       "label": "Télécharger sur",
@@ -215,7 +215,7 @@
     "sections": {
       "core": {
         "title": "Notre promesse",
-        "content": "Slow Spot est conçue avec la confidentialité au cœur. Votre pratique de méditation est personnelle, et nous la respectons entièrement."
+        "content": "Slow Spot est conçue avec la confidentialité au cœur. Votre méditation est personnelle, et nous la respectons entièrement."
       },
       "whatWeCollect": {
         "title": "Ce que nous collectons",

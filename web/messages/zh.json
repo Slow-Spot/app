@@ -2,17 +2,17 @@
   "hero": {
     "badge": "冥想变得简单",
     "title": "找到你的内心平静",
-    "subtitle": "一款注重隐私的冥想应用。无需账户，无需追踪，无需障碍。只有你和你的练习。",
+    "subtitle": "一款注重隐私的冥想应用。无需账户，无需追踪，无需障碍。只有你和你的平静。",
     "ctaPrimary": "免费下载",
     "ctaSecondary": "查看功能"
   },
   "appPreview": {
     "title": "你的个人冥想伴侣",
-    "subtitle": "为真实生活而设计。随时随地，用你的语言练习。一切都保存在你的设备上。",
+    "subtitle": "为真实生活而设计。随时随地，用你的语言冥想。一切都保存在你的设备上。",
     "features": {
       "instant": {
         "title": "即刻开始",
-        "description": "无需注册。打开应用开始你的练习。"
+        "description": "无需注册。打开应用开始冥想。"
       },
       "language": {
         "title": "你的语言",
@@ -52,7 +52,7 @@
       },
       "cultural": {
         "title": "多元传统",
-        "description": "探索禅宗、正念、内观以及来自世界各地的练习。"
+        "description": "探索禅宗、正念、内观以及来自世界各地的传统。"
       },
       "theme": {
         "title": "明暗模式",
@@ -79,7 +79,7 @@
     ]
   },
   "download": {
-    "sectionTitle": "今天开始你的练习",
+    "sectionTitle": "今天开始冥想",
     "sectionSubtitle": "iOS和Android免费下载。无需账户。",
     "appStore": {
       "label": "下载于",
@@ -215,7 +215,7 @@
     "sections": {
       "core": {
         "title": "我们的承诺",
-        "content": "Slow Spot 以隐私为核心设计。您的冥想练习是私人的，我们完全尊重这一点。"
+        "content": "Slow Spot 以隐私为核心设计。您的冥想是私人的，我们完全尊重这一点。"
       },
       "whatWeCollect": {
         "title": "我们收集什么",

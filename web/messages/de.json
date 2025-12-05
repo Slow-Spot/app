@@ -2,13 +2,13 @@
   "hero": {
     "badge": "Meditation einfach gemacht",
     "title": "Finde deinen inneren Frieden",
-    "subtitle": "Eine Meditations-App mit Fokus auf Privatsphäre. Keine Konten, kein Tracking, keine Hindernisse. Nur du und deine Praxis.",
+    "subtitle": "Eine Meditations-App mit Fokus auf Privatsphäre. Keine Konten, kein Tracking, keine Hindernisse. Nur du und dein Frieden.",
     "ctaPrimary": "Kostenlos herunterladen",
     "ctaSecondary": "Funktionen ansehen"
   },
   "appPreview": {
     "title": "Dein persönlicher Meditationsbegleiter",
-    "subtitle": "Für das echte Leben entwickelt. Überall und jederzeit üben, in deiner Sprache. Alles bleibt privat auf deinem Gerät.",
+    "subtitle": "Für das echte Leben entwickelt. Überall und jederzeit meditieren, in deiner Sprache. Alles bleibt privat auf deinem Gerät.",
     "features": {
       "instant": {
         "title": "Sofort starten",
@@ -32,7 +32,7 @@
   },
   "features": {
     "sectionTitle": "Alles was du brauchst",
-    "sectionSubtitle": "Durchdachte Funktionen zur Unterstützung deiner Meditationspraxis",
+    "sectionSubtitle": "Durchdachte Funktionen zur Unterstützung deiner Meditation",
     "cards": {
       "progressive": {
         "title": "Progressives Lernen",
@@ -52,7 +52,7 @@
       },
       "cultural": {
         "title": "Vielfalt der Traditionen",
-        "description": "Entdecke Zen, Achtsamkeit, Vipassana und Praktiken aus aller Welt."
+        "description": "Entdecke Zen, Achtsamkeit, Vipassana und Traditionen aus aller Welt."
       },
       "theme": {
         "title": "Hell- und Dunkelmodus",
@@ -79,7 +79,7 @@
     ]
   },
   "download": {
-    "sectionTitle": "Starte deine Praxis heute",
+    "sectionTitle": "Starte heute mit der Meditation",
     "sectionSubtitle": "Kostenlos verfügbar für iOS und Android. Kein Konto erforderlich.",
     "appStore": {
       "label": "Laden im",
@@ -215,7 +215,7 @@
     "sections": {
       "core": {
         "title": "Unser Versprechen",
-        "content": "Slow Spot wurde mit Privatsphäre als Kernprinzip entwickelt. Deine Meditationspraxis ist persönlich, und wir respektieren das vollständig."
+        "content": "Slow Spot wurde mit Privatsphäre als Kernprinzip entwickelt. Deine Meditation ist persönlich, und wir respektieren das vollständig."
       },
       "whatWeCollect": {
         "title": "Was wir sammeln",
