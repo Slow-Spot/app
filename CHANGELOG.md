@@ -1,3 +1,12 @@
+## [1.6.0](https://github.com/Slow-Spot/app/compare/v1.5.0...v1.6.0) (2025-12-05)
+
+### Features
+
+* **mobile:** add comprehensive system settings detection and integration ([9471d71](https://github.com/Slow-Spot/app/commit/9471d716bc61873861e54070ead4bf242ce7a069))
+* **mobile:** add enhanced haptic feedback for breathing phases ([98ac1f2](https://github.com/Slow-Spot/app/commit/98ac1f265ee20e9d126128ce90b9f424cb93138d))
+* **mobile:** add hide countdown option for distraction-free meditation ([4bdd1ee](https://github.com/Slow-Spot/app/commit/4bdd1ee8fb9bd3b86425c130ec9d7bcbeb9590bc))
+* **mobile:** enhance default session with evidence-based mindfulness settings ([858d33d](https://github.com/Slow-Spot/app/commit/858d33de436792d2ca9cc38e4a48fb92cf9cffa2))
+
 ## [1.5.0](https://github.com/Slow-Spot/app/compare/v1.4.0...v1.5.0) (2025-12-04)
 
 ### Features
