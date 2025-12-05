@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/Slow-Spot/app/compare/v1.7.0...v1.8.0) (2025-12-05)
+
+### Features
+
+* **web:** enhance light mode visual design with vibrant purple accents ([179ba92](https://github.com/Slow-Spot/app/commit/179ba9229d213b79676f5a35781659e5404f2bfe)), closes [#7C3AED](https://github.com/Slow-Spot/app/issues/7C3AED) [#C084FC](https://github.com/Slow-Spot/app/issues/C084FC)
+
 ## [1.7.0](https://github.com/Slow-Spot/app/compare/v1.6.0...v1.7.0) (2025-12-05)
 
 ### Features
