@@ -1,3 +1,11 @@
+## [1.8.2](https://github.com/Slow-Spot/app/compare/v1.8.1...v1.8.2) (2025-12-05)
+
+### Bug Fixes
+
+* **mobile,web:** fix name saving in onboarding and remove duplicate CSS ([8960c16](https://github.com/Slow-Spot/app/commit/8960c167c123a352b2ce150675310c2bce2e6d91))
+* **mobile:** restore default session after data clear ([2acf8fb](https://github.com/Slow-Spot/app/commit/2acf8fbf9a3dacbc4a2340652659493c96015e26))
+* **web:** add light mode styles for subpage footer and fix icon conflicts ([df75253](https://github.com/Slow-Spot/app/commit/df752536c7d4a9eeafb63dedcc956b678638b7d5))
+
 ## [1.8.1](https://github.com/Slow-Spot/app/compare/v1.8.0...v1.8.1) (2025-12-05)
 
 ### Bug Fixes
