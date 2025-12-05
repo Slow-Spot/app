@@ -76,6 +76,10 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
       bg: isDark ? `rgba(${featureColorPalettes.sky.rgb}, 0.2)` : `rgba(${featureColorPalettes.sky.rgb}, 0.1)`,
       icon: isDark ? featureColorPalettes.sky.darkIcon : featureColorPalettes.sky.lightIcon,
     },
+    slate: {
+      bg: isDark ? `rgba(${featureColorPalettes.slate.rgb}, 0.2)` : `rgba(${featureColorPalettes.slate.rgb}, 0.1)`,
+      icon: isDark ? featureColorPalettes.slate.darkIcon : featureColorPalettes.slate.lightIcon,
+    },
   }), [isDark]);
 
   // Dynamic styles based on theme
@@ -146,6 +150,10 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
     { id: 'nature', icon: 'leaf-outline' as const, label: t('custom.sounds.nature'), color: iconColors.emerald },
     { id: 'ocean', icon: 'water-outline' as const, label: t('custom.sounds.ocean'), color: iconColors.sky },
     { id: 'forest', icon: 'flower-outline' as const, label: t('custom.sounds.forest'), color: iconColors.teal },
+    { id: 'rain', icon: 'rainy-outline' as const, label: t('custom.sounds.rain'), color: iconColors.sky },
+    { id: 'fire', icon: 'flame-outline' as const, label: t('custom.sounds.fire'), color: iconColors.amber },
+    { id: 'wind', icon: 'cloudy-outline' as const, label: t('custom.sounds.wind'), color: iconColors.slate },
+    { id: 'custom', icon: 'musical-note-outline' as const, label: t('custom.sounds.custom'), color: iconColors.rose },
   ];
 
   // Breathing pattern options with scientific descriptions
@@ -419,6 +427,11 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
               );
             })}
           </View>
+
+          {/* Hint about custom sounds in settings */}
+          <Text style={[styles.soundHint, { color: colors.text.tertiary }]}>
+            {t('custom.sounds.customHint')}
+          </Text>
         </GradientCard>
 
         {/* Bell Settings - Combined */}
@@ -853,44 +866,50 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes.sm,
     marginLeft: theme.spacing.xs,
   },
-  // Sound grid
+  // Sound grid - 4 columns layout for 8 options (2x4)
   soundGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: theme.spacing.sm,
   },
   soundOption: {
-    width: '31%',
+    width: '23%', // 4 columns with gap
     aspectRatio: 1,
     borderRadius: theme.borderRadius.xl,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing.sm,
+    padding: theme.spacing.xs,
     position: 'relative',
   },
   soundIconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 12, // Rounded square to match app icon style
+    width: 36,
+    height: 36,
+    borderRadius: 10, // Rounded square to match app icon style
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: theme.spacing.xs,
+    marginBottom: 4,
   },
   soundLabel: {
-    fontSize: theme.typography.fontSizes.xs,
+    fontSize: 10,
     fontWeight: theme.typography.fontWeights.medium,
     textAlign: 'center',
   },
   selectedIndicator: {
     position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+    top: 4,
+    right: 4,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  soundHint: {
+    fontSize: theme.typography.fontSizes.xs,
+    textAlign: 'center',
+    marginTop: theme.spacing.md,
+    fontStyle: 'italic',
   },
   // Toggle rows
   toggleRow: {

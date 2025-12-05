@@ -34,7 +34,7 @@ export interface BreathingTiming {
 }
 
 /** Available ambient sound options */
-export type AmbientSound = 'silence' | 'nature' | 'ocean' | 'forest';
+export type AmbientSound = 'silence' | 'nature' | 'ocean' | 'forest' | 'rain' | 'fire' | 'wind' | 'custom';
 
 /** Haptic feedback configuration */
 export interface HapticSettings {
@@ -86,6 +86,10 @@ const AUDIO = {
     nature: require('../../assets/sounds/ambient/nature.mp3'),
     ocean: require('../../assets/sounds/ambient/ocean.mp3'),
     forest: require('../../assets/sounds/ambient/forest.mp3'),
+    rain: require('../../assets/sounds/ambient/rain.mp3'),
+    fire: require('../../assets/sounds/ambient/fire.mp3'),
+    wind: require('../../assets/sounds/ambient/wind.mp3'),
+    // 'custom' is handled separately via user's custom sound URI
   },
 } as const;
 
@@ -127,9 +131,10 @@ const generateId = (): string => {
   return `custom-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 };
 
-/** Get ambient sound asset (or undefined for silence) */
+/** Get ambient sound asset (or undefined for silence/custom) */
 const getAmbientAsset = (sound: AmbientSound): number | undefined => {
-  return sound === 'silence' ? undefined : AUDIO.AMBIENT[sound];
+  if (sound === 'silence' || sound === 'custom') return undefined;
+  return AUDIO.AMBIENT[sound];
 };
 
 /** Get frequency for ambient sound */

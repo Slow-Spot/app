@@ -53,6 +53,10 @@ const getAmbientSoundName = (sound: string | undefined, t: any): string => {
     'nature': t('custom.ambientNature', 'Natura'),
     'ocean': t('custom.ambientOcean', 'Ocean'),
     'forest': t('custom.ambientForest', 'Las'),
+    'rain': t('custom.ambientRain', 'Deszcz'),
+    'fire': t('custom.ambientFire', 'Ogień'),
+    'wind': t('custom.ambientWind', 'Wiatr'),
+    'custom': t('custom.ambientCustom', 'Własny'),
   };
   return sounds[sound] || sound;
 };
