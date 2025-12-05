@@ -247,6 +247,8 @@ export const deleteSession = async (id: string): Promise<void> => {
 export const clearAllSessions = async (): Promise<void> => {
   try {
     await AsyncStorage.removeItem(STORAGE_KEYS.SESSIONS);
+    // Also reset the default session flag so it will be recreated
+    await AsyncStorage.removeItem(STORAGE_KEYS.DEFAULT_SESSION_CREATED);
   } catch (error) {
     logger.error('Error clearing sessions:', error);
     throw error;
