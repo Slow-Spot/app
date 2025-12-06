@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/Slow-Spot/app/compare/v1.0.2...v1.0.3) (2025-12-06)
+
+### Bug Fixes
+
+* restore correct LinearGradient named import from expo-linear-gradient ([8e8108e](https://github.com/Slow-Spot/app/commit/8e8108e126e9b8b19cd938f098a641f8f52ccf5d))
+
 ## [1.0.2](https://github.com/Slow-Spot/app/compare/v1.0.1...v1.0.2) (2025-12-06)
 
 ### Bug Fixes
