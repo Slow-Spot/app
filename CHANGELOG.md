@@ -1,3 +1,9 @@
+## [1.0.5](https://github.com/Slow-Spot/app/compare/v1.0.4...v1.0.5) (2025-12-06)
+
+### Bug Fixes
+
+* update all app icons and add missing web favicons ([988ccb8](https://github.com/Slow-Spot/app/commit/988ccb82502166861a0118dd8c1cafe00b7f3bd7))
+
 ## [1.0.4](https://github.com/Slow-Spot/app/compare/v1.0.3...v1.0.4) (2025-12-06)
 
 ### Bug Fixes
