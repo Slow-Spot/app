@@ -1387,14 +1387,28 @@ html.light .footer-gradient .border-white\/10 {
   border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-/* Force ALL text in footer to be white in light mode */
-html.light .footer-gradient * {
-  color: rgba(255, 255, 255, 0.9);
+/* Force ALL text in footer to be white/light in light mode */
+html.light .footer-gradient,
+html.light .footer-gradient *,
+html.light .footer-gradient p,
+html.light .footer-gradient span,
+html.light .footer-gradient a,
+html.light .footer-gradient h3,
+html.light .footer-gradient h4,
+html.light .footer-gradient .text-gray-500,
+html.light .footer-gradient .text-gray-600,
+html.light .footer-gradient .text-gray-700 {
+  color: rgba(255, 255, 255, 0.85) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.85) !important;
 }
 
-html.light .footer-gradient h3 *,
-html.light .footer-gradient h4 * {
+html.light .footer-gradient h3,
+html.light .footer-gradient h4,
+html.light .footer-gradient .text-white,
+html.light .footer-gradient .font-semibold,
+html.light .footer-gradient .font-bold {
   color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
 }
 
 /* ==========================================================================
@@ -1439,16 +1453,28 @@ html.light #download .text-violet-300 {
 }
 
 /* Force ALL text in CTA/download section to be white in light mode */
+html.light .cta-section,
 html.light .cta-section *,
-html.light #download * {
-  color: rgba(255, 255, 255, 0.9);
+html.light .cta-section p,
+html.light .cta-section span,
+html.light .cta-section div,
+html.light #download,
+html.light #download *,
+html.light #download p,
+html.light #download span,
+html.light #download div {
+  color: rgba(255, 255, 255, 0.9) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.9) !important;
 }
 
 html.light .cta-section h2,
 html.light .cta-section .font-semibold,
+html.light .cta-section .font-bold,
 html.light #download h2,
-html.light #download .font-semibold {
+html.light #download .font-semibold,
+html.light #download .font-bold {
   color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
 }
 
 /* Store buttons in download section - glass effect */
