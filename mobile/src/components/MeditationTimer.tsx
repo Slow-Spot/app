@@ -14,7 +14,7 @@ import Animated, {
   cancelAnimation,
 } from 'react-native-reanimated';
 import Svg, { Circle, G, Text as SvgText } from 'react-native-svg';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import theme, { getThemeColors } from '../theme';
 import { brandColors } from '../theme/colors';
 import { ChimePoint } from '../types/customSession';

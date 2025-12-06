@@ -28,7 +28,7 @@ import Reanimated, {
   withSequence,
   Easing,
 } from 'react-native-reanimated';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { GradientBackground } from './GradientBackground';
 import { GradientButton } from './GradientButton';

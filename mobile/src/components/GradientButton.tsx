@@ -16,7 +16,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import { GradientDefinition } from '../theme/gradients';
 import theme from '../theme';
 

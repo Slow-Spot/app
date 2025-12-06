@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { View, Text, ActivityIndicator, FlatList, StyleSheet, Alert, TouchableOpacity, Modal } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { screenElementAnimation } from '../utils/animations';
 import { SessionCard } from '../components/SessionCard';

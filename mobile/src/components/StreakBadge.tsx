@@ -17,7 +17,7 @@ import Animated, {
   interpolateColor,
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import theme from '../theme';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 

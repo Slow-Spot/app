@@ -8,7 +8,7 @@ import { logger } from '../utils/logger';
 
 import React from 'react';
 import { StyleSheet, ViewStyle, StyleProp } from 'react-native';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import { GradientDefinition } from '../theme/gradients';
 
 interface GradientBackgroundProps {

@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import theme from '../theme';
 import { brandColors } from '../theme/colors';
 import {

@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
-import LinearGradient from 'expo-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import ColorPicker, { Panel1, HueSlider, Preview } from 'reanimated-color-picker';
 import { GradientBackground } from '../components/GradientBackground';
