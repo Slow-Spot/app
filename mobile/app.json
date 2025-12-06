@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slow Spot",
     "slug": "slow-spot",
-    "version": "1.8.4",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -42,8 +42,6 @@
         "UIBackgroundModes": [
           "audio"
         ],
-        "NSCalendarsUsageDescription": "We need access to your calendar to schedule meditation sessions.",
-        "NSRemindersUsageDescription": "We need access to your reminders to set meditation reminders.",
         "ITSAppUsesNonExemptEncryption": false,
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
@@ -53,7 +51,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "10804"
+      "buildNumber": "1"
     },
     "android": {
       "package": "com.slowspot.app",
@@ -67,11 +65,8 @@
         "icon": "./assets/notification-icon.png",
         "color": "#8B5CF6"
       },
-      "permissions": [
-        "READ_CALENDAR",
-        "WRITE_CALENDAR"
-      ],
-      "versionCode": 10804
+      "permissions": [],
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -84,7 +79,6 @@
     "owner": "leszekszpunar",
     "plugins": [
       "expo-font",
-      "expo-calendar",
       "expo-updates",
       "expo-audio"
     ]

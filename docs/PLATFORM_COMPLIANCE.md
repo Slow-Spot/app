@@ -56,8 +56,8 @@ Since Slow Spot offers meditation and mindfulness features, it falls under Googl
 #### 4. Permissions
 - **Requirement:** Minimal permissions with clear justification
 - **Slow Spot Status:** ✅ Compliant
-  - Only optional Calendar permission (for reminders)
-  - Clear explanation provided when permission requested
+  - No permissions required
+  - Audio background mode only (for meditation playback)
 
 ### Recommended Actions for Google Play
 
