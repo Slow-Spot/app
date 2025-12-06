@@ -36,27 +36,53 @@
     "cards": {
       "progressive": {
         "title": "Progressive Learning",
-        "description": "5 levels from beginner to advanced. Sessions that adapt to your experience level."
+        "description": "5 experience levels from beginner to master. Guided preparation with posture tips, breathing exercises, and personalized intention setting for each session."
       },
       "audio": {
-        "title": "Immersive Audio",
-        "description": "Layered soundscapes with ambient sounds and meditation bells."
+        "title": "8 Ambient Soundscapes",
+        "description": "Ocean waves, rain, forest, fire, wind, nature sounds, and meditation bells. Create the perfect atmosphere for your practice."
       },
       "tracking": {
-        "title": "Track Your Progress",
-        "description": "Monitor your sessions, streaks, and meditation minutes over time."
+        "title": "Track Your Journey",
+        "description": "Monitor daily streaks, total meditation minutes, session history, and mood tracking. See your progress and celebrate milestones."
       },
       "wisdom": {
         "title": "Daily Inspiration",
-        "description": "Fresh inspirational quotes each day, available in your language."
+        "description": "Fresh inspirational quotes each day in your language. Swipeable cards to save favorites and reflect on wisdom from various traditions."
       },
       "cultural": {
         "title": "Diverse Traditions",
-        "description": "Explore Zen, Mindfulness, Vipassana, and traditions from around the world."
+        "description": "Explore Zen, Mindfulness, Vipassana, Body Scan, Loving-Kindness, and more. Techniques from Buddhist, Hindu, and secular traditions worldwide."
       },
       "theme": {
         "title": "Light & Dark Mode",
-        "description": "Comfortable viewing that adapts to your preferences and time of day."
+        "description": "Scientifically designed color palettes for maximum comfort. Automatic switching based on time of day or manual control."
+      }
+    },
+    "additional": {
+      "breathing": {
+        "title": "4 Breathing Patterns",
+        "description": "Box breathing for stress, 4-7-8 for sleep, equal breathing for beginners, and calm breathing with extended exhale."
+      },
+      "custom": {
+        "title": "Custom Sessions",
+        "description": "Create unlimited personalized sessions. Set duration, interval bells, ambient sounds, and save your favorites."
+      },
+      "intentions": {
+        "title": "Intention Setting",
+        "description": "Set a personal intention before each session. Choose from suggestions like Calm, Presence, Gratitude, or write your own."
+      },
+      "offline": {
+        "title": "100% Offline",
+        "description": "All features work without internet. Your data stays on your device. Meditate anywhere, anytime."
+      },
+      "notifications": {
+        "title": "Smart Reminders",
+        "description": "Schedule daily meditation reminders. Calendar integration keeps your practice consistent."
+      },
+      "personalized": {
+        "title": "Time-Aware Greetings",
+        "description": "Personalized greetings and session recommendations based on time of day. Morning, afternoon, evening, and night modes."
       }
     }
   },
@@ -197,111 +223,162 @@
   },
   "privacyPage": {
     "title": "Privacy Policy",
-    "lastUpdated": "Last Updated: November 27, 2024",
+    "lastUpdated": "Last Updated: December 6, 2025",
     "summary": {
       "title": "The Short Version",
       "items": [
         "All data stays on your device only",
         "No accounts, no tracking, no ads",
         "Works 100% offline",
-        "Delete everything by uninstalling"
+        "Delete everything by uninstalling",
+        "GDPR, CCPA, and worldwide compliant"
       ]
     },
     "sections": {
       "core": {
-        "title": "Our Promise",
-        "content": "Slow Spot is built with privacy at its core. Your meditation is personal, and we respect that completely."
+        "title": "Our Privacy Promise",
+        "content": "Slow Spot is designed with privacy as its foundation. We believe that meditation is a deeply personal experience that deserves absolute privacy protection. Unlike most applications, we have built Slow Spot to function entirely without collecting, processing, or storing any personal data on external servers."
       },
       "whatWeCollect": {
-        "title": "What We Collect",
-        "content": "Nothing. We don't collect any personal data. All your information (preferences, session history, statistics) is stored locally on your device and never transmitted anywhere."
+        "title": "Information We Collect",
+        "content": "We collect absolutely no personal data. Zero. Slow Spot is a fully offline application that operates entirely on your device. We do not collect, process, transmit, sell, or share any information about you, your device, or your usage patterns. All your meditation preferences, session history, progress statistics, and personal settings remain exclusively on your device."
       },
       "localStorage": {
-        "title": "Data Stored On Your Device",
-        "intro": "The app stores the following locally:",
+        "title": "Data Stored Locally On Your Device",
+        "intro": "The app stores the following information exclusively on your device:",
         "items": [
-          "Your preferences (language, theme)",
-          "Meditation session history",
-          "Progress statistics and streaks",
-          "Calendar reminders (if enabled)"
+          "Your preferences (language selection, theme settings, sound preferences)",
+          "Meditation session history and notes",
+          "Progress statistics including streaks and total meditation time",
+          "Custom meditation sessions you create",
+          "User profile information (name, if provided)",
+          "Mood tracking data after sessions",
+          "Calendar reminders (only if you enable this feature)"
         ],
-        "note": "This data never leaves your device."
+        "note": "This data never leaves your device. We have no access to it, cannot view it, and cannot transmit it."
+      },
+      "noTracking": {
+        "title": "No Tracking, No Analytics",
+        "content": "We do not use any form of analytics, tracking, or telemetry. We do not know how many users we have, how often the app is used, which features are popular, or any other usage statistics. This is by design. Your meditation practice is nobody's business but yours."
       },
       "permissions": {
-        "title": "Permissions",
-        "content": "The app requires no permissions to work. Calendar access is optional and only used if you want meditation reminders."
+        "title": "App Permissions",
+        "content": "Slow Spot requires minimal permissions to function. The only optional permission is Calendar access, which is only requested if you choose to create meditation reminders. You can use all core features without granting any permissions."
       },
       "thirdParty": {
         "title": "Third-Party Services",
-        "content": "We don't use any analytics, advertising, or tracking services. Audio content is from royalty-free sources and doesn't involve data sharing."
+        "content": "We do not integrate any third-party analytics, advertising networks, social media trackers, or data collection services. All audio content is from royalty-free sources and is bundled with the app - no data is transmitted to external servers."
       },
       "children": {
-        "title": "Children's Privacy",
-        "content": "Since we don't collect any data, the app is safe for users of all ages."
+        "title": "Children's Privacy (COPPA Compliance)",
+        "content": "Since Slow Spot collects no personal data whatsoever, the app is inherently safe for users of all ages, including children under 13. We comply with COPPA (Children's Online Privacy Protection Act) and equivalent international regulations by virtue of not collecting any data."
+      },
+      "international": {
+        "title": "International Privacy Compliance",
+        "content": "Slow Spot's privacy-by-design approach ensures compliance with major international privacy regulations including: GDPR (European Union), CCPA/CPRA (California, USA), LGPD (Brazil), POPIA (South Africa), Australian Privacy Principles (Australia), PIPEDA (Canada), and other regional privacy laws. Since we collect no personal data, we exceed the requirements of these regulations."
       },
       "yourRights": {
-        "title": "Your Rights",
-        "content": "You can view all your data in the app and delete it anytime via Settings or by uninstalling. Since there's no account, there's nothing stored elsewhere to delete."
+        "title": "Your Data Rights",
+        "content": "Under various privacy laws (GDPR, CCPA, etc.), you have rights regarding your personal data. With Slow Spot, exercising these rights is simple: View your data anytime within the app, delete all data via Settings > Data & Privacy > Clear Data, or delete everything by uninstalling the app. Since no data exists on our servers, there is nothing additional to request or delete."
+      },
+      "security": {
+        "title": "Data Security",
+        "content": "Your data is secured by your device's built-in security features. We recommend using device encryption and screen lock for additional protection. Since data never leaves your device, there is no risk of data breaches on our end."
       },
       "changes": {
         "title": "Policy Changes",
-        "content": "If we update this policy, we'll change the date above and notify you in the app for significant changes."
+        "content": "We may update this Privacy Policy to reflect changes in our practices or for legal compliance. Any material changes will be communicated through app updates. We encourage you to review this policy periodically."
       },
       "contact": {
-        "title": "Contact",
+        "title": "Contact Us",
         "email": "Email:",
-        "website": "Website:"
+        "website": "Website:",
+        "note": "If you have any questions about this Privacy Policy or our privacy practices, please contact us."
+      },
+      "legal": {
+        "title": "Legal Basis",
+        "content": "This Privacy Policy is governed by Polish law. For users in the European Union, the data controller would be Slow Spot (contact details above). However, as we collect no personal data, data controller obligations do not apply in the traditional sense."
       }
     }
   },
   "termsPage": {
     "title": "Terms of Service",
-    "lastUpdated": "Last Updated: November 27, 2024",
+    "lastUpdated": "Last Updated: December 6, 2025",
     "summary": {
       "title": "The Short Version",
       "items": [
         "Free app for personal meditation",
         "No account needed",
         "Your data stays on your device",
-        "Not medical advice - consult a doctor if needed"
+        "Not medical advice - consult a doctor if needed",
+        "Works worldwide with no restrictions"
       ]
     },
     "sections": {
       "acceptance": {
-        "title": "Agreement",
-        "content": "By using Slow Spot, you agree to these terms. If you don't agree, please don't use the app."
+        "title": "Acceptance of Terms",
+        "content": "By downloading, installing, or using Slow Spot (the \"App\"), you agree to be bound by these Terms of Service (\"Terms\"). If you do not agree to these Terms, please do not use the App. These Terms constitute a legally binding agreement between you and Slow Spot."
       },
       "service": {
-        "title": "What We Offer",
-        "content": "Slow Spot is a free meditation app that works entirely offline. It includes meditation sessions, ambient sounds, progress tracking, and customizable timers. No account or internet required."
+        "title": "Description of Service",
+        "content": "Slow Spot is a free meditation and mindfulness application designed to help users practice meditation techniques, breathing exercises, and mindfulness. The App operates entirely offline and includes: guided meditation sessions with multiple techniques, 8 ambient soundscapes, customizable timers, progress tracking, mood journaling, and daily inspirational content. All features are provided free of charge with no in-app purchases, subscriptions, or advertisements."
+      },
+      "eligibility": {
+        "title": "Eligibility",
+        "content": "The App is available to users of all ages. Since we do not collect any personal data, there are no age restrictions. However, parents and guardians should supervise children's use of any digital device. By using the App, you represent that you have the legal capacity to enter into this agreement or that you have obtained parental consent."
       },
       "license": {
-        "title": "Your License",
-        "content": "You can use the app freely for personal meditation. Please don't copy, modify, reverse-engineer, or use it commercially without permission."
+        "title": "License Grant",
+        "content": "Subject to your compliance with these Terms, we grant you a limited, non-exclusive, non-transferable, revocable license to download, install, and use the App on your personal device for personal, non-commercial meditation practice. This license does not allow you to: copy, modify, or create derivative works of the App; reverse engineer, decompile, or disassemble the App; distribute, sell, lease, or sublicense the App; use the App for any commercial purpose without written permission; remove any copyright, trademark, or proprietary notices."
       },
       "yourContent": {
-        "title": "Your Content",
-        "content": "Anything you create in the app (custom sessions, notes) stays on your device. We never access or collect it."
+        "title": "User-Generated Content",
+        "content": "The App allows you to create custom meditation sessions, personal notes, and intentions. All user-generated content remains exclusively on your device. We have no access to your content, do not store it on any servers, and cannot view, collect, or transmit it. You retain full ownership of any content you create within the App."
+      },
+      "intellectual": {
+        "title": "Intellectual Property",
+        "content": "All content, design, code, graphics, audio files, and other materials in the App are owned by Slow Spot or its licensors and are protected by copyright, trademark, and other intellectual property laws. All ambient sounds are from royalty-free sources and are bundled with the App. Meditation techniques described in the App are based on traditional practices from various cultures and are presented for educational purposes."
       },
       "health": {
-        "title": "Health Notice",
-        "warning": "Important",
-        "content": "This app is for general wellness only. It's not medical advice and doesn't replace professional healthcare. If you have health concerns or experience discomfort during meditation, please consult a healthcare provider."
+        "title": "Health and Medical Disclaimer",
+        "warning": "Important Health Notice",
+        "content": "Slow Spot is designed for general wellness and relaxation purposes only. The App is NOT a substitute for professional medical advice, diagnosis, or treatment. Never disregard professional medical advice or delay seeking it because of something you have read or experienced in this App. If you have any medical conditions, psychological disorders, or are taking medication, consult your healthcare provider before beginning any meditation practice. Stop using the App immediately and seek medical attention if you experience: dizziness, difficulty breathing, severe anxiety or panic, dissociation or depersonalization, or any other concerning symptoms. Meditation practices may not be suitable for everyone, including those with certain mental health conditions."
       },
       "disclaimer": {
-        "title": "Disclaimer",
-        "content": "The app is provided \"as is\" without warranties. We're not liable for any damages from using the app. Our liability is limited to what you paid (the app is free)."
+        "title": "Disclaimer of Warranties",
+        "content": "THE APP IS PROVIDED \"AS IS\" AND \"AS AVAILABLE\" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO: IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. We do not warrant that the App will be uninterrupted, error-free, or completely secure. We make no representations about the suitability, reliability, or accuracy of the App for any purpose."
+      },
+      "liability": {
+        "title": "Limitation of Liability",
+        "content": "TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, SLOW SPOT AND ITS CREATORS, OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR REVENUES, WHETHER INCURRED DIRECTLY OR INDIRECTLY, OR ANY LOSS OF DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES RESULTING FROM: your use or inability to use the App; any unauthorized access to or use of the App; any interruption or cessation of the App; any errors or omissions in the App. Our total liability shall not exceed the amount you paid for the App, which is zero since the App is free."
+      },
+      "indemnification": {
+        "title": "Indemnification",
+        "content": "You agree to indemnify, defend, and hold harmless Slow Spot and its creators from any claims, damages, losses, liabilities, costs, and expenses (including reasonable attorneys' fees) arising from: your use of the App; your violation of these Terms; your violation of any rights of another party; any content you create within the App."
+      },
+      "termination": {
+        "title": "Termination",
+        "content": "These Terms are effective until terminated. You may terminate this agreement at any time by uninstalling the App from your device. We reserve the right to modify or discontinue the App at any time without notice. Upon termination, all licenses granted to you will immediately cease, and you must stop using the App."
       },
       "changes": {
-        "title": "Changes",
-        "content": "We may update the app or these terms. Continued use means you accept any changes."
+        "title": "Modifications to Terms",
+        "content": "We reserve the right to modify these Terms at any time. Any changes will be effective immediately upon posting the revised Terms within the App or on our website. Your continued use of the App after any changes constitutes your acceptance of the new Terms. We encourage you to review these Terms periodically for any updates."
       },
       "governing": {
-        "title": "Legal",
-        "content": "These terms are governed by Polish law. Together with our Privacy Policy, they form the complete agreement."
+        "title": "Governing Law and Jurisdiction",
+        "content": "These Terms shall be governed by and construed in accordance with the laws of Poland, without regard to its conflict of law provisions. For users in the European Union, nothing in these Terms affects your rights under mandatory consumer protection laws of your country of residence. Any disputes arising from these Terms shall be resolved in the courts of Poland, unless local consumer protection laws require otherwise."
+      },
+      "severability": {
+        "title": "Severability",
+        "content": "If any provision of these Terms is found to be unenforceable or invalid by a court of competent jurisdiction, that provision will be limited or eliminated to the minimum extent necessary so that these Terms will otherwise remain in full force and effect."
+      },
+      "entire": {
+        "title": "Entire Agreement",
+        "content": "These Terms, together with our Privacy Policy, constitute the entire agreement between you and Slow Spot regarding the use of the App. Any failure by us to enforce any right or provision of these Terms will not be considered a waiver of that right or provision."
       },
       "contact": {
-        "title": "Contact",
+        "title": "Contact Information",
+        "content": "If you have any questions about these Terms of Service, please contact us:",
         "email": "Email:",
         "website": "Website:"
       }

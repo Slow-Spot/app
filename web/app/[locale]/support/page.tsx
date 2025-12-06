@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import HeaderWithControls from '../components/HeaderWithControls';
 import SubpageFooter from '../components/SubpageFooter';
+import { appConfig } from '../../config/app.config';
 
 interface FaqItem {
   question: string;
@@ -86,7 +87,7 @@ export default function Support() {
           <div className="subpage-app-info-grid">
             <div className="subpage-app-info-card">
               <p className="subpage-app-info-label">{t('appInfo.version')}</p>
-              <p className="subpage-app-info-value">{t('appInfo.versionNumber')}</p>
+              <p className="subpage-app-info-value">{appConfig.version}</p>
             </div>
             <div className="subpage-app-info-card">
               <p className="subpage-app-info-label">{t('appInfo.platform')}</p>

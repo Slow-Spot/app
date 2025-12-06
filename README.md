@@ -1,223 +1,182 @@
-# Slow Spot - Meditation & Mindfulness App
+<p align="center">
+  <img src="assets/logo.png" alt="Slow Spot Logo" width="120" height="120" />
+</p>
 
-**Unikatowa aplikacja do medytacji z naciskiem na prostotę, wielojęzyczność i prywatność.**
+<h1 align="center">Slow Spot</h1>
 
-## 🚀 Try It Now - Test on Your Phone!
+<p align="center">
+  <strong>Find your inner peace, one breath at a time.</strong>
+</p>
 
-<div align="center">
+<p align="center">
+  <a href="https://slowspot.me">Website</a> •
+  <a href="#features">Features</a> •
+  <a href="#download">Download</a> •
+  <a href="#development">Development</a> •
+  <a href="#privacy">Privacy</a>
+</p>
 
-### 📱 Scan QR Code to Test
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.8.3-6366F1?style=flat-square" alt="Version" />
+  <img src="https://img.shields.io/badge/platforms-iOS%20%7C%20Android-8B5CF6?style=flat-square" alt="Platforms" />
+  <img src="https://img.shields.io/badge/license-Proprietary-A855F7?style=flat-square" alt="License" />
+  <img src="https://img.shields.io/badge/languages-7-FCD34D?style=flat-square" alt="Languages" />
+</p>
 
-<table>
-<tr>
-<td align="center">
-<b>Direct Link (Expo Go)</b><br/>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=exp%3A%2F%2Fu.expo.dev%2F2b3ebb2e-60e7-4355-922a-db729c41792d" alt="QR Code Direct" width="200"/>
-<br/>
-<sup>Scan in Expo Go app</sup>
-</td>
-<td align="center">
-<b>Web Link (Recommended)</b><br/>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fexpo.dev%2F%40leszekszpunar%2Fslow-spot" alt="QR Code Web" width="200"/>
-<br/>
-<sup>Scan with camera</sup>
-</td>
-</tr>
-</table>
+---
+
+## About
+
+**Slow Spot** is a meditation app designed with privacy in mind. No accounts, no tracking, no barriers. Just you and your peace.
+
+Built for people who want to meditate without distractions, Slow Spot works entirely offline and never collects any personal data. Your meditation practice stays private — on your device only.
+
+<p align="center">
+  <img src="mobile/screenshot_home.png" alt="Slow Spot App Preview" width="280" />
+</p>
+
+---
+
+## Features
+
+### Core Experience
+- **Guided Breathing** — 5 meditation levels with scientifically-based breathing patterns
+- **8 Ambient Sounds** — Nature sounds, rain, ocean waves, and more
+- **Haptic Feedback** — Gentle vibrations guide your breathing phases
+- **Personalization** — Custom session names and breathing pace adjustments
+
+### Privacy First
+- **100% Offline** — Works without internet connection
+- **No Account Required** — Start meditating immediately
+- **Zero Data Collection** — Nothing is tracked, stored, or shared
+- **GDPR/CCPA Compliant** — By design, not by policy
+
+### Accessibility
+- **7 Languages** — English, Polish, German, Spanish, French, Hindi, Chinese
+- **Dark & Light Mode** — Follows your system preference
+- **VoiceOver Support** — Full accessibility for visually impaired users
+- **Free Forever** — All features included, no premium tier
+
+---
+
+## Download
+
+<p align="center">
+  <a href="#">
+    <img src="https://img.shields.io/badge/App%20Store-Coming%20Soon-000000?style=for-the-badge&logo=apple&logoColor=white" alt="App Store" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="#">
+    <img src="https://img.shields.io/badge/Google%20Play-Coming%20Soon-414141?style=for-the-badge&logo=google-play&logoColor=white" alt="Google Play" />
+  </a>
+</p>
+
+### Test Now with Expo Go
+
+1. Install [Expo Go](https://expo.dev/go) on your phone
+2. Scan the QR code or open: [expo.dev/@leszekszpunar/slow-spot](https://expo.dev/@leszekszpunar/slow-spot)
+
+---
+
+## Development
+
+### Project Structure
+
+```
+slow-spot/
+├── mobile/          # React Native + Expo app
+├── web/             # Next.js landing page
+├── docs/            # Documentation
+└── assets/          # Shared assets
+```
+
+### Tech Stack
+
+| Component | Technology |
+|-----------|------------|
+| Mobile | React Native, Expo SDK 52 |
+| Web | Next.js 15, Tailwind CSS |
+| Languages | TypeScript |
+| CI/CD | GitHub Actions |
+| Hosting | Vercel (web), EAS (mobile) |
 
 ### Quick Start
 
-**Step 1:** Install Expo Go
-- [📱 iOS (App Store)](https://apps.apple.com/app/expo-go/id982107779)
-- [🤖 Android (Google Play)](https://play.google.com/store/apps/details?id=host.exp.exponent)
-
-**Step 2:** Scan QR code above OR open link:
-- 🔗 **Web** (recommended): [https://expo.dev/@leszekszpunar/slow-spot](https://expo.dev/@leszekszpunar/slow-spot)
-- 📱 **Direct Expo Go**: `exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d`
-- 🔄 **Latest Update**: [Expo Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/updates)
-
-**Step 3:** App opens automatically! ✨
-
----
-
-📖 **Documentation**: [Testing Guide](./TESTING_GUIDE.md) | [QR Codes](./QR_CODE.md)
-
-</div>
-
----
-
-## 🎯 O Projekcie
-
-Slow Spot to wieloplatformowa aplikacja do medytacji, która wyróżnia się:
-- **Brakiem logowania** - pełna prywatność użytkownika (GDPR compliant)
-- **Offline-first** - działanie bez internetu
-- **Wielojęzycznością** - pełne wsparcie dla 6 języków (PL, EN, ES, DE, FR, HI)
-- **Audio-first experience** - medytacja "bez ekranu"
-- **Minimalistycznym UX** - zero rozproszeń
-- **Niskimi kosztami** - $6/miesiąc dla MVP
-
-## 📁 Struktura Projektu
-
-```
-slow-spot-app/
-├── mobile/          # Expo/React Native app (iOS + Android)
-├── web/             # Next.js landing page
-├── backend/         # .NET Core 8 REST API
-├── architecture/    # Pełna dokumentacja architektury
-└── README.md        # Ten plik
-```
-
-## 🚀 Technologie
-
-### Frontend Mobile
-- **Framework:** Expo SDK 50 + React Native
-- **UI Library:** Tamagui (performance-focused)
-- **Audio:** Expo AV
-- **i18n:** react-i18next
-- **Storage:** SQLite (offline-first)
-
-### Frontend Web
-- **Framework:** Next.js 14 (App Router)
-- **Styling:** Tailwind CSS
-- **Hosting:** Vercel
-
-### Backend
-- **Framework:** .NET Core 8 (Minimal APIs)
-- **Database:** PostgreSQL 15
-- **Cache:** Redis 7
-- **Hosting:** Railway
-
-### Infrastructure
-- **CDN:** Cloudflare R2 + CDN (audio delivery)
-- **Monitoring:** Sentry + PostHog
-- **CI/CD:** GitHub Actions
-
-## 📋 Wymagania
-
-- **Node.js:** >= 20.0.0
-- **.NET SDK:** >= 8.0
-- **Docker:** >= 24.0 (dla lokalnej bazy danych)
-- **Expo CLI:** Latest
-
-## 🏗️ Instalacja i Uruchomienie
-
-### 1. Backend API
-
 ```bash
-cd backend
-dotnet restore
-dotnet run
-# API dostępne na: http://localhost:5000
-```
+# Clone the repository
+git clone https://github.com/Slow-Spot/app.git
+cd app
 
-### 2. Mobile App
-
-```bash
+# Mobile app
 cd mobile
 npm install
 npx expo start
-# Skanuj QR code w Expo Go
-```
 
-### 3. Landing Page
-
-```bash
+# Web landing page
 cd web
 npm install
 npm run dev
-# Otwórz: http://localhost:3000
 ```
 
-## 📖 Dokumentacja
+### Requirements
 
-### 🚀 Quick Start & Testing
-- **[EXPO_GO_TESTING.md](./mobile/EXPO_GO_TESTING.md)** - Testowanie przez Expo Go (0 minut setup!)
-- **[BUILD_AND_DEPLOY.md](./BUILD_AND_DEPLOY.md)** - Pełny przewodnik budowania i dystrybucji
-- **[mobile/README.md](./mobile/README.md)** - Dokumentacja aplikacji mobilnej
-
-### 🏗️ Architektura
-- **[architecture/README.md](./architecture/README.md)** - Przegląd architektury
-- **[IMPLEMENTATION-CHECKLIST.md](./architecture/IMPLEMENTATION-CHECKLIST.md)** - MVP Checklist (co zrobione)
-- **[TECHNOLOGY-STACK.md](./architecture/TECHNOLOGY-STACK.md)** - Stack technologiczny
-- **[ADR-001](./architecture/ADR-001-system-architecture.md)** - Szczegółowa architektura systemu
-
-### 💰 Biznes & Bezpieczeństwo
-- **[Cost Analysis](./architecture/cost-analysis.md)** - Analiza kosztów
-- **[Security Plan](./architecture/security-plan.md)** - Plan bezpieczeństwa
-- **[Deployment](./architecture/deployment-strategy.md)** - Strategia wdrożenia
-
-### 🎨 Zasoby
-- **[RESOURCES.md](./RESOURCES.md)** - Darmowe assety (ikony, dźwięki, grafiki)
-
-## 🎯 MVP Roadmap (6 tygodni)
-
-- [x] Week 1: Infrastructure setup
-- [x] Week 2: Backend foundation
-- [ ] Week 3-4: Mobile app core
-- [ ] Week 5: Integration & polish
-- [ ] Week 6: Testing & soft launch
-
-## 🌍 Języki
-
-- 🇵🇱 Polski (pl)
-- 🇬🇧 English (en)
-- 🇪🇸 Español (es)
-- 🇩🇪 Deutsch (de)
-- 🇫🇷 Français (fr)
-- 🇮🇳 हिन्दी (hi)
-
-## 💰 Koszty (Projekcje)
-
-| Etap | Użytkownicy | Koszt/miesiąc |
-|------|-------------|---------------|
-| MVP | 1,000 | $6 |
-| Growth | 10,000 | $103 |
-| Scale | 100,000 | $763 |
-
-**92% taniej niż Azure dla MVP!**
-
-## 🔐 Bezpieczeństwo
-
-- ✅ Brak danych osobowych (GDPR compliant)
-- ✅ OWASP Top 10 zmitigowane
-- ✅ Device ID hashowane (SHA256)
-- ✅ TLS 1.3 wszędzie
-- ✅ Rate limiting (100 req/min)
-
-## 🧪 Testy
-
-```bash
-# Backend
-cd backend
-dotnet test
-
-# Mobile
-cd mobile
-npm run test
-
-# Web
-cd web
-npm run test
-```
-
-## 📝 Licencja
-
-Copyright © 2025 ITEON
-All rights reserved.
-
-## 👥 Zespół
-
-- **Tech Lead:** [Your Name]
-- **Backend:** .NET Core
-- **Mobile:** React Native/Expo
-- **Web:** Next.js
-
-## 📞 Kontakt
-
-- **Email:** tech@slowspot.app
-- **GitHub:** [Repository URL]
-- **Slack:** #slow-spot-dev
+- Node.js >= 20.0.0
+- Expo CLI (latest)
+- iOS Simulator or Android Emulator (optional)
 
 ---
 
-**Ostatnia aktualizacja:** 2025-11-08
+## Privacy
+
+Slow Spot is built with a **privacy-by-design** architecture:
+
+| What We Collect | Answer |
+|-----------------|--------|
+| Personal data | None |
+| Usage analytics | None |
+| Advertising data | None |
+| Third-party tracking | None |
+
+All meditation data stays on your device. We don't have servers that store user data because we don't collect any.
+
+**Compliance:** GDPR (EU), CCPA (California), LGPD (Brazil), POPIA (South Africa), PIPEDA (Canada)
+
+Read our full [Privacy Policy](https://slowspot.me/privacy) and [Terms of Service](https://slowspot.me/terms).
+
+---
+
+## Languages
+
+| Language | Code | Status |
+|----------|------|--------|
+| English | `en` | Complete |
+| Polski | `pl` | Complete |
+| Deutsch | `de` | Complete |
+| Español | `es` | Complete |
+| Français | `fr` | Complete |
+| हिन्दी | `hi` | Complete |
+| 中文 | `zh` | Complete |
+
+---
+
+## Contributing
+
+This is a proprietary project. For inquiries about contributing or partnerships, please contact us.
+
+---
+
+## Contact
+
+- **Website:** [slowspot.me](https://slowspot.me)
+- **Email:** [contact@slowspot.me](mailto:contact@slowspot.me)
+- **Support:** [slowspot.me/support](https://slowspot.me/support)
+
+---
+
+<p align="center">
+  <sub>Made with calm in Poland</sub>
+</p>
+
+<p align="center">
+  <sub>© 2025 Slow Spot. All rights reserved.</sub>
+</p>

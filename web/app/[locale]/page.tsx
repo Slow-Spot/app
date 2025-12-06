@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import HeaderWithControls from './components/HeaderWithControls';
+import { appConfig } from '../config/app.config';
 
 // Breathing Animation Component with 4-4-4 cycle
 const BreathingCircle = () => {
@@ -495,7 +496,7 @@ export default function HomePage() {
               {t('footer.bottom.copyright', { year: new Date().getFullYear() })}
             </p>
             <div className="flex items-center gap-4">
-              <span className="text-gray-700 text-xs">v1.6.0</span>
+              <span className="text-gray-700 text-xs">v{appConfig.version}</span>
               <p className="text-gray-600 text-sm">{t('footer.bottom.tagline')}</p>
             </div>
           </div>

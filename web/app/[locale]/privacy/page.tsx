@@ -60,17 +60,33 @@ export default function PrivacyPolicy() {
           <h2>{t('sections.thirdParty.title')}</h2>
           <p>{t('sections.thirdParty.content')}</p>
 
+          {/* No Tracking */}
+          <h2>{t('sections.noTracking.title')}</h2>
+          <p>{t('sections.noTracking.content')}</p>
+
           {/* Children */}
           <h2>{t('sections.children.title')}</h2>
           <p>{t('sections.children.content')}</p>
+
+          {/* International Compliance */}
+          <h2>{t('sections.international.title')}</h2>
+          <p>{t('sections.international.content')}</p>
 
           {/* Your Rights */}
           <h2>{t('sections.yourRights.title')}</h2>
           <p>{t('sections.yourRights.content')}</p>
 
+          {/* Security */}
+          <h2>{t('sections.security.title')}</h2>
+          <p>{t('sections.security.content')}</p>
+
           {/* Changes */}
           <h2>{t('sections.changes.title')}</h2>
           <p>{t('sections.changes.content')}</p>
+
+          {/* Legal Basis */}
+          <h2>{t('sections.legal.title')}</h2>
+          <p>{t('sections.legal.content')}</p>
 
           {/* Contact */}
           <h2>{t('sections.contact.title')}</h2>

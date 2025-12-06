@@ -1,223 +1,73 @@
-# Slow Spot Mobile App
+# Slow Spot Mobile
 
-Aplikacja mobilna do medytacji i mindfulness zbudowana z **Expo**, **React Native**, i **NativeWind**.
+React Native mobile application for iOS and Android.
 
-## 🚀 Szybki start
+## Tech Stack
 
-### Testowanie przez Expo Go (0 minut setup)
-```bash
-./start-expo-go.sh
-```
-📖 Dokumentacja: [EXPO_GO_TESTING.md](./EXPO_GO_TESTING.md)
+- **Framework:** React Native with Expo SDK 52
+- **Language:** TypeScript
+- **UI:** Custom components with Reanimated 3
+- **Storage:** SQLite (expo-sqlite)
+- **Audio:** Expo AV
+- **i18n:** react-i18next (7 languages)
 
-### Development na symulatorze
-```bash
-npx expo run:ios          # iOS
-npx expo run:android      # Android
-```
-
-### Budowanie aplikacji
-📖 Pełna dokumentacja: [BUILD_AND_DEPLOY.md](../BUILD_AND_DEPLOY.md)
-
-## 📚 Dokumentacja
-
-- **[EXPO_GO_TESTING.md](./EXPO_GO_TESTING.md)** - Najszybszy sposób testowania (Expo Go)
-- **[BUILD_AND_DEPLOY.md](../BUILD_AND_DEPLOY.md)** - Budowanie i dystrybucja (APK, IPA, sklepy)
-- **[IMPLEMENTATION-CHECKLIST.md](../architecture/IMPLEMENTATION-CHECKLIST.md)** - Progress MVP
-- **[RESOURCES.md](../RESOURCES.md)** - Darmowe assety (ikony, dźwięki)
-
-## ✨ Features
-
-- 🧘 **Sesje medytacji**: Guided meditation z timerem i chimes
-- 💭 **Cytaty inspirujące**: Codzienne cytaty w 6 językach
-- 🌍 **6 języków**: EN, PL, ES, DE, FR, HI
-- 🎨 **Piękny UI**: Minimalistyczny design z gradientami
-- 📱 **Offline-First**: Działa bez internetu (w planach)
-- 🎵 **3-Layer Audio**: Voice + ambient + meditation chimes
-- 🌙 **Dark mode**: Light/Dark/System theme
-- ♿ **Accessibility**: VoiceOver i TalkBack support
-
-## 🛠 Tech Stack
-
-- **Framework**: Expo SDK 54 + React Native 0.81
-- **UI**: NativeWind (Tailwind CSS for RN) + gradients
-- **Language**: TypeScript
-- **Navigation**: Expo Router (React Navigation)
-- **i18n**: react-i18next + expo-localization
-- **Audio**: expo-av (⚠️ deprecated → migrate to expo-audio)
-- **Animations**: React Native Reanimated 4 (60fps)
-- **Storage**: AsyncStorage + SQLite (planned)
-- **State**: Zustand stores
-
-## Project Structure
-
-```
-mobile/
-├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── QuoteCard.tsx    # Quote display card
-│   │   ├── SessionCard.tsx  # Meditation session card
-│   │   └── MeditationTimer.tsx  # Circular timer with controls
-│   ├── screens/             # Main app screens
-│   │   ├── HomeScreen.tsx   # Home with daily quote
-│   │   ├── MeditationScreen.tsx  # Session selection & player
-│   │   ├── QuotesScreen.tsx # Quote browser
-│   │   └── SettingsScreen.tsx  # Language & theme settings
-│   ├── services/            # Business logic
-│   │   ├── api.ts           # API client with offline-first caching
-│   │   └── audio.ts         # 3-layer audio engine
-│   └── i18n/                # Internationalization
-│       ├── index.ts         # i18n configuration
-│       └── locales/         # Translation files (en, pl, es, de, fr, hi)
-├── tamagui.config.ts        # Tamagui theme configuration
-├── App.tsx                  # Main app component with navigation
-└── package.json             # Dependencies
-```
-
-## Installation
+## Quick Start
 
 ```bash
 # Install dependencies
 npm install
 
-# Start the development server
+# Start development server
 npx expo start
+
+# Run on iOS Simulator
+npx expo run:ios
+
+# Run on Android Emulator
+npx expo run:android
 ```
 
-## Running the App
+## Project Structure
+
+```
+mobile/
+├── app/                 # Expo Router screens
+├── assets/              # Images, fonts, sounds
+├── src/
+│   ├── components/      # Reusable UI components
+│   ├── hooks/           # Custom React hooks
+│   ├── i18n/            # Translations (7 languages)
+│   ├── services/        # Business logic
+│   ├── store/           # State management (Zustand)
+│   ├── theme/           # Colors, typography
+│   └── utils/           # Helper functions
+└── ios/                 # Native iOS project
+```
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| Breathing Animation | Smooth, 60fps animation with Reanimated 3 |
+| Haptic Feedback | Phase-specific vibration patterns |
+| Ambient Sounds | 8 high-quality nature sounds |
+| Offline Mode | Full functionality without internet |
+| Accessibility | VoiceOver/TalkBack support |
+
+## Building
 
 ```bash
-# Run on iOS simulator
-npm run ios
+# Development build
+eas build --profile development --platform ios
 
-# Run on Android emulator
-npm run android
-
-# Run on web browser
-npm run web
+# Production build
+eas build --profile production --platform all
 ```
 
-## Key Features Explained
+## Testing via Expo Go
 
-### 1. Offline-First Architecture
+Scan QR code or visit: [expo.dev/@leszekszpunar/slow-spot](https://expo.dev/@leszekszpunar/slow-spot)
 
-The API service layer (`src/services/api.ts`) implements a cache-first strategy:
-- Checks AsyncStorage for cached data first
-- Falls back to API if cache is expired (1-hour TTL)
-- Returns stale cache if API fails (offline mode)
+---
 
-### 2. 3-Layer Audio Engine
-
-The audio engine (`src/services/audio.ts`) manages three simultaneous audio layers:
-- **Voice**: Guided meditation narration (foreground, 80% volume)
-- **Ambient**: Background sounds like nature or music (looping, 40% volume)
-- **Chime**: Start/end bells and interval markers (60% volume)
-
-Features:
-- Fade in/out transitions
-- Independent volume control
-- Plays in background
-- Respects silent mode on iOS
-
-### 3. Multilingual Support
-
-Full i18n support with:
-- Automatic locale detection via expo-localization
-- 6 languages: EN, PL, ES, DE, FR, HI
-- Fallback to English if translation missing
-- Easy to add new languages (just add JSON file)
-
-### 4. Tamagui UI
-
-Minimal, zen-inspired design with:
-- Custom color palette (calm grays and soft tones)
-- Smooth animations and transitions
-- Accessibility support
-- Dark mode ready (theme toggle in Settings)
-
-## API Integration
-
-The app connects to the .NET Core backend API:
-
-**Development**: `http://localhost:5000/api`
-**Production**: Will be configured for Railway deployment
-
-API Endpoints:
-- `GET /api/quotes?lang=en` - Get all quotes in a language
-- `GET /api/quotes/random?lang=en` - Get random quote
-- `GET /api/sessions?lang=en&level=1` - Get meditation sessions
-- `GET /api/sessions/{id}` - Get specific session
-
-## Configuration
-
-### Backend URL
-
-Update the API base URL in `src/services/api.ts`:
-
-```typescript
-const API_BASE_URL = 'https://your-api-url.railway.app/api';
-```
-
-### Tamagui Theme
-
-Customize colors, spacing, and typography in `tamagui.config.ts`.
-
-## Adding New Languages
-
-1. Create translation file in `src/i18n/locales/{language-code}.json`
-2. Copy structure from `en.json`
-3. Translate all keys
-4. Add to `LANGUAGES` array in `src/screens/SettingsScreen.tsx`
-5. Import in `src/i18n/index.ts`
-
-Example:
-```json
-{
-  "app": {
-    "name": "Slow Spot",
-    "tagline": "Your translation here"
-  },
-  ...
-}
-```
-
-## Dependencies
-
-Main packages:
-- `expo` - Expo SDK for React Native
-- `tamagui` - UI framework
-- `react-i18next` - Internationalization
-- `expo-av` - Audio playback
-- `@react-native-async-storage/async-storage` - Offline storage
-- `expo-localization` - Device locale detection
-
-## Build for Production
-
-```bash
-# Build for iOS
-eas build --platform ios
-
-# Build for Android
-eas build --platform android
-
-# Build for both
-eas build --platform all
-```
-
-## Next Steps
-
-- [ ] Add user preferences storage (favorite sessions, custom timer durations)
-- [ ] Implement progress tracking (meditation streak, total minutes)
-- [ ] Add notification system (daily reminders)
-- [ ] Implement audio download for true offline mode
-- [ ] Add analytics (PostHog integration)
-- [ ] Set up Sentry for error tracking
-- [ ] Configure EAS Build for app store deployment
-
-## License
-
-Private - ITEON Project
-
-## Author
-
-ITEON Development Team
+See main [README](../README.md) for full project documentation.

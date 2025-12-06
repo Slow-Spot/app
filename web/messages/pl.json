@@ -197,111 +197,162 @@
   },
   "privacyPage": {
     "title": "Polityka prywatności",
-    "lastUpdated": "Ostatnia aktualizacja: 27 listopada 2024",
+    "lastUpdated": "Ostatnia aktualizacja: 6 grudnia 2025",
     "summary": {
       "title": "W skrócie",
       "items": [
         "Wszystkie dane zostają na Twoim urządzeniu",
         "Bez kont, bez śledzenia, bez reklam",
         "Działa 100% offline",
-        "Usuń wszystko odinstalowując aplikację"
+        "Usuń wszystko odinstalowując aplikację",
+        "Zgodność z RODO, CCPA i przepisami światowymi"
       ]
     },
     "sections": {
       "core": {
-        "title": "Nasza obietnica",
-        "content": "Slow Spot jest zbudowana z prywatnością jako fundamentem. Twoja medytacja jest osobista i w pełni to szanujemy."
+        "title": "Nasza obietnica prywatności",
+        "content": "Slow Spot jest zaprojektowana z prywatnością jako fundamentem. Wierzymy, że medytacja jest głęboko osobistym doświadczeniem, które zasługuje na absolutną ochronę prywatności. W przeciwieństwie do większości aplikacji, zbudowaliśmy Slow Spot tak, aby działała całkowicie bez zbierania, przetwarzania lub przechowywania jakichkolwiek danych osobowych na zewnętrznych serwerach."
       },
       "whatWeCollect": {
-        "title": "Co zbieramy",
-        "content": "Nic. Nie zbieramy żadnych danych osobowych. Wszystkie Twoje informacje (preferencje, historia sesji, statystyki) są przechowywane lokalnie na Twoim urządzeniu i nigdy nie są nigdzie przesyłane."
+        "title": "Informacje, które zbieramy",
+        "content": "Nie zbieramy absolutnie żadnych danych osobowych. Zero. Slow Spot jest w pełni offline i działa całkowicie na Twoim urządzeniu. Nie zbieramy, nie przetwarzamy, nie przesyłamy, nie sprzedajemy ani nie udostępniamy żadnych informacji o Tobie, Twoim urządzeniu ani Twoich wzorcach użytkowania. Wszystkie Twoje preferencje medytacyjne, historia sesji, statystyki postępów i ustawienia osobiste pozostają wyłącznie na Twoim urządzeniu."
       },
       "localStorage": {
-        "title": "Dane przechowywane na Twoim urządzeniu",
-        "intro": "Aplikacja przechowuje lokalnie:",
+        "title": "Dane przechowywane lokalnie na Twoim urządzeniu",
+        "intro": "Aplikacja przechowuje następujące informacje wyłącznie na Twoim urządzeniu:",
         "items": [
-          "Twoje preferencje (język, motyw)",
-          "Historię sesji medytacyjnych",
-          "Statystyki postępów i serie",
-          "Przypomnienia kalendarza (jeśli włączone)"
+          "Twoje preferencje (wybór języka, ustawienia motywu, preferencje dźwiękowe)",
+          "Historia sesji medytacyjnych i notatki",
+          "Statystyki postępów, w tym serie i całkowity czas medytacji",
+          "Utworzone przez Ciebie niestandardowe sesje medytacyjne",
+          "Informacje o profilu użytkownika (imię, jeśli podane)",
+          "Dane śledzenia nastroju po sesjach",
+          "Przypomnienia kalendarza (tylko jeśli włączysz tę funkcję)"
         ],
-        "note": "Te dane nigdy nie opuszczają Twojego urządzenia."
+        "note": "Te dane nigdy nie opuszczają Twojego urządzenia. Nie mamy do nich dostępu, nie możemy ich przeglądać ani przesyłać."
+      },
+      "noTracking": {
+        "title": "Bez śledzenia, bez analityki",
+        "content": "Nie używamy żadnej formy analityki, śledzenia ani telemetrii. Nie wiemy, ilu mamy użytkowników, jak często aplikacja jest używana, które funkcje są popularne, ani żadnych innych statystyk użytkowania. To jest celowe. Twoja praktyka medytacyjna to niczyja sprawa poza Tobą."
       },
       "permissions": {
-        "title": "Uprawnienia",
-        "content": "Aplikacja nie wymaga żadnych uprawnień do działania. Dostęp do kalendarza jest opcjonalny i używany tylko jeśli chcesz otrzymywać przypomnienia o medytacji."
+        "title": "Uprawnienia aplikacji",
+        "content": "Slow Spot wymaga minimalnych uprawnień do działania. Jedynym opcjonalnym uprawnieniem jest dostęp do Kalendarza, który jest wymagany tylko jeśli zdecydujesz się tworzyć przypomnienia o medytacji. Możesz korzystać ze wszystkich podstawowych funkcji bez przyznawania jakichkolwiek uprawnień."
       },
       "thirdParty": {
         "title": "Usługi zewnętrzne",
-        "content": "Nie używamy żadnych usług analitycznych, reklamowych ani śledzących. Treści audio pochodzą z bezpłatnych źródeł i nie wiążą się z udostępnianiem danych."
+        "content": "Nie integrujemy żadnych zewnętrznych usług analitycznych, sieci reklamowych, trackerów mediów społecznościowych ani usług zbierania danych. Wszystkie treści audio pochodzą ze źródeł wolnych od tantiem i są dołączone do aplikacji - żadne dane nie są przesyłane na zewnętrzne serwery."
       },
       "children": {
-        "title": "Prywatność dzieci",
-        "content": "Ponieważ nie zbieramy żadnych danych, aplikacja jest bezpieczna dla użytkowników w każdym wieku."
+        "title": "Prywatność dzieci (Zgodność z COPPA)",
+        "content": "Ponieważ Slow Spot nie zbiera żadnych danych osobowych, aplikacja jest z natury bezpieczna dla użytkowników w każdym wieku, w tym dzieci poniżej 13 lat. Jesteśmy zgodni z COPPA (Children's Online Privacy Protection Act) i równoważnymi międzynarodowymi regulacjami poprzez niekzbieranie żadnych danych."
+      },
+      "international": {
+        "title": "Międzynarodowa zgodność z przepisami o prywatności",
+        "content": "Podejście privacy-by-design w Slow Spot zapewnia zgodność z głównymi międzynarodowymi regulacjami dotyczącymi prywatności, w tym: RODO (Unia Europejska), CCPA/CPRA (Kalifornia, USA), LGPD (Brazylia), POPIA (Republika Południowej Afryki), Australijskie Zasady Prywatności (Australia), PIPEDA (Kanada) i inne regionalne przepisy o prywatności. Ponieważ nie zbieramy żadnych danych osobowych, przekraczamy wymagania tych regulacji."
       },
       "yourRights": {
-        "title": "Twoje prawa",
-        "content": "Możesz przeglądać wszystkie swoje dane w aplikacji i usunąć je w każdej chwili przez Ustawienia lub odinstalowanie. Ponieważ nie ma konta, nie ma też nic zapisanego gdzie indziej do usunięcia."
+        "title": "Twoje prawa dotyczące danych",
+        "content": "Zgodnie z różnymi przepisami o prywatności (RODO, CCPA itp.) masz prawa dotyczące swoich danych osobowych. W przypadku Slow Spot korzystanie z tych praw jest proste: przeglądaj swoje dane w dowolnym momencie w aplikacji, usuń wszystkie dane przez Ustawienia > Dane i prywatność > Wyczyść dane, lub usuń wszystko odinstalowując aplikację. Ponieważ żadne dane nie istnieją na naszych serwerach, nie ma nic dodatkowego do zażądania lub usunięcia."
+      },
+      "security": {
+        "title": "Bezpieczeństwo danych",
+        "content": "Twoje dane są zabezpieczone wbudowanymi funkcjami bezpieczeństwa Twojego urządzenia. Zalecamy używanie szyfrowania urządzenia i blokady ekranu dla dodatkowej ochrony. Ponieważ dane nigdy nie opuszczają Twojego urządzenia, nie ma ryzyka wycieku danych po naszej stronie."
       },
       "changes": {
         "title": "Zmiany polityki",
-        "content": "Jeśli zaktualizujemy tę politykę, zmienimy datę powyżej i powiadomimy Cię w aplikacji o istotnych zmianach."
+        "content": "Możemy aktualizować tę Politykę prywatności, aby odzwierciedlić zmiany w naszych praktykach lub dla zgodności z prawem. Wszelkie istotne zmiany będą komunikowane poprzez aktualizacje aplikacji. Zachęcamy do okresowego przeglądania tej polityki."
       },
       "contact": {
         "title": "Kontakt",
         "email": "E-mail:",
-        "website": "Strona:"
+        "website": "Strona:",
+        "note": "Jeśli masz pytania dotyczące tej Polityki prywatności lub naszych praktyk prywatności, skontaktuj się z nami."
+      },
+      "legal": {
+        "title": "Podstawa prawna",
+        "content": "Niniejsza Polityka prywatności podlega prawu polskiemu. Dla użytkowników w Unii Europejskiej administratorem danych byłby Slow Spot (dane kontaktowe powyżej). Jednak ponieważ nie zbieramy żadnych danych osobowych, obowiązki administratora danych nie mają zastosowania w tradycyjnym sensie."
       }
     }
   },
   "termsPage": {
     "title": "Regulamin",
-    "lastUpdated": "Ostatnia aktualizacja: 27 listopada 2024",
+    "lastUpdated": "Ostatnia aktualizacja: 6 grudnia 2025",
     "summary": {
       "title": "W skrócie",
       "items": [
         "Darmowa aplikacja do osobistej medytacji",
         "Konto nie jest wymagane",
         "Twoje dane zostają na urządzeniu",
-        "To nie jest porada medyczna - w razie potrzeby skonsultuj się z lekarzem"
+        "To nie jest porada medyczna - w razie potrzeby skonsultuj się z lekarzem",
+        "Działa na całym świecie bez ograniczeń"
       ]
     },
     "sections": {
       "acceptance": {
-        "title": "Zgoda",
-        "content": "Korzystając ze Slow Spot, zgadzasz się z tym regulaminem. Jeśli się nie zgadzasz, prosimy o niekorzystanie z aplikacji."
+        "title": "Akceptacja warunków",
+        "content": "Pobierając, instalując lub korzystając ze Slow Spot (\"Aplikacja\"), zgadzasz się przestrzegać niniejszego Regulaminu (\"Warunki\"). Jeśli nie zgadzasz się z tymi Warunkami, prosimy o niekorzystanie z Aplikacji. Niniejsze Warunki stanowią prawnie wiążącą umowę między Tobą a Slow Spot."
       },
       "service": {
-        "title": "Co oferujemy",
-        "content": "Slow Spot to darmowa aplikacja do medytacji, która działa całkowicie offline. Zawiera sesje medytacyjne, dźwięki otoczenia, śledzenie postępów i konfigurowalne timery. Nie wymaga konta ani internetu."
+        "title": "Opis usługi",
+        "content": "Slow Spot to darmowa aplikacja do medytacji i uważności, zaprojektowana, aby pomóc użytkownikom praktykować techniki medytacyjne, ćwiczenia oddechowe i uważność. Aplikacja działa całkowicie offline i obejmuje: prowadzone sesje medytacyjne z wieloma technikami, 8 dźwięków otoczenia, konfigurowalne timery, śledzenie postępów, dziennik nastroju i codzienne inspirujące treści. Wszystkie funkcje są dostępne bezpłatnie, bez zakupów w aplikacji, subskrypcji ani reklam."
+      },
+      "eligibility": {
+        "title": "Uprawnienia",
+        "content": "Aplikacja jest dostępna dla użytkowników w każdym wieku. Ponieważ nie zbieramy żadnych danych osobowych, nie ma ograniczeń wiekowych. Jednak rodzice i opiekunowie powinni nadzorować korzystanie przez dzieci z każdego urządzenia cyfrowego. Korzystając z Aplikacji, oświadczasz, że masz zdolność prawną do zawarcia tej umowy lub że uzyskałeś zgodę rodzica."
       },
       "license": {
-        "title": "Twoja licencja",
-        "content": "Możesz swobodnie korzystać z aplikacji do osobistej medytacji. Prosimy, abyś nie kopiował, nie modyfikował, nie dokonywał inżynierii wstecznej ani nie używał jej komercyjnie bez pozwolenia."
+        "title": "Udzielenie licencji",
+        "content": "Z zastrzeżeniem przestrzegania niniejszych Warunków, udzielamy Ci ograniczonej, niewyłącznej, niezbywalnej, odwołalnej licencji na pobieranie, instalowanie i korzystanie z Aplikacji na Twoim osobistym urządzeniu do osobistej, niekomercyjnej praktyki medytacyjnej. Ta licencja nie pozwala na: kopiowanie, modyfikowanie ani tworzenie dzieł pochodnych Aplikacji; inżynierię wsteczną, dekompilację ani dezasemblację Aplikacji; dystrybucję, sprzedaż, wypożyczanie ani sublicencjonowanie Aplikacji; wykorzystywanie Aplikacji do jakichkolwiek celów komercyjnych bez pisemnej zgody; usuwanie jakichkolwiek informacji o prawach autorskich, znakach towarowych lub prawach własności."
       },
       "yourContent": {
-        "title": "Twoje treści",
-        "content": "Wszystko, co tworzysz w aplikacji (własne sesje, notatki) pozostaje na Twoim urządzeniu. Nigdy nie mamy do tego dostępu ani tego nie zbieramy."
+        "title": "Treści użytkownika",
+        "content": "Aplikacja pozwala tworzyć niestandardowe sesje medytacyjne, osobiste notatki i intencje. Wszystkie treści tworzone przez użytkownika pozostają wyłącznie na Twoim urządzeniu. Nie mamy dostępu do Twoich treści, nie przechowujemy ich na żadnych serwerach i nie możemy ich przeglądać, zbierać ani przesyłać. Zachowujesz pełną własność wszelkich treści, które tworzysz w Aplikacji."
+      },
+      "intellectual": {
+        "title": "Własność intelektualna",
+        "content": "Wszystkie treści, projekt, kod, grafika, pliki audio i inne materiały w Aplikacji są własnością Slow Spot lub jej licencjodawców i są chronione prawem autorskim, znakami towarowymi oraz innymi prawami własności intelektualnej. Wszystkie dźwięki otoczenia pochodzą ze źródeł wolnych od tantiem i są dołączone do Aplikacji. Techniki medytacyjne opisane w Aplikacji są oparte na tradycyjnych praktykach z różnych kultur i są prezentowane w celach edukacyjnych."
       },
       "health": {
-        "title": "Informacja zdrowotna",
-        "warning": "Ważne",
-        "content": "Ta aplikacja służy wyłącznie ogólnemu dobrostanowi. Nie jest poradą medyczną i nie zastępuje profesjonalnej opieki zdrowotnej. Jeśli masz problemy zdrowotne lub odczuwasz dyskomfort podczas medytacji, skonsultuj się z lekarzem."
+        "title": "Zastrzeżenie zdrowotne i medyczne",
+        "warning": "Ważna informacja zdrowotna",
+        "content": "Slow Spot jest przeznaczona wyłącznie do ogólnego dobrostanu i relaksacji. Aplikacja NIE zastępuje profesjonalnej porady medycznej, diagnozy ani leczenia. Nigdy nie lekceważ profesjonalnej porady medycznej ani nie zwlekaj z jej uzyskaniem z powodu czegoś, co przeczytałeś lub doświadczyłeś w tej Aplikacji. Jeśli masz jakiekolwiek schorzenia, zaburzenia psychiczne lub przyjmujesz leki, skonsultuj się z lekarzem przed rozpoczęciem jakiejkolwiek praktyki medytacyjnej. Natychmiast przerwij korzystanie z Aplikacji i zwróć się o pomoc medyczną, jeśli doświadczasz: zawrotów głowy, trudności z oddychaniem, silnego niepokoju lub paniki, dysocjacji lub depersonalizacji, lub jakichkolwiek innych niepokojących objawów. Praktyki medytacyjne mogą nie być odpowiednie dla każdego, w tym dla osób z pewnymi schorzeniami psychicznymi."
       },
       "disclaimer": {
-        "title": "Wyłączenie odpowiedzialności",
-        "content": "Aplikacja jest dostarczana \"tak jak jest\" bez gwarancji. Nie ponosimy odpowiedzialności za szkody wynikające z korzystania z aplikacji. Nasza odpowiedzialność jest ograniczona do kwoty, którą zapłaciłeś (aplikacja jest darmowa)."
+        "title": "Wyłączenie gwarancji",
+        "content": "APLIKACJA JEST DOSTARCZANA \"TAK JAK JEST\" I \"JAK DOSTĘPNA\" BEZ JAKICHKOLWIEK GWARANCJI, WYRAŹNYCH LUB DOROZUMIANYCH, W TYM M.IN.: DOROZUMIANYCH GWARANCJI PRZYDATNOŚCI HANDLOWEJ, PRZYDATNOŚCI DO OKREŚLONEGO CELU I NIENARUSZANIA PRAW. Nie gwarantujemy, że Aplikacja będzie działać nieprzerwanie, bez błędów lub całkowicie bezpiecznie. Nie składamy żadnych oświadczeń dotyczących przydatności, niezawodności lub dokładności Aplikacji do jakichkolwiek celów."
+      },
+      "liability": {
+        "title": "Ograniczenie odpowiedzialności",
+        "content": "W MAKSYMALNYM ZAKRESIE DOZWOLONYM PRZEZ OBOWIĄZUJĄCE PRAWO, SLOW SPOT I JEJ TWÓRCY, URZĘDNICY, DYREKTORZY, PRACOWNICY I AGENCI NIE PONOSZĄ ODPOWIEDZIALNOŚCI ZA JAKIEKOLWIEK SZKODY POŚREDNIE, PRZYPADKOWE, SZCZEGÓLNE, WTÓRNE LUB KARNE, ANI ZA JAKĄKOLWIEK UTRATĘ ZYSKÓW LUB PRZYCHODÓW, BEZPOŚREDNICH LUB POŚREDNICH, ANI ZA UTRATĘ DANYCH, UŻYTKOWANIA, WARTOŚCI FIRMY LUB INNYCH STRAT NIEMATERIALNYCH WYNIKAJĄCYCH Z: korzystania lub niemożności korzystania z Aplikacji; jakiegokolwiek nieautoryzowanego dostępu do lub użycia Aplikacji; jakiejkolwiek przerwy lub zaprzestania działania Aplikacji; jakichkolwiek błędów lub pominięć w Aplikacji. Nasza całkowita odpowiedzialność nie przekroczy kwoty, którą zapłaciłeś za Aplikację, która wynosi zero, ponieważ Aplikacja jest darmowa."
+      },
+      "indemnification": {
+        "title": "Zwolnienie z odpowiedzialności",
+        "content": "Zgadzasz się zabezpieczyć, bronić i chronić Slow Spot i jej twórców przed wszelkimi roszczeniami, szkodami, stratami, zobowiązaniami, kosztami i wydatkami (w tym uzasadnionymi kosztami obsługi prawnej) wynikającymi z: Twojego korzystania z Aplikacji; Twojego naruszenia niniejszych Warunków; Twojego naruszenia jakichkolwiek praw innej strony; jakichkolwiek treści, które tworzysz w Aplikacji."
+      },
+      "termination": {
+        "title": "Rozwiązanie",
+        "content": "Niniejsze Warunki obowiązują do momentu ich rozwiązania. Możesz rozwiązać tę umowę w dowolnym momencie, odinstalowując Aplikację ze swojego urządzenia. Zastrzegamy sobie prawo do modyfikacji lub zaprzestania działania Aplikacji w dowolnym momencie bez powiadomienia. Po rozwiązaniu wszystkie licencje udzielone Tobie natychmiast wygasają i musisz zaprzestać korzystania z Aplikacji."
       },
       "changes": {
-        "title": "Zmiany",
-        "content": "Możemy aktualizować aplikację lub ten regulamin. Dalsze korzystanie oznacza akceptację zmian."
+        "title": "Modyfikacje warunków",
+        "content": "Zastrzegamy sobie prawo do modyfikacji niniejszych Warunków w dowolnym momencie. Wszelkie zmiany wchodzą w życie natychmiast po opublikowaniu zaktualizowanych Warunków w Aplikacji lub na naszej stronie internetowej. Dalsze korzystanie z Aplikacji po wprowadzeniu zmian oznacza akceptację nowych Warunków. Zachęcamy do okresowego przeglądania niniejszych Warunków."
       },
       "governing": {
-        "title": "Postanowienia prawne",
-        "content": "Ten regulamin podlega prawu polskiemu. Wraz z naszą Polityką prywatności stanowi pełną umowę."
+        "title": "Prawo właściwe i jurysdykcja",
+        "content": "Niniejsze Warunki podlegają prawu polskiemu i będą interpretowane zgodnie z nim, bez względu na kolizje przepisów prawnych. Dla użytkowników w Unii Europejskiej żadne z postanowień niniejszych Warunków nie wpływa na Twoje prawa wynikające z obowiązujących przepisów o ochronie konsumentów w Twoim kraju zamieszkania. Wszelkie spory wynikające z niniejszych Warunków będą rozstrzygane przez sądy w Polsce, chyba że lokalne przepisy o ochronie konsumentów stanowią inaczej."
+      },
+      "severability": {
+        "title": "Rozdzielność",
+        "content": "Jeśli jakiekolwiek postanowienie niniejszych Warunków zostanie uznane za niewykonalne lub nieważne przez właściwy sąd, postanowienie to zostanie ograniczone lub wyeliminowane do minimalnego niezbędnego zakresu, tak aby niniejsze Warunki pozostały w pełnej mocy."
+      },
+      "entire": {
+        "title": "Całość umowy",
+        "content": "Niniejsze Warunki, wraz z naszą Polityką prywatności, stanowią całość umowy między Tobą a Slow Spot dotyczącej korzystania z Aplikacji. Jakiekolwiek niewykonanie przez nas jakiegokolwiek prawa lub postanowienia niniejszych Warunków nie będzie uważane za zrzeczenie się tego prawa lub postanowienia."
       },
       "contact": {
-        "title": "Kontakt",
+        "title": "Informacje kontaktowe",
+        "content": "Jeśli masz pytania dotyczące niniejszego Regulaminu, skontaktuj się z nami:",
         "email": "E-mail:",
         "website": "Strona:"
       }

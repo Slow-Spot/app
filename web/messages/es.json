@@ -202,111 +202,162 @@
   },
   "privacyPage": {
     "title": "Política de privacidad",
-    "lastUpdated": "Última actualización: 27 de noviembre de 2024",
+    "lastUpdated": "Última actualización: 6 de diciembre de 2025",
     "summary": {
       "title": "En resumen",
       "items": [
         "Todos los datos permanecen solo en tu dispositivo",
         "Sin cuentas, sin seguimiento, sin anuncios",
         "Funciona 100% sin conexión",
-        "Desinstala para eliminar todo"
+        "Desinstala para eliminar todo",
+        "Cumplimiento con RGPD, CCPA y normativas mundiales"
       ]
     },
     "sections": {
       "core": {
-        "title": "Nuestra promesa",
-        "content": "Slow Spot está diseñada con la privacidad como núcleo. Tu meditación es personal, y lo respetamos completamente."
+        "title": "Nuestra promesa de privacidad",
+        "content": "Slow Spot está diseñada con la privacidad como fundamento. Creemos que la meditación es una experiencia profundamente personal que merece una protección absoluta de la privacidad. A diferencia de la mayoría de aplicaciones, hemos construido Slow Spot para funcionar completamente sin recopilar, procesar o almacenar datos personales en servidores externos."
       },
       "whatWeCollect": {
-        "title": "Lo que recopilamos",
-        "content": "Nada. No recopilamos ningún dato personal."
+        "title": "Información que recopilamos",
+        "content": "No recopilamos absolutamente ningún dato personal. Cero. Slow Spot es una aplicación completamente sin conexión que opera íntegramente en tu dispositivo. No recopilamos, procesamos, transmitimos, vendemos ni compartimos ninguna información sobre ti, tu dispositivo o tus patrones de uso. Todas tus preferencias de meditación, historial de sesiones, estadísticas de progreso y configuraciones personales permanecen exclusivamente en tu dispositivo."
       },
       "localStorage": {
-        "title": "Datos almacenados en tu dispositivo",
-        "intro": "La aplicación almacena localmente lo siguiente:",
+        "title": "Datos almacenados localmente en tu dispositivo",
+        "intro": "La aplicación almacena la siguiente información exclusivamente en tu dispositivo:",
         "items": [
-          "Tus preferencias (idioma, tema)",
-          "Historial de sesiones de meditación",
-          "Estadísticas de progreso y rachas",
-          "Recordatorios de calendario (si están activados)"
+          "Tus preferencias (selección de idioma, configuración de tema, preferencias de sonido)",
+          "Historial de sesiones de meditación y notas",
+          "Estadísticas de progreso incluyendo rachas y tiempo total de meditación",
+          "Sesiones de meditación personalizadas que crees",
+          "Información de perfil de usuario (nombre, si se proporciona)",
+          "Datos de seguimiento de estado de ánimo después de las sesiones",
+          "Recordatorios de calendario (solo si activas esta función)"
         ],
-        "note": "Estos datos nunca salen de tu dispositivo."
+        "note": "Estos datos nunca abandonan tu dispositivo. No tenemos acceso a ellos, no podemos verlos y no podemos transmitirlos."
+      },
+      "noTracking": {
+        "title": "Sin seguimiento, sin análisis",
+        "content": "No utilizamos ninguna forma de análisis, seguimiento o telemetría. No sabemos cuántos usuarios tenemos, con qué frecuencia se usa la aplicación, qué funciones son populares ni ninguna otra estadística de uso. Esto es intencionado. Tu práctica de meditación no es asunto de nadie más que tuyo."
       },
       "permissions": {
-        "title": "Permisos",
-        "content": "La aplicación no requiere permisos para funcionar."
+        "title": "Permisos de la aplicación",
+        "content": "Slow Spot requiere permisos mínimos para funcionar. El único permiso opcional es el acceso al Calendario, que solo se solicita si eliges crear recordatorios de meditación. Puedes usar todas las funciones principales sin otorgar ningún permiso."
       },
       "thirdParty": {
         "title": "Servicios de terceros",
-        "content": "No utilizamos ningún servicio de análisis, publicidad o seguimiento."
+        "content": "No integramos ningún servicio de análisis de terceros, redes publicitarias, rastreadores de redes sociales o servicios de recopilación de datos. Todo el contenido de audio proviene de fuentes libres de derechos y está incluido en la aplicación; no se transmiten datos a servidores externos."
       },
       "children": {
-        "title": "Privacidad de los niños",
-        "content": "Como no recopilamos datos, la aplicación es segura para usuarios de todas las edades."
+        "title": "Privacidad de los niños (Cumplimiento COPPA)",
+        "content": "Dado que Slow Spot no recopila ningún dato personal en absoluto, la aplicación es inherentemente segura para usuarios de todas las edades, incluidos niños menores de 13 años. Cumplimos con COPPA (Ley de Protección de la Privacidad Infantil en Línea) y regulaciones internacionales equivalentes en virtud de no recopilar ningún dato."
+      },
+      "international": {
+        "title": "Cumplimiento internacional de privacidad",
+        "content": "El enfoque de privacidad por diseño de Slow Spot garantiza el cumplimiento de las principales regulaciones internacionales de privacidad, incluidas: RGPD (Unión Europea), CCPA/CPRA (California, EE. UU.), LGPD (Brasil), POPIA (Sudáfrica), Principios de Privacidad de Australia (Australia), PIPEDA (Canadá) y otras leyes regionales de privacidad. Dado que no recopilamos datos personales, superamos los requisitos de estas regulaciones."
       },
       "yourRights": {
-        "title": "Tus derechos",
-        "content": "Puedes ver todos tus datos en la aplicación y eliminarlos en cualquier momento."
+        "title": "Tus derechos sobre los datos",
+        "content": "Según diversas leyes de privacidad (RGPD, CCPA, etc.), tienes derechos sobre tus datos personales. Con Slow Spot, ejercer estos derechos es simple: visualiza tus datos en cualquier momento dentro de la aplicación, elimina todos los datos a través de Configuración > Datos y privacidad > Borrar datos, o elimina todo desinstalando la aplicación. Dado que no existen datos en nuestros servidores, no hay nada adicional que solicitar o eliminar."
+      },
+      "security": {
+        "title": "Seguridad de los datos",
+        "content": "Tus datos están protegidos por las funciones de seguridad integradas de tu dispositivo. Recomendamos usar cifrado del dispositivo y bloqueo de pantalla para protección adicional. Dado que los datos nunca abandonan tu dispositivo, no existe riesgo de violaciones de datos de nuestra parte."
       },
       "changes": {
         "title": "Cambios en la política",
-        "content": "Si actualizamos esta política, cambiaremos la fecha anterior."
+        "content": "Podemos actualizar esta Política de privacidad para reflejar cambios en nuestras prácticas o por cumplimiento legal. Cualquier cambio importante se comunicará a través de actualizaciones de la aplicación. Te recomendamos revisar esta política periódicamente."
       },
       "contact": {
-        "title": "Contacto",
+        "title": "Contáctanos",
         "email": "Correo electrónico:",
-        "website": "Sitio web:"
+        "website": "Sitio web:",
+        "note": "Si tienes alguna pregunta sobre esta Política de privacidad o nuestras prácticas de privacidad, contáctanos."
+      },
+      "legal": {
+        "title": "Base legal",
+        "content": "Esta Política de privacidad se rige por la ley polaca. Para usuarios en la Unión Europea, el responsable del tratamiento de datos sería Slow Spot (datos de contacto arriba). Sin embargo, como no recopilamos datos personales, las obligaciones del responsable del tratamiento no se aplican en el sentido tradicional."
       }
     }
   },
   "termsPage": {
     "title": "Términos de servicio",
-    "lastUpdated": "Última actualización: 27 de noviembre de 2024",
+    "lastUpdated": "Última actualización: 6 de diciembre de 2025",
     "summary": {
       "title": "En resumen",
       "items": [
         "Aplicación gratuita para meditación personal",
         "Sin cuenta requerida",
         "Tus datos permanecen en tu dispositivo",
-        "No es consejo médico - consulta a un médico si es necesario"
+        "No es consejo médico - consulta a un médico si es necesario",
+        "Funciona en todo el mundo sin restricciones"
       ]
     },
     "sections": {
       "acceptance": {
-        "title": "Acuerdo",
-        "content": "Al usar Slow Spot, aceptas estos términos."
+        "title": "Aceptación de los términos",
+        "content": "Al descargar, instalar o usar Slow Spot (la \"Aplicación\"), aceptas estar sujeto a estos Términos de servicio (\"Términos\"). Si no estás de acuerdo con estos Términos, por favor no uses la Aplicación. Estos Términos constituyen un acuerdo legalmente vinculante entre tú y Slow Spot."
       },
       "service": {
-        "title": "Lo que proporcionamos",
-        "content": "Slow Spot es una aplicación de meditación gratuita que funciona completamente sin conexión."
+        "title": "Descripción del servicio",
+        "content": "Slow Spot es una aplicación gratuita de meditación y atención plena diseñada para ayudar a los usuarios a practicar técnicas de meditación, ejercicios de respiración y mindfulness. La Aplicación opera completamente sin conexión e incluye: sesiones de meditación guiadas con múltiples técnicas, 8 paisajes sonoros ambientales, temporizadores personalizables, seguimiento de progreso, registro de estado de ánimo y contenido inspirador diario. Todas las funciones se proporcionan de forma gratuita sin compras dentro de la aplicación, suscripciones ni publicidad."
+      },
+      "eligibility": {
+        "title": "Elegibilidad",
+        "content": "La Aplicación está disponible para usuarios de todas las edades. Dado que no recopilamos datos personales, no hay restricciones de edad. Sin embargo, los padres y tutores deben supervisar el uso que hacen los niños de cualquier dispositivo digital. Al usar la Aplicación, declaras que tienes la capacidad legal para celebrar este acuerdo o que has obtenido el consentimiento de tus padres."
       },
       "license": {
-        "title": "Tu licencia",
-        "content": "Puedes usar la aplicación libremente para meditación personal."
+        "title": "Concesión de licencia",
+        "content": "Sujeto a tu cumplimiento de estos Términos, te otorgamos una licencia limitada, no exclusiva, intransferible y revocable para descargar, instalar y usar la Aplicación en tu dispositivo personal para práctica de meditación personal y no comercial. Esta licencia no te permite: copiar, modificar o crear trabajos derivados de la Aplicación; realizar ingeniería inversa, descompilar o desensamblar la Aplicación; distribuir, vender, alquilar o sublicenciar la Aplicación; usar la Aplicación con fines comerciales sin permiso por escrito; eliminar avisos de derechos de autor, marcas comerciales o de propiedad."
       },
       "yourContent": {
-        "title": "Tu contenido",
-        "content": "Todo lo que crees en la aplicación permanece en tu dispositivo."
+        "title": "Contenido generado por el usuario",
+        "content": "La Aplicación te permite crear sesiones de meditación personalizadas, notas personales e intenciones. Todo el contenido generado por el usuario permanece exclusivamente en tu dispositivo. No tenemos acceso a tu contenido, no lo almacenamos en ningún servidor y no podemos verlo, recopilarlo ni transmitirlo. Conservas la propiedad total de cualquier contenido que crees dentro de la Aplicación."
+      },
+      "intellectual": {
+        "title": "Propiedad intelectual",
+        "content": "Todo el contenido, diseño, código, gráficos, archivos de audio y otros materiales en la Aplicación son propiedad de Slow Spot o sus licenciantes y están protegidos por derechos de autor, marcas comerciales y otras leyes de propiedad intelectual. Todos los sonidos ambientales provienen de fuentes libres de derechos y están incluidos en la Aplicación. Las técnicas de meditación descritas en la Aplicación se basan en prácticas tradicionales de diversas culturas y se presentan con fines educativos."
       },
       "health": {
-        "title": "Información de salud",
-        "warning": "Importante",
-        "content": "Esta aplicación es solo para bienestar general. No es consejo médico."
+        "title": "Descargo de responsabilidad sobre salud y medicina",
+        "warning": "Aviso importante sobre salud",
+        "content": "Slow Spot está diseñada únicamente para fines de bienestar general y relajación. La Aplicación NO es un sustituto del consejo, diagnóstico o tratamiento médico profesional. Nunca ignores el consejo médico profesional ni retrases su búsqueda por algo que hayas leído o experimentado en esta Aplicación. Si tienes alguna condición médica, trastornos psicológicos o estás tomando medicamentos, consulta a tu proveedor de atención médica antes de comenzar cualquier práctica de meditación. Deja de usar la Aplicación inmediatamente y busca atención médica si experimentas: mareos, dificultad para respirar, ansiedad severa o pánico, disociación o despersonalización, o cualquier otro síntoma preocupante. Las prácticas de meditación pueden no ser adecuadas para todos, incluidas aquellas personas con ciertas condiciones de salud mental."
       },
       "disclaimer": {
-        "title": "Descargo de responsabilidad",
-        "content": "La aplicación se proporciona \"tal cual\" sin garantías."
+        "title": "Descargo de garantías",
+        "content": "LA APLICACIÓN SE PROPORCIONA \"TAL CUAL\" Y \"SEGÚN DISPONIBILIDAD\" SIN GARANTÍAS DE NINGÚN TIPO, YA SEAN EXPRESAS O IMPLÍCITAS, INCLUYENDO PERO NO LIMITÁNDOSE A: GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN. No garantizamos que la Aplicación será ininterrumpida, libre de errores o completamente segura. No hacemos declaraciones sobre la idoneidad, fiabilidad o precisión de la Aplicación para ningún propósito."
+      },
+      "liability": {
+        "title": "Limitación de responsabilidad",
+        "content": "EN LA MÁXIMA MEDIDA PERMITIDA POR LA LEY APLICABLE, SLOW SPOT Y SUS CREADORES, FUNCIONARIOS, DIRECTORES, EMPLEADOS Y AGENTES NO SERÁN RESPONSABLES DE NINGÚN DAÑO INDIRECTO, INCIDENTAL, ESPECIAL, CONSECUENTE O PUNITIVO, NI DE NINGUNA PÉRDIDA DE BENEFICIOS O INGRESOS, YA SEA INCURRIDA DIRECTA O INDIRECTAMENTE, NI DE NINGUNA PÉRDIDA DE DATOS, USO, BUENA VOLUNTAD U OTRAS PÉRDIDAS INTANGIBLES RESULTANTES DE: tu uso o incapacidad de usar la Aplicación; cualquier acceso no autorizado a o uso de la Aplicación; cualquier interrupción o cese de la Aplicación; cualquier error u omisión en la Aplicación. Nuestra responsabilidad total no excederá la cantidad que pagaste por la Aplicación, que es cero ya que la Aplicación es gratuita."
+      },
+      "indemnification": {
+        "title": "Indemnización",
+        "content": "Aceptas indemnizar, defender y mantener indemnes a Slow Spot y sus creadores de cualquier reclamación, daño, pérdida, responsabilidad, costo y gasto (incluidos honorarios razonables de abogados) que surjan de: tu uso de la Aplicación; tu violación de estos Términos; tu violación de los derechos de otra parte; cualquier contenido que crees dentro de la Aplicación."
+      },
+      "termination": {
+        "title": "Terminación",
+        "content": "Estos Términos son efectivos hasta su terminación. Puedes terminar este acuerdo en cualquier momento desinstalando la Aplicación de tu dispositivo. Nos reservamos el derecho de modificar o descontinuar la Aplicación en cualquier momento sin previo aviso. Al terminar, todas las licencias otorgadas a ti cesarán inmediatamente y debes dejar de usar la Aplicación."
       },
       "changes": {
-        "title": "Cambios",
-        "content": "Podemos actualizar la aplicación o estos términos."
+        "title": "Modificaciones a los términos",
+        "content": "Nos reservamos el derecho de modificar estos Términos en cualquier momento. Cualquier cambio será efectivo inmediatamente después de publicar los Términos revisados dentro de la Aplicación o en nuestro sitio web. Tu uso continuo de la Aplicación después de cualquier cambio constituye tu aceptación de los nuevos Términos. Te recomendamos revisar estos Términos periódicamente para cualquier actualización."
       },
       "governing": {
-        "title": "Legal",
-        "content": "Estos términos se rigen por la ley polaca."
+        "title": "Ley aplicable y jurisdicción",
+        "content": "Estos Términos se regirán e interpretarán de acuerdo con las leyes de Polonia, sin tener en cuenta sus disposiciones sobre conflictos de leyes. Para los usuarios en la Unión Europea, nada en estos Términos afecta tus derechos bajo las leyes obligatorias de protección al consumidor de tu país de residencia. Cualquier disputa que surja de estos Términos se resolverá en los tribunales de Polonia, a menos que las leyes locales de protección al consumidor requieran lo contrario."
+      },
+      "severability": {
+        "title": "Divisibilidad",
+        "content": "Si alguna disposición de estos Términos se considera inaplicable o inválida por un tribunal de jurisdicción competente, esa disposición se limitará o eliminará en la medida mínima necesaria para que estos Términos permanezcan en pleno vigor y efecto."
+      },
+      "entire": {
+        "title": "Acuerdo completo",
+        "content": "Estos Términos, junto con nuestra Política de privacidad, constituyen el acuerdo completo entre tú y Slow Spot con respecto al uso de la Aplicación. Cualquier falta de aplicación por nuestra parte de cualquier derecho o disposición de estos Términos no se considerará una renuncia a ese derecho o disposición."
       },
       "contact": {
-        "title": "Contacto",
+        "title": "Información de contacto",
+        "content": "Si tienes alguna pregunta sobre estos Términos de servicio, contáctanos:",
         "email": "Correo electrónico:",
         "website": "Sitio web:"
       }
