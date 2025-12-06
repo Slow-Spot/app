@@ -195,7 +195,7 @@
     "appInfo": {
       "title": "应用信息",
       "version": "版本",
-      "versionNumber": "1.8.4",
+      "versionNumber": "1.0.0",
       "platform": "平台",
       "platformValue": "iOS 和 Android"
     }
