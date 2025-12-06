@@ -4,7 +4,7 @@ React Native mobile application for iOS and Android.
 
 ## Tech Stack
 
-- **Framework:** React Native with Expo SDK 52
+- **Framework:** React Native with Expo SDK 54
 - **Language:** TypeScript
 - **UI:** Custom components with Reanimated 3
 - **Storage:** SQLite (expo-sqlite)

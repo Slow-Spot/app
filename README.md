@@ -94,7 +94,7 @@ slow-spot/
 
 | Component | Technology |
 |-----------|------------|
-| Mobile | React Native, Expo SDK 52 |
+| Mobile | React Native, Expo SDK 54 |
 | Web | Next.js 15, Tailwind CSS |
 | Languages | TypeScript |
 | CI/CD | GitHub Actions |
