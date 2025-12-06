@@ -1,3 +1,9 @@
+## [1.8.4](https://github.com/Slow-Spot/app/compare/v1.8.3...v1.8.4) (2025-12-06)
+
+### Bug Fixes
+
+* **web:** fix text contrast in footer and download sections for light mode ([266337a](https://github.com/Slow-Spot/app/commit/266337a9ba15838d872133f41add2a399963a265))
+
 ## [1.8.3](https://github.com/Slow-Spot/app/compare/v1.8.2...v1.8.3) (2025-12-05)
 
 ### Bug Fixes
