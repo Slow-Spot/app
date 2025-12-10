@@ -80,7 +80,8 @@
     "plugins": [
       "expo-font",
       "expo-updates",
-      "expo-audio"
+      "expo-audio",
+      "expo-localization"
     ]
   }
 }

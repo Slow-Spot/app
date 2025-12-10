@@ -33,8 +33,8 @@ clean_cache() {
 cleanup() {
     echo "🧹 Czyszczenie procesów..."
     killall -9 node 2>/dev/null
-    killall -9 Simulator 2>/dev/null
-    sleep 2
+    # Don't kill Simulator - let Expo manage it
+    sleep 1
     echo "✅ Procesy wyczyszczone"
 }
 
