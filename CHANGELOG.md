@@ -1,3 +1,9 @@
+## [1.0.7](https://github.com/Slow-Spot/app/compare/v1.0.6...v1.0.7) (2025-12-10)
+
+### Bug Fixes
+
+* improve text contrast in light mode for better readability ([db14826](https://github.com/Slow-Spot/app/commit/db14826675f3cbec5481102ff050481bbb5b7ce0)), closes [#48484A](https://github.com/Slow-Spot/app/issues/48484A)
+
 ## [1.0.6](https://github.com/Slow-Spot/app/compare/v1.0.5...v1.0.6) (2025-12-10)
 
 ### Bug Fixes
