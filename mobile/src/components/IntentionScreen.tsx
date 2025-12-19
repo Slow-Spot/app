@@ -326,8 +326,6 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
   // Get time-based greeting
   const getTimeGreeting = () => {
     const hour = new Date().getHours();
-    // Debug: Log the hour to verify timezone
-    console.log('[IntentionScreen] Current hour:', hour, 'Timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
     if (hour >= 5 && hour < 12) return t('intention.greeting.morning', 'Good Morning');
     if (hour >= 12 && hour < 17) return t('intention.greeting.afternoon', 'Good Afternoon');

@@ -144,7 +144,7 @@ export const Badge: React.FC<BadgeProps> = ({
     if ((variant === 'primary' || variant === 'default') && selected) {
       return {
         ...baseStyle,
-        colors: currentTheme.gradient,
+        colors: [...currentTheme.gradient],
       };
     }
     return baseStyle;

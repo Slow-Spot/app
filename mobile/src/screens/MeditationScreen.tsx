@@ -17,7 +17,7 @@ import { GradientBackground } from '../components/GradientBackground';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
-import { getAllSessions, deleteSession, CustomSession, BreathingPattern, BreathingTiming, initializeDefaultSession } from '../services/customSessionStorage';
+import { getAllSessions, deleteSession, CustomSession, BreathingPattern, BreathingTiming, initializeDefaultSession, getCustomAmbientUri, getCustomBellUri, createSessionFromConfig } from '../services/customSessionStorage';
 import { userPreferences } from '../services/userPreferences';
 import { ChimePoint } from '../types/customSession';
 import theme, { getThemeColors, getThemeGradients, getCardStyles } from '../theme';
@@ -97,6 +97,8 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState<MeditationSession | CustomSession | null>(null);
   const [flowState, setFlowState] = useState<FlowState>('list');
+  // Store custom chime URI for interval bells in MeditationTimer
+  const [activeCustomChimeUri, setActiveCustomChimeUri] = useState<string | undefined>(undefined);
   const [userIntention, setUserIntention] = useState('');
   const [sessionMood, setSessionMood] = useState<1 | 2 | 3 | 4 | 5 | undefined>();
   const [actionModalSession, setActionModalSession] = useState<CustomSession | null>(null);
@@ -108,15 +110,9 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   // Handle pending session config from CustomSessionBuilder "Start Session" button
   useEffect(() => {
     if (pendingSessionConfig) {
-      // Create a temporary session from the config
-      const tempSession: CustomSession = {
-        id: `temp-${Date.now()}`,
-        name: pendingSessionConfig.name || t('custom.quickSession', 'Quick Session'),
-        description: t('custom.quickSessionDescription', 'Session started from builder'),
-        duration: pendingSessionConfig.durationMinutes * 60,
-        isCustom: true,
-        config: pendingSessionConfig,
-      };
+      // Create a properly configured temporary session using the same function as saved sessions
+      // This ensures all properties (ambientUrl, chimeUrl, etc.) are set correctly
+      const tempSession = createSessionFromConfig(pendingSessionConfig, `temp-${Date.now()}`);
 
       // Start the session immediately
       setSelectedSession(tempSession);
@@ -125,7 +121,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
       // Clear the pending config so it doesn't re-trigger
       onClearPendingSession?.();
     }
-  }, [pendingSessionConfig, onClearPendingSession, t]);
+  }, [pendingSessionConfig, onClearPendingSession]);
 
   // Refresh sessions when returning to list view (e.g., after saving a session)
   useEffect(() => {
@@ -202,7 +198,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     }
 
     // Use the existing config from the custom session
-    onEditSession(session.id, session.config);
+    onEditSession(String(session.id), session.config);
   };
 
   const handleDeleteSession = async (session: CustomSession) => {
@@ -219,7 +215,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteSession(session.id);
+              await deleteSession(String(session.id));
               Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
               // Reload sessions
               await loadSessions();
@@ -259,24 +255,51 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         await audioEngine.loadTrack('voice', selectedSession.voiceUrl, 0.8);
       }
 
+      // Determine ambient sound URL - check for custom sounds
+      let ambientUrl: string | number | undefined = selectedSession.ambientUrl;
+      const customSession = selectedSession as CustomSession;
+
+      // If this is a custom session, check if user wants custom ambient sound
+      if (customSession.isCustom && customSession.config?.ambientSound) {
+        const customAmbientUri = await getCustomAmbientUri(customSession.config.ambientSound);
+        if (customAmbientUri) {
+          logger.log('Using custom ambient sound from settings');
+          ambientUrl = customAmbientUri;
+        } else if (customSession.config.ambientSound === 'custom') {
+          // User selected 'custom' but hasn't configured it in settings
+          logger.warn('Custom ambient selected but no custom sound configured in settings');
+          ambientUrl = undefined;
+        }
+      }
+
       // Only load ambient if URL is provided and not 'silence'
-      if (selectedSession.ambientUrl && selectedSession.ambientUrl !== 'silence') {
-        logger.log('Loading ambient track:', selectedSession.ambientUrl);
-        await audioEngine.loadTrack('ambient', selectedSession.ambientUrl, 0.4);
+      if (ambientUrl && ambientUrl !== 'silence') {
+        logger.log('Loading ambient track:', typeof ambientUrl === 'string' ? ambientUrl.substring(0, 50) : ambientUrl);
+        await audioEngine.loadTrack('ambient', ambientUrl, 0.4);
       } else {
         logger.log('Skipping ambient track (silence mode or no URL)');
       }
 
-      if (selectedSession.chimeUrl) {
-        logger.log('Loading chime track:', selectedSession.chimeUrl);
-        await audioEngine.loadTrack('chime', selectedSession.chimeUrl, 0.6);
+      // Determine chime URL - check for custom bell sound
+      let chimeUrl: string | number | undefined = selectedSession.chimeUrl;
+      const customBellUri = await getCustomBellUri();
+      if (customBellUri && selectedSession.chimeUrl) {
+        logger.log('Using custom bell sound from settings');
+        chimeUrl = customBellUri;
+      }
+      // Store custom bell URI for interval bells in MeditationTimer
+      setActiveCustomChimeUri(customBellUri);
+
+      if (chimeUrl) {
+        logger.log('Loading chime track:', typeof chimeUrl === 'string' ? chimeUrl.substring(0, 50) : chimeUrl);
+        await audioEngine.loadTrack('chime', chimeUrl, 0.6);
       }
 
       // Start with chime, then fade in ambient
-      if (selectedSession.chimeUrl) {
+      if (chimeUrl) {
         await audioEngine.play('chime');
       }
-      if (selectedSession.ambientUrl && selectedSession.ambientUrl !== 'silence') {
+      if (ambientUrl && ambientUrl !== 'silence') {
         await audioEngine.fadeIn('ambient', 3000, 0.4);
       }
       if (selectedSession.voiceUrl) {
@@ -291,15 +314,25 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   const handleAudioToggle = async (enabled: boolean) => {
     try {
+      // Determine if ambient was loaded (either from session or custom sounds)
+      const customSession = selectedSession as CustomSession;
+      const hasAmbientFromSession = selectedSession?.ambientUrl && selectedSession.ambientUrl !== 'silence';
+      const hasCustomAmbient = customSession?.isCustom && customSession.config?.ambientSound && customSession.config.ambientSound !== 'silence';
+      const hasAmbient = hasAmbientFromSession || hasCustomAmbient;
+
       // Control ambient sound when audio is toggled
       if (enabled) {
-        // Fade in ambient if it was loaded
-        if (selectedSession?.ambientUrl && selectedSession.ambientUrl !== 'silence') {
+        // Fade in ambient if it was loaded (either default or custom)
+        if (hasAmbient) {
           await audioEngine.fadeIn('ambient', 1500, 0.4);
         }
       } else {
-        // Fade out ambient when muted
-        await audioEngine.fadeOut('ambient', 1500);
+        // IMMEDIATELY stop ambient when muted (no fade delay)
+        await audioEngine.setVolume('ambient', 0);
+        await audioEngine.pause('ambient');
+        // Also stop any playing chime immediately
+        await audioEngine.setVolume('chime', 0);
+        await audioEngine.pause('chime');
       }
     } catch (error) {
       logger.error('Failed to toggle audio:', error);
@@ -344,6 +377,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
       onMeditationStateChange(null);
       setFlowState('list');
       setSelectedSession(null);
+      setActiveCustomChimeUri(undefined);
     } catch (error) {
       logger.error('Failed to cancel session:', error);
     }
@@ -371,6 +405,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
       setSelectedSession(null);
       setUserIntention('');
       setSessionMood(undefined);
+      setActiveCustomChimeUri(undefined);
     } catch (error) {
       logger.error('Failed to cleanup after celebration:', error);
     }
@@ -415,7 +450,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
             style={styles.mainCardContainer}
           >
             <AnimatedPressable
-              onPress={onNavigateToCustom}
+              onPress={onNavigateToCustom ?? (() => {})}
               style={[styles.mainCard, dynamicStyles.mainCardShadow]}
               pressScale={0.98}
               hapticType="medium"
@@ -583,6 +618,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           breathingPattern={getBreathingPattern()}
           customBreathing={getCustomBreathing()}
           hideTimer={getHideTimer()}
+          customChimeUri={activeCustomChimeUri}
           sessionHaptics={getSessionHaptics()}
           breathingHaptics={getBreathingHaptics()}
           intervalBellHaptics={getIntervalBellHaptics()}

@@ -261,7 +261,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
                 style={styles.modalButton}
               >
                 <LinearGradient
-                  colors={currentTheme.gradient}
+                  colors={[...currentTheme.gradient]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={styles.modalButtonGradient}
@@ -999,7 +999,7 @@ const StepProgress: React.FC<{ currentStep: string; t: any; isDark?: boolean }> 
               <LinearGradient
                 colors={
                   isComplete || isActive
-                    ? currentTheme.gradient
+                    ? [...currentTheme.gradient]
                     : isDark
                       ? ['#3A3A4A', '#2A2A3A']
                       : [neutralColors.gray[200], neutralColors.gray[300]]
@@ -1027,7 +1027,7 @@ const StepProgress: React.FC<{ currentStep: string; t: any; isDark?: boolean }> 
                 />
                 {/* Filled portion of line for completed steps */}
                 <LinearGradient
-                  colors={currentTheme.gradient}
+                  colors={[...currentTheme.gradient]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={[

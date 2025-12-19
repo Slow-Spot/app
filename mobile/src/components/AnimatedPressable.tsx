@@ -30,6 +30,10 @@ interface AnimatedPressableProps {
   hapticType?: 'light' | 'medium' | 'heavy' | 'selection';
   /** Accessibility label */
   accessibilityLabel?: string;
+  /** Accessibility hint */
+  accessibilityHint?: string;
+  /** Accessibility role */
+  accessibilityRole?: 'button' | 'link' | 'none' | 'text' | 'search' | 'image' | 'imagebutton' | 'adjustable' | 'header' | 'summary' | 'alert' | 'checkbox' | 'combobox' | 'menu' | 'menubar' | 'menuitem' | 'progressbar' | 'radio' | 'radiogroup' | 'scrollbar' | 'spinbutton' | 'switch' | 'tab' | 'tablist' | 'timer' | 'toolbar';
   /** Spring configuration - stiffness */
   springStiffness?: number;
   /** Spring configuration - damping */
@@ -45,6 +49,8 @@ export const AnimatedPressable: React.FC<AnimatedPressableProps> = ({
   hapticFeedback = true,
   hapticType = 'light',
   accessibilityLabel,
+  accessibilityHint,
+  accessibilityRole = 'button',
   springStiffness = 400,
   springDamping = 20,
 }) => {
@@ -109,7 +115,8 @@ export const AnimatedPressable: React.FC<AnimatedPressableProps> = ({
         style={[style, animatedStyle]}
         accessible={true}
         accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
+        accessibilityHint={accessibilityHint}
+        accessibilityRole={accessibilityRole}
         accessibilityState={{ disabled }}
       >
         {children}

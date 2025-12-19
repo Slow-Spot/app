@@ -5,7 +5,8 @@
   },
   "splash": {
     "appName": "Slow Spot.me",
-    "tagline": "找到属于你的宁静时刻"
+    "tagline": "找到属于你的宁静时刻",
+    "loading": "加载中..."
   },
   "intention": {
     "greeting": {
@@ -33,9 +34,9 @@
       "subtitle": "为冥想做准备",
       "choosePattern": "选择一个模式：",
       "patterns": {
+        "478": "助眠",
         "box": "缓解压力",
         "boxDesc": "平静并集中注意力",
-        "478": "助眠",
         "478Desc": "睡前深度放松",
         "equal": "初学者适用",
         "equalDesc": "简单易学的模式",
@@ -60,7 +61,7 @@
     "welcome": "欢迎",
     "dailyQuote": "每日禅语",
     "quickStart": "快速开始",
-    "quickStartDesc": "立即开始5分钟冥想",
+    "quickStartDesc": "立即开始冥想",
     "startMeditation": "开始冥想",
     "exploreSessions": "探索冥想课程",
     "exploreFeatures": "探索功能",
@@ -97,7 +98,10 @@
     "streakWeek": "连续一周！",
     "streakTwoWeeks": "惊人的进步！",
     "streakMonth": "平静大师！",
-    "streakMaster": "冥想传奇！"
+    "streakMaster": "冥想传奇！",
+    "readyToMeditate": "准备好冥想了吗？",
+    "startNow": "立即开始",
+    "explore": "探索"
   },
   "meditation": {
     "title": "冥想",
@@ -138,16 +142,24 @@
     "breatheIn": "吸气",
     "breatheOut": "呼气",
     "hold": "屏住",
-    "inProgress": "进行中",
+    "inProgress": "冥想进行中",
     "endSessionTitle": "结束课程？",
-    "endSessionMessage": "你的进度将被保存。确定要结束冥想吗？",
+    "endSessionMessage": "确定要提前结束此课程吗？",
     "endSessionConfirm": "结束",
     "endSessionCancel": "继续",
     "yourIntention": "你的意图",
     "intentionDescription": "你在课程前为自己设定的目标",
     "meditationInProgress": "冥想进行中",
     "breatheNaturally": "自然呼吸",
-    "tapToShowControls": "点击显示控制"
+    "tapToShowControls": "点击显示控制",
+    "customize": "自定义",
+    "endSession": "结束课程",
+    "moodAfter": "之后感觉如何？",
+    "moodBefore": "之前感觉如何？",
+    "saveSession": "保存课程",
+    "sessionNotesPlaceholder": "添加课程笔记...",
+    "sessionComplete": "课程完成",
+    "sessionEnded": "课程结束"
   },
   "instructions": {
     "timeOfDay": {
@@ -192,14 +204,15 @@
       "intentionPlaceholder": "例如 \"与我的呼吸保持同在\"",
       "duringSession": "在你的课程中",
       "keepInMind": "记住这些提示：",
-      "spaceSetup": "空间设置",
+      "spaceSetup": "空间准备",
       "quietPlace": "安静的地方",
-      "quietPlaceDesc": "找一个不会被打扰的安静地方",
+      "quietPlaceDesc": "找一个没有干扰的安静地方",
       "comfortablePosition": "舒适的姿势",
-      "comfortablePositionDesc": "坐下或躺下，让身体放松",
+      "comfortablePositionDesc": "以放松的姿势坐下或躺下",
       "timer": "计时器",
-      "timerDesc": "设置你的冥想时长",
-      "ready": "准备好了"
+      "timerDesc": "设置冥想时长",
+      "ready": "准备好",
+      "breathingExerciseDesc": "简单的呼吸练习来准备"
     },
     "skipModal": {
       "title": "进入冥想",
@@ -359,6 +372,34 @@
           "type": "gentle"
         }
       }
+    },
+    "bodyRelaxation": {
+      "startingPosition": "起始姿势",
+      "startingPositionDesc": "找一个舒适的姿势",
+      "eyesClosed": "闭上眼睛",
+      "eyesClosedDesc": "轻轻闭上眼睛",
+      "bodyAwareness": "身体觉察",
+      "bodyAwarenessDesc": "感受你的身体",
+      "releaseTension": "释放紧张",
+      "releaseTensionDesc": "放松所有肌肉"
+    },
+    "focusSetup": {
+      "breathFocus": "专注呼吸",
+      "breathFocusDesc": "观察你的呼吸",
+      "relaxBody": "放松身体",
+      "relaxBodyDesc": "释放所有紧张",
+      "clearMind": "清空思绪",
+      "clearMindDesc": "让思绪飘走",
+      "setIntention": "设定意图",
+      "setIntentionDesc": "定义你的课程目标"
+    },
+    "breathingTechniques": {
+      "naturalBreath": "自然呼吸",
+      "naturalBreathDesc": "自然地呼吸",
+      "deepBreath": "深呼吸",
+      "deepBreathDesc": "深深地吸气和呼气",
+      "countedBreath": "数息",
+      "countedBreathDesc": "数你的呼吸次数"
     }
   },
   "sessions": {
@@ -551,7 +592,8 @@
     "breathPrayer": {
       "title": "呼吸祷告",
       "description": "与呼吸同步的节奏性祷告。"
-    }
+    },
+    "empty": "没有保存的课程"
   },
   "quotes": {
     "title": "启发性语录",
@@ -660,7 +702,42 @@
     "notSet": "未设置",
     "soundPickError": "错误",
     "soundPickErrorBody": "无法加载所选音频文件。",
-    "customSoundsHint": "从您的设备选择音频文件。支持的格式：MP3、WAV、M4A。"
+    "customSoundsHint": "从您的设备选择音频文件。支持的格式：MP3、WAV、M4A。",
+    "importStreak": "导入连续记录",
+    "importStreakDescription": "从其他应用继续你的连续记录",
+    "addImportedStreak": "从其他应用添加连续记录",
+    "importStreakHint": "当你冥想时，导入的连续记录将添加到你的当前记录中。",
+    "importStreakTitle": "导入你的连续记录",
+    "importStreakMessage": "输入你之前冥想练习的天数。",
+    "streakDays": "连续天数",
+    "sourceApp": "来自应用（可选）",
+    "sourceAppPlaceholder": "如 Headspace、Calm",
+    "days": "天",
+    "fromApp": "来自",
+    "clearImportedStreak": "清除导入的连续记录？",
+    "clearImportedStreakBody": "这将删除你导入的连续记录天数。",
+    "invalidStreak": "无效值",
+    "invalidStreakBody": "请输入正数天数。",
+    "streakSaveError": "无法保存导入的连续记录。",
+    "clearDataConfirm": "确定吗？此操作无法撤销。",
+    "clearDataDescription": "删除所有冥想数据",
+    "clearDataSuccess": "所有数据已删除",
+    "exportDataDescription": "导出冥想历史",
+    "rateApp": "评价应用",
+    "shareApp": "分享应用",
+    "soundSettings": "声音设置",
+    "soundSettingsDescription": "配置音频偏好",
+    "version": "版本",
+    "customSoundDescription": "使用自定义环境声音",
+    "hapticDescription": "课程期间振动",
+    "notificationsDescription": "冥想提醒",
+    "resetData": "重置数据",
+    "credits": "制作团队",
+    "creditsIdea": "概念",
+    "creditsExecution": "开发",
+    "creditsSponsor": "赞助商",
+    "madeWith": "用",
+    "inPoland": "制作于波兰"
   },
   "navigation": {
     "home": "首页",
@@ -675,7 +752,19 @@
     "next": "下一步",
     "close": "关闭",
     "skip": "跳过",
-    "continue": "继续"
+    "continue": "继续",
+    "save": "保存",
+    "edit": "编辑",
+    "remove": "删除",
+    "confirm": "确认",
+    "error": "错误",
+    "delete": "删除",
+    "done": "完成",
+    "loading": "加载中...",
+    "no": "否",
+    "success": "成功",
+    "warning": "警告",
+    "yes": "是"
   },
   "introGuide": {
     "title": "冥想入门",
@@ -736,17 +825,6 @@
     "breathingSection": "呼吸练习",
     "breathingIntro": "呼吸技巧有助于平静心灵并为冥想做准备。选择适合你情况的模式。",
     "breathingExercises": {
-      "box": {
-        "name": "缓解压力",
-        "description": "平静并集中注意力。非常适合压力和焦虑。",
-        "steps": [
-          "用鼻子吸气4秒",
-          "屏住呼吸4秒",
-          "用嘴呼气4秒",
-          "屏住呼吸4秒",
-          "重复4-5个循环"
-        ]
-      },
       "478": {
         "name": "助眠",
         "description": "睡前深度放松。帮助你入睡。",
@@ -756,6 +834,17 @@
           "用嘴呼气8秒",
           "重复3-4次",
           "让身体放松"
+        ]
+      },
+      "box": {
+        "name": "缓解压力",
+        "description": "平静并集中注意力。非常适合压力和焦虑。",
+        "steps": [
+          "用鼻子吸气4秒",
+          "屏住呼吸4秒",
+          "用嘴呼气4秒",
+          "屏住呼吸4秒",
+          "重复4-5个循环"
         ]
       },
       "equal": {
@@ -919,22 +1008,67 @@
     "dayThu": "周四",
     "dayFri": "周五",
     "daySat": "周六",
-    "daySun": "周日"
+    "daySun": "周日",
+    "achievements": "成就",
+    "allTime": "全部时间",
+    "averageSession": "平均课程",
+    "calendarView": "日历视图",
+    "experience": "经验",
+    "goalAchieved": "目标达成！",
+    "goalProgress": "目标进度",
+    "hours": "小时",
+    "level": "等级",
+    "listView": "列表视图",
+    "meditationHistory": "冥想历史",
+    "minutesToNextLevel": "距下一级{{count}}分钟",
+    "nextLevel": "下一级",
+    "noRecentSessions": "没有最近的课程",
+    "reminderSet": "提醒已设置",
+    "removeReminder": "移除提醒",
+    "scheduleReminder": "安排提醒",
+    "sessionsPerWeek": "每周课程",
+    "startFirstSession": "开始你的第一次课程",
+    "thisMonth": "本月",
+    "viewAll": "查看全部",
+    "weeklyGoal": "每周目标",
+    "weeklyGoalDescription": "设置你的冥想目标"
   },
   "calendar": {
     "title": "日历集成",
     "scheduleReminder": "安排每日冥想",
     "selectTime": "选择时间",
-    "daily": "每天",
+    "daily": "每日",
     "cancel": "取消",
     "save": "保存提醒",
-    "permissionDenied": "无日历访问权限",
+    "permissionDenied": "日历权限被拒绝",
     "permissionMessage": "请在设置中启用日历访问",
-    "reminderSet": "提醒已设置！",
+    "reminderSet": "提醒设置成功！",
     "reminderCanceled": "提醒已取消",
-    "currentReminder": "活动提醒",
-    "noReminder": "无活动提醒",
-    "at": "在"
+    "currentReminder": "当前提醒",
+    "noReminder": "没有活动提醒",
+    "at": "在",
+    "addToCalendar": "添加到日历",
+    "removeFromCalendar": "从日历移除",
+    "reminderTitle": "冥想提醒",
+    "reminderDescription": "是时候使用Slow Spot进行每日冥想了",
+    "selectDays": "选择日期",
+    "everyday": "每天",
+    "weekdays": "工作日",
+    "weekends": "周末",
+    "custom": "自定义",
+    "monday": "周一",
+    "tuesday": "周二",
+    "wednesday": "周三",
+    "thursday": "周四",
+    "friday": "周五",
+    "saturday": "周六",
+    "sunday": "周日",
+    "permissionRequired": "需要日历权限",
+    "permissionDescription": "我们需要访问您的日历来创建冥想提醒",
+    "grantPermission": "授予权限",
+    "reminderCreated": "提醒创建成功",
+    "reminderRemoved": "提醒已移除",
+    "errorCreatingReminder": "创建提醒时出错"
   },
   "custom": {
     "title": "自定义课程",
@@ -947,7 +1081,7 @@
     "duration": "时长",
     "durationDescription": "选择你的冥想课程时长",
     "minutes": "分钟",
-    "minutesWithCount": "{{count}} 分钟",
+    "minutesWithCount": "{{count}}分钟",
     "customInterval": "自定义值：",
     "customDuration": "自定义时长：",
     "selected": "已选择",
@@ -961,8 +1095,8 @@
     "min": "分钟",
     "bells": "钟声",
     "bellsDescription": "课程期间的声音信号",
-    "awakeningChime": "结束钟声",
-    "awakeningChimeSubtitle": "标志练习结束的温柔声音",
+    "awakeningChime": "唤醒铃声",
+    "awakeningChimeSubtitle": "结束课程的柔和声音",
     "endChime": "结束钟声",
     "endChimeDescription": "课程结束时的温柔钟声",
     "endChimeHint": "结束时的温柔信号",
@@ -993,7 +1127,7 @@
     "saveAndStart": "保存并开始",
     "startWithoutSaving": "不保存直接开始",
     "start": "开始",
-    "longPressToEdit": "长按以编辑",
+    "longPressToEdit": "长按编辑",
     "editSession": "编辑课程",
     "deleteSession": "删除课程",
     "startSession": "开始课程",
@@ -1035,12 +1169,12 @@
       "customHint": "您可以在应用设置中自定义声音"
     },
     "breathing": {
+      "478": "4-7-8",
       "none": "无指导",
       "noneDesc": "无呼吸模式的冥想",
       "box": "方形呼吸",
       "boxDesc": "压力下的平衡与专注",
       "boxBenefit": "美国海豹突击队用于压力管理",
-      "478": "4-7-8",
       "478Desc": "天然助眠",
       "478Benefit": "入睡前平静思绪",
       "equal": "等比呼吸",
@@ -1070,7 +1204,50 @@
     "inhale": "吸气",
     "hold": "屏住",
     "exhale": "呼气",
-    "cycle": "循环"
+    "cycle": "循环",
+    "addToFavorites": "添加到收藏",
+    "ambientVolume": "环境音量",
+    "backgroundImage": "背景图片",
+    "bellVolume": "铃声音量",
+    "birds": "鸟鸣",
+    "chooseImage": "选择图片",
+    "createNew": "新建",
+    "customBackground": "自定义背景",
+    "defaultBackground": "默认背景",
+    "deleteConfirm": "确定要删除此课程吗？",
+    "duplicate": "复制",
+    "durationMinutes": "{{count}}分钟",
+    "endBell": "结束铃",
+    "favorites": "收藏",
+    "fire": "火焰",
+    "forest": "森林",
+    "guidedMeditation": "引导冥想",
+    "guidedMeditationDescription": "跟随语音指导",
+    "intervalBells": "间隔铃声",
+    "intervalBellsDescription": "课程期间的定期提醒",
+    "intervalMinutes": "间隔（分钟）",
+    "keepScreenOn": "保持屏幕常亮",
+    "keepScreenOnDescription": "防止屏幕关闭",
+    "noSound": "无声",
+    "ocean": "海洋",
+    "previewSound": "预览声音",
+    "rain": "雨声",
+    "removeFromFavorites": "从收藏移除",
+    "sessionDeleted": "课程已删除",
+    "sessionDuplicated": "课程已复制",
+    "share": "分享",
+    "startBell": "开始铃",
+    "stopPreview": "停止预览",
+    "stream": "溪流",
+    "vibrationDescription": "课程期间振动",
+    "whiteNoise": "白噪音",
+    "wind": "风声",
+    "breathingExercise": "呼吸练习",
+    "breathingExerciseDescription": "简单的呼吸练习来准备",
+    "bellSounds": "铃声",
+    "bellSoundsSubtitle": "课程期间的柔和信号",
+    "volume": "音量",
+    "intervalBellLabel": "间隔铃"
   },
   "achievements": {
     "title": "成就",
@@ -1219,7 +1396,8 @@
     "reflectionMaster": {
       "title": "反思大师",
       "description": "为25次冥想课程添加笔记"
-    }
+    },
+    "meditation": "冥想"
   },
   "onboarding": {
     "skip": "跳过",
@@ -1243,6 +1421,14 @@
       "subtitle": "告诉我们你的名字，每次访问时我们会亲自问候你。",
       "placeholder": "你的名字（可选）",
       "hint": "你可以稍后在个人资料中更改"
+    },
+    "slide5": {
+      "title": "继续你的旅程？",
+      "subtitle": "从其他应用导入你的冥想连续记录，从你离开的地方继续。",
+      "daysLabel": "天数",
+      "sourceLabel": "来自应用（可选）",
+      "sourcePlaceholder": "如 Headspace",
+      "hint": "如果你是新开始，请跳过此步骤"
     },
     "healthDisclaimer": "此应用支持正念练习，不能替代专业医疗保健。如有健康问题请咨询医生。",
     "successTitle": "一切就绪！",

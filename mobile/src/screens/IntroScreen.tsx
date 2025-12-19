@@ -49,6 +49,7 @@ import { usePersonalization } from '../contexts/PersonalizationContext';
 import { useUserProfile } from '../contexts/UserProfileContext';
 import { AnimatedPressable } from '../components/AnimatedPressable';
 import { logger } from '../utils/logger';
+import { saveImportedStreak } from '../services/progressTracker';
 
 const { width, height } = Dimensions.get('window');
 
@@ -61,6 +62,7 @@ interface Slide {
   icon: keyof typeof Ionicons.glyphMap;
   accentIcon?: keyof typeof Ionicons.glyphMap;
   isNameSlide?: boolean;
+  isStreakImportSlide?: boolean;
 }
 
 const slides: Slide[] = [
@@ -92,6 +94,14 @@ const slides: Slide[] = [
     icon: 'person',
     accentIcon: 'chatbubble-ellipses',
     isNameSlide: true,
+  },
+  {
+    key: '5',
+    titleKey: 'onboarding.slide5.title',
+    subtitleKey: 'onboarding.slide5.subtitle',
+    icon: 'flame',
+    accentIcon: 'arrow-up',
+    isStreakImportSlide: true,
   },
 ];
 
@@ -224,7 +234,11 @@ const OnboardingSlide: React.FC<{
   nameInputValue?: string;
   onNameChange?: (name: string) => void;
   showDisclaimer?: boolean;
-}> = ({ item, index, scrollX, primaryColor, animationsEnabled, nameInputValue, onNameChange, showDisclaimer }) => {
+  streakDaysValue?: string;
+  onStreakDaysChange?: (days: string) => void;
+  streakSourceValue?: string;
+  onStreakSourceChange?: (source: string) => void;
+}> = ({ item, index, scrollX, primaryColor, animationsEnabled, nameInputValue, onNameChange, showDisclaimer, streakDaysValue, onStreakDaysChange, streakSourceValue, onStreakSourceChange }) => {
   const { t } = useTranslation();
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -319,6 +333,48 @@ const OnboardingSlide: React.FC<{
             />
             <Text style={styles.nameInputHint}>
               {t('onboarding.slide4.hint', 'You can change this later in Profile')}
+            </Text>
+          </View>
+        )}
+
+        {/* Streak import for slide 5 */}
+        {item.isStreakImportSlide && (
+          <View style={styles.streakImportContainer}>
+            <View style={styles.streakInputRow}>
+              <View style={styles.streakInputWrapper}>
+                <Text style={styles.streakInputLabel}>
+                  {t('onboarding.slide5.daysLabel', 'Days')}
+                </Text>
+                <TextInput
+                  style={[styles.streakInput, { borderColor: `${primaryColor}40` }]}
+                  placeholder="0"
+                  placeholderTextColor="#9CA3AF"
+                  value={streakDaysValue}
+                  onChangeText={onStreakDaysChange}
+                  keyboardType="number-pad"
+                  returnKeyType="done"
+                  maxLength={5}
+                  accessibilityLabel={t('onboarding.slide5.daysLabel', 'Days')}
+                />
+              </View>
+              <View style={[styles.streakInputWrapper, { flex: 2 }]}>
+                <Text style={styles.streakInputLabel}>
+                  {t('onboarding.slide5.sourceLabel', 'From app (optional)')}
+                </Text>
+                <TextInput
+                  style={[styles.streakInput, { borderColor: `${primaryColor}40` }]}
+                  placeholder={t('onboarding.slide5.sourcePlaceholder', 'e.g. Headspace')}
+                  placeholderTextColor="#9CA3AF"
+                  value={streakSourceValue}
+                  onChangeText={onStreakSourceChange}
+                  returnKeyType="done"
+                  maxLength={30}
+                  accessibilityLabel={t('onboarding.slide5.sourceLabel', 'From app (optional)')}
+                />
+              </View>
+            </View>
+            <Text style={styles.streakInputHint}>
+              {t('onboarding.slide5.hint', 'Skip this if you\'re starting fresh')}
             </Text>
           </View>
         )}
@@ -441,6 +497,10 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
   const [reduceMotion, setReduceMotion] = useState(false);
   const scrollX = useSharedValue(0);
 
+  // Streak import state
+  const [streakDaysInput, setStreakDaysInput] = useState('');
+  const [streakSourceInput, setStreakSourceInput] = useState('');
+
   // Check for reduced motion preference
   React.useEffect(() => {
     const checkReduceMotion = async () => {
@@ -485,6 +545,14 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
       const trimmedName = nameInput.trim();
       logger.log('IntroScreen: Saving name:', trimmedName || '(empty/clearing)');
       await setUserName(trimmedName || undefined);
+
+      // Save imported streak if provided
+      const streakDays = parseInt(streakDaysInput, 10);
+      if (!isNaN(streakDays) && streakDays > 0) {
+        logger.log('IntroScreen: Saving imported streak:', streakDays, 'days from', streakSourceInput || '(no source)');
+        await saveImportedStreak(streakDays, streakSourceInput.trim() || undefined);
+      }
+
       await AsyncStorage.setItem(INTRO_COMPLETED_KEY, 'true');
       // Show success animation before navigating
       setShowSuccess(true);
@@ -492,7 +560,7 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
       logger.error('Error saving intro completion:', error);
       onDone();
     }
-  }, [nameInput, settings.hapticEnabled, setUserName, onDone]);
+  }, [nameInput, streakDaysInput, streakSourceInput, settings.hapticEnabled, setUserName, onDone]);
 
   const handleSuccessComplete = useCallback(() => {
     onDone();
@@ -631,6 +699,10 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
             nameInputValue={nameInput}
             onNameChange={handleNameChange}
             showDisclaimer={index === 0}
+            streakDaysValue={streakDaysInput}
+            onStreakDaysChange={setStreakDaysInput}
+            streakSourceValue={streakSourceInput}
+            onStreakSourceChange={setStreakSourceInput}
           />
         )}
       />
@@ -656,7 +728,7 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
             hapticType="medium"
           >
             <LinearGradient
-              colors={currentTheme.gradient}
+              colors={[...currentTheme.gradient]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.buttonGradient}
@@ -823,6 +895,48 @@ const styles = StyleSheet.create({
   },
   nameInputHint: {
     marginTop: 12,
+    fontSize: 14,
+    color: '#9CA3AF',
+    textAlign: 'center',
+  },
+  // Streak import styles
+  streakImportContainer: {
+    width: '100%',
+    marginTop: 32,
+    paddingHorizontal: 8,
+  },
+  streakInputRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  streakInputWrapper: {
+    flex: 1,
+  },
+  streakInputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#4B5563',
+    marginBottom: 8,
+  },
+  streakInput: {
+    width: '100%',
+    height: 56,
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    fontSize: 18,
+    backgroundColor: '#FFFFFF',
+    color: '#1F2937',
+    textAlign: 'center',
+    borderWidth: 2,
+    // Card-like shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  streakInputHint: {
+    marginTop: 16,
     fontSize: 14,
     color: '#9CA3AF',
     textAlign: 'center',

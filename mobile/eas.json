@@ -54,8 +54,7 @@
       },
       "cache": {
         "disabled": false,
-        "cacheDefaultPaths": true,
-        "customPaths": ["node_modules"]
+        "paths": ["node_modules"]
       }
     },
     "production-simulator": {
@@ -70,17 +69,15 @@
   "submit": {
     "preview": {
       "ios": {
-        "appleId": "your-apple-id@example.com",
-        "ascAppId": "PLACEHOLDER_APP_STORE_CONNECT_APP_ID",
-        "appleTeamId": "PLACEHOLDER_APPLE_TEAM_ID"
+        "appleId": "leszekszpunar@gmail.com",
+        "appleTeamId": "QQHRMJ6B78"
       }
     },
     "production": {
       "ios": {
-        "appleId": "your-apple-id@example.com",
-        "ascAppId": "PLACEHOLDER_APP_STORE_CONNECT_APP_ID",
-        "appleTeamId": "PLACEHOLDER_APPLE_TEAM_ID",
-        "sku": "slow-spot-app"
+        "appleId": "leszekszpunar@gmail.com",
+        "appleTeamId": "QQHRMJ6B78",
+        "sku": "com.iteon.slowspot"
       },
       "android": {
         "serviceAccountKeyPath": "./android-service-account.json",

@@ -216,7 +216,7 @@ export const MeditationIntroGuide: React.FC<MeditationIntroGuideProps> = ({
               activeOpacity={0.8}
             >
               <LinearGradient
-                colors={currentTheme.gradient}
+                colors={[...currentTheme.gradient]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.ctaGradient}

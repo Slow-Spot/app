@@ -14,6 +14,7 @@ import { logger } from '../utils/logger';
 const STORAGE_KEYS = {
   SESSIONS: '@slow_spot_custom_sessions',
   DEFAULT_SESSION_CREATED: '@slow_spot_default_session_v2',
+  CUSTOM_SOUNDS: '@slow_spot_custom_sounds',
 } as const;
 
 const DEFAULT_SESSION_ID = 'default-mindful-breathing';
@@ -74,6 +75,23 @@ export interface SessionConfig {
 export interface CustomSession extends MeditationSession {
   isCustom: true;
   config: SessionConfig;
+}
+
+/** Custom sound configuration for user-selected audio files */
+export interface CustomSoundsConfig {
+  /** Custom bell/chime sound file URI */
+  customBellUri?: string;
+  customBellName?: string;
+  /** Custom ambient sounds URIs */
+  customAmbientUris: {
+    nature?: { uri: string; name: string };
+    ocean?: { uri: string; name: string };
+    forest?: { uri: string; name: string };
+    rain?: { uri: string; name: string };
+    fire?: { uri: string; name: string };
+    wind?: { uri: string; name: string };
+    custom?: { uri: string; name: string };
+  };
 }
 
 // ============================================================================
@@ -142,8 +160,49 @@ const getAmbientFrequency = (_sound: AmbientSound): number => {
   return 440; // Standard tuning frequency
 };
 
+// ============================================================================
+// Custom Sounds Loading
+// ============================================================================
+
+/** Load custom sounds configuration from storage */
+export const getCustomSoundsConfig = async (): Promise<CustomSoundsConfig | null> => {
+  try {
+    const data = await AsyncStorage.getItem(STORAGE_KEYS.CUSTOM_SOUNDS);
+    if (data) {
+      return JSON.parse(data) as CustomSoundsConfig;
+    }
+    return null;
+  } catch (error) {
+    logger.error('Error loading custom sounds config:', error);
+    return null;
+  }
+};
+
+/** Get custom ambient sound URI for a specific sound type */
+export const getCustomAmbientUri = async (soundType: AmbientSound): Promise<string | undefined> => {
+  if (soundType === 'silence') return undefined;
+
+  const config = await getCustomSoundsConfig();
+  if (!config || !config.customAmbientUris) return undefined;
+
+  // For 'custom' type, use the custom ambient URI
+  if (soundType === 'custom') {
+    return config.customAmbientUris.custom?.uri;
+  }
+
+  // For other types, check if there's a custom override
+  const customSound = config.customAmbientUris[soundType];
+  return customSound?.uri;
+};
+
+/** Get custom bell/chime URI */
+export const getCustomBellUri = async (): Promise<string | undefined> => {
+  const config = await getCustomSoundsConfig();
+  return config?.customBellUri;
+};
+
 /** Convert SessionConfig to full CustomSession object */
-const createSessionObject = (config: SessionConfig, id?: string): CustomSession => {
+export const createSessionFromConfig = (config: SessionConfig, id?: string): CustomSession => {
   const sessionId = id || generateId();
   const needsChime = config.endChimeEnabled || config.intervalBellEnabled;
 
@@ -195,7 +254,7 @@ export const getSessionById = async (id: string): Promise<CustomSession | null> 
 export const saveSession = async (config: SessionConfig): Promise<CustomSession> => {
   try {
     const sessions = await getAllSessions();
-    const newSession = createSessionObject(config);
+    const newSession = createSessionFromConfig(config);
     sessions.push(newSession);
     await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
     return newSession;
@@ -215,7 +274,7 @@ export const updateSession = async (id: string, config: SessionConfig): Promise<
       throw new Error(`Session not found: ${id}`);
     }
 
-    const updatedSession = createSessionObject(config, id);
+    const updatedSession = createSessionFromConfig(config, id);
     updatedSession.createdAt = sessions[index].createdAt;
     sessions[index] = updatedSession;
 
@@ -271,7 +330,7 @@ export const initializeDefaultSession = async (): Promise<void> => {
     // Always ensure at least one session exists
     // This handles: first launch, clear data, or user manually deleted all sessions
     if (sessions.length === 0) {
-      const defaultSession = createSessionObject(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
+      const defaultSession = createSessionFromConfig(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
       await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify([defaultSession]));
       await AsyncStorage.setItem(STORAGE_KEYS.DEFAULT_SESSION_CREATED, 'true');
       logger.log('Default session created (empty list)');
@@ -290,11 +349,11 @@ export const initializeDefaultSession = async (): Promise<void> => {
 
     if (existingIndex >= 0) {
       // Update existing default session to latest config
-      sessions[existingIndex] = createSessionObject(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
+      sessions[existingIndex] = createSessionFromConfig(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
       sessions[existingIndex].createdAt = sessions[existingIndex].createdAt;
     } else {
       // Add default session at the beginning
-      const defaultSession = createSessionObject(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
+      const defaultSession = createSessionFromConfig(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
       sessions.unshift(defaultSession);
     }
 

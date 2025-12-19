@@ -315,7 +315,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={currentTheme.gradient}
+        colors={[...currentTheme.gradient]}
         locations={[0, 0.5, 1]}
         start={{ x: 0.2, y: 0 }}
         end={{ x: 0.8, y: 1 }}

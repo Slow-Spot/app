@@ -58,6 +58,8 @@ class AudioEngine {
       // Determine source type:
       // - number = require() result (local asset)
       // - string starting with http = remote URL
+      // - string starting with file:// = local file from document picker
+      // - string starting with content:// = Android content provider URI
       // - other string = invalid, skip
       let source: { uri: string } | number;
 
@@ -67,6 +69,10 @@ class AudioEngine {
       } else if (typeof uri === 'string' && uri.startsWith('http')) {
         // Remote URL
         source = { uri };
+      } else if (typeof uri === 'string' && (uri.startsWith('file://') || uri.startsWith('content://'))) {
+        // Local file from document picker (iOS: file://, Android: content://)
+        source = { uri };
+        logger.log(`Loading custom audio file for ${layer}: ${uri.substring(0, 50)}...`);
       } else {
         logger.warn(`Invalid audio source for ${layer}: ${uri}`);
         return;

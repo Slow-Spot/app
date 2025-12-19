@@ -47,6 +47,8 @@ interface MeditationTimerProps {
   customBreathing?: BreathingTiming;
   /** Hide the timer for a distraction-free meditation experience */
   hideTimer?: boolean;
+  /** Custom chime/bell sound URI from settings (file:// or content://) */
+  customChimeUri?: string;
   /** Haptic feedback at session start and end */
   sessionHaptics?: boolean;
   /** Haptic feedback synchronized with breathing phases */
@@ -66,6 +68,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   breathingPattern = 'box',
   customBreathing,
   hideTimer = true,
+  customChimeUri,
   sessionHaptics = true,
   breathingHaptics = true,
   intervalBellHaptics = true,
@@ -111,7 +114,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     stopContinuousHaptic();
 
     // Trigger single haptic pulse at phase transition
-    triggerPhaseTransitionHaptic(phase);
+    triggerPhaseTransitionHaptic();
   }, [isBreathingHapticEnabled, stopContinuousHaptic, triggerPhaseTransitionHaptic]);
 
   // Cleanup haptic interval on unmount
@@ -304,21 +307,38 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const breathingOpacity = useSharedValue(0.3);
   const breathingGlow = useSharedValue(0);
 
-  // Load chime sound
+  // Load chime sound (use custom URI if provided, otherwise default bell)
   useEffect(() => {
     let isMounted = true;
 
     const loadChimeSound = async () => {
       try {
-        const player = createAudioPlayer(
-          require('../../assets/sounds/meditation-bell.mp3')
-        );
+        // Use custom chime URI if provided (from settings), otherwise use default
+        const source = customChimeUri
+          ? { uri: customChimeUri }
+          : require('../../assets/sounds/meditation-bell.mp3');
+
+        logger.log('Loading chime sound:', customChimeUri ? 'custom' : 'default');
+        const player = createAudioPlayer(source);
         player.loop = false;
         if (isMounted) {
           chimeSound.current = player;
         }
       } catch (error) {
         logger.error('Error loading chime sound:', error);
+        // Fallback to default if custom fails
+        if (customChimeUri && isMounted) {
+          try {
+            logger.warn('Custom chime failed, falling back to default');
+            const fallbackPlayer = createAudioPlayer(
+              require('../../assets/sounds/meditation-bell.mp3')
+            );
+            fallbackPlayer.loop = false;
+            chimeSound.current = fallbackPlayer;
+          } catch (fallbackError) {
+            logger.error('Error loading fallback chime:', fallbackError);
+          }
+        }
       }
     };
 
@@ -330,7 +350,15 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         chimeSound.current.release();
       }
     };
-  }, []);
+  }, [customChimeUri]);
+
+  // Immediately stop local chime sound when audio is muted
+  useEffect(() => {
+    if (!audioEnabled && chimeSound.current) {
+      chimeSound.current.pause();
+      chimeSound.current.seekTo(0);
+    }
+  }, [audioEnabled]);
 
   // Breathing animation - synchronized with text, using dynamic timing from pattern
   useEffect(() => {
@@ -565,7 +593,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         {showBreathingGuide && (
           <Animated.View style={[styles.breathingCircleWrapper, breathingAnimatedStyle, { width: size, height: size }]}>
             <LinearGradient
-              colors={dynamicStyles.breathingCircleGradient}
+              colors={[...dynamicStyles.breathingCircleGradient]}
               style={styles.breathingCircle}
               start={{ x: 0.5, y: 0.5 }}
               end={{ x: 1, y: 1 }}
@@ -689,7 +717,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             : t('accessibility.resumeMeditationHint', 'Resumes the meditation timer')}
         >
           <LinearGradient
-            colors={currentTheme.gradient}
+            colors={[...currentTheme.gradient]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.primaryButton}

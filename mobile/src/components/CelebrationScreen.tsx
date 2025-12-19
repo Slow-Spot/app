@@ -49,7 +49,7 @@ import theme, { getThemeColors, getThemeGradients } from '../theme';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { AnimatedPressable } from './AnimatedPressable';
 import { StreakBadge } from './StreakBadge';
-import { getProgressStats, ProgressStats } from '../services/progressTracker';
+import { getProgressStats, getTotalStreak, ProgressStats } from '../services/progressTracker';
 
 const { width, height } = Dimensions.get('window');
 
@@ -262,6 +262,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
   const [selectedMood, setSelectedMood] = useState<MoodRating | null>(null);
   const [notes, setNotes] = useState('');
   const [stats, setStats] = useState<ProgressStats | null>(null);
+  const [totalStreak, setTotalStreak] = useState(0);
   const [showConfetti, setShowConfetti] = useState(true);
 
   // Confetti colors based on theme
@@ -351,8 +352,12 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
 
   const loadStats = async () => {
     try {
-      const progressStats = await getProgressStats();
+      const [progressStats, streakData] = await Promise.all([
+        getProgressStats(),
+        getTotalStreak(),
+      ]);
       setStats(progressStats);
+      setTotalStreak(streakData.total);
     } catch (error) {
       logger.error('Failed to load stats:', error);
     }
@@ -406,7 +411,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
             style={styles.header}
           >
             <CelebrationCheckmark
-              gradient={currentTheme.gradient}
+              gradient={[...currentTheme.gradient]}
               animationsEnabled={settings.animationsEnabled}
             />
             <Text style={[styles.title, dynamicStyles.title]}>
@@ -417,13 +422,13 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
             </Text>
 
             {/* Streak badge if applicable */}
-            {stats && stats.currentStreak > 0 && (
+            {totalStreak > 0 && (
               <Animated.View
                 entering={settings.animationsEnabled ? ZoomIn.delay(600).duration(400) : undefined}
                 style={styles.streakContainer}
               >
                 <StreakBadge
-                  streak={stats.currentStreak}
+                  streak={totalStreak}
                   isDark={isDark}
                   size="lg"
                   showLabel={true}
@@ -534,7 +539,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
                     mood={moodValue}
                     label={t(`profile.mood${moodValue}`)}
                     isSelected={selectedMood === moodValue}
-                    gradient={currentTheme.gradient}
+                    gradient={[...currentTheme.gradient]}
                     onSelect={handleMoodSelect}
                     dynamicStyles={dynamicStyles}
                     animationsEnabled={settings.animationsEnabled}
@@ -636,7 +641,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
               accessibilityHint={t('accessibility.continueHint', 'Returns to home screen')}
             >
               <LinearGradient
-                colors={currentTheme.gradient}
+                colors={[...currentTheme.gradient]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.continueButtonGradient}

@@ -5,7 +5,8 @@
   },
   "splash": {
     "appName": "Slow Spot.me",
-    "tagline": "Find your moment of peace"
+    "tagline": "Find your moment of peace",
+    "loading": "Loading..."
   },
   "intention": {
     "greeting": {
@@ -33,9 +34,9 @@
       "subtitle": "Prepare for meditation",
       "choosePattern": "Choose a pattern:",
       "patterns": {
+        "478": "For Sleep",
         "box": "For Stress",
         "boxDesc": "Calms and focuses the mind",
-        "478": "For Sleep",
         "478Desc": "Deep relaxation before sleep",
         "equal": "For Beginners",
         "equalDesc": "Simple pattern for beginners",
@@ -95,7 +96,12 @@
     "instructions": "Instructions",
     "instructionsDesc": "How to meditate",
     "inspirations": "Inspirations",
-    "inspirationsDesc": "Quotes & motivation"
+    "inspirationsDesc": "Quotes & motivation",
+    "quickStart": "Quick Start",
+    "quickStartDesc": "Start your meditation now",
+    "readyToMeditate": "Ready to meditate?",
+    "startNow": "Start Now",
+    "explore": "Explore"
   },
   "meditation": {
     "title": "Meditation",
@@ -140,7 +146,20 @@
     "intentionDescription": "What you set for yourself before the session",
     "meditationInProgress": "MEDITATION IN PROGRESS",
     "breatheNaturally": "Breathe naturally",
-    "tapToShowControls": "Tap to show controls"
+    "tapToShowControls": "Tap to show controls",
+    "customize": "Customize",
+    "endSession": "End Session",
+    "endSessionCancel": "Continue",
+    "endSessionConfirm": "End Session",
+    "endSessionMessage": "Are you sure you want to end this session early?",
+    "endSessionTitle": "End session?",
+    "inProgress": "Meditation in progress",
+    "moodAfter": "How do you feel after?",
+    "moodBefore": "How do you feel before?",
+    "saveSession": "Save Session",
+    "sessionNotesPlaceholder": "Add notes about your session...",
+    "sessionComplete": "Session Complete",
+    "sessionEnded": "Session Ended"
   },
   "instructions": {
     "timeOfDay": {
@@ -180,7 +199,16 @@
       "yourIntention": "Your Intention (Optional)",
       "intentionPlaceholder": "e.g., \"Stay present with my breath\"",
       "duringSession": "During Your Session",
-      "keepInMind": "Keep these tips in mind:"
+      "keepInMind": "Keep these tips in mind:",
+      "breathingExerciseDesc": "Simple breathing exercise to prepare",
+      "comfortablePosition": "Comfortable Position",
+      "comfortablePositionDesc": "Sit or lie down in a relaxed position",
+      "quietPlace": "Quiet Place",
+      "quietPlaceDesc": "Find a peaceful spot without distractions",
+      "ready": "Ready",
+      "spaceSetup": "Space Setup",
+      "timer": "Timer",
+      "timerDesc": "Set your meditation duration"
     },
     "skipModal": {
       "title": "Go to meditation",
@@ -340,6 +368,38 @@
           "type": "gentle"
         }
       }
+    },
+    "breathingPrep": {
+      "breathe": "Breathe",
+      "hold": "Hold"
+    },
+    "bodyRelaxation": {
+      "startingPosition": "Starting Position",
+      "startingPositionDesc": "Find a comfortable position",
+      "eyesClosed": "Close Your Eyes",
+      "eyesClosedDesc": "Gently close your eyes",
+      "bodyAwareness": "Body Awareness",
+      "bodyAwarenessDesc": "Feel your body",
+      "releaseTension": "Release Tension",
+      "releaseTensionDesc": "Relax all muscles"
+    },
+    "focusSetup": {
+      "breathFocus": "Focus on Breath",
+      "breathFocusDesc": "Observe your breathing",
+      "relaxBody": "Relax Body",
+      "relaxBodyDesc": "Let go of all tension",
+      "clearMind": "Clear Mind",
+      "clearMindDesc": "Let thoughts drift away",
+      "setIntention": "Set Intention",
+      "setIntentionDesc": "Define your session goal"
+    },
+    "breathingTechniques": {
+      "naturalBreath": "Natural Breath",
+      "naturalBreathDesc": "Breathe naturally",
+      "deepBreath": "Deep Breath",
+      "deepBreathDesc": "Deep inhales and exhales",
+      "countedBreath": "Counted Breath",
+      "countedBreathDesc": "Count your breaths"
     }
   },
   "sessions": {
@@ -479,7 +539,42 @@
     "notSet": "Not set",
     "soundPickError": "Error",
     "soundPickErrorBody": "Could not load the selected audio file.",
-    "customSoundsHint": "Select audio files from your device. Supported formats: MP3, WAV, M4A."
+    "customSoundsHint": "Select audio files from your device. Supported formats: MP3, WAV, M4A.",
+    "importStreak": "Import Streak",
+    "importStreakDescription": "Continue your streak from another app",
+    "addImportedStreak": "Add streak from another app",
+    "importStreakHint": "Your imported streak will be added to your current streak when you meditate.",
+    "importStreakTitle": "Import your streak",
+    "importStreakMessage": "Enter the number of days from your previous meditation practice.",
+    "streakDays": "Streak days",
+    "sourceApp": "From app (optional)",
+    "sourceAppPlaceholder": "e.g. Headspace, Calm",
+    "days": "days",
+    "fromApp": "From",
+    "clearImportedStreak": "Clear imported streak?",
+    "clearImportedStreakBody": "This will remove your imported streak days.",
+    "invalidStreak": "Invalid value",
+    "invalidStreakBody": "Please enter a positive number of days.",
+    "streakSaveError": "Could not save imported streak.",
+    "clearDataConfirm": "Are you sure? This cannot be undone.",
+    "clearDataDescription": "Remove all meditation data",
+    "clearDataSuccess": "All data cleared",
+    "exportDataDescription": "Export your meditation history",
+    "rateApp": "Rate App",
+    "shareApp": "Share App",
+    "soundSettings": "Sound Settings",
+    "soundSettingsDescription": "Configure audio preferences",
+    "version": "Version",
+    "customSoundDescription": "Use custom ambient sounds",
+    "hapticDescription": "Vibration during session",
+    "notificationsDescription": "Meditation reminders",
+    "resetData": "Reset Data",
+    "credits": "Credits",
+    "creditsIdea": "Concept",
+    "creditsExecution": "Development",
+    "creditsSponsor": "Sponsor",
+    "madeWith": "Made with",
+    "inPoland": "in Poland"
   },
   "navigation": {
     "home": "Home",
@@ -494,7 +589,19 @@
     "next": "Next",
     "close": "Close",
     "skip": "Skip",
-    "continue": "Continue"
+    "continue": "Continue",
+    "save": "Save",
+    "edit": "Edit",
+    "remove": "Remove",
+    "confirm": "Confirm",
+    "error": "Error",
+    "delete": "Delete",
+    "done": "Done",
+    "loading": "Loading...",
+    "no": "No",
+    "success": "Success",
+    "warning": "Warning",
+    "yes": "Yes"
   },
   "introGuide": {
     "title": "Introduction to Meditation",
@@ -702,11 +809,8 @@
     "breathPrayer": {
       "title": "Breath Prayer",
       "description": "Rhythmic prayer synchronized with breathing."
-    }
-  },
-  "common": {
-    "ok": "OK",
-    "cancel": "Cancel"
+    },
+    "empty": "No saved sessions"
   },
   "custom": {
     "title": "Custom Session",
@@ -719,7 +823,7 @@
     "duration": "Duration",
     "durationDescription": "Choose the length of your meditation session",
     "customDuration": "Custom duration:",
-    "customInterval": "Custom value:",
+    "customInterval": "Custom:",
     "minutes": "min",
     "selected": "selected",
     "ambientSound": "Ambient Sound",
@@ -737,7 +841,6 @@
     "intervalBellHint": "Mindful moment during session",
     "intervalEvery": "Bell every:",
     "intervalWarning": "Interval must be shorter than session duration",
-    "customInterval": "Custom:",
     "min": "min",
     "bells": "Bells",
     "bellsDescription": "Sound signals during your session",
@@ -822,12 +925,12 @@
     "exhale": "Exhale",
     "cycle": "cycle",
     "breathing": {
+      "478": "4-7-8",
       "none": "No Guidance",
       "noneDesc": "Meditate without a breathing pattern",
       "box": "Box Breathing",
       "boxDesc": "Balance & focus through equal phases",
       "boxBenefit": "Used by Navy SEALs for stress management",
-      "478": "4-7-8",
       "478Desc": "Natural sedative for nervous system",
       "478Benefit": "Calms racing thoughts before sleep",
       "equal": "Equal Breathing",
@@ -838,7 +941,55 @@
       "calmBenefit": "Reduces anxiety and promotes calmness"
     },
     "breathingTitle": "Breathing Pattern",
-    "breathingDescription": "Choose a science-backed breathing technique (optional)"
+    "breathingDescription": "Choose a science-backed breathing technique (optional)",
+    "addToFavorites": "Add to Favorites",
+    "ambientVolume": "Ambient Volume",
+    "awakeningChime": "Awakening Chime",
+    "awakeningChimeSubtitle": "Gentle sound to end your session",
+    "backgroundImage": "Background Image",
+    "bellVolume": "Bell Volume",
+    "birds": "Birds",
+    "chooseImage": "Choose Image",
+    "createNew": "Create New",
+    "customBackground": "Custom Background",
+    "defaultBackground": "Default Background",
+    "deleteConfirm": "Are you sure you want to delete this session?",
+    "duplicate": "Duplicate",
+    "durationMinutes": "{{count}} minutes",
+    "endBell": "End Bell",
+    "favorites": "Favorites",
+    "fire": "Fire",
+    "forest": "Forest",
+    "guidedMeditation": "Guided Meditation",
+    "guidedMeditationDescription": "Follow along with voice guidance",
+    "intervalBells": "Interval Bells",
+    "intervalBellsDescription": "Periodic reminders during session",
+    "intervalMinutes": "Interval (minutes)",
+    "keepScreenOn": "Keep Screen On",
+    "keepScreenOnDescription": "Prevent screen from turning off",
+    "longPressToEdit": "Long press to edit",
+    "minutesWithCount": "{{count}} min",
+    "noSound": "No Sound",
+    "ocean": "Ocean",
+    "previewSound": "Preview Sound",
+    "rain": "Rain",
+    "removeFromFavorites": "Remove from Favorites",
+    "sessionDeleted": "Session deleted",
+    "sessionDuplicated": "Session duplicated",
+    "share": "Share",
+    "start": "Start",
+    "startBell": "Start Bell",
+    "stopPreview": "Stop Preview",
+    "stream": "Stream",
+    "vibrationDescription": "Haptic feedback during session",
+    "whiteNoise": "White Noise",
+    "wind": "Wind",
+    "breathingExercise": "Breathing Exercise",
+    "breathingExerciseDescription": "Simple breathing exercise to prepare",
+    "bellSounds": "Bell Sounds",
+    "bellSoundsSubtitle": "Gentle signals during session",
+    "volume": "Volume",
+    "intervalBellLabel": "Interval Bell"
   },
   "profile": {
     "title": "Your Profile",
@@ -890,7 +1041,30 @@
     "dayThu": "Thu",
     "dayFri": "Fri",
     "daySat": "Sat",
-    "daySun": "Sun"
+    "daySun": "Sun",
+    "achievements": "Achievements",
+    "allTime": "All Time",
+    "averageSession": "Average Session",
+    "calendarView": "Calendar View",
+    "experience": "Experience",
+    "goalAchieved": "Goal Achieved!",
+    "goalProgress": "Goal Progress",
+    "hours": "hours",
+    "level": "Level",
+    "listView": "List View",
+    "meditationHistory": "Meditation History",
+    "minutesToNextLevel": "{{count}} min to next level",
+    "nextLevel": "Next Level",
+    "noRecentSessions": "No recent sessions",
+    "reminderSet": "Reminder set",
+    "removeReminder": "Remove Reminder",
+    "scheduleReminder": "Schedule Reminder",
+    "sessionsPerWeek": "Sessions per week",
+    "startFirstSession": "Start your first session",
+    "thisMonth": "This Month",
+    "viewAll": "View All",
+    "weeklyGoal": "Weekly Goal",
+    "weeklyGoalDescription": "Set your meditation target"
   },
   "calendar": {
     "title": "Calendar Integration",
@@ -905,7 +1079,29 @@
     "reminderCanceled": "Reminder canceled",
     "currentReminder": "Current Reminder",
     "noReminder": "No active reminder",
-    "at": "at"
+    "at": "at",
+    "addToCalendar": "Add to Calendar",
+    "removeFromCalendar": "Remove from Calendar",
+    "reminderTitle": "Meditation Reminder",
+    "reminderDescription": "Time for your daily meditation session with Slow Spot",
+    "selectDays": "Select Days",
+    "everyday": "Every Day",
+    "weekdays": "Weekdays",
+    "weekends": "Weekends",
+    "custom": "Custom",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "permissionRequired": "Calendar Permission Required",
+    "permissionDescription": "We need access to your calendar to create meditation reminders",
+    "grantPermission": "Grant Permission",
+    "reminderCreated": "Reminder created successfully",
+    "reminderRemoved": "Reminder removed",
+    "errorCreatingReminder": "Error creating reminder"
   },
   "instructionsScreen": {
     "title": "Meditation Guides",
@@ -920,17 +1116,6 @@
     "breathingSection": "Breathing Exercises",
     "breathingIntro": "Breathing techniques help calm the mind and prepare for meditation. Choose the pattern that suits your situation.",
     "breathingExercises": {
-      "box": {
-        "name": "For Stress",
-        "description": "Calms and focuses the mind. Perfect for stress and anxiety.",
-        "steps": [
-          "Inhale through nose for 4 seconds",
-          "Hold breath for 4 seconds",
-          "Exhale through mouth for 4 seconds",
-          "Hold breath for 4 seconds",
-          "Repeat for 4-5 cycles"
-        ]
-      },
       "478": {
         "name": "For Sleep",
         "description": "Deep relaxation before bed. Helps you fall asleep.",
@@ -940,6 +1125,17 @@
           "Exhale through mouth for 8 seconds",
           "Repeat 3-4 times",
           "Allow your body to relax"
+        ]
+      },
+      "box": {
+        "name": "For Stress",
+        "description": "Calms and focuses the mind. Perfect for stress and anxiety.",
+        "steps": [
+          "Inhale through nose for 4 seconds",
+          "Hold breath for 4 seconds",
+          "Exhale through mouth for 4 seconds",
+          "Hold breath for 4 seconds",
+          "Repeat for 4-5 cycles"
         ]
       },
       "equal": {
@@ -1200,7 +1396,8 @@
     "reflectionMaster": {
       "title": "Reflection Master",
       "description": "Add notes to 25 meditation sessions"
-    }
+    },
+    "meditation": "Meditation"
   },
   "onboarding": {
     "skip": "Skip",
@@ -1224,6 +1421,14 @@
       "subtitle": "Tell us your name and we'll greet you personally each time you visit.",
       "placeholder": "Your name (optional)",
       "hint": "You can change this later in Profile"
+    },
+    "slide5": {
+      "title": "Continue Your Journey?",
+      "subtitle": "Import your meditation streak from another app to continue where you left off.",
+      "daysLabel": "Days",
+      "sourceLabel": "From app (optional)",
+      "sourcePlaceholder": "e.g. Headspace",
+      "hint": "Skip this if you're starting fresh"
     },
     "healthDisclaimer": "This app supports mindfulness practice and is not a substitute for professional healthcare. Consult a doctor for health concerns.",
     "successTitle": "You're All Set!",

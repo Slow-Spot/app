@@ -27,7 +27,7 @@ import Reanimated, {
   Easing,
 } from 'react-native-reanimated';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
-import { brandColors, primaryColor, neutralColors, backgrounds } from '../theme/colors';
+import { brandColors, primaryColor, neutralColors, backgrounds, getSectionColors } from '../theme/colors';
 import { MeditationIntroGuide } from '../components/MeditationIntroGuide';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 // Using primaryColor.transparent for consistent brand color opacity
@@ -153,6 +153,14 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
   // Theme-aware colors and gradients
   const colors = useMemo(() => getThemeColors(isDark), [isDark]);
   const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
+  const sectionColors = useMemo(() => getSectionColors(isDark), [isDark]);
+
+  // Science section colors - use currentTheme primary color for consistency
+  const scienceColors = useMemo(() => ({
+    icon: currentTheme.primary,
+    background: isDark ? `${currentTheme.primary}33` : `${currentTheme.primary}1A`,
+    buttonBg: isDark ? `${currentTheme.primary}33` : `${currentTheme.primary}1A`,
+  }), [isDark, currentTheme]);
 
   // Open breathing modal with specific pattern
   const openBreathingModal = (patternId: string) => {
@@ -227,7 +235,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
             activeOpacity={0.8}
           >
             <LinearGradient
-              colors={currentTheme.gradient}
+              colors={[...currentTheme.gradient]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.featuredGradient}
@@ -328,11 +336,11 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
           {/* Breathing Science Section - Scientific sources */}
           <View style={[styles.card, dynamicStyles.card, { marginTop: theme.spacing.lg }]}>
             <View style={styles.cardHeader}>
-              <View style={[styles.breathingIconBox, { backgroundColor: '#E0F2FE' }]}>
-                <Ionicons name="flask" size={24} color="#0284C7" />
+              <View style={[styles.breathingIconBox, { backgroundColor: scienceColors.background }]}>
+                <Ionicons name="flask" size={24} color={scienceColors.icon} />
               </View>
               <View style={styles.breathingTitleContainer}>
-                <Text style={[styles.cardTitle, { color: '#0284C7' }]}>
+                <Text style={[styles.cardTitle, { color: scienceColors.icon }]}>
                   {t('settings.breathingScience', 'Breathing Science')}
                 </Text>
                 <Text style={[styles.breathingPattern, dynamicStyles.duration]}>
@@ -360,7 +368,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                         <Ionicons
                           name="document-text"
                           size={18}
-                          color="#0284C7"
+                          color={scienceColors.icon}
                           style={styles.sourceIcon}
                         />
                         <View style={styles.sourceTitleContainer}>
@@ -384,12 +392,12 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                           {t(source.descKey)}
                         </Text>
                         <TouchableOpacity
-                          style={[styles.learnMoreButton, { backgroundColor: '#E0F2FE' }]}
+                          style={[styles.learnMoreButton, { backgroundColor: scienceColors.buttonBg }]}
                           onPress={() => Linking.openURL(source.url)}
                           activeOpacity={0.7}
                         >
-                          <Ionicons name="open-outline" size={16} color="#0284C7" />
-                          <Text style={[styles.learnMoreText, { color: '#0284C7' }]}>
+                          <Ionicons name="open-outline" size={16} color={scienceColors.icon} />
+                          <Text style={[styles.learnMoreText, { color: scienceColors.icon }]}>
                             {t('settings.learnMore', 'Read study')}
                           </Text>
                         </TouchableOpacity>
@@ -594,7 +602,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                       onPress={() => setBreathingActive(true)}
                     >
                       <LinearGradient
-                        colors={currentTheme.gradient}
+                        colors={[...currentTheme.gradient]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
                         style={styles.modalButtonGradient}

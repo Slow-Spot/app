@@ -38,6 +38,38 @@ cleanup() {
     echo "✅ Procesy wyczyszczone"
 }
 
+# Funkcja sprawdzania czy symulator jest gotowy
+wait_for_simulator() {
+    echo "📱 Sprawdzanie symulatora iOS..."
+
+    # Uruchom symulator jeśli nie działa
+    if ! pgrep -x "Simulator" > /dev/null; then
+        echo "🔄 Uruchamianie Symulatora..."
+        open -a Simulator
+        sleep 5
+    fi
+
+    # Poczekaj aż symulator będzie gotowy (max 30 sekund)
+    local attempts=0
+    local max_attempts=15
+
+    while [ $attempts -lt $max_attempts ]; do
+        # Sprawdź czy jakieś urządzenie jest uruchomione
+        if xcrun simctl list devices | grep -q "Booted"; then
+            echo "✅ Symulator gotowy"
+            return 0
+        fi
+
+        echo "⏳ Czekam na symulator... ($((attempts + 1))/$max_attempts)"
+        sleep 2
+        attempts=$((attempts + 1))
+    done
+
+    echo "⚠️  Timeout - uruchamiam domyślny symulator..."
+    xcrun simctl boot "iPhone 16 Plus" 2>/dev/null || xcrun simctl boot "iPhone 15" 2>/dev/null || true
+    sleep 3
+}
+
 # Funkcja uruchamiania
 start() {
     echo "🚀 Uruchamianie Expo..."
@@ -47,6 +79,7 @@ start() {
 # Funkcja uruchamiania z iOS
 start_ios() {
     echo "🚀 Uruchamianie Expo z iOS Simulator..."
+    wait_for_simulator
     npx expo start --clear --ios
 }
 

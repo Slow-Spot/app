@@ -34,6 +34,7 @@ import {
   getProgressStats,
   getCompletedSessions,
   getSessionsInRange,
+  getTotalStreak,
   ProgressStats,
   CompletedSession,
 } from '../services/progressTracker';
@@ -148,6 +149,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
     longestStreak: 0,
     lastSessionDate: null,
   });
+  const [totalStreakData, setTotalStreakData] = useState<{ total: number; imported: number }>({ total: 0, imported: 0 });
   const [sessions, setSessions] = useState<CompletedSession[]>([]);
   const [weeklyActivity, setWeeklyActivity] = useState<WeeklyActivityData[]>([]);
   const [customSessionCount, setCustomSessionCount] = useState(0);
@@ -200,17 +202,19 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
    */
   const loadProfileData = useCallback(async () => {
     try {
-      const [progressStats, completedSessions, customSessions, weeklyData] = await Promise.all([
+      const [progressStats, completedSessions, customSessions, weeklyData, streakData] = await Promise.all([
         getProgressStats(),
         getCompletedSessions(),
         getAllSessions(),
         calculateWeeklyActivity(),
+        getTotalStreak(),
       ]);
 
       setStats(progressStats);
       setSessions(completedSessions.reverse()); // Most recent first
       setCustomSessionCount(customSessions.length);
       setWeeklyActivity(weeklyData);
+      setTotalStreakData({ total: streakData.total, imported: streakData.imported });
     } catch (error) {
       logger.error('Error loading profile data:', error);
     } finally {
@@ -657,7 +661,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
             )}
             {renderStatCard(
               'flame',
-              stats.currentStreak,
+              totalStreakData.total,
               t('profile.currentStreak'),
               t('profile.days'),
               dynamicStyles.iconOrange,
@@ -665,7 +669,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
             )}
             {renderStatCard(
               'trophy',
-              stats.longestStreak,
+              Math.max(stats.longestStreak, totalStreakData.total),
               t('profile.longestStreak'),
               t('profile.days'),
               dynamicStyles.iconPurple,

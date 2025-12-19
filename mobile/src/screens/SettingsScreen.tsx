@@ -19,6 +19,7 @@ import {
   Switch,
   Alert,
   Dimensions,
+  TextInput,
 } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { Paths, Directory } from 'expo-file-system';
@@ -44,7 +45,7 @@ import Constants from 'expo-constants';
 import { brandColors, primaryColor, featureColorPalettes, semanticColors, getFeatureIconColors } from '../theme/colors';
 import { exportAllData, clearAllData, resetOnboarding } from '../services/storage';
 import { clearAllSessions } from '../services/customSessionStorage';
-import { clearProgress } from '../services/progressTracker';
+import { clearProgress, saveImportedStreak, getImportedStreak, clearImportedStreak, ImportedStreakData } from '../services/progressTracker';
 import { clearAllQuoteHistory } from '../services/quoteHistory';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
@@ -205,6 +206,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [showExportErrorModal, setShowExportErrorModal] = useState(false);
   const [showClearErrorModal, setShowClearErrorModal] = useState(false);
 
+  // Streak import states
+  const [showStreakImportModal, setShowStreakImportModal] = useState(false);
+  const [streakInputValue, setStreakInputValue] = useState('');
+  const [sourceAppValue, setSourceAppValue] = useState('');
+  const [importedStreakData, setImportedStreakData] = useState<ImportedStreakData | null>(null);
+
   // Easter egg state - tap 7 times on About section for confetti!
   const [easterEggTaps, setEasterEggTaps] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -282,6 +289,71 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     };
     loadCustomSounds();
   }, []);
+
+  // Load imported streak data on mount
+  React.useEffect(() => {
+    const loadImportedStreak = async () => {
+      try {
+        const data = await getImportedStreak();
+        setImportedStreakData(data);
+      } catch (error) {
+        logger.error('Failed to load imported streak:', error);
+      }
+    };
+    loadImportedStreak();
+  }, []);
+
+  // Handle saving imported streak
+  const handleSaveImportedStreak = async () => {
+    const days = parseInt(streakInputValue, 10);
+    if (isNaN(days) || days < 1) {
+      Alert.alert(
+        t('settings.invalidStreak', 'Invalid value'),
+        t('settings.invalidStreakBody', 'Please enter a positive number of days.')
+      );
+      return;
+    }
+
+    try {
+      await saveImportedStreak(days, sourceAppValue || undefined);
+      const newData = await getImportedStreak();
+      setImportedStreakData(newData);
+      setShowStreakImportModal(false);
+      setStreakInputValue('');
+      setSourceAppValue('');
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch (error) {
+      logger.error('Failed to save imported streak:', error);
+      Alert.alert(
+        t('common.error', 'Error'),
+        t('settings.streakSaveError', 'Could not save imported streak.')
+      );
+    }
+  };
+
+  // Handle clearing imported streak
+  const handleClearImportedStreak = async () => {
+    Alert.alert(
+      t('settings.clearImportedStreak', 'Clear imported streak?'),
+      t('settings.clearImportedStreakBody', 'This will remove your imported streak days.'),
+      [
+        { text: t('common.cancel', 'Cancel'), style: 'cancel' },
+        {
+          text: t('common.confirm', 'Confirm'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await clearImportedStreak();
+              setImportedStreakData(null);
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            } catch (error) {
+              logger.error('Failed to clear imported streak:', error);
+            }
+          },
+        },
+      ]
+    );
+  };
 
   // Save custom sounds to storage
   const saveCustomSounds = async (newConfig: CustomSoundsConfig) => {
@@ -559,6 +631,87 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </GradientCard>
           </Animated.View>
         )}
+
+        {/* Import Streak Card - For users migrating from other apps */}
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(3) : undefined}>
+        <GradientCard
+          gradient={themeGradients.card.whiteCard}
+          style={[styles.card, dynamicStyles.cardShadow]}
+          isDark={isDark}
+        >
+          <View style={styles.cardRow}>
+            <View style={[styles.iconBox, { backgroundColor: `${currentTheme.primary}20` }]}>
+              <Ionicons name="flame" size={24} color={currentTheme.primary} />
+            </View>
+            <View style={styles.cardTextContainer}>
+              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
+                {t('settings.importStreak', 'Import Streak')}
+              </Text>
+              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
+                {t('settings.importStreakDescription', 'Continue your streak from another app')}
+              </Text>
+            </View>
+          </View>
+
+          {/* Show imported streak info or import button */}
+          {importedStreakData ? (
+            <View style={styles.importedStreakInfo}>
+              <View style={[styles.importedStreakBadge, { backgroundColor: `${currentTheme.primary}20` }]}>
+                <Ionicons name="flame" size={20} color={currentTheme.primary} />
+                <Text style={[styles.importedStreakDays, { color: currentTheme.primary }]}>
+                  +{importedStreakData.days} {t('settings.days', 'days')}
+                </Text>
+              </View>
+              {importedStreakData.sourceApp && (
+                <Text style={[styles.importedStreakSource, dynamicStyles.cardDescription]}>
+                  {t('settings.fromApp', 'From')}: {importedStreakData.sourceApp}
+                </Text>
+              )}
+              <View style={styles.importedStreakActions}>
+                <TouchableOpacity
+                  style={[styles.streakActionButton, { backgroundColor: `${currentTheme.primary}15` }]}
+                  onPress={() => {
+                    setStreakInputValue(importedStreakData.days.toString());
+                    setSourceAppValue(importedStreakData.sourceApp || '');
+                    setShowStreakImportModal(true);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="pencil" size={16} color={currentTheme.primary} />
+                  <Text style={[styles.streakActionText, { color: currentTheme.primary }]}>
+                    {t('common.edit', 'Edit')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.streakActionButton, { backgroundColor: `${semanticColors.error.default}12` }]}
+                  onPress={handleClearImportedStreak}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="trash-outline" size={16} color={semanticColors.error.default} />
+                  <Text style={[styles.streakActionText, { color: semanticColors.error.default }]}>
+                    {t('common.remove', 'Remove')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={[styles.importStreakButton, { backgroundColor: `${currentTheme.primary}15` }]}
+              onPress={() => setShowStreakImportModal(true)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="add-circle" size={20} color={currentTheme.primary} />
+              <Text style={[styles.importStreakButtonText, { color: currentTheme.primary }]}>
+                {t('settings.addImportedStreak', 'Add streak from another app')}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          <Text style={[styles.importStreakHint, dynamicStyles.cardDescription]}>
+            {t('settings.importStreakHint', 'Your imported streak will be added to your current streak when you meditate.')}
+          </Text>
+        </GradientCard>
+        </Animated.View>
 
         {/* Custom Sounds Card */}
         <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(3) : undefined}>
@@ -1044,6 +1197,20 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </Text>
             </TouchableOpacity>
           </View>
+          {/* Restart Onboarding - moved here for better context */}
+          <TouchableOpacity
+            style={[styles.restartOnboardingInline, { backgroundColor: dynamicStyles.optionBg }]}
+            onPress={handleRestartOnboarding}
+            activeOpacity={0.7}
+          >
+            <View style={styles.restartOnboardingContent}>
+              <Ionicons name="refresh" size={18} color={currentTheme.primary} />
+              <Text style={[styles.restartOnboardingText, dynamicStyles.cardDescription]}>
+                {t('settings.restartOnboarding', 'Restart onboarding')}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={dynamicStyles.chevronColor} />
+          </TouchableOpacity>
         </GradientCard>
         </Animated.View>
 
@@ -1131,59 +1298,130 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           <TouchableOpacity
             onPress={handleEasterEggTap}
             activeOpacity={1}
-            style={styles.cardRow}
+            style={styles.aboutHeader}
           >
-            <View style={[styles.iconBox, { backgroundColor: `${currentTheme.primary}20` }]}>
-              <Ionicons name="information-circle" size={24} color={currentTheme.primary} />
+            <View style={[styles.aboutLogoContainer, { backgroundColor: `${currentTheme.primary}15` }]}>
+              <Ionicons name="leaf" size={32} color={currentTheme.primary} />
             </View>
-            <View style={styles.cardTextContainer}>
-              <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
-                {t('settings.about', 'About the app')}
-              </Text>
-              <Text style={[styles.cardDescription, dynamicStyles.cardDescription]}>
-                {t('app.name')} • v{Constants.expoConfig?.version || '1.0.0'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <View style={[styles.aboutContent, { backgroundColor: dynamicStyles.optionBg }]}>
-            <Text style={[styles.aboutTagline, dynamicStyles.cardDescription]}>
+            <Text style={[styles.aboutAppName, dynamicStyles.cardTitle]}>
+              {t('app.name')}
+            </Text>
+            <Text style={[styles.aboutTaglineNew, dynamicStyles.cardDescription]}>
               {t('app.tagline')}
             </Text>
-            <View style={styles.aboutFeatures}>
-              <View style={styles.aboutFeature}>
-                <Ionicons name="checkmark-circle" size={16} color={currentTheme.primary} />
-                <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
+          </TouchableOpacity>
+
+          <View style={[styles.aboutContent, { backgroundColor: dynamicStyles.optionBg }]}>
+            {/* Features Grid */}
+            <View style={styles.aboutFeaturesGrid}>
+              <View style={[styles.aboutFeatureCard, { backgroundColor: currentTheme.primary + '08' }]}>
+                <Ionicons name="cloud-offline" size={20} color={currentTheme.primary} />
+                <Text style={[styles.aboutFeatureCardText, dynamicStyles.cardDescription]}>
                   {t('settings.featureOffline', 'Works offline')}
                 </Text>
               </View>
-              <View style={styles.aboutFeature}>
-                <Ionicons name="checkmark-circle" size={16} color={currentTheme.primary} />
-                <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
+              <View style={[styles.aboutFeatureCard, { backgroundColor: currentTheme.primary + '08' }]}>
+                <Ionicons name="eye-off" size={20} color={currentTheme.primary} />
+                <Text style={[styles.aboutFeatureCardText, dynamicStyles.cardDescription]}>
                   {t('settings.featurePrivacy', 'No ads or tracking')}
                 </Text>
               </View>
-              <View style={styles.aboutFeature}>
-                <Ionicons name="checkmark-circle" size={16} color={currentTheme.primary} />
-                <Text style={[styles.aboutFeatureText, dynamicStyles.cardDescription]}>
+              <View style={[styles.aboutFeatureCard, { backgroundColor: currentTheme.primary + '08' }]}>
+                <Ionicons name="phone-portrait" size={20} color={currentTheme.primary} />
+                <Text style={[styles.aboutFeatureCardText, dynamicStyles.cardDescription]}>
                   {t('settings.featureLocal', 'Data on device')}
                 </Text>
               </View>
             </View>
-          </View>
-          {/* Restart Onboarding button */}
-          <TouchableOpacity
-            style={[styles.restartOnboardingButton, { backgroundColor: dynamicStyles.optionBg }]}
-            onPress={handleRestartOnboarding}
-            activeOpacity={0.7}
-          >
-            <View style={styles.legalLinkContent}>
-              <Ionicons name="refresh" size={20} color={currentTheme.primary} />
-              <Text style={[styles.legalLinkText, dynamicStyles.cardTitle]}>
-                {t('settings.restartOnboarding', 'Restart onboarding')}
-              </Text>
+
+            {/* Credits Section */}
+            <View style={styles.creditsSection}>
+              <View style={styles.creditsTitleRow}>
+                <View style={[styles.creditsDivider, { backgroundColor: currentTheme.primary + '30' }]} />
+                <Text style={[styles.creditsTitle, { color: currentTheme.primary }]}>
+                  {t('settings.credits', 'Credits')}
+                </Text>
+                <View style={[styles.creditsDivider, { backgroundColor: currentTheme.primary + '30' }]} />
+              </View>
+
+              <View style={styles.creditsGrid}>
+                <TouchableOpacity
+                  style={[styles.creditCard, { backgroundColor: currentTheme.primary + '08' }]}
+                  onPress={() => Linking.openURL('https://www.linkedin.com/in/tytus-sawa/')}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.creditIconBg, { backgroundColor: currentTheme.primary + '15' }]}>
+                    <Ionicons name="bulb-outline" size={18} color={currentTheme.primary} />
+                  </View>
+                  <Text style={[styles.creditCardLabel, dynamicStyles.cardDescription]}>
+                    {t('settings.creditsIdea', 'Concept')}
+                  </Text>
+                  <View style={styles.creditCardNameRow}>
+                    <Text style={[styles.creditCardName, { color: currentTheme.primary }]}>
+                      Tytus Sawa
+                    </Text>
+                    <Ionicons name="logo-linkedin" size={14} color={currentTheme.primary} />
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.creditCard, { backgroundColor: currentTheme.primary + '08' }]}
+                  onPress={() => Linking.openURL('https://www.linkedin.com/in/leszek-szpunar/')}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.creditIconBg, { backgroundColor: currentTheme.primary + '15' }]}>
+                    <Ionicons name="code-slash-outline" size={18} color={currentTheme.primary} />
+                  </View>
+                  <Text style={[styles.creditCardLabel, dynamicStyles.cardDescription]}>
+                    {t('settings.creditsExecution', 'Development')}
+                  </Text>
+                  <View style={styles.creditCardNameRow}>
+                    <Text style={[styles.creditCardName, { color: currentTheme.primary }]}>
+                      Leszek Szpunar
+                    </Text>
+                    <Ionicons name="logo-linkedin" size={14} color={currentTheme.primary} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.sponsorCard, { backgroundColor: currentTheme.primary + '08' }]}
+                onPress={() => Linking.openURL('https://iteon.pl/')}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.sponsorIconBg, { backgroundColor: currentTheme.primary + '15' }]}>
+                  <Ionicons name="heart-outline" size={18} color={currentTheme.primary} />
+                </View>
+                <View style={styles.sponsorTextContainer}>
+                  <Text style={[styles.creditCardLabel, dynamicStyles.cardDescription]}>
+                    {t('settings.creditsSponsor', 'Sponsor')}
+                  </Text>
+                  <View style={styles.creditCardNameRow}>
+                    <Text style={[styles.sponsorName, { color: currentTheme.primary }]}>
+                      ITEON
+                    </Text>
+                    <Ionicons name="open-outline" size={14} color={currentTheme.primary} />
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
-            <Ionicons name="chevron-forward" size={18} color={dynamicStyles.chevronColor} />
-          </TouchableOpacity>
+
+            {/* Version & Made with love */}
+            <View style={styles.aboutFooter}>
+              <Text style={[styles.aboutVersion, dynamicStyles.cardDescription]}>
+                v{Constants.expoConfig?.version || '1.0.0'}
+              </Text>
+              <View style={styles.madeWithLove}>
+                <Text style={[styles.madeWithLoveText, dynamicStyles.cardDescription]}>
+                  {t('settings.madeWith', 'Made with')}
+                </Text>
+                <Ionicons name="heart" size={12} color={currentTheme.primary} />
+                <Text style={[styles.madeWithLoveText, dynamicStyles.cardDescription]}>
+                  {t('settings.inPoland', 'in Poland')}
+                </Text>
+              </View>
+            </View>
+          </View>
         </GradientCard>
         </Animated.View>
       </ScrollView>
@@ -1246,6 +1484,89 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         buttons={[{ text: 'OK' }]}
         onDismiss={() => setShowClearErrorModal(false)}
       />
+
+      {/* Streak Import Modal */}
+      <AppModal
+        visible={showStreakImportModal}
+        title={t('settings.importStreakTitle', 'Import your streak')}
+        message={t('settings.importStreakMessage', 'Enter the number of days from your previous meditation practice.')}
+        icon="flame"
+        iconColor={currentTheme.primary}
+        buttons={[]}
+        onDismiss={() => {
+          setShowStreakImportModal(false);
+          setStreakInputValue('');
+          setSourceAppValue('');
+        }}
+      >
+        <View style={styles.streakImportForm}>
+          <View style={styles.streakInputContainer}>
+            <Text style={[styles.streakInputLabel, dynamicStyles.cardTitle]}>
+              {t('settings.streakDays', 'Streak days')}
+            </Text>
+            <TextInput
+              style={[
+                styles.streakInput,
+                {
+                  backgroundColor: dynamicStyles.optionBg,
+                  borderColor: dynamicStyles.optionBorder,
+                  color: colors.text.primary,
+                }
+              ]}
+              value={streakInputValue}
+              onChangeText={setStreakInputValue}
+              keyboardType="number-pad"
+              placeholder="540"
+              placeholderTextColor={colors.text.tertiary}
+              maxLength={5}
+            />
+          </View>
+          <View style={styles.streakInputContainer}>
+            <Text style={[styles.streakInputLabel, dynamicStyles.cardTitle]}>
+              {t('settings.sourceApp', 'From app (optional)')}
+            </Text>
+            <TextInput
+              style={[
+                styles.streakInput,
+                {
+                  backgroundColor: dynamicStyles.optionBg,
+                  borderColor: dynamicStyles.optionBorder,
+                  color: colors.text.primary,
+                }
+              ]}
+              value={sourceAppValue}
+              onChangeText={setSourceAppValue}
+              placeholder={t('settings.sourceAppPlaceholder', 'e.g. Headspace, Calm')}
+              placeholderTextColor={colors.text.tertiary}
+              maxLength={50}
+            />
+          </View>
+          <View style={styles.streakModalButtons}>
+            <TouchableOpacity
+              style={[styles.streakModalButton, { backgroundColor: dynamicStyles.optionBg }]}
+              onPress={() => {
+                setShowStreakImportModal(false);
+                setStreakInputValue('');
+                setSourceAppValue('');
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.streakModalButtonText, dynamicStyles.cardTitle]}>
+                {t('common.cancel', 'Cancel')}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.streakModalButton, { backgroundColor: currentTheme.primary }]}
+              onPress={handleSaveImportedStreak}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.streakModalButtonText, { color: '#fff' }]}>
+                {t('common.save', 'Save')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </AppModal>
 
       {/* Easter egg confetti overlay */}
       {showConfetti && (
@@ -1378,27 +1699,147 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   // About section
-  aboutContent: {
-    marginTop: theme.spacing.md,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.lg,
+  aboutHeader: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.md,
   },
-  aboutTagline: {
+  aboutLogoContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.sm,
+  },
+  aboutAppName: {
+    fontSize: theme.typography.fontSizes.xl,
+    fontWeight: '700',
+    marginBottom: theme.spacing.xs,
+  },
+  aboutTaglineNew: {
     fontSize: theme.typography.fontSizes.sm,
     fontStyle: 'italic',
     textAlign: 'center',
-    marginBottom: theme.spacing.md,
+    opacity: 0.8,
   },
-  aboutFeatures: {
-    gap: theme.spacing.sm,
+  aboutContent: {
+    marginTop: theme.spacing.sm,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
   },
-  aboutFeature: {
+  aboutFeaturesGrid: {
+    flexDirection: 'row',
+    gap: theme.spacing.xs,
+  },
+  aboutFeatureCard: {
+    flex: 1,
+    alignItems: 'center',
+    padding: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
+    gap: theme.spacing.xs,
+  },
+  aboutFeatureCardText: {
+    fontSize: theme.typography.fontSizes.xs,
+    textAlign: 'center',
+    lineHeight: 14,
+  },
+  aboutFooter: {
+    marginTop: theme.spacing.md,
+    paddingTop: theme.spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.05)',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
+  aboutVersion: {
+    fontSize: theme.typography.fontSizes.xs,
+    opacity: 0.5,
+  },
+  madeWithLove: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 4,
+  },
+  madeWithLoveText: {
+    fontSize: theme.typography.fontSizes.xs,
+    opacity: 0.6,
+  },
+  // Credits section
+  creditsSection: {
+    marginTop: theme.spacing.lg,
+    paddingTop: theme.spacing.md,
+  },
+  creditsTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.md,
     gap: theme.spacing.sm,
   },
-  aboutFeatureText: {
+  creditsDivider: {
+    flex: 1,
+    height: 1,
+    maxWidth: 40,
+  },
+  creditsTitle: {
+    fontSize: theme.typography.fontSizes.xs,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+  },
+  creditsGrid: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
+  },
+  creditCard: {
+    flex: 1,
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+    gap: theme.spacing.xs,
+  },
+  creditIconBg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.xs,
+  },
+  creditCardLabel: {
+    fontSize: theme.typography.fontSizes.xs,
+    opacity: 0.7,
+  },
+  creditCardNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  creditCardName: {
     fontSize: theme.typography.fontSizes.sm,
+    fontWeight: '600',
+  },
+  sponsorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+    gap: theme.spacing.md,
+  },
+  sponsorIconBg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sponsorTextContainer: {
+    flex: 1,
+  },
+  sponsorName: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: '700',
   },
   // Legal links section
   legalLinks: {
@@ -1421,7 +1862,7 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes.sm,
     fontWeight: '500',
   },
-  // Restart onboarding button
+  // Restart onboarding button (old - kept for compatibility)
   restartOnboardingButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1429,6 +1870,24 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.lg,
     marginTop: theme.spacing.md,
+  },
+  // Restart onboarding inline (in Data & Privacy section)
+  restartOnboardingInline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    marginTop: theme.spacing.md,
+  },
+  restartOnboardingContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+  },
+  restartOnboardingText: {
+    fontSize: theme.typography.fontSizes.sm,
   },
   // Scientific sources section
   scienceIntro: {
@@ -1604,5 +2063,98 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: theme.spacing.xs,
     paddingHorizontal: theme.spacing.sm,
+  },
+  // Streak import styles
+  importedStreakInfo: {
+    marginTop: theme.spacing.md,
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+  },
+  importedStreakBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius.full,
+    gap: theme.spacing.xs,
+  },
+  importedStreakDays: {
+    fontSize: theme.typography.fontSizes.lg,
+    fontWeight: '700',
+  },
+  importedStreakSource: {
+    fontSize: theme.typography.fontSizes.sm,
+  },
+  importedStreakActions: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.xs,
+  },
+  streakActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    gap: theme.spacing.xs,
+  },
+  streakActionText: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: '500',
+  },
+  importStreakButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
+    marginTop: theme.spacing.md,
+    gap: theme.spacing.sm,
+  },
+  importStreakButtonText: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: '600',
+  },
+  importStreakHint: {
+    fontSize: theme.typography.fontSizes.xs,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginTop: theme.spacing.md,
+    paddingHorizontal: theme.spacing.sm,
+  },
+  // Streak import modal styles
+  streakImportForm: {
+    gap: theme.spacing.md,
+    paddingTop: theme.spacing.sm,
+  },
+  streakInputContainer: {
+    gap: theme.spacing.xs,
+  },
+  streakInputLabel: {
+    fontSize: theme.typography.fontSizes.sm,
+    fontWeight: '500',
+  },
+  streakInput: {
+    borderWidth: 1.5,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.md,
+    fontSize: theme.typography.fontSizes.md,
+  },
+  streakModalButtons: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.sm,
+  },
+  streakModalButton: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+  },
+  streakModalButtonText: {
+    fontSize: theme.typography.fontSizes.md,
+    fontWeight: '600',
   },
 });

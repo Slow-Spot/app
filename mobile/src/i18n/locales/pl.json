@@ -1,11 +1,12 @@
 {
   "app": {
-    "name": "Slow Spot.me",
+    "name": "Slow Spot",
     "tagline": "Twoja przestrzeń do medytacji"
   },
   "splash": {
     "appName": "Slow Spot.me",
-    "tagline": "Znajdź chwilę spokoju"
+    "tagline": "Znajdź chwilę spokoju",
+    "loading": "Ładowanie..."
   },
   "intention": {
     "greeting": {
@@ -33,9 +34,9 @@
       "subtitle": "Przygotuj się do medytacji",
       "choosePattern": "Wybierz wzorzec:",
       "patterns": {
+        "478": "Na spokój",
         "box": "Na stres",
         "boxDesc": "Uspokaja i skupia umysł",
-        "478": "Na spokój",
         "478Desc": "Głęboka relaksacja przed snem",
         "equal": "Na początek",
         "equalDesc": "Prosty wzorzec dla początkujących",
@@ -151,7 +152,14 @@
     "intentionDescription": "To, co sobie założyłeś przed sesją",
     "meditationInProgress": "Medytacja w trakcie",
     "breatheNaturally": "Oddychaj naturalnie",
-    "tapToShowControls": "Dotknij, aby pokazać kontrolki"
+    "tapToShowControls": "Dotknij, aby pokazać kontrolki",
+    "endSession": "Zakończ sesję",
+    "moodAfter": "Jak się czujesz po?",
+    "moodBefore": "Jak się czujesz przed?",
+    "saveSession": "Zapisz sesję",
+    "sessionNotesPlaceholder": "Dodaj notatki o sesji...",
+    "sessionComplete": "Sesja zakończona",
+    "sessionEnded": "Sesja zakończona"
   },
   "instructions": {
     "timeOfDay": {
@@ -165,7 +173,7 @@
       "nightRecommendation": "Nocna medytacja przygotowuje do spokojnego snu. Skanowanie ciała jest bardzo polecane."
     },
     "breathingPrep": {
-      "hold": "Trzymaj",
+      "hold": "Zatrzymaj",
       "breathe": "Oddychaj"
     },
     "preparation": {
@@ -195,7 +203,16 @@
       "yourIntention": "Twoja intencja (opcjonalnie)",
       "intentionPlaceholder": "np. \"Pozostań obecny z moim oddechem\"",
       "duringSession": "Podczas twojej sesji",
-      "keepInMind": "Pamiętaj o tych wskazówkach:"
+      "keepInMind": "Pamiętaj o tych wskazówkach:",
+      "breathingExerciseDesc": "Proste ćwiczenie oddechowe do przygotowania",
+      "comfortablePosition": "Wygodna pozycja",
+      "comfortablePositionDesc": "Usiądź lub połóż się w zrelaksowanej pozycji",
+      "quietPlace": "Cicha przestrzeń",
+      "quietPlaceDesc": "Znajdź spokojne miejsce bez rozpraszaczy",
+      "ready": "Gotowy",
+      "spaceSetup": "Przygotowanie przestrzeni",
+      "timer": "Timer",
+      "timerDesc": "Ustaw czas trwania medytacji"
     },
     "skipModal": {
       "title": "Przejdź do medytacji",
@@ -355,6 +372,34 @@
           "type": "gentle"
         }
       }
+    },
+    "bodyRelaxation": {
+      "startingPosition": "Pozycja początkowa",
+      "startingPositionDesc": "Znajdź wygodną pozycję",
+      "eyesClosed": "Zamknij oczy",
+      "eyesClosedDesc": "Delikatnie zamknij oczy",
+      "bodyAwareness": "Świadomość ciała",
+      "bodyAwarenessDesc": "Poczuj swoje ciało",
+      "releaseTension": "Uwolnij napięcie",
+      "releaseTensionDesc": "Rozluźnij wszystkie mięśnie"
+    },
+    "focusSetup": {
+      "breathFocus": "Skup się na oddechu",
+      "breathFocusDesc": "Obserwuj swój oddech",
+      "relaxBody": "Rozluźnij ciało",
+      "relaxBodyDesc": "Puść całe napięcie",
+      "clearMind": "Oczyść umysł",
+      "clearMindDesc": "Pozwól myślom odpłynąć",
+      "setIntention": "Ustal intencję",
+      "setIntentionDesc": "Określ cel sesji"
+    },
+    "breathingTechniques": {
+      "naturalBreath": "Naturalny oddech",
+      "naturalBreathDesc": "Oddychaj naturalnie",
+      "deepBreath": "Głęboki oddech",
+      "deepBreathDesc": "Głębokie wdechy i wydechy",
+      "countedBreath": "Liczony oddech",
+      "countedBreathDesc": "Licz oddechy"
     }
   },
   "sessions": {
@@ -494,7 +539,42 @@
     "notSet": "Nie ustawiono",
     "soundPickError": "Błąd",
     "soundPickErrorBody": "Nie udało się załadować wybranego pliku audio.",
-    "customSoundsHint": "Wybierz pliki audio z urządzenia. Obsługiwane formaty: MP3, WAV, M4A."
+    "customSoundsHint": "Wybierz pliki audio z urządzenia. Obsługiwane formaty: MP3, WAV, M4A.",
+    "importStreak": "Importuj passę",
+    "importStreakDescription": "Kontynuuj swoją passę z innej aplikacji",
+    "addImportedStreak": "Dodaj passę z innej aplikacji",
+    "importStreakHint": "Zaimportowana passa zostanie dodana do obecnej passy, gdy zaczniesz medytować.",
+    "importStreakTitle": "Importuj swoją passę",
+    "importStreakMessage": "Wpisz liczbę dni z poprzedniej praktyki medytacyjnej.",
+    "streakDays": "Dni passy",
+    "sourceApp": "Z aplikacji (opcjonalnie)",
+    "sourceAppPlaceholder": "np. Headspace, Calm",
+    "days": "dni",
+    "fromApp": "Z aplikacji",
+    "clearImportedStreak": "Usunąć zaimportowaną passę?",
+    "clearImportedStreakBody": "Usunie to dni zaimportowanej passy.",
+    "invalidStreak": "Nieprawidłowa wartość",
+    "invalidStreakBody": "Wprowadź dodatnią liczbę dni.",
+    "streakSaveError": "Nie udało się zapisać zaimportowanej passy.",
+    "clearDataConfirm": "Czy na pewno? Tej operacji nie można cofnąć.",
+    "clearDataDescription": "Usuń wszystkie dane medytacji",
+    "clearDataSuccess": "Wszystkie dane usunięte",
+    "exportDataDescription": "Eksportuj historię medytacji",
+    "rateApp": "Oceń aplikację",
+    "shareApp": "Udostępnij aplikację",
+    "soundSettings": "Ustawienia dźwięku",
+    "soundSettingsDescription": "Konfiguruj preferencje audio",
+    "version": "Wersja",
+    "customSoundDescription": "Użyj własnych dźwięków otoczenia",
+    "hapticDescription": "Wibracje podczas sesji",
+    "notificationsDescription": "Przypomnienia o medytacji",
+    "resetData": "Resetuj dane",
+    "credits": "Twórcy",
+    "creditsIdea": "Pomysł",
+    "creditsExecution": "Wykonanie",
+    "creditsSponsor": "Sponsor",
+    "madeWith": "Stworzone z",
+    "inPoland": "w Polsce"
   },
   "navigation": {
     "home": "Główna",
@@ -509,7 +589,19 @@
     "next": "Dalej",
     "close": "Zamknij",
     "skip": "Pomiń",
-    "continue": "Kontynuuj"
+    "continue": "Kontynuuj",
+    "save": "Zapisz",
+    "edit": "Edytuj",
+    "remove": "Usuń",
+    "confirm": "Potwierdź",
+    "error": "Błąd",
+    "delete": "Usuń",
+    "done": "Gotowe",
+    "loading": "Ładowanie...",
+    "no": "Nie",
+    "success": "Sukces",
+    "warning": "Ostrzeżenie",
+    "yes": "Tak"
   },
   "introGuide": {
     "title": "Wprowadzenie do medytacji",
@@ -607,7 +699,30 @@
     "dayThu": "Czw",
     "dayFri": "Pt",
     "daySat": "Sob",
-    "daySun": "Ndz"
+    "daySun": "Ndz",
+    "achievements": "Osiągnięcia",
+    "allTime": "Cały czas",
+    "averageSession": "Średnia sesja",
+    "calendarView": "Widok kalendarza",
+    "experience": "Doświadczenie",
+    "goalAchieved": "Cel osiągnięty!",
+    "goalProgress": "Postęp celu",
+    "hours": "godzin",
+    "level": "Poziom",
+    "listView": "Widok listy",
+    "meditationHistory": "Historia medytacji",
+    "minutesToNextLevel": "{{count}} min do następnego poziomu",
+    "nextLevel": "Następny poziom",
+    "noRecentSessions": "Brak ostatnich sesji",
+    "reminderSet": "Przypomnienie ustawione",
+    "removeReminder": "Usuń przypomnienie",
+    "scheduleReminder": "Zaplanuj przypomnienie",
+    "sessionsPerWeek": "Sesji tygodniowo",
+    "startFirstSession": "Rozpocznij pierwszą sesję",
+    "thisMonth": "Ten miesiąc",
+    "viewAll": "Zobacz wszystko",
+    "weeklyGoal": "Cel tygodniowy",
+    "weeklyGoalDescription": "Ustaw swój cel medytacyjny"
   },
   "calendar": {
     "title": "Integracja z kalendarzem",
@@ -616,13 +731,35 @@
     "daily": "Codziennie",
     "cancel": "Anuluj",
     "save": "Zapisz przypomnienie",
-    "permissionDenied": "Brak dostępu do kalendarza",
-    "permissionMessage": "Proszę włączyć dostęp do kalendarza w Ustawieniach",
+    "permissionDenied": "Odmowa dostępu do kalendarza",
+    "permissionMessage": "Włącz dostęp do kalendarza w Ustawieniach",
     "reminderSet": "Przypomnienie ustawione!",
     "reminderCanceled": "Przypomnienie anulowane",
-    "currentReminder": "Aktywne przypomnienie",
+    "currentReminder": "Aktualne przypomnienie",
     "noReminder": "Brak aktywnego przypomnienia",
-    "at": "o"
+    "at": "o",
+    "addToCalendar": "Dodaj do kalendarza",
+    "removeFromCalendar": "Usuń z kalendarza",
+    "reminderTitle": "Przypomnienie o medytacji",
+    "reminderDescription": "Czas na codzienną sesję medytacji z Slow Spot",
+    "selectDays": "Wybierz dni",
+    "everyday": "Codziennie",
+    "weekdays": "Dni robocze",
+    "weekends": "Weekendy",
+    "custom": "Własne",
+    "monday": "Poniedziałek",
+    "tuesday": "Wtorek",
+    "wednesday": "Środa",
+    "thursday": "Czwartek",
+    "friday": "Piątek",
+    "saturday": "Sobota",
+    "sunday": "Niedziela",
+    "permissionRequired": "Wymagane uprawnienia kalendarza",
+    "permissionDescription": "Potrzebujemy dostępu do kalendarza, aby tworzyć przypomnienia o medytacji",
+    "grantPermission": "Przyznaj uprawnienia",
+    "reminderCreated": "Przypomnienie utworzone pomyślnie",
+    "reminderRemoved": "Przypomnienie usunięte",
+    "errorCreatingReminder": "Błąd podczas tworzenia przypomnienia"
   },
   "sessionsList": {
     "morningAwakening": {
@@ -784,7 +921,8 @@
     "breathPrayer": {
       "title": "Modlitwa oddechowa",
       "description": "Rytmiczna modlitwa zsynchronizowana z oddychaniem."
-    }
+    },
+    "empty": "Brak zapisanych sesji"
   },
   "custom": {
     "title": "Własna sesja",
@@ -844,7 +982,7 @@
       "customHint": "Możesz dostosować dźwięki w ustawieniach aplikacji"
     },
     "awakeningChime": "Dzwonek przebudzenia",
-    "awakeningChimeSubtitle": "Delikatny dźwięk sygnalizujący koniec sesji",
+    "awakeningChimeSubtitle": "Delikatny dźwięk kończący sesję",
     "guidingVoice": "Głos prowadzący",
     "guidingVoiceSubtitle": "Łagodne wskazówki głosowe podczas sesji",
     "voiceGuidance": "Przewodnik głosowy",
@@ -861,7 +999,7 @@
     "updateSession": "Aktualizuj sesję",
     "saveAndStart": "Zapisz i rozpocznij",
     "startWithoutSaving": "Rozpocznij bez zapisywania",
-    "start": "Rozpocznij",
+    "start": "Start",
     "longPressToEdit": "Przytrzymaj, aby edytować",
     "editSession": "Edytuj sesję",
     "deleteSession": "Usuń sesję",
@@ -904,12 +1042,12 @@
     "exhale": "Wydech",
     "cycle": "cykl",
     "breathing": {
+      "478": "4-7-8",
       "none": "Bez instrukcji",
       "noneDesc": "Medytuj bez wzorca oddechowego",
       "box": "Box Breathing",
       "boxDesc": "Równowaga i skupienie przy stresie",
       "boxBenefit": "Używany przez Navy SEALs do radzenia ze stresem",
-      "478": "4-7-8",
       "478Desc": "Naturalna pomoc na sen",
       "478Benefit": "Uspokaja goniące myśli przed snem",
       "equal": "Equal Breathing",
@@ -920,10 +1058,53 @@
       "calmBenefit": "Redukuje niepokój i wprowadza spokój"
     },
     "breathingTitle": "Wzorzec oddechowy",
-    "breathingDescription": "Wybierz technikę wspieraną badaniami naukowymi (opcjonalne)"
+    "breathingDescription": "Wybierz technikę wspieraną badaniami naukowymi (opcjonalne)",
+    "addToFavorites": "Dodaj do ulubionych",
+    "ambientVolume": "Głośność otoczenia",
+    "backgroundImage": "Obraz tła",
+    "bellVolume": "Głośność dzwonka",
+    "birds": "Ptaki",
+    "chooseImage": "Wybierz obraz",
+    "createNew": "Utwórz nowy",
+    "customBackground": "Własne tło",
+    "defaultBackground": "Domyślne tło",
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę sesję?",
+    "duplicate": "Duplikuj",
+    "durationMinutes": "{{count}} minut",
+    "endBell": "Dzwonek końcowy",
+    "favorites": "Ulubione",
+    "fire": "Ogień",
+    "forest": "Las",
+    "guidedMeditation": "Medytacja prowadzona",
+    "guidedMeditationDescription": "Podążaj za głosowym przewodnikiem",
+    "intervalBells": "Dzwonki interwałowe",
+    "intervalBellsDescription": "Okresowe przypomnienia podczas sesji",
+    "intervalMinutes": "Interwał (minuty)",
+    "keepScreenOn": "Utrzymuj ekran włączony",
+    "keepScreenOnDescription": "Zapobiega wyłączaniu ekranu",
+    "noSound": "Bez dźwięku",
+    "ocean": "Ocean",
+    "previewSound": "Podgląd dźwięku",
+    "rain": "Deszcz",
+    "removeFromFavorites": "Usuń z ulubionych",
+    "sessionDeleted": "Sesja usunięta",
+    "sessionDuplicated": "Sesja zduplikowana",
+    "share": "Udostępnij",
+    "startBell": "Dzwonek początkowy",
+    "stopPreview": "Zatrzymaj podgląd",
+    "stream": "Strumień",
+    "vibrationDescription": "Wibracje podczas sesji",
+    "whiteNoise": "Biały szum",
+    "wind": "Wiatr",
+    "breathingExercise": "Ćwiczenie oddechowe",
+    "breathingExerciseDescription": "Proste ćwiczenie oddechowe na początek",
+    "bellSounds": "Dźwięki dzwonka",
+    "bellSoundsSubtitle": "Delikatne sygnały podczas sesji",
+    "volume": "Głośność",
+    "intervalBellLabel": "Dzwonek interwałowy"
   },
   "instructionsScreen": {
-    "title": "Przewodniki medytacji",
+    "title": "Instrukcje",
     "subtitle": "Poznaj techniki i naucz się budować własną rutynę",
     "featuredIntro": {
       "title": "Wprowadzenie do medytacji",
@@ -935,17 +1116,6 @@
     "breathingSection": "Ćwiczenia oddechowe",
     "breathingIntro": "Techniki oddechowe pomagają uspokoić umysł i przygotować się do medytacji. Wybierz wzorzec odpowiedni dla swojej sytuacji.",
     "breathingExercises": {
-      "box": {
-        "name": "Na stres",
-        "description": "Uspokaja i skupia umysł. Idealny przy stresie i lęku.",
-        "steps": [
-          "Wdech przez nos przez 4 sekundy",
-          "Zatrzymaj oddech na 4 sekundy",
-          "Wydech przez usta przez 4 sekundy",
-          "Zatrzymaj oddech na 4 sekundy",
-          "Powtarzaj przez 4-5 cykli"
-        ]
-      },
       "478": {
         "name": "Na spokój",
         "description": "Głęboka relaksacja przed snem. Pomaga zasnąć.",
@@ -955,6 +1125,17 @@
           "Wydech przez usta przez 8 sekund",
           "Powtórz 3-4 razy",
           "Pozwól ciału się rozluźnić"
+        ]
+      },
+      "box": {
+        "name": "Na stres",
+        "description": "Uspokaja i skupia umysł. Idealny przy stresie i lęku.",
+        "steps": [
+          "Wdech przez nos przez 4 sekundy",
+          "Zatrzymaj oddech na 4 sekundy",
+          "Wydech przez usta przez 4 sekundy",
+          "Zatrzymaj oddech na 4 sekundy",
+          "Powtarzaj przez 4-5 cykli"
         ]
       },
       "equal": {
@@ -1215,7 +1396,8 @@
     "reflectionMaster": {
       "title": "Mistrz refleksji",
       "description": "Dodaj notatki do 25 sesji medytacji"
-    }
+    },
+    "meditation": "Meditation"
   },
   "onboarding": {
     "skip": "Pomiń",
@@ -1239,6 +1421,14 @@
       "subtitle": "Podaj swoje imię, a będziemy się do Ciebie zwracać osobiście przy każdej wizycie.",
       "placeholder": "Twoje imię (opcjonalnie)",
       "hint": "Możesz to zmienić później w Profilu"
+    },
+    "slide5": {
+      "title": "Kontynuujesz podróż?",
+      "subtitle": "Zaimportuj passę z innej aplikacji i kontynuuj od miejsca, w którym skończyłeś.",
+      "daysLabel": "Dni",
+      "sourceLabel": "Z aplikacji (opcjonalnie)",
+      "sourcePlaceholder": "np. Headspace",
+      "hint": "Pomiń, jeśli zaczynasz od zera"
     },
     "healthDisclaimer": "Aplikacja wspiera praktykę mindfulness i nie zastępuje profesjonalnej opieki zdrowotnej. W przypadku problemów zdrowotnych skonsultuj się z lekarzem.",
     "successTitle": "Wszystko gotowe!",

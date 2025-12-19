@@ -8,6 +8,17 @@ import { logger } from '../utils/logger';
 
 const STORAGE_KEY = 'meditation_progress';
 const SESSIONS_KEY = 'completed_sessions';
+const IMPORTED_STREAK_KEY = 'imported_streak';
+
+/**
+ * Imported streak data from another meditation app
+ */
+export interface ImportedStreakData {
+  days: number;                    // Number of imported streak days
+  importedAt: string;              // ISO date when imported
+  sourceApp?: string;              // Optional: name of source app (e.g., "Headspace", "Calm")
+  originalStartDate?: string;      // Optional: when the original streak started
+}
 
 export interface CompletedSession {
   id: number | string; // number for preset sessions, string for custom sessions
@@ -250,5 +261,99 @@ export const getTodayMinutes = async (): Promise<number> => {
   } catch (error) {
     logger.error('Error getting today minutes:', error);
     return 0;
+  }
+};
+
+// ══════════════════════════════════════════════════════════════
+// Imported Streak Functions
+// For users migrating from other meditation apps
+// ══════════════════════════════════════════════════════════════
+
+/**
+ * Save imported streak data from another app
+ * This adds bonus days to the user's current streak
+ */
+export const saveImportedStreak = async (
+  days: number,
+  sourceApp?: string,
+  originalStartDate?: string
+): Promise<void> => {
+  try {
+    const data: ImportedStreakData = {
+      days: Math.max(0, Math.floor(days)), // Ensure positive integer
+      importedAt: new Date().toISOString(),
+      ...(sourceApp && { sourceApp }),
+      ...(originalStartDate && { originalStartDate }),
+    };
+    await AsyncStorage.setItem(IMPORTED_STREAK_KEY, JSON.stringify(data));
+    logger.log(`Imported streak saved: ${days} days from ${sourceApp || 'unknown app'}`);
+  } catch (error) {
+    logger.error('Error saving imported streak:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get imported streak data
+ */
+export const getImportedStreak = async (): Promise<ImportedStreakData | null> => {
+  try {
+    const data = await AsyncStorage.getItem(IMPORTED_STREAK_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    logger.error('Error reading imported streak:', error);
+    return null;
+  }
+};
+
+/**
+ * Clear imported streak data
+ */
+export const clearImportedStreak = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(IMPORTED_STREAK_KEY);
+    logger.log('Imported streak cleared');
+  } catch (error) {
+    logger.error('Error clearing imported streak:', error);
+  }
+};
+
+/**
+ * Get total streak including imported days
+ * Only adds imported streak if user has meditated today or yesterday
+ * (to maintain the "active streak" requirement)
+ */
+export const getTotalStreak = async (): Promise<{
+  total: number;
+  current: number;
+  imported: number;
+  hasActiveStreak: boolean;
+}> => {
+  try {
+    const sessions = await getCompletedSessions();
+    const currentStreak = calculateCurrentStreak(sessions);
+    const importedData = await getImportedStreak();
+
+    // Only add imported streak if user has an active streak (meditated recently)
+    const hasActiveStreak = currentStreak > 0;
+    const importedDays = importedData?.days || 0;
+
+    // Total = current streak + imported (only if active)
+    const total = hasActiveStreak ? currentStreak + importedDays : currentStreak;
+
+    return {
+      total,
+      current: currentStreak,
+      imported: importedDays,
+      hasActiveStreak,
+    };
+  } catch (error) {
+    logger.error('Error calculating total streak:', error);
+    return {
+      total: 0,
+      current: 0,
+      imported: 0,
+      hasActiveStreak: false,
+    };
   }
 };

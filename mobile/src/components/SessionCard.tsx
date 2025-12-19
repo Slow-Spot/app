@@ -10,7 +10,7 @@ import { MeditationSession } from '../services/api';
 import { CustomSession } from '../services/customSessionStorage';
 import { AnimatedPressable } from './AnimatedPressable';
 import theme, { getThemeColors, getCardStyles, getSwipeActionColors } from '../theme';
-import { getSectionColors } from '../theme/colors';
+import { getSectionColors, featureColorPalettes } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
 interface SessionCardProps {
@@ -80,6 +80,12 @@ export const SessionCard = React.memo<SessionCardProps>(({
   const sectionColors = useMemo(() => getSectionColors(isDark), [isDark]);
   const globalCardStyles = useMemo(() => getCardStyles(isDark), [isDark]);
   const swipeColors = useMemo(() => getSwipeActionColors(isDark), [isDark]);
+
+  // Default session uses rose palette (flower theme)
+  const defaultSessionColors = useMemo(() => ({
+    icon: isDark ? featureColorPalettes.rose.darkIcon : featureColorPalettes.rose.lightIcon,
+    background: isDark ? featureColorPalettes.rose[800] : featureColorPalettes.rose.light,
+  }), [isDark]);
 
   // Get custom session config for displaying details
   const customConfig = isCustom ? (session as CustomSession).config : null;
@@ -190,14 +196,14 @@ export const SessionCard = React.memo<SessionCardProps>(({
         styles.iconContainer,
         {
           backgroundColor: isDefaultSession
-            ? '#FCE7F3' // Pink background for default session (flower theme)
+            ? defaultSessionColors.background
             : sectionColors.meditation.background
         }
       ]}>
         <Ionicons
           name={isDefaultSession ? 'flower-outline' : 'leaf-outline'}
           size={22}
-          color={isDefaultSession ? '#EC4899' : sectionColors.meditation.icon}
+          color={isDefaultSession ? defaultSessionColors.icon : sectionColors.meditation.icon}
         />
       </View>
 

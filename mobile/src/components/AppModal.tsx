@@ -40,6 +40,8 @@ export interface AppModalProps {
   onDismiss?: () => void;
   icon?: keyof typeof Ionicons.glyphMap;
   iconColor?: string;
+  /** Custom content to render below the message */
+  children?: React.ReactNode;
 }
 
 export const AppModal: React.FC<AppModalProps> = ({
@@ -50,6 +52,7 @@ export const AppModal: React.FC<AppModalProps> = ({
   onDismiss,
   icon,
   iconColor,
+  children,
 }) => {
   const systemColorScheme = useColorScheme();
   const isDark = systemColorScheme === 'dark';
@@ -157,6 +160,9 @@ export const AppModal: React.FC<AppModalProps> = ({
           {message && (
             <Text style={[styles.message, { color: colors.text.secondary }]}>{message}</Text>
           )}
+
+          {/* Custom children content */}
+          {children}
 
           {/* Buttons */}
           <View style={[styles.buttonsContainer, buttons.length === 2 && styles.buttonsRow]}>

@@ -5,7 +5,8 @@
   },
   "splash": {
     "appName": "Slow Spot.me",
-    "tagline": "अपनी शांति का क्षण खोजें"
+    "tagline": "अपनी शांति का क्षण खोजें",
+    "loading": "लोड हो रहा है..."
   },
   "intention": {
     "greeting": {
@@ -33,9 +34,9 @@
       "subtitle": "ध्यान की तैयारी करें",
       "choosePattern": "एक पैटर्न चुनें:",
       "patterns": {
+        "478": "नींद के लिए",
         "box": "तनाव के लिए",
         "boxDesc": "मन को शांत और केंद्रित करता है",
-        "478": "नींद के लिए",
         "478Desc": "नींद से पहले गहन विश्राम",
         "equal": "शुरुआती के लिए",
         "equalDesc": "शुरुआती के लिए सरल पैटर्न",
@@ -97,7 +98,10 @@
     "inspirations": "प्रेरणा",
     "inspirationsDesc": "उद्धरण और प्रेरणा",
     "quickStart": "त्वरित प्रारंभ",
-    "quickStartDesc": "अभी 5 मिनट का ध्यान शुरू करें"
+    "quickStartDesc": "अभी 5 मिनट का ध्यान शुरू करें",
+    "readyToMeditate": "ध्यान के लिए तैयार?",
+    "startNow": "अभी शुरू करें",
+    "explore": "खोजें"
   },
   "meditation": {
     "title": "ध्यान",
@@ -150,7 +154,12 @@
     "tapToShowControls": "नियंत्रण दिखाने के लिए टैप करें",
     "notesOptional": "अपने विचार लिखें (वैकल्पिक)",
     "notesPlaceholder": "आप कैसा महसूस कर रहे हैं? आपके क्या विचार हैं?",
-    "inspiration": "प्रेरणा"
+    "inspiration": "प्रेरणा",
+    "customize": "अनुकूलित करें",
+    "endSessionCancel": "जारी रखें",
+    "endSessionConfirm": "सत्र समाप्त करें",
+    "sessionComplete": "सत्र पूर्ण",
+    "sessionEnded": "सत्र समाप्त"
   },
   "quotes": {
     "title": "प्रेरक उद्धरण",
@@ -211,7 +220,9 @@
       "comfortablePositionDesc": "आराम से बैठें या लेट जाएं",
       "timer": "टाइमर",
       "timerDesc": "अपना पसंदीदा ध्यान टाइमर सेट करें",
-      "ready": "मैं तैयार हूँ"
+      "ready": "मैं तैयार हूँ",
+      "breathe": "साँस लें",
+      "breathingExerciseDesc": "तैयारी के लिए सरल श्वास व्यायाम"
     },
     "skipModal": {
       "title": "ध्यान पर जाएं",
@@ -371,6 +382,34 @@
           "type": "gentle"
         }
       }
+    },
+    "bodyRelaxation": {
+      "startingPosition": "प्रारंभिक स्थिति",
+      "startingPositionDesc": "आरामदायक स्थिति खोजें",
+      "eyesClosed": "आँखें बंद करें",
+      "eyesClosedDesc": "धीरे से अपनी आँखें बंद करें",
+      "bodyAwareness": "शारीरिक जागरूकता",
+      "bodyAwarenessDesc": "अपने शरीर को महसूस करें",
+      "releaseTension": "तनाव छोड़ें",
+      "releaseTensionDesc": "सभी मांसपेशियों को आराम दें"
+    },
+    "focusSetup": {
+      "breathFocus": "साँस पर ध्यान दें",
+      "breathFocusDesc": "अपनी साँस देखें",
+      "relaxBody": "शरीर को आराम दें",
+      "relaxBodyDesc": "सभी तनाव छोड़ दें",
+      "clearMind": "मन साफ़ करें",
+      "clearMindDesc": "विचारों को जाने दें",
+      "setIntention": "इरादा निर्धारित करें",
+      "setIntentionDesc": "अपने सत्र का लक्ष्य निर्धारित करें"
+    },
+    "breathingTechniques": {
+      "naturalBreath": "प्राकृतिक साँस",
+      "naturalBreathDesc": "स्वाभाविक रूप से साँस लें",
+      "deepBreath": "गहरी साँस",
+      "deepBreathDesc": "गहरी साँस लें और छोड़ें",
+      "countedBreath": "गिनती वाली साँस",
+      "countedBreathDesc": "अपनी साँसें गिनें"
     }
   },
   "sessions": {
@@ -422,9 +461,9 @@
     "dataPrivacy": "डेटा और गोपनीयता",
     "dataPrivacyDescription": "सभी डेटा इस डिवाइस पर रहता है",
     "clearData": "डेटा साफ़ करें",
-    "clearDataDescription": "सभी ऐप डेटा हटाएं",
-    "clearDataConfirm": "क्या आप वाकई अपना सारा डेटा हटाना चाहते हैं?",
-    "clearDataSuccess": "सभी डेटा साफ़ कर दिया गया है",
+    "clearDataDescription": "सभी ध्यान डेटा हटाएं",
+    "clearDataConfirm": "क्या आप सुनिश्चित हैं? यह पूर्ववत नहीं किया जा सकता।",
+    "clearDataSuccess": "सभी डेटा हटाया गया",
     "clearDataTitle": "स्थानीय डेटा साफ़ करें?",
     "clearDataBody": "यह आपके सत्र, प्रगति, अनुस्मारक और प्राथमिकताओं को इस डिवाइस से हटा देगा।",
     "dataCleared": "स्थानीय डेटा साफ़ किया गया",
@@ -433,18 +472,18 @@
     "featurePrivacy": "कोई विज्ञापन या ट्रैकिंग नहीं",
     "featureLocal": "डेटा डिवाइस पर",
     "exportData": "डेटा निर्यात करें",
-    "exportDataDescription": "अपना ध्यान डेटा डाउनलोड करें",
+    "exportDataDescription": "ध्यान इतिहास निर्यात करें",
     "skipInstructions": "निर्देश छोड़ें",
     "skipInstructionsDescription": "अनुभवी ध्यानियों के लिए",
     "soundSettings": "ध्वनि सेटिंग्स",
-    "soundSettingsDescription": "घंटियां और परिवेशी ध्वनियां कॉन्फ़िगर करें",
+    "soundSettingsDescription": "ऑडियो प्राथमिकताएं कॉन्फ़िगर करें",
     "version": "संस्करण",
     "termsOfService": "सेवा की शर्तें",
     "privacyPolicy": "गोपनीयता नीति",
     "support": "सहायता",
     "legalTitle": "कानूनी जानकारी",
     "legalDescription": "शर्तें, गोपनीयता नीति और सहायता",
-    "rateApp": "ऐप को रेट करें",
+    "rateApp": "ऐप रेट करें",
     "shareApp": "ऐप साझा करें",
     "restartOnboarding": "ऑनबोर्डिंग पुनः शुरू करें",
     "restartOnboardingTitle": "ऑनबोर्डिंग पुनः शुरू करें?",
@@ -509,7 +548,33 @@
     "notSet": "सेट नहीं है",
     "soundPickError": "त्रुटि",
     "soundPickErrorBody": "चयनित ऑडियो फ़ाइल लोड नहीं हो सकी।",
-    "customSoundsHint": "अपने डिवाइस से ऑडियो फ़ाइलें चुनें। समर्थित प्रारूप: MP3, WAV, M4A।"
+    "customSoundsHint": "अपने डिवाइस से ऑडियो फ़ाइलें चुनें। समर्थित प्रारूप: MP3, WAV, M4A।",
+    "importStreak": "श्रृंखला आयात करें",
+    "importStreakDescription": "किसी अन्य ऐप से अपनी श्रृंखला जारी रखें",
+    "addImportedStreak": "अन्य ऐप से श्रृंखला जोड़ें",
+    "importStreakHint": "जब आप ध्यान करेंगे तो आपकी आयातित श्रृंखला आपकी वर्तमान श्रृंखला में जोड़ दी जाएगी।",
+    "importStreakTitle": "अपनी श्रृंखला आयात करें",
+    "importStreakMessage": "अपनी पिछली ध्यान अभ्यास के दिनों की संख्या दर्ज करें।",
+    "streakDays": "श्रृंखला दिन",
+    "sourceApp": "ऐप से (वैकल्पिक)",
+    "sourceAppPlaceholder": "जैसे Headspace, Calm",
+    "days": "दिन",
+    "fromApp": "से",
+    "clearImportedStreak": "आयातित श्रृंखला हटाएं?",
+    "clearImportedStreakBody": "इससे आपकी आयातित श्रृंखला के दिन हट जाएंगे।",
+    "invalidStreak": "अमान्य मान",
+    "invalidStreakBody": "कृपया दिनों की एक सकारात्मक संख्या दर्ज करें।",
+    "streakSaveError": "आयातित श्रृंखला सहेजी नहीं जा सकी।",
+    "customSoundDescription": "कस्टम परिवेश ध्वनियों का उपयोग करें",
+    "hapticDescription": "सत्र के दौरान कंपन",
+    "notificationsDescription": "ध्यान अनुस्मारक",
+    "resetData": "डेटा रीसेट करें",
+    "credits": "श्रेय",
+    "creditsIdea": "अवधारणा",
+    "creditsExecution": "विकास",
+    "creditsSponsor": "प्रायोजक",
+    "madeWith": "बनाया गया",
+    "inPoland": "पोलैंड में"
   },
   "navigation": {
     "home": "होम",
@@ -677,7 +742,8 @@
     "breathPrayer": {
       "title": "श्वास प्रार्थना",
       "description": "श्वास के साथ समन्वित लयबद्ध प्रार्थना।"
-    }
+    },
+    "empty": "कोई सहेजे गए सत्र नहीं"
   },
   "achievements": {
     "title": "उपलब्धियाँ",
@@ -826,7 +892,8 @@
     "reflectionMaster": {
       "title": "चिंतन गुरु",
       "description": "25 ध्यान सत्रों में नोट्स जोड़ें"
-    }
+    },
+    "meditation": "ध्यान"
   },
   "common": {
     "ok": "ठीक है",
@@ -834,10 +901,11 @@
     "save": "सहेजें",
     "delete": "हटाएं",
     "edit": "संपादित करें",
+    "remove": "हटाएं",
     "close": "बंद करें",
     "back": "वापस",
     "next": "अगला",
-    "done": "पूर्ण",
+    "done": "हो गया",
     "loading": "लोड हो रहा है...",
     "error": "त्रुटि",
     "success": "सफलता",
@@ -864,20 +932,20 @@
     "achievements": "उपलब्धियाँ",
     "viewAll": "सभी देखें",
     "recentSessions": "हाल के सत्र",
-    "noRecentSessions": "कोई हाल के सत्र नहीं",
-    "startFirstSession": "अपना पहला ध्यान सत्र शुरू करें",
+    "noRecentSessions": "कोई हालिया सत्र नहीं",
+    "startFirstSession": "अपना पहला सत्र शुरू करें",
     "level": "स्तर",
     "experience": "अनुभव",
     "nextLevel": "अगला स्तर",
-    "minutesToNextLevel": "अगले स्तर तक {{minutes}} मिनट",
+    "minutesToNextLevel": "अगले स्तर तक {{count}} मिनट",
     "scheduleReminder": "अनुस्मारक शेड्यूल करें",
-    "reminderSet": "{{time}} के लिए अनुस्मारक सेट",
+    "reminderSet": "अनुस्मारक सेट",
     "removeReminder": "अनुस्मारक हटाएं",
     "weeklyGoal": "साप्ताहिक लक्ष्य",
-    "weeklyGoalDescription": "अपना साप्ताहिक ध्यान लक्ष्य सेट करें",
+    "weeklyGoalDescription": "अपना ध्यान लक्ष्य निर्धारित करें",
     "sessionsPerWeek": "प्रति सप्ताह सत्र",
-    "goalProgress": "{{goal}} में से {{current}} सत्र",
-    "goalAchieved": "लक्ष्य हासिल!",
+    "goalProgress": "लक्ष्य प्रगति",
+    "goalAchieved": "लक्ष्य प्राप्त!",
     "meditationHistory": "ध्यान इतिहास",
     "calendarView": "कैलेंडर दृश्य",
     "listView": "सूची दृश्य",
@@ -965,14 +1033,14 @@
     "subtitle": "अपनी आवश्यकताओं के अनुसार ध्यान बनाएं",
     "mySavedSessions": "मेरे सहेजे गए सत्र",
     "savedSessionsHint": "शुरू करने के लिए टैप करें, विकल्पों के लिए दबाए रखें",
-    "createNew": "नया सत्र बनाएं",
-    "editSession": "सत्र संपादित करें",
+    "createNew": "नया बनाएं",
+    "editSession": "संपादित करें",
     "sessionName": "सत्र का नाम",
     "sessionNameHint": "वैकल्पिक - सहेजने के लिए",
     "sessionNamePlaceholder": "उदा. प्रातः ध्यान",
     "duration": "अवधि",
     "durationDescription": "अपने ध्यान सत्र की अवधि चुनें",
-    "durationMinutes": "{{minutes}} मिनट",
+    "durationMinutes": "{{count}} मिनट",
     "customDuration": "कस्टम अवधि:",
     "customInterval": "कस्टम मान:",
     "minutes": "मिनट",
@@ -987,7 +1055,7 @@
     "ambientFire": "आग",
     "ambientWind": "हवा",
     "ambientCustom": "कस्टम",
-    "noSound": "कोई ध्वनि नहीं",
+    "noSound": "कोई आवाज़ नहीं",
     "rain": "बारिश",
     "ocean": "समुद्र",
     "forest": "जंगल",
@@ -1005,15 +1073,15 @@
     "intervalWarning": "अंतराल सत्र की अवधि से छोटा होना चाहिए",
     "intervalMinutes": "अंतराल (मिनट)",
     "startBell": "शुरुआती घंटी",
-    "endBell": "समापन घंटी",
-    "bellVolume": "घंटी की आवाज़",
-    "ambientVolume": "परिवेशी आवाज़",
+    "endBell": "समाप्ति घंटी",
+    "bellVolume": "घंटी वॉल्यूम",
+    "ambientVolume": "परिवेश वॉल्यूम",
     "endChime": "समापन घंटी",
     "endChimeDescription": "आपके सत्र के अंत में सौम्य झंकार",
     "endChimeHint": "अंत में सौम्य संकेत",
     "vibration": "हैप्टिक (कंपन)",
     "vibrationHint": "श्वास चरणों के लिए स्पर्श मार्गदर्शन",
-    "vibrationDescription": "सत्र के अंत में कंपन करें",
+    "vibrationDescription": "सत्र के दौरान कंपन",
     "sessionHaptics": "सत्र हैप्टिक",
     "sessionHapticsHint": "सत्र की शुरुआत और अंत में कंपन",
     "breathingHaptics": "श्वास हैप्टिक",
@@ -1062,23 +1130,22 @@
     "deleteConfirm": "क्या आप वाकई इस सत्र को हटाना चाहते हैं?",
     "sessionDeleted": "सत्र हटाया गया",
     "previewSound": "ध्वनि पूर्वावलोकन",
-    "stopPreview": "पूर्वावलोकन बंद करें",
+    "stopPreview": "पूर्वावलोकन रोकें",
     "guidedMeditation": "निर्देशित ध्यान",
-    "guidedMeditationDescription": "सत्र के दौरान मौखिक संकेत शामिल करें",
+    "guidedMeditationDescription": "आवाज़ मार्गदर्शन का पालन करें",
     "backgroundImage": "पृष्ठभूमि छवि",
     "chooseImage": "छवि चुनें",
     "defaultBackground": "डिफ़ॉल्ट पृष्ठभूमि",
     "customBackground": "कस्टम पृष्ठभूमि",
     "keepScreenOn": "स्क्रीन चालू रखें",
-    "keepScreenOnDescription": "ध्यान के दौरान स्क्रीन को बंद होने से रोकें",
+    "keepScreenOnDescription": "स्क्रीन को बंद होने से रोकें",
     "favorites": "पसंदीदा",
     "addToFavorites": "पसंदीदा में जोड़ें",
     "removeFromFavorites": "पसंदीदा से हटाएं",
-    "duplicate": "डुप्लिकेट",
+    "duplicate": "डुप्लीकेट",
     "share": "साझा करें",
-    "sessionDuplicated": "सत्र डुप्लिकेट किया गया",
+    "sessionDuplicated": "सत्र डुप्लीकेट किया गया",
     "sessionOptions": "आप क्या करना चाहेंगे?",
-    "editSession": "संपादित करें",
     "editNotImplemented": "बिल्डर स्क्रीन से कनेक्ट होने पर संपादन कार्यक्षमता उपलब्ध होगी",
     "deleteConfirmTitle": "सत्र हटाएं",
     "deleteConfirmMessage": "क्या आप वाकई इस सत्र को हटाना चाहते हैं?",
@@ -1089,12 +1156,12 @@
     "customSession": "कस्टम सत्र",
     "customSessions": "कस्टम सत्र",
     "breathing": {
+      "478": "4-7-8",
       "none": "बिना मार्गदर्शन",
       "noneDesc": "श्वास पैटर्न के बिना ध्यान करें",
       "box": "बॉक्स ब्रीदिंग",
       "boxDesc": "तनाव में संतुलन और एकाग्रता",
       "boxBenefit": "Navy SEALs द्वारा तनाव प्रबंधन के लिए उपयोग किया जाता है",
-      "478": "4-7-8",
       "478Desc": "प्राकृतिक नींद सहायता",
       "478Benefit": "सोने से पहले दौड़ते विचारों को शांत करता है",
       "equal": "समान श्वास",
@@ -1124,7 +1191,21 @@
     "inhale": "सांस लें",
     "hold": "रोकें",
     "exhale": "सांस छोड़ें",
-    "cycle": "चक्र"
+    "cycle": "चक्र",
+    "min": "min",
+    "awakeningChime": "जागृति घंटी",
+    "awakeningChimeSubtitle": "सत्र समाप्त करने के लिए कोमल ध्वनि",
+    "intervalBells": "अंतराल घंटियाँ",
+    "intervalBellsDescription": "सत्र के दौरान आवधिक अनुस्मारक",
+    "longPressToEdit": "संपादित करने के लिए दबाए रखें",
+    "minutesWithCount": "{{count}} मिनट",
+    "start": "शुरू करें",
+    "breathingExercise": "श्वास व्यायाम",
+    "breathingExerciseDescription": "तैयारी के लिए सरल श्वास व्यायाम",
+    "bellSounds": "घंटी की आवाज़ें",
+    "bellSoundsSubtitle": "सत्र के दौरान कोमल संकेत",
+    "volume": "वॉल्यूम",
+    "intervalBellLabel": "अंतराल घंटी"
   },
   "introGuide": {
     "title": "ध्यान का परिचय",
@@ -1185,17 +1266,6 @@
     "breathingSection": "श्वास व्यायाम",
     "breathingIntro": "श्वास तकनीकें मन को शांत करने और ध्यान की तैयारी में मदद करती हैं। अपनी स्थिति के अनुसार पैटर्न चुनें।",
     "breathingExercises": {
-      "box": {
-        "name": "तनाव के लिए",
-        "description": "मन को शांत और केंद्रित करता है। तनाव और चिंता के लिए उत्तम।",
-        "steps": [
-          "नाक से 4 सेकंड तक सांस लें",
-          "4 सेकंड तक सांस रोकें",
-          "मुंह से 4 सेकंड तक सांस छोड़ें",
-          "4 सेकंड तक सांस रोकें",
-          "4-5 चक्रों के लिए दोहराएं"
-        ]
-      },
       "478": {
         "name": "नींद के लिए",
         "description": "सोने से पहले गहन विश्राम। नींद आने में मदद करता है।",
@@ -1205,6 +1275,17 @@
           "मुंह से 8 सेकंड तक सांस छोड़ें",
           "3-4 बार दोहराएं",
           "अपने शरीर को आराम करने दें"
+        ]
+      },
+      "box": {
+        "name": "तनाव के लिए",
+        "description": "मन को शांत और केंद्रित करता है। तनाव और चिंता के लिए उत्तम।",
+        "steps": [
+          "नाक से 4 सेकंड तक सांस लें",
+          "4 सेकंड तक सांस रोकें",
+          "मुंह से 4 सेकंड तक सांस छोड़ें",
+          "4 सेकंड तक सांस रोकें",
+          "4-5 चक्रों के लिए दोहराएं"
         ]
       },
       "equal": {
@@ -1340,6 +1421,14 @@
       "subtitle": "हमें अपना नाम बताएं और हम आपका व्यक्तिगत अभिवादन करेंगे।",
       "placeholder": "आपका नाम (वैकल्पिक)",
       "hint": "आप इसे बाद में प्रोफ़ाइल में बदल सकते हैं"
+    },
+    "slide5": {
+      "title": "अपनी यात्रा जारी रखें?",
+      "subtitle": "किसी अन्य ऐप से अपनी ध्यान श्रृंखला आयात करें और जहां छोड़ा था वहां से जारी रखें।",
+      "daysLabel": "दिन",
+      "sourceLabel": "ऐप से (वैकल्पिक)",
+      "sourcePlaceholder": "जैसे Headspace",
+      "hint": "अगर आप नए शुरू कर रहे हैं तो इसे छोड़ दें"
     },
     "healthDisclaimer": "यह ऐप सचेतनता अभ्यास का समर्थन करता है और पेशेवर स्वास्थ्य देखभाल का विकल्प नहीं है। स्वास्थ्य संबंधी चिंताओं के लिए डॉक्टर से परामर्श करें।",
     "successTitle": "आप पूरी तरह तैयार हैं!",

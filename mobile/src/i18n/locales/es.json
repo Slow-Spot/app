@@ -5,7 +5,8 @@
   },
   "splash": {
     "appName": "Slow Spot.me",
-    "tagline": "Encuentra tu momento de paz"
+    "tagline": "Encuentra tu momento de paz",
+    "loading": "Cargando..."
   },
   "intention": {
     "greeting": {
@@ -33,9 +34,9 @@
       "subtitle": "Prepárate para la meditación",
       "choosePattern": "Elige un patrón:",
       "patterns": {
+        "478": "Para Dormir",
         "box": "Para el Estrés",
         "boxDesc": "Calma y enfoca la mente",
-        "478": "Para Dormir",
         "478Desc": "Relajación profunda antes de dormir",
         "equal": "Para Principiantes",
         "equalDesc": "Patrón simple para principiantes",
@@ -79,7 +80,7 @@
     "streakMaster": "¡Leyenda de la meditación!",
     "welcome": "Bienvenido",
     "dailyQuote": "Cita Diaria",
-    "quickStart": "Inicio Rápido",
+    "quickStart": "Inicio rápido",
     "quickStartDesc": "Comienza tu meditación ahora",
     "startMeditation": "Comenzar Meditación",
     "exploreSessions": "Explorar Sesiones",
@@ -97,7 +98,10 @@
     "instructions": "Instrucciones",
     "instructionsDesc": "Cómo meditar",
     "inspirations": "Inspiraciones",
-    "inspirationsDesc": "Citas y motivación"
+    "inspirationsDesc": "Citas y motivación",
+    "readyToMeditate": "¿Listo para meditar?",
+    "startNow": "Comenzar ahora",
+    "explore": "Explorar"
   },
   "meditation": {
     "title": "Meditación",
@@ -116,7 +120,7 @@
     "expert": "Experto",
     "master": "Maestro",
     "start": "Comenzar",
-    "pause": "Pausar",
+    "pause": "Pausa",
     "resume": "Reanudar",
     "finish": "Terminar",
     "minutes": "{{count}} min",
@@ -143,11 +147,19 @@
     "meditationInProgress": "MEDITACIÓN EN PROGRESO",
     "breatheNaturally": "Respira naturalmente",
     "tapToShowControls": "Toca para mostrar controles",
-    "inProgress": "En Progreso",
+    "inProgress": "Meditación en progreso",
     "endSessionTitle": "¿Terminar sesión?",
-    "endSessionMessage": "Tu progreso se guardará. ¿Seguro que quieres terminar la meditación?",
+    "endSessionMessage": "¿Estás seguro de que quieres terminar esta sesión antes de tiempo?",
     "endSessionConfirm": "Terminar",
-    "endSessionCancel": "Continuar"
+    "endSessionCancel": "Continuar",
+    "customize": "Personalizar",
+    "endSession": "Terminar sesión",
+    "moodAfter": "¿Cómo te sientes después?",
+    "moodBefore": "¿Cómo te sientes antes?",
+    "saveSession": "Guardar sesión",
+    "sessionNotesPlaceholder": "Añade notas sobre tu sesión...",
+    "sessionComplete": "Sesión completada",
+    "sessionEnded": "Sesión terminada"
   },
   "instructions": {
     "timeOfDay": {
@@ -191,7 +203,16 @@
       "yourIntention": "Tu Intención (Opcional)",
       "intentionPlaceholder": "ej. \"Permanecer presente con mi respiración\"",
       "duringSession": "Durante Tu Sesión",
-      "keepInMind": "Ten en cuenta estos consejos:"
+      "keepInMind": "Ten en cuenta estos consejos:",
+      "breathingExerciseDesc": "Ejercicio simple de respiración para prepararte",
+      "comfortablePosition": "Posición cómoda",
+      "comfortablePositionDesc": "Siéntate o acuéstate en posición relajada",
+      "quietPlace": "Lugar tranquilo",
+      "quietPlaceDesc": "Encuentra un lugar pacífico sin distracciones",
+      "ready": "Listo",
+      "spaceSetup": "Preparación del espacio",
+      "timer": "Temporizador",
+      "timerDesc": "Establece la duración de tu meditación"
     },
     "skipModal": {
       "title": "Ir a meditación",
@@ -351,6 +372,34 @@
           "type": "gentle"
         }
       }
+    },
+    "bodyRelaxation": {
+      "startingPosition": "Posición inicial",
+      "startingPositionDesc": "Encuentra una posición cómoda",
+      "eyesClosed": "Cierra los ojos",
+      "eyesClosedDesc": "Cierra suavemente los ojos",
+      "bodyAwareness": "Conciencia corporal",
+      "bodyAwarenessDesc": "Siente tu cuerpo",
+      "releaseTension": "Libera la tensión",
+      "releaseTensionDesc": "Relaja todos los músculos"
+    },
+    "focusSetup": {
+      "breathFocus": "Enfócate en la respiración",
+      "breathFocusDesc": "Observa tu respiración",
+      "relaxBody": "Relaja el cuerpo",
+      "relaxBodyDesc": "Suelta toda la tensión",
+      "clearMind": "Despeja la mente",
+      "clearMindDesc": "Deja que los pensamientos se alejen",
+      "setIntention": "Establece la intención",
+      "setIntentionDesc": "Define el objetivo de tu sesión"
+    },
+    "breathingTechniques": {
+      "naturalBreath": "Respiración natural",
+      "naturalBreathDesc": "Respira naturalmente",
+      "deepBreath": "Respiración profunda",
+      "deepBreathDesc": "Inhalaciones y exhalaciones profundas",
+      "countedBreath": "Respiración contada",
+      "countedBreathDesc": "Cuenta tus respiraciones"
     }
   },
   "sessions": {
@@ -490,7 +539,42 @@
     "notSet": "No establecido",
     "soundPickError": "Error",
     "soundPickErrorBody": "No se pudo cargar el archivo de audio seleccionado.",
-    "customSoundsHint": "Selecciona archivos de audio de tu dispositivo. Formatos soportados: MP3, WAV, M4A."
+    "customSoundsHint": "Selecciona archivos de audio de tu dispositivo. Formatos soportados: MP3, WAV, M4A.",
+    "importStreak": "Importar racha",
+    "importStreakDescription": "Continúa tu racha desde otra aplicación",
+    "addImportedStreak": "Añadir racha de otra aplicación",
+    "importStreakHint": "Tu racha importada se añadirá a tu racha actual cuando medites.",
+    "importStreakTitle": "Importa tu racha",
+    "importStreakMessage": "Introduce el número de días de tu práctica de meditación anterior.",
+    "streakDays": "Días de racha",
+    "sourceApp": "Desde app (opcional)",
+    "sourceAppPlaceholder": "ej. Headspace, Calm",
+    "days": "días",
+    "fromApp": "Desde",
+    "clearImportedStreak": "¿Eliminar racha importada?",
+    "clearImportedStreakBody": "Esto eliminará los días de tu racha importada.",
+    "invalidStreak": "Valor inválido",
+    "invalidStreakBody": "Por favor, introduce un número positivo de días.",
+    "streakSaveError": "No se pudo guardar la racha importada.",
+    "clearDataConfirm": "¿Estás seguro? Esto no se puede deshacer.",
+    "clearDataDescription": "Eliminar todos los datos de meditación",
+    "clearDataSuccess": "Todos los datos eliminados",
+    "exportDataDescription": "Exportar historial de meditación",
+    "rateApp": "Calificar app",
+    "shareApp": "Compartir app",
+    "soundSettings": "Ajustes de sonido",
+    "soundSettingsDescription": "Configurar preferencias de audio",
+    "version": "Versión",
+    "customSoundDescription": "Usar sonidos ambientales personalizados",
+    "hapticDescription": "Vibración durante la sesión",
+    "notificationsDescription": "Recordatorios de meditación",
+    "resetData": "Restablecer datos",
+    "credits": "Créditos",
+    "creditsIdea": "Concepto",
+    "creditsExecution": "Desarrollo",
+    "creditsSponsor": "Patrocinador",
+    "madeWith": "Hecho con",
+    "inPoland": "en Polonia"
   },
   "navigation": {
     "home": "Inicio",
@@ -505,7 +589,19 @@
     "next": "Siguiente",
     "close": "Cerrar",
     "skip": "Omitir",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "remove": "Eliminar",
+    "confirm": "Confirmar",
+    "error": "Error",
+    "delete": "Eliminar",
+    "done": "Hecho",
+    "loading": "Cargando...",
+    "no": "No",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "yes": "Sí"
   },
   "introGuide": {
     "title": "Introducción a la Meditación",
@@ -713,7 +809,8 @@
     "breathPrayer": {
       "title": "Oración Respirada",
       "description": "Oración rítmica sincronizada con la respiración."
-    }
+    },
+    "empty": "Sin sesiones guardadas"
   },
   "custom": {
     "title": "Sesión Personalizada",
@@ -828,12 +925,12 @@
     "exhale": "Exhalar",
     "cycle": "ciclo",
     "breathing": {
+      "478": "4-7-8",
       "none": "Sin Guía",
       "noneDesc": "Medita sin patrón de respiración",
       "box": "Respiración Cuadrada",
       "boxDesc": "Equilibrio y enfoque con estrés",
       "boxBenefit": "Usado por Navy SEALs para manejar el estrés",
-      "478": "4-7-8",
       "478Desc": "Ayuda natural para dormir",
       "478Benefit": "Calma pensamientos acelerados antes de dormir",
       "equal": "Respiración Igual",
@@ -844,7 +941,55 @@
       "calmBenefit": "Reduce la ansiedad y promueve la calma"
     },
     "breathingTitle": "Patrón de Respiración",
-    "breathingDescription": "Elige una técnica de respiración respaldada por la ciencia (opcional)"
+    "breathingDescription": "Elige una técnica de respiración respaldada por la ciencia (opcional)",
+    "addToFavorites": "Añadir a favoritos",
+    "ambientVolume": "Volumen ambiental",
+    "awakeningChime": "Campana de despertar",
+    "awakeningChimeSubtitle": "Sonido suave para terminar la sesión",
+    "backgroundImage": "Imagen de fondo",
+    "bellVolume": "Volumen de campana",
+    "birds": "Pájaros",
+    "chooseImage": "Elegir imagen",
+    "createNew": "Crear nuevo",
+    "customBackground": "Fondo personalizado",
+    "defaultBackground": "Fondo predeterminado",
+    "deleteConfirm": "¿Estás seguro de que quieres eliminar esta sesión?",
+    "duplicate": "Duplicar",
+    "durationMinutes": "{{count}} minutos",
+    "endBell": "Campana final",
+    "favorites": "Favoritos",
+    "fire": "Fuego",
+    "forest": "Bosque",
+    "guidedMeditation": "Meditación guiada",
+    "guidedMeditationDescription": "Sigue la guía de voz",
+    "intervalBells": "Campanas de intervalo",
+    "intervalBellsDescription": "Recordatorios periódicos durante la sesión",
+    "intervalMinutes": "Intervalo (minutos)",
+    "keepScreenOn": "Mantener pantalla encendida",
+    "keepScreenOnDescription": "Evita que la pantalla se apague",
+    "longPressToEdit": "Mantén pulsado para editar",
+    "minutesWithCount": "{{count}} min",
+    "noSound": "Sin sonido",
+    "ocean": "Océano",
+    "previewSound": "Previsualizar sonido",
+    "rain": "Lluvia",
+    "removeFromFavorites": "Eliminar de favoritos",
+    "sessionDeleted": "Sesión eliminada",
+    "sessionDuplicated": "Sesión duplicada",
+    "share": "Compartir",
+    "start": "Iniciar",
+    "startBell": "Campana inicial",
+    "stopPreview": "Detener previsualización",
+    "stream": "Arroyo",
+    "vibrationDescription": "Vibración durante la sesión",
+    "whiteNoise": "Ruido blanco",
+    "wind": "Viento",
+    "breathingExercise": "Ejercicio de respiración",
+    "breathingExerciseDescription": "Ejercicio simple de respiración para prepararte",
+    "bellSounds": "Sonidos de campana",
+    "bellSoundsSubtitle": "Señales suaves durante la sesión",
+    "volume": "Volumen",
+    "intervalBellLabel": "Campana de intervalo"
   },
   "profile": {
     "title": "Tu Perfil",
@@ -896,22 +1041,67 @@
     "dayThu": "Jue",
     "dayFri": "Vie",
     "daySat": "Sáb",
-    "daySun": "Dom"
+    "daySun": "Dom",
+    "achievements": "Logros",
+    "allTime": "Todo el tiempo",
+    "averageSession": "Sesión promedio",
+    "calendarView": "Vista de calendario",
+    "experience": "Experiencia",
+    "goalAchieved": "¡Meta alcanzada!",
+    "goalProgress": "Progreso de la meta",
+    "hours": "horas",
+    "level": "Nivel",
+    "listView": "Vista de lista",
+    "meditationHistory": "Historial de meditación",
+    "minutesToNextLevel": "{{count}} min para el siguiente nivel",
+    "nextLevel": "Siguiente nivel",
+    "noRecentSessions": "Sin sesiones recientes",
+    "reminderSet": "Recordatorio configurado",
+    "removeReminder": "Eliminar recordatorio",
+    "scheduleReminder": "Programar recordatorio",
+    "sessionsPerWeek": "Sesiones por semana",
+    "startFirstSession": "Comienza tu primera sesión",
+    "thisMonth": "Este mes",
+    "viewAll": "Ver todo",
+    "weeklyGoal": "Meta semanal",
+    "weeklyGoalDescription": "Establece tu objetivo de meditación"
   },
   "calendar": {
     "title": "Integración de Calendario",
-    "scheduleReminder": "Programar Meditación Diaria",
-    "selectTime": "Seleccionar Hora",
+    "scheduleReminder": "Programar meditación diaria",
+    "selectTime": "Seleccionar hora",
     "daily": "Diario",
     "cancel": "Cancelar",
-    "save": "Guardar Recordatorio",
+    "save": "Guardar recordatorio",
     "permissionDenied": "Permiso de calendario denegado",
-    "permissionMessage": "Por favor activa el acceso al calendario en Configuración",
-    "reminderSet": "¡Recordatorio establecido con éxito!",
+    "permissionMessage": "Por favor habilita el acceso al calendario en Ajustes",
+    "reminderSet": "¡Recordatorio configurado!",
     "reminderCanceled": "Recordatorio cancelado",
-    "currentReminder": "Recordatorio Actual",
+    "currentReminder": "Recordatorio actual",
     "noReminder": "Sin recordatorio activo",
-    "at": "a las"
+    "at": "a las",
+    "addToCalendar": "Añadir al calendario",
+    "removeFromCalendar": "Eliminar del calendario",
+    "reminderTitle": "Recordatorio de meditación",
+    "reminderDescription": "Hora de tu sesión diaria de meditación con Slow Spot",
+    "selectDays": "Seleccionar días",
+    "everyday": "Todos los días",
+    "weekdays": "Días laborables",
+    "weekends": "Fines de semana",
+    "custom": "Personalizado",
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado",
+    "sunday": "Domingo",
+    "permissionRequired": "Permiso de calendario requerido",
+    "permissionDescription": "Necesitamos acceso a tu calendario para crear recordatorios de meditación",
+    "grantPermission": "Conceder permiso",
+    "reminderCreated": "Recordatorio creado exitosamente",
+    "reminderRemoved": "Recordatorio eliminado",
+    "errorCreatingReminder": "Error al crear el recordatorio"
   },
   "instructionsScreen": {
     "title": "Guías de Meditación",
@@ -926,17 +1116,6 @@
     "breathingSection": "Ejercicios de Respiración",
     "breathingIntro": "Las técnicas de respiración ayudan a calmar la mente y prepararse para la meditación. Elige el patrón que se adapte a tu situación.",
     "breathingExercises": {
-      "box": {
-        "name": "Para el Estrés",
-        "description": "Calma y enfoca la mente. Perfecto para el estrés y la ansiedad.",
-        "steps": [
-          "Inhala por la nariz durante 4 segundos",
-          "Mantén la respiración durante 4 segundos",
-          "Exhala por la boca durante 4 segundos",
-          "Mantén la respiración durante 4 segundos",
-          "Repite durante 4-5 ciclos"
-        ]
-      },
       "478": {
         "name": "Para Dormir",
         "description": "Relajación profunda antes de acostarse. Te ayuda a conciliar el sueño.",
@@ -946,6 +1125,17 @@
           "Exhala por la boca durante 8 segundos",
           "Repite 3-4 veces",
           "Permite que tu cuerpo se relaje"
+        ]
+      },
+      "box": {
+        "name": "Para el Estrés",
+        "description": "Calma y enfoca la mente. Perfecto para el estrés y la ansiedad.",
+        "steps": [
+          "Inhala por la nariz durante 4 segundos",
+          "Mantén la respiración durante 4 segundos",
+          "Exhala por la boca durante 4 segundos",
+          "Mantén la respiración durante 4 segundos",
+          "Repite durante 4-5 ciclos"
         ]
       },
       "equal": {
@@ -1206,7 +1396,8 @@
     "reflectionMaster": {
       "title": "Maestro de la Reflexión",
       "description": "Agrega notas a 25 sesiones de meditación"
-    }
+    },
+    "meditation": "Meditación"
   },
   "onboarding": {
     "skip": "Omitir",
@@ -1230,6 +1421,14 @@
       "subtitle": "Dinos tu nombre y te saludaremos personalmente cada vez que visites.",
       "placeholder": "Tu nombre (opcional)",
       "hint": "Puedes cambiar esto más tarde en Perfil"
+    },
+    "slide5": {
+      "title": "¿Continúas tu viaje?",
+      "subtitle": "Importa tu racha de meditación de otra aplicación para continuar donde lo dejaste.",
+      "daysLabel": "Días",
+      "sourceLabel": "Desde app (opcional)",
+      "sourcePlaceholder": "ej. Headspace",
+      "hint": "Omite esto si empiezas de cero"
     },
     "healthDisclaimer": "Esta aplicación apoya la práctica de mindfulness y no sustituye la atención médica profesional. Consulta a un médico para problemas de salud.",
     "successTitle": "¡Todo Listo!",

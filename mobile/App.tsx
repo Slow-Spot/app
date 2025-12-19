@@ -286,7 +286,7 @@ function AppContent() {
         <View style={styles.screenContainer}>
           <AnimatedScreenContainer
             screenKey={currentScreen}
-            onNavigate={handleNavigate}
+            onNavigate={handleNavigate as (screen: string) => void}
             enableSwipe={currentScreen !== 'meditation' || !activeMeditationState}
           >
             {renderScreen()}
