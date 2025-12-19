@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/Slow-Spot/app/compare/v1.1.0...v1.1.1) (2025-12-19)
+
+### Bug Fixes
+
+* restore and sync package-lock.json for CI/CD ([0378539](https://github.com/Slow-Spot/app/commit/0378539dff2ac95a948fcf015b35914590e2c4b5))
+
 ## [1.1.0](https://github.com/Slow-Spot/app/compare/v1.0.7...v1.1.0) (2025-12-19)
 
 ### Features
