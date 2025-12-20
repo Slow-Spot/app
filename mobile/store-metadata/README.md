@@ -106,7 +106,7 @@ Located in `descriptions/` folder with files for each language:
 - **Privacy Policy**: https://slowspot.me/privacy
 - **Terms of Service**: https://slowspot.me/terms
 - **Marketing URL**: https://slowspot.me
-- **Support Email**: support@slowspot.app
+- **Support Email**: contact@slowspot.app
 
 ## Checklist Before Submission
 
