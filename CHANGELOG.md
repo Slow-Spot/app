@@ -1,3 +1,14 @@
+## [1.2.0](https://github.com/Slow-Spot/app/compare/v1.1.2...v1.2.0) (2025-12-20)
+
+### Features
+
+* add responsive design system for tablet and web ([5a2438f](https://github.com/Slow-Spot/app/commit/5a2438f1e5054b5571ee0d33565c8094a2664b47))
+
+### Bug Fixes
+
+* app store audit compliance improvements ([141de3a](https://github.com/Slow-Spot/app/commit/141de3a08cc27916ea106b98d45ce300830bff1c))
+* upscale screenshots and unify contact email ([88aa01b](https://github.com/Slow-Spot/app/commit/88aa01b4b2d945c5bbb7f5ea857a0a9719d9148f))
+
 ## [1.1.2](https://github.com/Slow-Spot/app/compare/v1.1.1...v1.1.2) (2025-12-20)
 
 ### Bug Fixes
