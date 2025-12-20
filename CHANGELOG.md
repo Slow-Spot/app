@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/Slow-Spot/app/compare/v1.2.0...v1.2.1) (2025-12-20)
+
+### Bug Fixes
+
+* add Android feature graphic for Google Play Store ([c6f25c5](https://github.com/Slow-Spot/app/commit/c6f25c5aa6c43667fda761f4997ebec7d8728a38))
+
 ## [1.2.0](https://github.com/Slow-Spot/app/compare/v1.1.2...v1.2.0) (2025-12-20)
 
 ### Features

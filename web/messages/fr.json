@@ -195,7 +195,7 @@
     "appInfo": {
       "title": "Informations sur l'application",
       "version": "Version",
-      "versionNumber": "1.2.0",
+      "versionNumber": "1.2.1",
       "platform": "Plateforme",
       "platformValue": "iOS et Android"
     }
