@@ -8,6 +8,7 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "privacy": "public",
+    "primaryCategory": "HEALTH_AND_FITNESS",
     "privacyManifests": {
       "NSPrivacyAccessedAPITypes": [
         {
@@ -46,7 +47,9 @@
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
           "NSExceptionDomains": {}
-        }
+        },
+        "LSMinimumSystemVersion": "13.0",
+        "MinimumOSVersion": "13.0"
       },
       "config": {
         "usesNonExemptEncryption": false
@@ -66,6 +69,12 @@
         "color": "#8B5CF6"
       },
       "permissions": [],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ],
       "versionCode": 10102
     },
     "web": {
@@ -80,7 +89,12 @@
     "plugins": [
       "expo-font",
       "expo-updates",
-      "expo-audio",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false
+        }
+      ],
       "expo-localization"
     ]
   }
