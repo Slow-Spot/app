@@ -1,3 +1,9 @@
+## [1.3.2](https://github.com/Slow-Spot/app/compare/v1.3.1...v1.3.2) (2025-12-20)
+
+### Bug Fixes
+
+* resolve expo-doctor schema validation warnings ([b1eff09](https://github.com/Slow-Spot/app/commit/b1eff09ea4fe59e214a916523728889301204452))
+
 ## [1.3.1](https://github.com/Slow-Spot/app/compare/v1.3.0...v1.3.1) (2025-12-20)
 
 ### Bug Fixes
