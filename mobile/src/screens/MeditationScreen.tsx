@@ -14,6 +14,8 @@ import { MeditationTimer } from '../components/MeditationTimer';
 import { IntentionScreen } from '../components/IntentionScreen';
 import { CelebrationScreen } from '../components/CelebrationScreen';
 import { GradientBackground } from '../components/GradientBackground';
+import { ResponsiveContainer } from '../components/ResponsiveContainer';
+import { useResponsive } from '../hooks/useResponsive';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
 import { saveSessionCompletion } from '../services/progressTracker';
@@ -72,6 +74,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { currentTheme, settings } = usePersonalization();
+  const { select, screenPadding } = useResponsive();
+
+  // Multi-column layout for tablets/desktop
+  const numColumns = select({ phone: 1, tablet: 2, desktop: 2, default: 1 });
 
   // Theme-aware colors and gradients
   const colors = useMemo(() => getThemeColors(isDark), [isDark]);
@@ -643,20 +649,25 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   // Default: show session list
   return (
     <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
-      <FlatList
-        data={sessions}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        ListHeaderComponent={renderListHeader}
-        ListEmptyComponent={renderListEmpty}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={5}
-        maxToRenderPerBatch={3}
-        windowSize={5}
-        removeClippedSubviews={false}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+      <ResponsiveContainer style={styles.responsiveWrapper}>
+        <FlatList
+          key={`sessions-${numColumns}`}
+          data={sessions}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          ListHeaderComponent={renderListHeader}
+          ListEmptyComponent={renderListEmpty}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          numColumns={numColumns}
+          columnWrapperStyle={numColumns > 1 ? styles.columnWrapper : undefined}
+          initialNumToRender={5}
+          maxToRenderPerBatch={3}
+          windowSize={5}
+          removeClippedSubviews={false}
+          ItemSeparatorComponent={numColumns === 1 ? () => <View style={styles.separator} /> : undefined}
+        />
+      </ResponsiveContainer>
 
       {/* Session Action Modal */}
       <Modal
@@ -748,10 +759,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  responsiveWrapper: {
+    flex: 1,
+  },
   listContent: {
-    padding: theme.layout.screenPadding,
+    // Horizontal padding handled by ResponsiveContainer
+    paddingVertical: theme.layout.screenPadding,
     paddingBottom: theme.spacing.xxxl,
     flexGrow: 1,
+  },
+  columnWrapper: {
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.md,
   },
   header: {
     marginTop: theme.spacing.lg,

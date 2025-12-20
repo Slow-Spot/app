@@ -40,6 +40,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { AppModal, AppModalButton } from '../components/AppModal';
+import { ResponsiveGrid } from '../components/ResponsiveGrid';
+import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import Constants from 'expo-constants';
 import { brandColors, primaryColor, featureColorPalettes, semanticColors, getFeatureIconColors } from '../theme/colors';
@@ -79,6 +81,7 @@ const LANGUAGES = [
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+  { code: 'zh', name: '中文', flag: '🇨🇳' },
 ];
 
 const THEME_OPTIONS = [
@@ -566,11 +569,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
   return (
     <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ResponsiveContainer scrollable contentContainerStyle={styles.scrollContent}>
+
         <Animated.Text
           entering={effectiveAnimationsEnabled ? screenElementAnimation(0) : undefined}
           style={[styles.title, dynamicStyles.title]}
@@ -1070,7 +1070,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               </Text>
             </View>
           </View>
-          <View style={styles.systemInfoGrid}>
+          <ResponsiveGrid
+            columns={{ phone: 2, tablet: 3, desktop: 4 }}
+            gap={theme.spacing.sm}
+            style={styles.systemInfoGridWrapper}
+          >
             <View style={[styles.systemInfoItem, { backgroundColor: dynamicStyles.optionBg }]}>
               <View style={[styles.systemInfoIconBox, { backgroundColor: `${currentTheme.primary}15` }]}>
                 <Ionicons name="time-outline" size={20} color={currentTheme.primary} />
@@ -1151,7 +1155,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 </View>
               </View>
             )}
-          </View>
+          </ResponsiveGrid>
         </GradientCard>
         </Animated.View>
 
@@ -1430,7 +1434,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </View>
         </GradientCard>
         </Animated.View>
-      </ScrollView>
+      </ResponsiveContainer>
 
       {/* Restart Onboarding Modal */}
       <AppModal
@@ -1604,7 +1608,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: theme.spacing.lg,
+    paddingVertical: theme.spacing.lg,
     paddingBottom: theme.spacing.xxxl,
     gap: theme.spacing.md,
   },
@@ -1988,15 +1992,13 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes.xs,
     marginTop: 2,
   },
-  // System Info section
-  systemInfoGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  // System Info section - now uses ResponsiveGrid for adaptive layout
+  systemInfoGridWrapper: {
     marginTop: theme.spacing.md,
-    gap: theme.spacing.sm,
   },
   systemInfoItem: {
-    width: '48%',
+    // Width now handled by ResponsiveGrid
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     padding: theme.spacing.md,

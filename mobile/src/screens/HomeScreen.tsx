@@ -17,6 +17,7 @@ import Animated, {
 import { screenElementAnimation, DURATION_STANDARD, DELAY_FIRST, DELAY_SECOND, DELAY_STAGGER } from '../utils/animations';
 import { GradientBackground } from '../components/GradientBackground';
 import { AnimatedPressable } from '../components/AnimatedPressable';
+import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import theme, { getThemeColors, getThemeGradients, getCardStyles } from '../theme';
 import { getSectionColors } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
@@ -98,11 +99,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
     <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ResponsiveContainer scrollable contentContainerStyle={styles.scrollContent}>
+
         {/* Header - Calm/Headspace inspired minimalist greeting */}
         <Animated.View
           entering={settings.animationsEnabled ? screenElementAnimation(0) : undefined}
@@ -264,7 +262,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <Ionicons name="chevron-forward" size={18} color={colors.text.tertiary} />
           </AnimatedPressable>
         </Animated.View>
-      </ScrollView>
+      </ResponsiveContainer>
     </GradientBackground>
   );
 };
@@ -277,7 +275,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: theme.layout.screenPadding,
+    // Horizontal padding handled by ResponsiveContainer
     paddingTop: theme.spacing.lg,
     paddingBottom: theme.spacing.xxxl,
   },

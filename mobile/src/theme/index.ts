@@ -474,5 +474,20 @@ export { colors, gradients, darkColors, darkGradients, getThemeColors, getThemeG
 // Export types from gradients
 export type { GradientDefinition } from './gradients';
 
+// Export responsive utilities
+export {
+  breakpoints,
+  contentWidths,
+  gridColumns,
+  screenPadding as responsiveScreenPadding,
+  getBreakpoint,
+  isBreakpointOrHigher,
+  getContentWidth,
+  getGridColumns,
+  calculateItemWidth,
+  selectByBreakpoint,
+} from './responsive';
+export type { Breakpoint } from './responsive';
+
 // Export default theme
 export default theme;

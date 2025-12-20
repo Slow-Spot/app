@@ -15,6 +15,7 @@ import { AnimatedPressable } from '../components/AnimatedPressable';
 import { api, Quote } from '../services/api';
 import { getUniqueRandomQuote, markQuoteAsShown } from '../services/quoteHistory';
 import { GradientBackground } from '../components/GradientBackground';
+import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
@@ -141,11 +142,12 @@ export const QuotesScreen: React.FC<QuotesScreenProps> = ({ isDark = false }) =>
   return (
     <GestureHandlerRootView style={styles.gestureRoot}>
       <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
-        {/* Header */}
-        <Animated.View
-          entering={settings.animationsEnabled ? screenElementAnimation(0) : undefined}
-          style={styles.header}
-        >
+        <ResponsiveContainer style={styles.responsiveContent}>
+          {/* Header */}
+          <Animated.View
+            entering={settings.animationsEnabled ? screenElementAnimation(0) : undefined}
+            style={styles.header}
+          >
           <View style={styles.headerContent}>
             <Text style={[styles.title, dynamicStyles.title]}>
               {t('quotes.title')}
@@ -223,6 +225,7 @@ export const QuotesScreen: React.FC<QuotesScreenProps> = ({ isDark = false }) =>
             </Text>
           </Animated.View>
         )}
+        </ResponsiveContainer>
       </GradientBackground>
     </GestureHandlerRootView>
   );
@@ -233,6 +236,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    flex: 1,
+  },
+  responsiveContent: {
     flex: 1,
   },
   header: {

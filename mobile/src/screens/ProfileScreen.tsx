@@ -28,6 +28,8 @@ import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { Badge } from '../components/Badge';
 import { MoodIcon, getMoodColors } from '../components/MoodIcon';
+import { ResponsiveGrid } from '../components/ResponsiveGrid';
+import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import theme, { gradients, getThemeColors, getThemeGradients } from '../theme';
 import { brandColors, primaryColor, featureColorPalettes, semanticColors } from '../theme/colors';
 import {
@@ -349,6 +351,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
 
   /**
    * Render a statistics card with icon box - consistent with app design
+   * Note: Wrapper is handled by ResponsiveGrid for proper responsive sizing
    */
   const renderStatCard = (
     icon: keyof typeof Ionicons.glyphMap,
@@ -358,7 +361,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
     iconColor?: string,
     iconBg?: string
   ) => (
-    <View style={[styles.statCardWrapper, dynamicStyles.statCardShadow]}>
+    <View style={[styles.statCardWrapperInner, dynamicStyles.statCardShadow]}>
       <GradientCard gradient={themeGradients.card.whiteCard} style={styles.statCard} isDark={isDark}>
         <View style={[styles.statIconBox, { backgroundColor: iconBg || dynamicStyles.iconBoxBg }]}>
           <Ionicons name={icon} size={22} color={iconColor || dynamicStyles.iconEmerald} />
@@ -559,18 +562,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
 
   return (
     <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
+      <ResponsiveContainer scrollable scrollViewProps={{
+        refreshControl: (
           <RefreshControl
             refreshing={refreshing}
             onRefresh={handleRefresh}
             tintColor={currentTheme.primary}
           />
-        }
-      >
+        )
+      }} contentContainerStyle={styles.scrollContent}>
+
         {/* Header with editable name */}
         <View style={styles.header}>
           <TouchableOpacity
@@ -642,7 +643,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
         {/* Statistics Grid */}
         <View style={styles.statsContainer}>
           <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>{t('profile.statistics')}</Text>
-          <View style={styles.statsGrid}>
+          <ResponsiveGrid
+            columns={{ phone: 2, tablet: 4, desktop: 4 }}
+            gap={theme.spacing.md}
+            equalHeight
+            itemAspectRatio={1}
+          >
             {renderStatCard(
               'checkmark-circle',
               stats.totalSessions,
@@ -675,7 +681,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
               dynamicStyles.iconPurple,
               dynamicStyles.iconBoxBgPurple
             )}
-          </View>
+          </ResponsiveGrid>
         </View>
 
         {/* Weekly Activity Chart */}
@@ -798,7 +804,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
             )}
           </GradientCard>
         </View>
-      </ScrollView>
+      </ResponsiveContainer>
 
       {/* Session Details Modal */}
       <Modal
@@ -936,7 +942,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: theme.layout.screenPadding,
+    paddingVertical: theme.layout.screenPadding,
     gap: theme.spacing.xl,
     paddingBottom: theme.spacing.xxxl,
   },
@@ -1029,15 +1035,10 @@ const styles = StyleSheet.create({
   statsContainer: {
     gap: theme.spacing.md,
   },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: theme.spacing.md,
-  },
-  statCardWrapper: {
-    width: '47%',
-    aspectRatio: 1,
+  // Note: statsGrid is now handled by ResponsiveGrid component
+  // statCardWrapperInner - sizing handled by ResponsiveGrid, this is just for inner styling
+  statCardWrapperInner: {
+    flex: 1,
     borderRadius: theme.borderRadius.xl,
   },
   statCard: {
