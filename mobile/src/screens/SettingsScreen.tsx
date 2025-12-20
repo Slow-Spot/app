@@ -1238,7 +1238,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <TouchableOpacity
               style={[styles.legalLink, { backgroundColor: dynamicStyles.optionBg }]}
               onPress={() => {
-                const locale = i18n.language === 'pl' ? 'pl' : 'en';
+                // Support all 7 app languages: en, pl, de, es, fr, hi, zh
+                const supportedLocales = ['en', 'pl', 'de', 'es', 'fr', 'hi', 'zh'];
+                const locale = supportedLocales.includes(i18n.language) ? i18n.language : 'en';
                 Linking.openURL(`https://slowspot.me/${locale}/privacy`);
               }}
               activeOpacity={0.7}
@@ -1254,7 +1256,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <TouchableOpacity
               style={[styles.legalLink, { backgroundColor: dynamicStyles.optionBg }]}
               onPress={() => {
-                const locale = i18n.language === 'pl' ? 'pl' : 'en';
+                // Support all 7 app languages: en, pl, de, es, fr, hi, zh
+                const supportedLocales = ['en', 'pl', 'de', 'es', 'fr', 'hi', 'zh'];
+                const locale = supportedLocales.includes(i18n.language) ? i18n.language : 'en';
                 Linking.openURL(`https://slowspot.me/${locale}/terms`);
               }}
               activeOpacity={0.7}
@@ -1270,7 +1274,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <TouchableOpacity
               style={[styles.legalLink, { backgroundColor: dynamicStyles.optionBg }]}
               onPress={() => {
-                const locale = i18n.language === 'pl' ? 'pl' : 'en';
+                // Support all 7 app languages: en, pl, de, es, fr, hi, zh
+                const supportedLocales = ['en', 'pl', 'de', 'es', 'fr', 'hi', 'zh'];
+                const locale = supportedLocales.includes(i18n.language) ? i18n.language : 'en';
                 Linking.openURL(`https://slowspot.me/${locale}/support`);
               }}
               activeOpacity={0.7}
