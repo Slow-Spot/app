@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/Slow-Spot/app/compare/v1.3.0...v1.3.1) (2025-12-20)
+
+### Bug Fixes
+
+* **mobile:** add missing peer dependencies for app store compliance ([a3bfa8a](https://github.com/Slow-Spot/app/commit/a3bfa8a9e8d507f44bd83c46aadaa77d81fb3eb5))
+
 ## [1.3.0](https://github.com/Slow-Spot/app/compare/v1.2.1...v1.3.0) (2025-12-20)
 
 ### Features
