@@ -1,3 +1,9 @@
+## [1.5.2](https://github.com/Slow-Spot/app/compare/v1.5.1...v1.5.2) (2025-12-21)
+
+### Bug Fixes
+
+* **mobile:** remove fake API URL - app is 100% offline ([0bea2d8](https://github.com/Slow-Spot/app/commit/0bea2d8f722a605d66dc3c294c26d249a2792259))
+
 ## [1.5.1](https://github.com/Slow-Spot/app/compare/v1.5.0...v1.5.1) (2025-12-21)
 
 ### Bug Fixes
