@@ -1,3 +1,9 @@
+## [1.5.3](https://github.com/Slow-Spot/app/compare/v1.5.2...v1.5.3) (2025-12-21)
+
+### Code Refactoring
+
+* **mobile:** remove dead API code - app is 100% offline ([42ddb21](https://github.com/Slow-Spot/app/commit/42ddb21d0461298b9810cf4f49710522749c7f6f))
+
 ## [1.5.2](https://github.com/Slow-Spot/app/compare/v1.5.1...v1.5.2) (2025-12-21)
 
 ### Bug Fixes
