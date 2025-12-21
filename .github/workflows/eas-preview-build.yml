@@ -1,23 +1,33 @@
-name: EAS Preview Build (Test Deployment)
+name: 🧪 EAS Preview Build (Beta Testing)
 
 on:
   push:
     branches:
+      - develop
       - 'feature/**'
       - 'fix/**'
+  pull_request:
+    branches:
+      - main
+      - develop
   workflow_dispatch:
     inputs:
       platform:
-        description: 'Platform to build (android only - iOS uses Expo Go)'
+        description: 'Platform to build'
         required: true
-        default: 'android'
+        default: 'all'
         type: choice
         options:
+          - all
           - android
+          - ios
+
+env:
+  EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
 jobs:
   build:
-    name: EAS Build Preview
+    name: 🧪 Preview Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,6 +41,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: mobile/package-lock.json
 
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
@@ -41,41 +53,77 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build for Android (Preview)
+      - name: Build Android (Preview APK)
+        id: android-build
         if: |
-          github.event_name == 'push' ||
+          github.event_name != 'workflow_dispatch' ||
           github.event.inputs.platform == 'android' ||
           github.event.inputs.platform == 'all'
         run: |
-          eas build --platform android \
-            --profile preview \
-            --non-interactive \
-            --no-wait
+          echo "🤖 Building Android Preview..."
+          eas build --platform android --profile preview --non-interactive --no-wait
+          echo "android_built=true" >> $GITHUB_OUTPUT
 
-      - name: Build summary
+      - name: Build iOS (Preview - Internal)
+        id: ios-build
+        if: |
+          github.event.inputs.platform == 'ios' ||
+          github.event.inputs.platform == 'all'
+        run: |
+          echo "🍎 Building iOS Preview..."
+          eas build --platform ios --profile preview --non-interactive --no-wait
+          echo "ios_built=true" >> $GITHUB_OUTPUT
+
+      - name: Build Summary
         if: always()
         run: |
-          echo "## 🚀 EAS Preview Build Started" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Android:** Native APK build → [Expo Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)" >> $GITHUB_STEP_SUMMARY
-          echo "**iOS:** Use Expo Go (no build needed) → [Install Expo Go](https://apps.apple.com/app/expo-go/id982107779)" >> $GITHUB_STEP_SUMMARY
+          echo "## 🧪 Preview Build Started" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${GITHUB_SHA::7}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📱 iOS Testing (FREE)" >> $GITHUB_STEP_SUMMARY
-          echo "1. Install Expo Go on iPhone" >> $GITHUB_STEP_SUMMARY
-          echo "2. Open: exp://@leszekszpunar/slow-spot" >> $GITHUB_STEP_SUMMARY
-          echo "3. OTA updates automatic via \`eas update\` workflow" >> $GITHUB_STEP_SUMMARY
+          echo "### Build Status" >> $GITHUB_STEP_SUMMARY
+          echo "| Platform | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ steps.android-build.outputs.android_built }}" == "true" ]]; then
+            echo "| 🤖 Android | ✅ Started |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 🤖 Android | ⏭️ Skipped |" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [[ "${{ steps.ios-build.outputs.ios_built }}" == "true" ]]; then
+            echo "| 🍎 iOS | ✅ Started |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| 🍎 iOS | ⏭️ Skipped |" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📥 Download & Test" >> $GITHUB_STEP_SUMMARY
+          echo "- [Expo Builds Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)" >> $GITHUB_STEP_SUMMARY
+          echo "- Android: Download APK directly" >> $GITHUB_STEP_SUMMARY
+          echo "- iOS: Use Expo Go or TestFlight" >> $GITHUB_STEP_SUMMARY
 
-      - name: Comment on PR (if applicable)
+      - name: Comment on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
+            const body = `## 🧪 Preview Build Started
+
+            **Branch:** \`${{ github.head_ref }}\`
+
+            ### 📥 Testing Instructions
+
+            | Platform | How to Test |
+            |----------|-------------|
+            | 🤖 Android | Download APK from [Expo Builds](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds) |
+            | 🍎 iOS | Use [Expo Go](https://apps.apple.com/app/expo-go/id982107779) or wait for TestFlight |
+
+            ---
+            *Build triggered by PR to \`${{ github.base_ref }}\`*
+            `;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚀 **Preview Build Started!**\n\n**Android APK:** [Expo Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)\n**iOS Testing:** Use [Expo Go](https://apps.apple.com/app/expo-go/id982107779) (FREE, no build needed)\n\nOnce complete:\n- 📦 Download Android APK and install directly\n- 📱 iOS: Install Expo Go → Open `exp://@leszekszpunar/slow-spot`\n- 🔄 OTA updates automatic for both platforms'
-            })
+              body: body
+            });
