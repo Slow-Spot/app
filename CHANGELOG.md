@@ -1,3 +1,9 @@
+## [1.3.3](https://github.com/Slow-Spot/app/compare/v1.3.2...v1.3.3) (2025-12-21)
+
+### Bug Fixes
+
+* **mobile:** correct --auto-submit flag syntax in EAS build workflow ([b2b90f7](https://github.com/Slow-Spot/app/commit/b2b90f7860752a719e1278dafb0aab0ff731abcf))
+
 ## [1.3.2](https://github.com/Slow-Spot/app/compare/v1.3.1...v1.3.2) (2025-12-20)
 
 ### Bug Fixes
