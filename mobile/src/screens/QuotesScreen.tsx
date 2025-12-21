@@ -71,7 +71,7 @@ export const QuotesScreen: React.FC<QuotesScreenProps> = ({ isDark = false }) =>
   const loadQuotes = async () => {
     try {
       setLoading(true);
-      const data = await api.quotes.getAll(i18n.language);
+      const data = await api.quotes.getAll();
       // Shuffle quotes for variety
       const shuffled = [...data].sort(() => Math.random() - 0.5);
       setQuotes(shuffled);
@@ -114,7 +114,7 @@ export const QuotesScreen: React.FC<QuotesScreenProps> = ({ isDark = false }) =>
 
   const loadRandomQuote = async () => {
     try {
-      const allQuotes = await api.quotes.getAll(i18n.language);
+      const allQuotes = await api.quotes.getAll();
       if (allQuotes.length === 0) return;
 
       const quote = await getUniqueRandomQuote(allQuotes, i18n.language);

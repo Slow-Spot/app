@@ -23,7 +23,7 @@ export const PreparationScreen: React.FC<PreparationScreenProps> = ({ onReady })
   const loadQuote = async () => {
     try {
       setLoading(true);
-      const randomQuote = await api.quotes.getRandom(i18n.language);
+      const randomQuote = await api.quotes.getRandom();
       setQuote(randomQuote);
     } catch (error) {
       logger.error('Failed to load quote:', error);
