@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/Slow-Spot/app/compare/v1.4.0...v1.5.0) (2025-12-21)
+
+### Features
+
+* **shared:** upgrade to turbo-pro CI/CD pipeline ([b70fe1b](https://github.com/Slow-Spot/app/commit/b70fe1b59bc90d0cb176b12624af9a0ae2c45e42))
+
 ## [1.4.0](https://github.com/Slow-Spot/app/compare/v1.3.3...v1.4.0) (2025-12-21)
 
 ### Features
