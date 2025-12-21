@@ -56,10 +56,11 @@ jobs:
           github.event.inputs.platform == 'ios' ||
           github.event.inputs.platform == 'all'
         run: |
-          eas build --platform ios \
-            --profile production \
-            --non-interactive \
-            --auto-submit=${{ github.event.inputs.submit || 'false' }}
+          if [ "${{ github.event.inputs.submit }}" = "true" ]; then
+            eas build --platform ios --profile production --non-interactive --auto-submit
+          else
+            eas build --platform ios --profile production --non-interactive
+          fi
 
       - name: Build for Android (Production)
         if: |
@@ -67,10 +68,11 @@ jobs:
           github.event.inputs.platform == 'android' ||
           github.event.inputs.platform == 'all'
         run: |
-          eas build --platform android \
-            --profile production \
-            --non-interactive \
-            --auto-submit=${{ github.event.inputs.submit || 'false' }}
+          if [ "${{ github.event.inputs.submit }}" = "true" ]; then
+            eas build --platform android --profile production --non-interactive --auto-submit
+          else
+            eas build --platform android --profile production --non-interactive
+          fi
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
