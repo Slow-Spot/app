@@ -2,15 +2,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MOCK_QUOTES, MOCK_SESSIONS } from './mockData';
 import { logger } from '../utils/logger';
 
-// ✅ SECURITY: Use environment variables for API URL
-// ✅ SECURITY: Always use HTTPS in production
-const API_BASE_URL = process.env.API_BASE_URL || 'https://api.slowspot.me/api';
-const USE_MOCK_DATA = process.env.USE_MOCK_DATA === 'true' || true; // Enable mock data for offline development
+// ✅ OFFLINE-FIRST: App works 100% offline with local mock data
+// No backend API required - all data is bundled with the app
+const USE_MOCK_DATA = true;
 
-// ✅ SECURITY: Validate that production uses HTTPS
-if (process.env.APP_ENV === 'production' && API_BASE_URL.startsWith('http://')) {
-  throw new Error('SECURITY ERROR: Production must use HTTPS for API calls');
-}
+// Future API support (currently unused)
+const API_BASE_URL = process.env.API_BASE_URL || '';
 
 export interface Quote {
   id: number;
