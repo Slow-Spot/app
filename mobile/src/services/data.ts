@@ -1,6 +1,6 @@
 import { Quote, MeditationSession } from './api';
 
-export const MOCK_QUOTES: Quote[] = [
+export const QUOTES: Quote[] = [
   // BUDDHIST WISDOM - Pali Canon (Dhammapada)
   {
     id: 1,
@@ -1448,7 +1448,7 @@ export const MOCK_QUOTES: Quote[] = [
   },
 ];
 
-export const MOCK_SESSIONS: MeditationSession[] = [
+export const SESSIONS: MeditationSession[] = [
   // TRADITIONAL BEGINNER SESSIONS (Level 1)
   {
     id: 1,

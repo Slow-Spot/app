@@ -1,4 +1,4 @@
-import { MOCK_QUOTES, MOCK_SESSIONS } from './mockData';
+import { QUOTES, SESSIONS } from './data';
 import { logger } from '../utils/logger';
 
 // ============================================================================
@@ -54,25 +54,25 @@ export const api = {
     getAll: async (): Promise<Quote[]> => {
       // All quotes have translations for all languages
       // QuoteCard component handles showing appropriate translation
-      return MOCK_QUOTES;
+      return QUOTES;
     },
 
     getRandom: async (): Promise<Quote> => {
-      const randomIndex = Math.floor(Math.random() * MOCK_QUOTES.length);
-      return MOCK_QUOTES[randomIndex];
+      const randomIndex = Math.floor(Math.random() * QUOTES.length);
+      return QUOTES[randomIndex];
     },
   },
 
   sessions: {
     getAll: async (lang?: string, level?: number): Promise<MeditationSession[]> => {
-      let filtered = MOCK_SESSIONS;
+      let filtered = SESSIONS;
 
       if (lang) {
         filtered = filtered.filter((s) => s.languageCode === lang);
         // Fallback to English if no sessions found for requested language
         if (filtered.length === 0) {
           logger.log(`No sessions found for language '${lang}', falling back to English`);
-          filtered = MOCK_SESSIONS.filter((s) => s.languageCode === 'en');
+          filtered = SESSIONS.filter((s) => s.languageCode === 'en');
         }
       }
 
@@ -84,7 +84,7 @@ export const api = {
     },
 
     getById: async (id: number): Promise<MeditationSession> => {
-      const session = MOCK_SESSIONS.find((s) => s.id === id);
+      const session = SESSIONS.find((s) => s.id === id);
       if (session) {
         return session;
       }
