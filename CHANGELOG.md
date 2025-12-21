@@ -1,3 +1,9 @@
+## [1.5.4](https://github.com/Slow-Spot/app/compare/v1.5.3...v1.5.4) (2025-12-21)
+
+### Code Refactoring
+
+* **mobile:** rename mockData to data - no mocks, real data ([d95bd51](https://github.com/Slow-Spot/app/commit/d95bd51203816cd415d0be25b7200e45da07dfb6))
+
 ## [1.5.3](https://github.com/Slow-Spot/app/compare/v1.5.2...v1.5.3) (2025-12-21)
 
 ### Code Refactoring
