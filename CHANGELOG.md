@@ -1,3 +1,9 @@
+## [1.5.5](https://github.com/Slow-Spot/app/compare/v1.5.4...v1.5.5) (2025-12-21)
+
+### Bug Fixes
+
+* **mobile:** update API calls after refactoring ([3106f33](https://github.com/Slow-Spot/app/commit/3106f33affd6f73288fe16d97085aec30c8e5281))
+
 ## [1.5.4](https://github.com/Slow-Spot/app/compare/v1.5.3...v1.5.4) (2025-12-21)
 
 ### Code Refactoring
