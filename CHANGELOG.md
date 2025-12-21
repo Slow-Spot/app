@@ -1,3 +1,9 @@
+## [1.5.1](https://github.com/Slow-Spot/app/compare/v1.5.0...v1.5.1) (2025-12-21)
+
+### Bug Fixes
+
+* **mobile:** update all URLs from slowspot.app to slowspot.me ([454f81f](https://github.com/Slow-Spot/app/commit/454f81f8be5472d78bac023a17edc6a211c89f6d))
+
 ## [1.5.0](https://github.com/Slow-Spot/app/compare/v1.4.0...v1.5.0) (2025-12-21)
 
 ### Features
