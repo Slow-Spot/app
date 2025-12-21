@@ -105,3 +105,8 @@ mobile/assets/audio/
 # Documentation builds
 _site/
 .jekyll-cache/
+
+# Service account credentials (NEVER commit\!)
+configurations/
+*.p8
+*-service-account*.json
