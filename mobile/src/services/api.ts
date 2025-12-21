@@ -4,7 +4,7 @@ import { logger } from '../utils/logger';
 
 // ✅ SECURITY: Use environment variables for API URL
 // ✅ SECURITY: Always use HTTPS in production
-const API_BASE_URL = process.env.API_BASE_URL || 'https://api.slowspot.app/api';
+const API_BASE_URL = process.env.API_BASE_URL || 'https://api.slowspot.me/api';
 const USE_MOCK_DATA = process.env.USE_MOCK_DATA === 'true' || true; // Enable mock data for offline development
 
 // ✅ SECURITY: Validate that production uses HTTPS
