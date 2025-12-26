@@ -72,6 +72,7 @@ jobs:
     name: 🤖 Sync Android Metadata (Fastlane)
     runs-on: ubuntu-latest
     if: |
+      github.event_name == 'push' ||
       github.event.inputs.platform == 'android' ||
       github.event.inputs.platform == 'all'
     defaults:
@@ -81,6 +82,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -110,7 +116,14 @@ jobs:
       - name: Push Android Metadata to Google Play
         run: |
           echo "📝 Syncing Android metadata to Google Play..."
-          bundle exec fastlane supply --metadata_path ./fastlane/metadata/android --skip_upload_apk --skip_upload_aab --skip_upload_images --skip_upload_screenshots
+          bundle exec fastlane supply \
+            --json_key google-play-key.json \
+            --package_name com.slowspot.app \
+            --metadata_path ./fastlane/metadata/android \
+            --skip_upload_apk \
+            --skip_upload_aab \
+            --skip_upload_images \
+            --skip_upload_screenshots
         continue-on-error: true
 
       - name: Cleanup credentials
