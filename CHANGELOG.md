@@ -1,3 +1,11 @@
+## [1.8.1](https://github.com/Slow-Spot/app/compare/v1.8.0...v1.8.1) (2025-12-26)
+
+### Bug Fixes
+
+* **ci:** add missing --json_key parameter for fastlane supply ([345ebe4](https://github.com/Slow-Spot/app/commit/345ebe46be64cebd239d5440824ce95c6ae1d38e))
+* **ci:** add missing push trigger for Android metadata sync ([d037d32](https://github.com/Slow-Spot/app/commit/d037d32298c777c4d157d8e327f21fe4eb8d09d4))
+* **ci:** add Node.js setup and package_name for Android metadata sync ([3421a0d](https://github.com/Slow-Spot/app/commit/3421a0d4b59ca6e5998e77f6448ffa82ed8f54e7))
+
 ## [1.8.0](https://github.com/Slow-Spot/app/compare/v1.7.0...v1.8.0) (2025-12-26)
 
 ### Features
