@@ -72,6 +72,7 @@ jobs:
     name: 🤖 Sync Android Metadata (Fastlane)
     runs-on: ubuntu-latest
     if: |
+      github.event_name == 'push' ||
       github.event.inputs.platform == 'android' ||
       github.event.inputs.platform == 'all'
     defaults:
