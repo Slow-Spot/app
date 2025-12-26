@@ -1,3 +1,9 @@
+## [1.8.0](https://github.com/Slow-Spot/app/compare/v1.7.0...v1.8.0) (2025-12-26)
+
+### Features
+
+* **mobile:** add automated store metadata sync for iOS and Android ([995ac8a](https://github.com/Slow-Spot/app/commit/995ac8a2502e956d18668fc170779e1b61277211))
+
 ## [1.7.0](https://github.com/Slow-Spot/app/compare/v1.6.0...v1.7.0) (2025-12-26)
 
 ### Features
