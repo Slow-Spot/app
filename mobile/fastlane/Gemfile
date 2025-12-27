@@ -1,6 +1,8 @@
 source "https://rubygems.org"
 
-gem "fastlane", "~> 2.225"
+# Pin to 2.224.0 to avoid nil releases bug in 2.225+
+# See: https://github.com/fastlane/fastlane/issues/21530
+gem "fastlane", "2.224.0"
 
 plugins_path = File.join(File.dirname(__FILE__), 'Pluginfile')
 eval_gemfile(plugins_path) if File.exist?(plugins_path)
