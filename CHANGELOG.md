@@ -1,3 +1,9 @@
+## [1.9.5](https://github.com/Slow-Spot/app/compare/v1.9.4...v1.9.5) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** require supply before monkey-patching ([3ad6df4](https://github.com/Slow-Spot/app/commit/3ad6df4cb0df796a75981b5118f089f82c29edc6))
+
 ## [1.9.4](https://github.com/Slow-Spot/app/compare/v1.9.3...v1.9.4) (2025-12-27)
 
 ### Bug Fixes
