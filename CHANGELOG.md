@@ -1,3 +1,9 @@
+## [1.11.0](https://github.com/Slow-Spot/app/compare/v1.10.3...v1.11.0) (2025-12-27)
+
+### Features
+
+* **mobile:** add Fastlane deliver for iOS metadata sync ([e22b096](https://github.com/Slow-Spot/app/commit/e22b096faedef2a9482e93cc53377edf63fd3a2e))
+
 ## [1.10.3](https://github.com/Slow-Spot/app/compare/v1.10.2...v1.10.3) (2025-12-27)
 
 ### Bug Fixes
