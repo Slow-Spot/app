@@ -48,18 +48,16 @@ platform :android do
     sh("cd .. && node scripts/generate-android-metadata.js")
 
     # Upload metadata to Google Play
-    # Note: skip_upload_changelogs=true because changelogs require an active release
+    # Note: No track specified - metadata is app-level, not track-specific
     upload_to_play_store(
       package_name: "com.slowspot.app",
-      track: "production",
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
       skip_upload_images: false,
       skip_upload_screenshots: false,
       skip_upload_changelogs: true,
-      sync_image_upload: true,
-      validate_only: false
+      sync_image_upload: true
     )
 
     UI.success("Metadata uploaded successfully to Google Play!")
@@ -71,7 +69,6 @@ platform :android do
 
     upload_to_play_store(
       package_name: "com.slowspot.app",
-      track: "production",
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
@@ -90,7 +87,6 @@ platform :android do
 
     upload_to_play_store(
       package_name: "com.slowspot.app",
-      track: "production",
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: true,
@@ -109,7 +105,6 @@ platform :android do
 
     upload_to_play_store(
       package_name: "com.slowspot.app",
-      track: "production",
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
@@ -170,18 +165,17 @@ platform :android do
     sh("cd .. && node scripts/generate-android-metadata.js")
 
     # Upload all metadata to Google Play
-    # Note: Monkey-patch above fixes nil releases crash (Fastlane bug #21530)
+    # Note: We don't specify track for metadata-only uploads (no APK/AAB)
+    # This avoids Fastlane bug #21007 where skip_upload_changelogs still checks for releases
     upload_to_play_store(
       package_name: "com.slowspot.app",
-      track: "production",
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
       skip_upload_images: false,
       skip_upload_screenshots: false,
       skip_upload_changelogs: true,
-      sync_image_upload: true,
-      validate_only: false
+      sync_image_upload: true
     )
 
     UI.success("Full sync completed!")
