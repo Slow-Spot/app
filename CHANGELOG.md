@@ -1,3 +1,9 @@
+## [1.9.3](https://github.com/Slow-Spot/app/compare/v1.9.2...v1.9.3) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** split full_sync into images + text with error handling ([8bb756d](https://github.com/Slow-Spot/app/commit/8bb756d7afb6a718f27582dafad6ad4381f3d8de))
+
 ## [1.9.2](https://github.com/Slow-Spot/app/compare/v1.9.1...v1.9.2) (2025-12-27)
 
 ### Bug Fixes
