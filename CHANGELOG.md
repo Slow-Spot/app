@@ -1,3 +1,9 @@
+## [1.9.8](https://github.com/Slow-Spot/app/compare/v1.9.7...v1.9.8) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** remove track param from metadata-only uploads ([98f2ed9](https://github.com/Slow-Spot/app/commit/98f2ed9ad7c829c2a4919ae467364463b68358fd)), closes [#21007](https://github.com/Slow-Spot/app/issues/21007)
+
 ## [1.9.7](https://github.com/Slow-Spot/app/compare/v1.9.6...v1.9.7) (2025-12-27)
 
 ### Bug Fixes
