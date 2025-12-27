@@ -114,18 +114,28 @@ jobs:
           cd fastlane
           bundle install
 
-      - name: Patch Fastlane bug #21530
+      - name: Patch Fastlane bugs #21530 and #21007
         run: |
-          # Find and patch the uploader.rb file to fix nil releases bug
+          # Find and patch the uploader.rb file to fix nil releases bugs
           UPLOADER_FILE=$(find fastlane/vendor -name "uploader.rb" -path "*/supply/lib/supply/*" 2>/dev/null | head -1)
           if [ -n "$UPLOADER_FILE" ]; then
             echo "Patching: $UPLOADER_FILE"
-            # Replace 'if releases.size > 1' with 'if releases&.size.to_i > 1'
+
+            # Bug #21530: Replace 'if releases.size > 1' with nil-safe version
             sed -i 's/if releases\.size > 1/if releases\&\.size\.to_i > 1/g' "$UPLOADER_FILE"
-            # Replace 'releases.first' with 'releases&.first' for safety
+
+            # Bug #21530: Replace 'releases.first' with nil-safe version
             sed -i 's/releases\.first$/releases\&\.first/g' "$UPLOADER_FILE"
-            echo "Patch applied successfully"
-            grep -n "releases" "$UPLOADER_FILE" | head -20
+
+            # Bug #21007: Change the "Could not find release" error to a warning
+            # This allows metadata upload without active releases when skip_upload_changelogs=true
+            sed -i "s/UI.user_error!(\"Could not find release for version code/UI.important(\"No release found for version code/g" "$UPLOADER_FILE"
+
+            # Also skip the changelog upload if release is nil
+            sed -i 's/upload_changelogs(release_notes, release, track, track_name) unless release_notes.empty?/upload_changelogs(release_notes, release, track, track_name) unless release_notes.empty? || release.nil?/g' "$UPLOADER_FILE"
+
+            echo "Patches applied successfully"
+            grep -n "release" "$UPLOADER_FILE" | grep -E "(user_error|important|upload_changelog)" | head -10
           else
             echo "Warning: Could not find uploader.rb to patch"
           fi
