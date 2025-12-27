@@ -94,12 +94,12 @@ function copyDirContents(srcDir, destDir) {
 for (const [sourceLocale, data] of Object.entries(metadata.locales)) {
   const targetLocale = LOCALE_MAPPING[sourceLocale] || sourceLocale;
   const localeDir = path.join(outputDir, targetLocale);
-  const changelogDir = path.join(localeDir, 'changelogs');
   const imagesDir = path.join(localeDir, 'images');
 
   // Create directories
+  // Note: We don't create changelogs directory because skip_upload_changelogs=true
+  // Changelogs require an active release which we may not have
   fs.mkdirSync(localeDir, { recursive: true });
-  fs.mkdirSync(changelogDir, { recursive: true });
   fs.mkdirSync(imagesDir, { recursive: true });
 
   // Write title (max 30 chars for Google Play)
@@ -115,9 +115,8 @@ for (const [sourceLocale, data] of Object.entries(metadata.locales)) {
   const fullDesc = data.description.substring(0, 4000);
   fs.writeFileSync(path.join(localeDir, 'full_description.txt'), fullDesc);
 
-  // Write changelog (for release notes)
-  const changelog = data.whatsNew || '• Bug fixes and improvements';
-  fs.writeFileSync(path.join(changelogDir, 'default.txt'), changelog);
+  // Note: Changelogs are NOT generated because they require an active release
+  // with a specific version code. Use update_changelog lane manually after publishing.
 
   // Copy screenshots from store/screenshots/android/{locale}/
   const srcScreenshotsDir = path.join(screenshotsDir, sourceLocale);
