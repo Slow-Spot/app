@@ -1,3 +1,9 @@
+## [1.9.10](https://github.com/Slow-Spot/app/compare/v1.9.9...v1.9.10) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** use internal track with draft status for initial submission ([c7e37f5](https://github.com/Slow-Spot/app/commit/c7e37f5384e6c95c03eaad24ea0792ea4b09c150))
+
 ## [1.9.9](https://github.com/Slow-Spot/app/compare/v1.9.8...v1.9.9) (2025-12-27)
 
 ### Bug Fixes
