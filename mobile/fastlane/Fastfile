@@ -16,6 +16,7 @@ platform :android do
     sh("cd .. && node scripts/generate-android-metadata.js")
 
     # Upload metadata to Google Play
+    # Note: skip_upload_changelogs=true because changelogs require an active release
     upload_to_play_store(
       package_name: "com.slowspot.app",
       track: "production",
@@ -24,7 +25,7 @@ platform :android do
       skip_upload_metadata: false,
       skip_upload_images: false,
       skip_upload_screenshots: false,
-      skip_upload_changelogs: false,
+      skip_upload_changelogs: true,
       sync_image_upload: true,
       validate_only: false
     )
@@ -44,6 +45,7 @@ platform :android do
       skip_upload_metadata: false,
       skip_upload_images: false,
       skip_upload_screenshots: false,
+      skip_upload_changelogs: true,
       validate_only: true
     )
 
@@ -81,7 +83,7 @@ platform :android do
       skip_upload_metadata: false,
       skip_upload_images: true,
       skip_upload_screenshots: true,
-      skip_upload_changelogs: false
+      skip_upload_changelogs: true
     )
 
     UI.success("Text metadata uploaded successfully!")
@@ -97,40 +99,16 @@ platform :android do
   end
 
   # ============================================
-  # CHANGELOGS
+  # CHANGELOGS (requires active release)
   # ============================================
 
-  desc "Update release notes/changelog only"
+  desc "Update release notes/changelog only (requires active release on track)"
   lane :update_changelog do |options|
     version_code = options[:version_code] || ENV["VERSION_CODE"]
 
-    sh("cd .. && node scripts/generate-android-metadata.js")
-
-    params = {
-      package_name: "com.slowspot.app",
-      track: "production",
-      skip_upload_apk: true,
-      skip_upload_aab: true,
-      skip_upload_metadata: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
-      skip_upload_changelogs: false
-    }
-
-    params[:version_code] = version_code.to_i if version_code
-
-    upload_to_play_store(params)
-
-    UI.success("Changelog updated successfully!")
-  end
-
-  # ============================================
-  # FULL SYNC
-  # ============================================
-
-  desc "Full sync - upload everything (metadata, screenshots, graphics)"
-  lane :full_sync do
-    UI.message("Starting full metadata sync...")
+    unless version_code
+      UI.user_error!("version_code is required for changelog upload. Pass it as version_code:12345")
+    end
 
     sh("cd .. && node scripts/generate-android-metadata.js")
 
@@ -139,10 +117,37 @@ platform :android do
       track: "production",
       skip_upload_apk: true,
       skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: false,
+      version_code: version_code.to_i
+    )
+
+    UI.success("Changelog updated for version #{version_code}!")
+  end
+
+  # ============================================
+  # FULL SYNC
+  # ============================================
+
+  desc "Full sync - upload everything (metadata, screenshots, graphics, no changelogs)"
+  lane :full_sync do
+    UI.message("Starting full metadata sync...")
+
+    sh("cd .. && node scripts/generate-android-metadata.js")
+
+    # Note: Changelogs are skipped because they require an active release
+    # Use update_changelog lane after publishing a release to add release notes
+    upload_to_play_store(
+      package_name: "com.slowspot.app",
+      track: "production",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
       skip_upload_metadata: false,
       skip_upload_images: false,
       skip_upload_screenshots: false,
-      skip_upload_changelogs: false,
+      skip_upload_changelogs: true,
       sync_image_upload: true,
       validate_only: false
     )
