@@ -1,29 +1,186 @@
-# Fastlane configuration for Slow Spot
-# Used primarily for Google Play metadata sync
+# Fastfile for Slow Spot
+# Handles Google Play metadata sync (screenshots, descriptions, graphics)
+# @see https://docs.fastlane.tools/
 
 default_platform(:android)
 
 platform :android do
-  desc "Sync metadata to Google Play Console"
-  lane :sync_metadata do
-    # Generate metadata from our JSON source
-    sh("node ../scripts/generate-android-metadata.js")
+
+  # ============================================
+  # METADATA MANAGEMENT
+  # ============================================
+
+  desc "Upload all metadata to Google Play (descriptions, screenshots, graphics)"
+  lane :upload_metadata do
+    # Generate metadata from our central JSON file
+    sh("cd .. && node scripts/generate-android-metadata.js")
 
     # Upload metadata to Google Play
-    supply(
+    upload_to_play_store(
+      package_name: "com.slowspot.app",
+      track: "production",
       skip_upload_apk: true,
       skip_upload_aab: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      skip_upload_changelogs: false,
+      sync_image_upload: true,
+      validate_only: false
+    )
+
+    UI.success("Metadata uploaded successfully to Google Play!")
+  end
+
+  desc "Validate metadata without uploading"
+  lane :validate_metadata do
+    sh("cd .. && node scripts/generate-android-metadata.js")
+
+    upload_to_play_store(
+      package_name: "com.slowspot.app",
+      track: "production",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      validate_only: true
+    )
+
+    UI.success("Metadata validation passed!")
+  end
+
+  desc "Upload only screenshots (no text metadata)"
+  lane :upload_screenshots do
+    sh("cd .. && node scripts/generate-android-metadata.js")
+
+    upload_to_play_store(
+      package_name: "com.slowspot.app",
+      track: "production",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      skip_upload_changelogs: true,
+      sync_image_upload: true
+    )
+
+    UI.success("Screenshots uploaded successfully!")
+  end
+
+  desc "Upload only text metadata (no screenshots)"
+  lane :upload_text_metadata do
+    sh("cd .. && node scripts/generate-android-metadata.js")
+
+    upload_to_play_store(
+      package_name: "com.slowspot.app",
+      track: "production",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: false,
       skip_upload_images: true,
       skip_upload_screenshots: true,
-      metadata_path: "./metadata/android"
+      skip_upload_changelogs: false
     )
+
+    UI.success("Text metadata uploaded successfully!")
   end
+
+  # ============================================
+  # LEGACY LANE (backward compatibility)
+  # ============================================
+
+  desc "Sync metadata to Google Play Console (alias for upload_metadata)"
+  lane :sync_metadata do
+    upload_metadata
+  end
+
+  # ============================================
+  # CHANGELOGS
+  # ============================================
+
+  desc "Update release notes/changelog only"
+  lane :update_changelog do |options|
+    version_code = options[:version_code] || ENV["VERSION_CODE"]
+
+    sh("cd .. && node scripts/generate-android-metadata.js")
+
+    params = {
+      package_name: "com.slowspot.app",
+      track: "production",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: false
+    }
+
+    params[:version_code] = version_code.to_i if version_code
+
+    upload_to_play_store(params)
+
+    UI.success("Changelog updated successfully!")
+  end
+
+  # ============================================
+  # FULL SYNC
+  # ============================================
+
+  desc "Full sync - upload everything (metadata, screenshots, graphics)"
+  lane :full_sync do
+    UI.message("Starting full metadata sync...")
+
+    sh("cd .. && node scripts/generate-android-metadata.js")
+
+    upload_to_play_store(
+      package_name: "com.slowspot.app",
+      track: "production",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      skip_upload_changelogs: false,
+      sync_image_upload: true,
+      validate_only: false
+    )
+
+    UI.success("Full sync completed!")
+  end
+
+  # ============================================
+  # DOWNLOAD / UTILITIES
+  # ============================================
+
+  desc "Download current metadata from Google Play (for backup/comparison)"
+  lane :download_metadata do
+    download_from_play_store(
+      package_name: "com.slowspot.app"
+    )
+
+    UI.success("Metadata downloaded to fastlane/metadata/android/")
+  end
+
+  desc "Generate metadata files locally (without uploading)"
+  lane :generate_metadata do
+    sh("cd .. && node scripts/generate-android-metadata.js")
+    UI.success("Metadata generated in fastlane/metadata/android/")
+  end
+
+  desc "Check connection to Google Play"
+  lane :check_connection do
+    validate_play_store_json_key
+    UI.success("Google Play connection successful!")
+  end
+
 end
 
 platform :ios do
   desc "Note: iOS metadata is handled by EAS Metadata"
   lane :info do
-    UI.message("iOS metadata is managed via EAS Metadata.")
-    UI.message("Run: eas metadata:push --platform ios")
+    UI.message("iOS metadata is managed via EAS Metadata (store.config.js)")
+    UI.message("Run: cd mobile && eas metadata:push --platform ios")
   end
 end

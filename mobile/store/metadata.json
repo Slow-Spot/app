@@ -1,64 +1,168 @@
 {
+  "$schema": "./metadata.schema.json",
+  "version": "2.0.0",
+  "lastUpdated": "2024-12-27",
+
   "app": {
     "name": "Slow Spot",
-    "copyright": "2024 Slow Spot"
+    "bundleId": "com.slowspot.app",
+    "copyright": "2024 Slow Spot",
+    "primaryCategory": "HEALTH_AND_FITNESS",
+    "secondaryCategory": "LIFESTYLE",
+    "contentRating": "4+",
+    "supportUrl": "https://slowspot.me/support",
+    "privacyPolicyUrl": "https://slowspot.me/privacy",
+    "termsOfServiceUrl": "https://slowspot.me/terms",
+    "marketingUrl": "https://slowspot.me"
   },
+
+  "contact": {
+    "email": "support@slowspot.me",
+    "firstName": "Leszek",
+    "lastName": "Szpunar",
+    "phone": "+48000000000"
+  },
+
+  "review": {
+    "demoAccountRequired": false,
+    "demoAccountName": null,
+    "demoAccountPassword": null,
+    "notes": "This is a meditation timer app. No login is required. All data is stored locally on the device. The app works completely offline."
+  },
+
+  "android": {
+    "defaultLanguage": "en-US",
+    "contactEmail": "support@slowspot.me",
+    "contactPhone": "+48000000000",
+    "contactWebsite": "https://slowspot.me"
+  },
+
   "locales": {
     "en-US": {
       "name": "Slow Spot - Meditation",
       "subtitle": "Find your moment of peace",
       "promotionalText": "Start your meditation journey today. Research suggests 10-12 minutes daily for 8 weeks can bring measurable benefits. No subscription required - completely free.",
-      "description": "Slow Spot is your personal space for daily meditation. Simple, beautiful, and completely free.\n\nWHAT MAKES SLOW SPOT DIFFERENT?\n• 100% Free - No subscriptions, no in-app purchases\n• Works Offline - Your data stays on your device\n• No Ads - Focus on what matters\n• Privacy First - No tracking, no data collection\n\nFEATURES:\n• Customizable meditation timer with ambient sounds\n• 40+ guided meditation sessions across 6 traditions\n• Breathing exercises (4-7-8, Box, Equal, Calm)\n• Progress tracking with streaks and achievements\n• Daily inspirational quotes\n• Multiple languages supported\n\nMEDITATION TRADITIONS:\n• Zen (Japanese) - Zazen, Kinhin\n• Vipassana (Buddhist) - Body Scan, Insight\n• Vedic (Hindu) - Om, Transcendental, Chakra\n• Taoist (Chinese) - Qigong, Inner Smile, Wu Wei\n• Sufi (Islamic) - Dhikr, Muraqaba\n• Christian Contemplative - Centering Prayer, Lectio Divina\n\nBACKED BY SCIENCE:\nResearch suggests regular meditation can support:\n• Reduced stress and anxiety\n• Better concentration and mental clarity\n• Deeper, more peaceful sleep\n\nStart with just 5 minutes a day. Your journey to inner peace begins now.",
+      "description": "Slow Spot is your personal space for daily meditation. Simple, beautiful, and completely free.\n\nWHAT MAKES SLOW SPOT DIFFERENT?\n\u2022 100% Free - No subscriptions, no in-app purchases\n\u2022 Works Offline - Your data stays on your device\n\u2022 No Ads - Focus on what matters\n\u2022 Privacy First - No tracking, no data collection\n\nFEATURES:\n\u2022 Customizable meditation timer with ambient sounds\n\u2022 40+ guided meditation sessions across 6 traditions\n\u2022 Breathing exercises (4-7-8, Box, Equal, Calm)\n\u2022 Progress tracking with streaks and achievements\n\u2022 Daily inspirational quotes\n\u2022 Multiple languages supported\n\nMEDITATION TRADITIONS:\n\u2022 Zen (Japanese) - Zazen, Kinhin\n\u2022 Vipassana (Buddhist) - Body Scan, Insight\n\u2022 Vedic (Hindu) - Om, Transcendental, Chakra\n\u2022 Taoist (Chinese) - Qigong, Inner Smile, Wu Wei\n\u2022 Sufi (Islamic) - Dhikr, Muraqaba\n\u2022 Christian Contemplative - Centering Prayer, Lectio Divina\n\nBACKED BY SCIENCE:\nResearch suggests regular meditation can support:\n\u2022 Reduced stress and anxiety\n\u2022 Better concentration and mental clarity\n\u2022 Deeper, more peaceful sleep\n\nStart with just 5 minutes a day. Your journey to inner peace begins now.",
       "keywords": "meditation,mindfulness,timer,breathing,relax,sleep,calm,focus,zen,yoga,stress,anxiety,peace",
-      "whatsNew": "• Improved performance and stability\n• Bug fixes and optimizations"
+      "whatsNew": "\u2022 Improved performance and stability\n\u2022 Bug fixes and optimizations",
+      "shortDescription": "Free meditation timer with 40+ guided sessions, breathing exercises, and progress tracking. No ads, works offline.",
+      "featureGraphicText": "Find Your Inner Peace",
+      "screenshotCaptions": [
+        "Beautiful meditation timer",
+        "40+ guided meditations",
+        "Breathing exercises",
+        "Track your progress",
+        "Daily inspiration",
+        "Multiple traditions"
+      ]
     },
     "pl": {
       "name": "Slow Spot - Medytacja",
-      "subtitle": "Twoja przestrzeń do medytacji",
-      "promotionalText": "Rozpocznij swoją podróż z medytacją. Badania sugerują, że 10-12 minut dziennie przez 8 tygodni może przynieść wymierne korzyści. Bez subskrypcji - całkowicie za darmo.",
-      "description": "Slow Spot to Twoja osobista przestrzeń do codziennej medytacji. Prosta, piękna i całkowicie darmowa.\n\nCO WYRÓŻNIA SLOW SPOT?\n• 100% Za darmo - Bez subskrypcji, bez zakupów w aplikacji\n• Działa offline - Twoje dane pozostają na urządzeniu\n• Bez reklam - Skup się na tym, co ważne\n• Prywatność przede wszystkim - Bez śledzenia, bez zbierania danych\n\nFUNKCJE:\n• Konfigurowalny timer medytacji z dźwiękami ambient\n• Ponad 40 sesji medytacji z 6 tradycji\n• Ćwiczenia oddechowe (4-7-8, Box, Equal, Calm)\n• Śledzenie postępów ze streak'ami i osiągnięciami\n• Codzienne inspirujące cytaty\n• Wsparcie wielu języków\n\nTRADYCJE MEDYTACYJNE:\n• Zen (japońska) - Zazen, Kinhin\n• Vipassana (buddyjska) - Skanowanie ciała, Wgląd\n• Wedyjska (hinduska) - Om, Transcendentalna, Czakry\n• Taoistyczna (chińska) - Qigong, Wewnętrzny uśmiech, Wu Wei\n• Suficka (islamska) - Dhikr, Muraqaba\n• Chrześcijańska kontemplacyjna - Modlitwa centrująca, Lectio Divina\n\nPOPARTE NAUKĄ:\nBadania sugerują, że regularna medytacja może wspierać:\n• Redukcję stresu i lęku\n• Lepszą koncentrację i jasność umysłu\n• Głębszy, spokojniejszy sen\n\nZacznij od 5 minut dziennie. Twoja podróż do wewnętrznego spokoju zaczyna się teraz.",
-      "keywords": "medytacja,uważność,timer,oddech,relaks,sen,spokój,skupienie,zen,joga,stres,lęk,pokój",
-      "whatsNew": "• Poprawiona wydajność i stabilność\n• Poprawki błędów i optymalizacje"
+      "subtitle": "Twoja przestrzen do medytacji",
+      "promotionalText": "Rozpocznij swoja podroz z medytacja. Badania sugeruja, ze 10-12 minut dziennie przez 8 tygodni moze przyniesc wymierne korzysci. Bez subskrypcji - calkowicie za darmo.",
+      "description": "Slow Spot to Twoja osobista przestrzen do codziennej medytacji. Prosta, piekna i calkowicie darmowa.\n\nCO WYROZNIA SLOW SPOT?\n\u2022 100% Za darmo - Bez subskrypcji, bez zakupow w aplikacji\n\u2022 Dziala offline - Twoje dane pozostaja na urzadzeniu\n\u2022 Bez reklam - Skup sie na tym, co wazne\n\u2022 Prywatnosc przede wszystkim - Bez sledzenia, bez zbierania danych\n\nFUNKCJE:\n\u2022 Konfigurowalny timer medytacji z dzwiekami ambient\n\u2022 Ponad 40 sesji medytacji z 6 tradycji\n\u2022 Cwiczenia oddechowe (4-7-8, Box, Equal, Calm)\n\u2022 Sledzenie postepow ze streak'ami i osiagnieciami\n\u2022 Codzienne inspirujace cytaty\n\u2022 Wsparcie wielu jezykow\n\nTRADYCJE MEDYTACYJNE:\n\u2022 Zen (japonska) - Zazen, Kinhin\n\u2022 Vipassana (buddyjska) - Skanowanie ciala, Wglad\n\u2022 Wedyjska (hinduska) - Om, Transcendentalna, Czakry\n\u2022 Taoistyczna (chinska) - Qigong, Wewnetrzny usmiech, Wu Wei\n\u2022 Suficka (islamska) - Dhikr, Muraqaba\n\u2022 Chrzescijanska kontemplacyjna - Modlitwa centrujaca, Lectio Divina\n\nPOPARTE NAUKA:\nBadania sugeruja, ze regularna medytacja moze wspierac:\n\u2022 Redukcje stresu i leku\n\u2022 Lepsza koncentracje i jasnosc umyslu\n\u2022 Glebszy, spokojniejszy sen\n\nZacznij od 5 minut dziennie. Twoja podroz do wewnetrznego spokoju zaczyna sie teraz.",
+      "keywords": "medytacja,uwaznosc,timer,oddech,relaks,sen,spokoj,skupienie,zen,joga,stres,lek,pokoj",
+      "whatsNew": "\u2022 Poprawiona wydajnosc i stabilnosc\n\u2022 Poprawki bledow i optymalizacje",
+      "shortDescription": "Darmowy timer medytacji z 40+ sesjami, cwiczeniami oddechowymi i sledzeniem postepu. Bez reklam, dziala offline.",
+      "featureGraphicText": "Znajdz Wewnetrzny Spokoj",
+      "screenshotCaptions": [
+        "Piekny timer medytacji",
+        "40+ sesji medytacji",
+        "Cwiczenia oddechowe",
+        "Sledz swoj postep",
+        "Codzienna inspiracja",
+        "Wiele tradycji"
+      ]
     },
     "de-DE": {
       "name": "Slow Spot - Meditation",
       "subtitle": "Finde deinen Moment der Ruhe",
-      "promotionalText": "Starte deine Meditationsreise heute. Studien zeigen, dass 10-12 Minuten täglich über 8 Wochen messbare Vorteile bringen können. Kein Abo erforderlich - komplett kostenlos.",
-      "description": "Slow Spot ist dein persönlicher Raum für tägliche Meditation. Einfach, schön und völlig kostenlos.\n\nWAS MACHT SLOW SPOT BESONDERS?\n• 100% Kostenlos - Keine Abos, keine In-App-Käufe\n• Funktioniert offline - Deine Daten bleiben auf deinem Gerät\n• Keine Werbung - Konzentriere dich auf das Wesentliche\n• Datenschutz zuerst - Kein Tracking, keine Datensammlung\n\nFUNKTIONEN:\n• Anpassbarer Meditationstimer mit Ambient-Sounds\n• 40+ geführte Meditationssitzungen aus 6 Traditionen\n• Atemübungen (4-7-8, Box, Equal, Calm)\n• Fortschrittsverfolgung mit Streaks und Erfolgen\n• Tägliche inspirierende Zitate\n• Mehrere Sprachen unterstützt\n\nMEDITATIONSTRADITIONEN:\n• Zen (japanisch) - Zazen, Kinhin\n• Vipassana (buddhistisch) - Body Scan, Einsicht\n• Vedisch (hinduistisch) - Om, Transzendental, Chakra\n• Taoistisch (chinesisch) - Qigong, Inneres Lächeln, Wu Wei\n• Sufi (islamisch) - Dhikr, Muraqaba\n• Christlich kontemplativ - Zentrierendes Gebet, Lectio Divina\n\nWISSENSCHAFTLICH FUNDIERT:\nStudien zeigen, dass regelmäßige Meditation unterstützen kann:\n• Reduzierter Stress und Angst\n• Bessere Konzentration und geistige Klarheit\n• Tieferer, friedlicherer Schlaf\n\nStarte mit nur 5 Minuten pro Tag. Deine Reise zum inneren Frieden beginnt jetzt.",
+      "promotionalText": "Starte deine Meditationsreise heute. Studien zeigen, dass 10-12 Minuten taglich uber 8 Wochen messbare Vorteile bringen konnen. Kein Abo erforderlich - komplett kostenlos.",
+      "description": "Slow Spot ist dein personlicher Raum fur tagliche Meditation. Einfach, schon und vollig kostenlos.\n\nWAS MACHT SLOW SPOT BESONDERS?\n\u2022 100% Kostenlos - Keine Abos, keine In-App-Kaufe\n\u2022 Funktioniert offline - Deine Daten bleiben auf deinem Gerat\n\u2022 Keine Werbung - Konzentriere dich auf das Wesentliche\n\u2022 Datenschutz zuerst - Kein Tracking, keine Datensammlung\n\nFUNKTIONEN:\n\u2022 Anpassbarer Meditationstimer mit Ambient-Sounds\n\u2022 40+ gefuhrte Meditationssitzungen aus 6 Traditionen\n\u2022 Atemubungen (4-7-8, Box, Equal, Calm)\n\u2022 Fortschrittsverfolgung mit Streaks und Erfolgen\n\u2022 Tagliche inspirierende Zitate\n\u2022 Mehrere Sprachen unterstutzt\n\nMEDITATIONSTRADITIONEN:\n\u2022 Zen (japanisch) - Zazen, Kinhin\n\u2022 Vipassana (buddhistisch) - Body Scan, Einsicht\n\u2022 Vedisch (hinduistisch) - Om, Transzendental, Chakra\n\u2022 Taoistisch (chinesisch) - Qigong, Inneres Lacheln, Wu Wei\n\u2022 Sufi (islamisch) - Dhikr, Muraqaba\n\u2022 Christlich kontemplativ - Zentrierendes Gebet, Lectio Divina\n\nWISSENSCHAFTLICH FUNDIERT:\nStudien zeigen, dass regelmasige Meditation unterstutzen kann:\n\u2022 Reduzierter Stress und Angst\n\u2022 Bessere Konzentration und geistige Klarheit\n\u2022 Tieferer, friedlicherer Schlaf\n\nStarte mit nur 5 Minuten pro Tag. Deine Reise zum inneren Frieden beginnt jetzt.",
       "keywords": "meditation,achtsamkeit,timer,atmung,entspannung,schlaf,ruhe,fokus,zen,yoga,stress,angst",
-      "whatsNew": "• Verbesserte Leistung und Stabilität\n• Fehlerbehebungen und Optimierungen"
+      "whatsNew": "\u2022 Verbesserte Leistung und Stabilitat\n\u2022 Fehlerbehebungen und Optimierungen",
+      "shortDescription": "Kostenloser Meditationstimer mit 40+ Sitzungen, Atemubungen und Fortschrittsverfolgung. Werbefrei, offline nutzbar.",
+      "featureGraphicText": "Finde Deinen Inneren Frieden",
+      "screenshotCaptions": [
+        "Schoner Meditationstimer",
+        "40+ gefuhrte Meditationen",
+        "Atemubungen",
+        "Verfolge deinen Fortschritt",
+        "Tagliche Inspiration",
+        "Mehrere Traditionen"
+      ]
     },
     "es-ES": {
-      "name": "Slow Spot - Meditación",
+      "name": "Slow Spot - Meditacion",
       "subtitle": "Encuentra tu momento de paz",
-      "promotionalText": "Comienza tu viaje de meditación hoy. Los estudios sugieren que 10-12 minutos diarios durante 8 semanas pueden traer beneficios medibles. Sin suscripción - completamente gratis.",
-      "description": "Slow Spot es tu espacio personal para la meditación diaria. Simple, hermoso y completamente gratis.\n\n¿QUÉ HACE DIFERENTE A SLOW SPOT?\n• 100% Gratis - Sin suscripciones, sin compras en la app\n• Funciona sin conexión - Tus datos permanecen en tu dispositivo\n• Sin anuncios - Concéntrate en lo que importa\n• Privacidad primero - Sin rastreo, sin recolección de datos\n\nCARACTERÍSTICAS:\n• Temporizador de meditación personalizable con sonidos ambient\n• 40+ sesiones de meditación guiada de 6 tradiciones\n• Ejercicios de respiración (4-7-8, Box, Equal, Calm)\n• Seguimiento de progreso con rachas y logros\n• Citas inspiradoras diarias\n• Múltiples idiomas soportados\n\nTRADICIONES DE MEDITACIÓN:\n• Zen (japonés) - Zazen, Kinhin\n• Vipassana (budista) - Escaneo corporal, Insight\n• Védica (hindú) - Om, Trascendental, Chakra\n• Taoísta (china) - Qigong, Sonrisa Interior, Wu Wei\n• Sufí (islámica) - Dhikr, Muraqaba\n• Cristiana contemplativa - Oración centrante, Lectio Divina\n\nRESPALDADO POR LA CIENCIA:\nLa investigación sugiere que la meditación regular puede apoyar:\n• Reducción del estrés y la ansiedad\n• Mejor concentración y claridad mental\n• Sueño más profundo y tranquilo\n\nComienza con solo 5 minutos al día. Tu viaje hacia la paz interior comienza ahora.",
-      "keywords": "meditación,mindfulness,temporizador,respiración,relajar,dormir,calma,enfoque,zen,yoga,estrés",
-      "whatsNew": "• Rendimiento y estabilidad mejorados\n• Correcciones de errores y optimizaciones"
+      "promotionalText": "Comienza tu viaje de meditacion hoy. Los estudios sugieren que 10-12 minutos diarios durante 8 semanas pueden traer beneficios medibles. Sin suscripcion - completamente gratis.",
+      "description": "Slow Spot es tu espacio personal para la meditacion diaria. Simple, hermoso y completamente gratis.\n\nQUE HACE DIFERENTE A SLOW SPOT?\n\u2022 100% Gratis - Sin suscripciones, sin compras en la app\n\u2022 Funciona sin conexion - Tus datos permanecen en tu dispositivo\n\u2022 Sin anuncios - Concentrate en lo que importa\n\u2022 Privacidad primero - Sin rastreo, sin recoleccion de datos\n\nCARACTERISTICAS:\n\u2022 Temporizador de meditacion personalizable con sonidos ambient\n\u2022 40+ sesiones de meditacion guiada de 6 tradiciones\n\u2022 Ejercicios de respiracion (4-7-8, Box, Equal, Calm)\n\u2022 Seguimiento de progreso con rachas y logros\n\u2022 Citas inspiradoras diarias\n\u2022 Multiples idiomas soportados\n\nTRADICIONES DE MEDITACION:\n\u2022 Zen (japones) - Zazen, Kinhin\n\u2022 Vipassana (budista) - Escaneo corporal, Insight\n\u2022 Vedica (hindu) - Om, Trascendental, Chakra\n\u2022 Taoista (china) - Qigong, Sonrisa Interior, Wu Wei\n\u2022 Sufi (islamica) - Dhikr, Muraqaba\n\u2022 Cristiana contemplativa - Oracion centrante, Lectio Divina\n\nRESPALDADO POR LA CIENCIA:\nLa investigacion sugiere que la meditacion regular puede apoyar:\n\u2022 Reduccion del estres y la ansiedad\n\u2022 Mejor concentracion y claridad mental\n\u2022 Sueno mas profundo y tranquilo\n\nComienza con solo 5 minutos al dia. Tu viaje hacia la paz interior comienza ahora.",
+      "keywords": "meditacion,mindfulness,temporizador,respiracion,relajar,dormir,calma,enfoque,zen,yoga,estres",
+      "whatsNew": "\u2022 Rendimiento y estabilidad mejorados\n\u2022 Correcciones de errores y optimizaciones",
+      "shortDescription": "Temporizador de meditacion gratis con 40+ sesiones, ejercicios de respiracion y seguimiento. Sin anuncios, funciona offline.",
+      "featureGraphicText": "Encuentra Tu Paz Interior",
+      "screenshotCaptions": [
+        "Hermoso temporizador",
+        "40+ meditaciones guiadas",
+        "Ejercicios de respiracion",
+        "Sigue tu progreso",
+        "Inspiracion diaria",
+        "Multiples tradiciones"
+      ]
     },
     "fr-FR": {
-      "name": "Slow Spot - Méditation",
+      "name": "Slow Spot - Meditation",
       "subtitle": "Trouvez votre moment de paix",
-      "promotionalText": "Commencez votre voyage de méditation aujourd'hui. Les études suggèrent que 10-12 minutes par jour pendant 8 semaines peuvent apporter des bienfaits mesurables. Sans abonnement - entièrement gratuit.",
-      "description": "Slow Spot est votre espace personnel pour la méditation quotidienne. Simple, beau et entièrement gratuit.\n\nQU'EST-CE QUI REND SLOW SPOT DIFFÉRENT?\n• 100% Gratuit - Sans abonnements, sans achats intégrés\n• Fonctionne hors ligne - Vos données restent sur votre appareil\n• Sans publicités - Concentrez-vous sur l'essentiel\n• Vie privée d'abord - Pas de suivi, pas de collecte de données\n\nFONCTIONNALITÉS:\n• Minuteur de méditation personnalisable avec sons ambiants\n• 40+ sessions de méditation guidée de 6 traditions\n• Exercices de respiration (4-7-8, Box, Equal, Calm)\n• Suivi des progrès avec séries et réalisations\n• Citations inspirantes quotidiennes\n• Plusieurs langues supportées\n\nTRADITIONS DE MÉDITATION:\n• Zen (japonais) - Zazen, Kinhin\n• Vipassana (bouddhiste) - Scan corporel, Insight\n• Védique (hindou) - Om, Transcendantal, Chakra\n• Taoïste (chinois) - Qigong, Sourire Intérieur, Wu Wei\n• Soufi (islamique) - Dhikr, Muraqaba\n• Chrétienne contemplative - Prière de centrage, Lectio Divina\n\nSOUTENU PAR LA SCIENCE:\nLa recherche suggère que la méditation régulière peut soutenir:\n• Réduction du stress et de l'anxiété\n• Meilleure concentration et clarté mentale\n• Sommeil plus profond et paisible\n\nCommencez avec seulement 5 minutes par jour. Votre voyage vers la paix intérieure commence maintenant.",
-      "keywords": "méditation,pleine conscience,minuteur,respiration,relaxer,sommeil,calme,focus,zen,yoga,stress",
-      "whatsNew": "• Performances et stabilité améliorées\n• Corrections de bugs et optimisations"
+      "promotionalText": "Commencez votre voyage de meditation aujourd'hui. Les etudes suggerent que 10-12 minutes par jour pendant 8 semaines peuvent apporter des bienfaits mesurables. Sans abonnement - entierement gratuit.",
+      "description": "Slow Spot est votre espace personnel pour la meditation quotidienne. Simple, beau et entierement gratuit.\n\nQU'EST-CE QUI REND SLOW SPOT DIFFERENT?\n\u2022 100% Gratuit - Sans abonnements, sans achats integres\n\u2022 Fonctionne hors ligne - Vos donnees restent sur votre appareil\n\u2022 Sans publicites - Concentrez-vous sur l'essentiel\n\u2022 Vie privee d'abord - Pas de suivi, pas de collecte de donnees\n\nFONCTIONNALITES:\n\u2022 Minuteur de meditation personnalisable avec sons ambiants\n\u2022 40+ sessions de meditation guidee de 6 traditions\n\u2022 Exercices de respiration (4-7-8, Box, Equal, Calm)\n\u2022 Suivi des progres avec series et realisations\n\u2022 Citations inspirantes quotidiennes\n\u2022 Plusieurs langues supportees\n\nTRADITIONS DE MEDITATION:\n\u2022 Zen (japonais) - Zazen, Kinhin\n\u2022 Vipassana (bouddhiste) - Scan corporel, Insight\n\u2022 Vedique (hindou) - Om, Transcendantal, Chakra\n\u2022 Taoiste (chinois) - Qigong, Sourire Interieur, Wu Wei\n\u2022 Soufi (islamique) - Dhikr, Muraqaba\n\u2022 Chretienne contemplative - Priere de centrage, Lectio Divina\n\nSOUTENU PAR LA SCIENCE:\nLa recherche suggere que la meditation reguliere peut soutenir:\n\u2022 Reduction du stress et de l'anxiete\n\u2022 Meilleure concentration et clarte mentale\n\u2022 Sommeil plus profond et paisible\n\nCommencez avec seulement 5 minutes par jour. Votre voyage vers la paix interieure commence maintenant.",
+      "keywords": "meditation,pleine conscience,minuteur,respiration,relaxer,sommeil,calme,focus,zen,yoga,stress",
+      "whatsNew": "\u2022 Performances et stabilite ameliorees\n\u2022 Corrections de bugs et optimisations",
+      "shortDescription": "Minuteur de meditation gratuit avec 40+ sessions, exercices de respiration et suivi. Sans pub, fonctionne hors ligne.",
+      "featureGraphicText": "Trouvez Votre Paix Interieure",
+      "screenshotCaptions": [
+        "Beau minuteur de meditation",
+        "40+ meditations guidees",
+        "Exercices de respiration",
+        "Suivez vos progres",
+        "Inspiration quotidienne",
+        "Plusieurs traditions"
+      ]
     },
     "zh-Hans": {
-      "name": "Slow Spot - 冥想",
-      "subtitle": "找到属于你的宁静时刻",
-      "promotionalText": "今天开始你的冥想之旅。研究表明，每天10-12分钟，持续8周可以带来可衡量的益处。无需订阅 - 完全免费。",
-      "description": "Slow Spot是您每日冥想的个人空间。简单、美观、完全免费。\n\nSLOW SPOT有何不同？\n• 100%免费 - 无订阅，无应用内购买\n• 离线工作 - 您的数据留在设备上\n• 无广告 - 专注于重要的事情\n• 隐私优先 - 无追踪，无数据收集\n\n功能：\n• 可定制的冥想计时器，带有环境音效\n• 40+来自6个传统的引导冥想课程\n• 呼吸练习（4-7-8，Box，Equal，Calm）\n• 进度追踪，含连续记录和成就\n• 每日励志引言\n• 支持多种语言\n\n冥想传统：\n• 禅宗（日本）- 坐禅，经行\n• 内观（佛教）- 身体扫描，洞察\n• 吠陀（印度教）- 唵，超越，脉轮\n• 道家（中国）- 气功，内在微笑，无为\n• 苏菲（伊斯兰教）- Dhikr，Muraqaba\n• 基督教默观 - 定心祈祷，神圣阅读\n\n科学支持：\n研究表明，定期冥想可以支持：\n• 减轻压力和焦虑\n• 提高专注力和心智清晰度\n• 更深沉、更平静的睡眠\n\n每天从5分钟开始。您的内心平静之旅现在开始。",
-      "keywords": "冥想,正念,计时器,呼吸,放松,睡眠,平静,专注,禅,瑜伽,压力,焦虑,和平",
-      "whatsNew": "• 提升性能和稳定性\n• 错误修复和优化"
+      "name": "Slow Spot - \u51a5\u60f3",
+      "subtitle": "\u627e\u5230\u5c5e\u4e8e\u4f60\u7684\u5b81\u9759\u65f6\u523b",
+      "promotionalText": "\u4eca\u5929\u5f00\u59cb\u4f60\u7684\u51a5\u60f3\u4e4b\u65c5\u3002\u7814\u7a76\u8868\u660e\uff0c\u6bcf\u592910-12\u5206\u949f\uff0c\u6301\u7eed8\u5468\u53ef\u4ee5\u5e26\u6765\u53ef\u8861\u91cf\u7684\u76ca\u5904\u3002\u65e0\u9700\u8ba2\u9605 - \u5b8c\u5168\u514d\u8d39\u3002",
+      "description": "Slow Spot\u662f\u60a8\u6bcf\u65e5\u51a5\u60f3\u7684\u4e2a\u4eba\u7a7a\u95f4\u3002\u7b80\u5355\u3001\u7f8e\u89c2\u3001\u5b8c\u5168\u514d\u8d39\u3002\n\nSLOW SPOT\u6709\u4f55\u4e0d\u540c\uff1f\n\u2022 100%\u514d\u8d39 - \u65e0\u8ba2\u9605\uff0c\u65e0\u5e94\u7528\u5185\u8d2d\u4e70\n\u2022 \u79bb\u7ebf\u5de5\u4f5c - \u60a8\u7684\u6570\u636e\u7559\u5728\u8bbe\u5907\u4e0a\n\u2022 \u65e0\u5e7f\u544a - \u4e13\u6ce8\u4e8e\u91cd\u8981\u7684\u4e8b\u60c5\n\u2022 \u9690\u79c1\u4f18\u5148 - \u65e0\u8ffd\u8e2a\uff0c\u65e0\u6570\u636e\u6536\u96c6\n\n\u529f\u80fd\uff1a\n\u2022 \u53ef\u5b9a\u5236\u7684\u51a5\u60f3\u8ba1\u65f6\u5668\uff0c\u5e26\u6709\u73af\u5883\u97f3\u6548\n\u2022 40+\u6765\u81ea6\u4e2a\u4f20\u7edf\u7684\u5f15\u5bfc\u51a5\u60f3\u8bfe\u7a0b\n\u2022 \u547c\u5438\u7ec3\u4e60\uff084-7-8\uff0cBox\uff0cEqual\uff0cCalm\uff09\n\u2022 \u8fdb\u5ea6\u8ffd\u8e2a\uff0c\u542b\u8fde\u7eed\u8bb0\u5f55\u548c\u6210\u5c31\n\u2022 \u6bcf\u65e5\u52b1\u5fd7\u5f15\u8a00\n\u2022 \u652f\u6301\u591a\u79cd\u8bed\u8a00\n\n\u51a5\u60f3\u4f20\u7edf\uff1a\n\u2022 \u7985\u5b97\uff08\u65e5\u672c\uff09- \u5750\u7985\uff0c\u7ecf\u884c\n\u2022 \u5185\u89c2\uff08\u4f5b\u6559\uff09- \u8eab\u4f53\u626b\u63cf\uff0c\u6d1e\u5bdf\n\u2022 \u5420\u9640\uff08\u5370\u5ea6\u6559\uff09- \u553f\uff0c\u8d85\u8d8a\uff0c\u8109\u8f6e\n\u2022 \u9053\u5bb6\uff08\u4e2d\u56fd\uff09- \u6c14\u529f\uff0c\u5185\u5728\u5fae\u7b11\uff0c\u65e0\u4e3a\n\u2022 \u82cf\u83f2\uff08\u4f0a\u65af\u5170\u6559\uff09- Dhikr\uff0cMuraqaba\n\u2022 \u57fa\u7763\u6559\u9ed8\u89c2 - \u5b9a\u5fc3\u7948\u7977\uff0c\u795e\u5723\u9605\u8bfb\n\n\u79d1\u5b66\u652f\u6301\uff1a\n\u7814\u7a76\u8868\u660e\uff0c\u5b9a\u671f\u51a5\u60f3\u53ef\u4ee5\u652f\u6301\uff1a\n\u2022 \u51cf\u8f7b\u538b\u529b\u548c\u7126\u8651\n\u2022 \u63d0\u9ad8\u4e13\u6ce8\u529b\u548c\u5fc3\u667a\u6e05\u6670\u5ea6\n\u2022 \u66f4\u6df1\u6c89\u3001\u66f4\u5e73\u9759\u7684\u7761\u7720\n\n\u6bcf\u5929\u4ece5\u5206\u949f\u5f00\u59cb\u3002\u60a8\u7684\u5185\u5fc3\u5e73\u9759\u4e4b\u65c5\u73b0\u5728\u5f00\u59cb\u3002",
+      "keywords": "\u51a5\u60f3,\u6b63\u5ff5,\u8ba1\u65f6\u5668,\u547c\u5438,\u653e\u677e,\u7761\u7720,\u5e73\u9759,\u4e13\u6ce8,\u7985,\u745c\u4f3d,\u538b\u529b,\u7126\u8651,\u548c\u5e73",
+      "whatsNew": "\u2022 \u63d0\u5347\u6027\u80fd\u548c\u7a33\u5b9a\u6027\n\u2022 \u9519\u8bef\u4fee\u590d\u548c\u4f18\u5316",
+      "shortDescription": "\u514d\u8d39\u51a5\u60f3\u8ba1\u65f6\u5668\uff0c\u542b40+\u5f15\u5bfc\u8bfe\u7a0b\u3001\u547c\u5438\u7ec3\u4e60\u548c\u8fdb\u5ea6\u8ffd\u8e2a\u3002\u65e0\u5e7f\u544a\uff0c\u79bb\u7ebf\u53ef\u7528\u3002",
+      "featureGraphicText": "\u627e\u5230\u5185\u5fc3\u7684\u5e73\u9759",
+      "screenshotCaptions": [
+        "\u7f8e\u89c2\u7684\u51a5\u60f3\u8ba1\u65f6\u5668",
+        "40+\u5f15\u5bfc\u51a5\u60f3",
+        "\u547c\u5438\u7ec3\u4e60",
+        "\u8ffd\u8e2a\u4f60\u7684\u8fdb\u5ea6",
+        "\u6bcf\u65e5\u7075\u611f",
+        "\u591a\u79cd\u4f20\u7edf"
+      ]
     },
     "hi": {
-      "name": "Slow Spot - ध्यान",
-      "subtitle": "अपनी शांति का क्षण खोजें",
-      "promotionalText": "आज ही अपनी ध्यान यात्रा शुरू करें। शोध बताते हैं कि 8 सप्ताह तक रोज 10-12 मिनट मापने योग्य लाभ ला सकते हैं। कोई सदस्यता नहीं - पूरी तरह मुफ्त।",
-      "description": "Slow Spot दैनिक ध्यान के लिए आपका निजी स्थान है। सरल, सुंदर और पूरी तरह मुफ्त।\n\nSLOW SPOT अलग क्यों है?\n• 100% मुफ्त - कोई सदस्यता नहीं, कोई इन-ऐप खरीदारी नहीं\n• ऑफलाइन काम करता है - आपका डेटा आपके डिवाइस पर रहता है\n• कोई विज्ञापन नहीं - जो महत्वपूर्ण है उस पर ध्यान दें\n• गोपनीयता पहले - कोई ट्रैकिंग नहीं, कोई डेटा संग्रह नहीं\n\nविशेषताएं:\n• एम्बिएंट ध्वनियों के साथ अनुकूलन योग्य ध्यान टाइमर\n• 6 परंपराओं से 40+ निर्देशित ध्यान सत्र\n• श्वास व्यायाम (4-7-8, Box, Equal, Calm)\n• स्ट्रीक्स और उपलब्धियों के साथ प्रगति ट्रैकिंग\n• दैनिक प्रेरणादायक उद्धरण\n• कई भाषाओं का समर्थन\n\nध्यान परंपराएं:\n• ज़ेन (जापानी) - ज़ाज़ेन, किन्हिन\n• विपश्यना (बौद्ध) - बॉडी स्कैन, इनसाइट\n• वैदिक (हिंदू) - ॐ, ट्रांसेंडेंटल, चक्र\n• ताओवादी (चीनी) - चीगोंग, आंतरिक मुस्कान, वू वेई\n• सूफी (इस्लामी) - धिक्र, मुराकबा\n• ईसाई चिंतन - केंद्रित प्रार्थना, लेक्टियो डिविना\n\nविज्ञान द्वारा समर्थित:\nशोध बताते हैं कि नियमित ध्यान सहायक हो सकता है:\n• तनाव और चिंता में कमी\n• बेहतर एकाग्रता और मानसिक स्पष्टता\n• गहरी, अधिक शांतिपूर्ण नींद\n\nप्रतिदिन केवल 5 मिनट से शुरू करें। आंतरिक शांति की आपकी यात्रा अभी शुरू होती है।",
-      "keywords": "ध्यान,माइंडफुलनेस,टाइमर,श्वास,आराम,नींद,शांत,फोकस,ज़ेन,योग,तनाव,चिंता,शांति",
-      "whatsNew": "• बेहतर प्रदर्शन और स्थिरता\n• बग फिक्स और अनुकूलन"
+      "name": "Slow Spot - \u0927\u094d\u092f\u093e\u0928",
+      "subtitle": "\u0905\u092a\u0928\u0940 \u0936\u093e\u0902\u0924\u093f \u0915\u093e \u0915\u094d\u0937\u0923 \u0916\u094b\u091c\u0947\u0902",
+      "promotionalText": "\u0906\u091c \u0939\u0940 \u0905\u092a\u0928\u0940 \u0927\u094d\u092f\u093e\u0928 \u092f\u093e\u0924\u094d\u0930\u093e \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902\u0964 \u0936\u094b\u0927 \u092c\u0924\u093e\u0924\u0947 \u0939\u0948\u0902 \u0915\u093f 8 \u0938\u092a\u094d\u0924\u093e\u0939 \u0924\u0915 \u0930\u094b\u091c 10-12 \u092e\u093f\u0928\u091f \u092e\u093e\u092a\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u0932\u093e\u092d \u0932\u093e \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964 \u0915\u094b\u0908 \u0938\u0926\u0938\u094d\u092f\u0924\u093e \u0928\u0939\u0940\u0902 - \u092a\u0942\u0930\u0940 \u0924\u0930\u0939 \u092e\u0941\u092b\u094d\u0924\u0964",
+      "description": "Slow Spot \u0926\u0948\u0928\u093f\u0915 \u0927\u094d\u092f\u093e\u0928 \u0915\u0947 \u0932\u093f\u090f \u0906\u092a\u0915\u093e \u0928\u093f\u091c\u0940 \u0938\u094d\u0925\u093e\u0928 \u0939\u0948\u0964 \u0938\u0930\u0932, \u0938\u0941\u0902\u0926\u0930 \u0914\u0930 \u092a\u0942\u0930\u0940 \u0924\u0930\u0939 \u092e\u0941\u092b\u094d\u0924\u0964\n\nSLOW SPOT \u0905\u0932\u0917 \u0915\u094d\u092f\u094b\u0902 \u0939\u0948?\n\u2022 100% \u092e\u0941\u092b\u094d\u0924 - \u0915\u094b\u0908 \u0938\u0926\u0938\u094d\u092f\u0924\u093e \u0928\u0939\u0940\u0902, \u0915\u094b\u0908 \u0907\u0928-\u0910\u092a \u0916\u0930\u0940\u0926\u093e\u0930\u0940 \u0928\u0939\u0940\u0902\n\u2022 \u0911\u092b\u0932\u093e\u0907\u0928 \u0915\u093e\u092e \u0915\u0930\u0924\u093e \u0939\u0948 - \u0906\u092a\u0915\u093e \u0921\u0947\u091f\u093e \u0906\u092a\u0915\u0947 \u0921\u093f\u0935\u093e\u0907\u0938 \u092a\u0930 \u0930\u0939\u0924\u093e \u0939\u0948\n\u2022 \u0915\u094b\u0908 \u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u0928\u0939\u0940\u0902 - \u091c\u094b \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0939\u0948 \u0909\u0938 \u092a\u0930 \u0927\u094d\u092f\u093e\u0928 \u0926\u0947\u0902\n\u2022 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u092a\u0939\u0932\u0947 - \u0915\u094b\u0908 \u091f\u094d\u0930\u0948\u0915\u093f\u0902\u0917 \u0928\u0939\u0940\u0902, \u0915\u094b\u0908 \u0921\u0947\u091f\u093e \u0938\u0902\u0917\u094d\u0930\u0939 \u0928\u0939\u0940\u0902\n\n\u0935\u093f\u0936\u0947\u0937\u0924\u093e\u090f\u0902:\n\u2022 \u090f\u0902\u092c\u093f\u090f\u0902\u091f \u0927\u094d\u0935\u0928\u093f\u092f\u094b\u0902 \u0915\u0947 \u0938\u093e\u0925 \u0905\u0928\u0941\u0915\u0942\u0932\u0928 \u092f\u094b\u0917\u094d\u092f \u0927\u094d\u092f\u093e\u0928 \u091f\u093e\u0907\u092e\u0930\n\u2022 6 \u092a\u0930\u0902\u092a\u0930\u093e\u0913\u0902 \u0938\u0947 40+ \u0928\u093f\u0930\u094d\u0926\u0947\u0936\u093f\u0924 \u0927\u094d\u092f\u093e\u0928 \u0938\u0924\u094d\u0930\n\u2022 \u0936\u094d\u0935\u093e\u0938 \u0935\u094d\u092f\u093e\u092f\u093e\u092e (4-7-8, Box, Equal, Calm)\n\u2022 \u0938\u094d\u091f\u094d\u0930\u0940\u0915\u094d\u0938 \u0914\u0930 \u0909\u092a\u0932\u092c\u094d\u0927\u093f\u092f\u094b\u0902 \u0915\u0947 \u0938\u093e\u0925 \u092a\u094d\u0930\u0917\u0924\u093f \u091f\u094d\u0930\u0948\u0915\u093f\u0902\u0917\n\u2022 \u0926\u0948\u0928\u093f\u0915 \u092a\u094d\u0930\u0947\u0930\u0923\u093e\u0926\u093e\u092f\u0915 \u0909\u0926\u094d\u0927\u0930\u0923\n\u2022 \u0915\u0908 \u092d\u093e\u0937\u093e\u0913\u0902 \u0915\u093e \u0938\u092e\u0930\u094d\u0925\u0928\n\n\u0927\u094d\u092f\u093e\u0928 \u092a\u0930\u0902\u092a\u0930\u093e\u090f\u0902:\n\u2022 \u091c\u093c\u0947\u0928 (\u091c\u093e\u092a\u093e\u0928\u0940) - \u091c\u093c\u093e\u091c\u093c\u0947\u0928, \u0915\u093f\u0928\u094d\u0939\u093f\u0928\n\u2022 \u0935\u093f\u092a\u0936\u094d\u092f\u0928\u093e (\u092c\u094c\u0926\u094d\u0927) - \u092c\u0949\u0921\u0940 \u0938\u094d\u0915\u0948\u0928, \u0907\u0928\u0938\u093e\u0907\u091f\n\u2022 \u0935\u0948\u0926\u093f\u0915 (\u0939\u093f\u0902\u0926\u0942) - \u0913\u092e, \u091f\u094d\u0930\u0948\u0902\u0938\u0947\u0902\u0921\u0947\u0902\u091f\u0932, \u091a\u0915\u094d\u0930\n\u2022 \u0924\u093e\u0913\u0935\u093e\u0926\u0940 (\u091a\u0940\u0928\u0940) - \u091a\u0940\u0917\u094b\u0902\u0917, \u0906\u0902\u0924\u0930\u093f\u0915 \u092e\u0941\u0938\u094d\u0915\u093e\u0928, \u0935\u0942 \u0935\u0947\u0908\n\u2022 \u0938\u0942\u092b\u0940 (\u0907\u0938\u094d\u0932\u093e\u092e\u0940) - \u0927\u093f\u0915\u094d\u0930, \u092e\u0941\u0930\u093e\u0915\u092c\u093e\n\u2022 \u0908\u0938\u093e\u0908 \u091a\u093f\u0902\u0924\u0928 - \u0915\u0947\u0902\u0926\u094d\u0930\u093f\u0924 \u092a\u094d\u0930\u093e\u0930\u094d\u0925\u0928\u093e, \u0932\u0947\u0915\u094d\u091f\u093f\u092f\u094b \u0921\u093f\u0935\u093f\u0928\u093e\n\n\u0935\u093f\u091c\u094d\u091e\u093e\u0928 \u0926\u094d\u0935\u093e\u0930\u093e \u0938\u092e\u0930\u094d\u0925\u093f\u0924:\n\u0936\u094b\u0927 \u092c\u0924\u093e\u0924\u0947 \u0939\u0948\u0902 \u0915\u093f \u0928\u093f\u092f\u092e\u093f\u0924 \u0927\u094d\u092f\u093e\u0928 \u0938\u0939\u093e\u092f\u0915 \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948:\n\u2022 \u0924\u0928\u093e\u0935 \u0914\u0930 \u091a\u093f\u0902\u0924\u093e \u092e\u0947\u0902 \u0915\u092e\u0940\n\u2022 \u092c\u0947\u0939\u0924\u0930 \u090f\u0915\u093e\u0917\u094d\u0930\u0924\u093e \u0914\u0930 \u092e\u093e\u0928\u0938\u093f\u0915 \u0938\u094d\u092a\u0937\u094d\u091f\u0924\u093e\n\u2022 \u0917\u0939\u0930\u0940, \u0905\u0927\u093f\u0915 \u0936\u093e\u0902\u0924\u093f\u092a\u0942\u0930\u094d\u0923 \u0928\u0940\u0902\u0926\n\n\u092a\u094d\u0930\u0924\u093f\u0926\u093f\u0928 \u0915\u0947\u0935\u0932 5 \u092e\u093f\u0928\u091f \u0938\u0947 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902\u0964 \u0906\u0902\u0924\u0930\u093f\u0915 \u0936\u093e\u0902\u0924\u093f \u0915\u0940 \u0906\u092a\u0915\u0940 \u092f\u093e\u0924\u094d\u0930\u093e \u0905\u092d\u0940 \u0936\u0941\u0930\u0942 \u0939\u094b\u0924\u0940 \u0939\u0948\u0964",
+      "keywords": "\u0927\u094d\u092f\u093e\u0928,\u092e\u093e\u0907\u0902\u0921\u092b\u0941\u0932\u0928\u0947\u0938,\u091f\u093e\u0907\u092e\u0930,\u0936\u094d\u0935\u093e\u0938,\u0906\u0930\u093e\u092e,\u0928\u0940\u0902\u0926,\u0936\u093e\u0902\u0924,\u092b\u094b\u0915\u0938,\u091c\u093c\u0947\u0928,\u092f\u094b\u0917,\u0924\u0928\u093e\u0935,\u091a\u093f\u0902\u0924\u093e,\u0936\u093e\u0902\u0924\u093f",
+      "whatsNew": "\u2022 \u092c\u0947\u0939\u0924\u0930 \u092a\u094d\u0930\u0926\u0930\u094d\u0936\u0928 \u0914\u0930 \u0938\u094d\u0925\u093f\u0930\u0924\u093e\n\u2022 \u092c\u0917 \u092b\u093f\u0915\u094d\u0938 \u0914\u0930 \u0905\u0928\u0941\u0915\u0942\u0932\u0928",
+      "shortDescription": "\u092e\u0941\u092b\u094d\u0924 \u0927\u094d\u092f\u093e\u0928 \u091f\u093e\u0907\u092e\u0930, 40+ \u0938\u0924\u094d\u0930, \u0936\u094d\u0935\u093e\u0938 \u0935\u094d\u092f\u093e\u092f\u093e\u092e \u0914\u0930 \u092a\u094d\u0930\u0917\u0924\u093f \u091f\u094d\u0930\u0948\u0915\u093f\u0902\u0917\u0964 \u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u0928\u0939\u0940\u0902, \u0911\u092b\u0932\u093e\u0907\u0928\u0964",
+      "featureGraphicText": "\u0906\u0902\u0924\u0930\u093f\u0915 \u0936\u093e\u0902\u0924\u093f \u092a\u093e\u090f\u0902",
+      "screenshotCaptions": [
+        "\u0938\u0941\u0902\u0926\u0930 \u0927\u094d\u092f\u093e\u0928 \u091f\u093e\u0907\u092e\u0930",
+        "40+ \u0928\u093f\u0930\u094d\u0926\u0947\u0936\u093f\u0924 \u0927\u094d\u092f\u093e\u0928",
+        "\u0936\u094d\u0935\u093e\u0938 \u0935\u094d\u092f\u093e\u092f\u093e\u092e",
+        "\u0905\u092a\u0928\u0940 \u092a\u094d\u0930\u0917\u0924\u093f \u091f\u094d\u0930\u0948\u0915 \u0915\u0930\u0947\u0902",
+        "\u0926\u0948\u0928\u093f\u0915 \u092a\u094d\u0930\u0947\u0930\u0923\u093e",
+        "\u0915\u0908 \u092a\u0930\u0902\u092a\u0930\u093e\u090f\u0902"
+      ]
     }
   }
 }

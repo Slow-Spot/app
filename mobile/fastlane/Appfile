@@ -1,10 +1,10 @@
-# Fastlane Appfile for Slow Spot
+# Fastlane Appfile for Slow Spot Android
+# @see https://docs.fastlane.tools/advanced/Appfile/
 
-# Android Configuration
-json_key_file("./android-service-account.json") # Path to service account JSON
-package_name("me.slowspot.app") # Android package name
+# Android package name (must match app.json)
+package_name("com.slowspot.app")
 
-# iOS Configuration (for reference - EAS handles iOS)
-# app_identifier("me.slowspot.app")
-# apple_id("leszekszpunar@gmail.com")
-# team_id("QQHRMJ6B78")
+# Google Play JSON key for API access
+# In CI: Set via GOOGLE_PLAY_JSON_KEY_FILE environment variable
+# Locally: Place the file in mobile/ directory
+json_key_file(ENV["GOOGLE_PLAY_JSON_KEY_FILE"] || "./android-service-account.json")

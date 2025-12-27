@@ -3,8 +3,9 @@ name: 📝 Store Metadata Sync
 on:
   push:
     paths:
-      - 'mobile/store/metadata.json'
+      - 'mobile/store/**'
       - 'mobile/store.config.js'
+      - 'mobile/scripts/generate-android-metadata.js'
     branches:
       - main
   workflow_dispatch:
@@ -12,12 +13,20 @@ on:
       platform:
         description: 'Platform to sync metadata'
         required: true
-        default: 'ios'
+        default: 'all'
         type: choice
         options:
           - ios
           - android
           - all
+      include_screenshots:
+        description: 'Include screenshots and graphics'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
@@ -66,10 +75,15 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Metadata has been pushed to App Store Connect." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Source files:**" >> $GITHUB_STEP_SUMMARY
+          echo "- \`store/metadata.json\` - Localized content" >> $GITHUB_STEP_SUMMARY
+          echo "- \`store.config.js\` - EAS Metadata configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- \`store/screenshots/ios/\` - Screenshots by locale/device" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "[View in App Store Connect](https://appstoreconnect.apple.com)" >> $GITHUB_STEP_SUMMARY
 
   sync-android-metadata:
-    name: 🤖 Sync Android Metadata (Fastlane)
+    name: 🤖 Sync Android Metadata
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'push' ||
@@ -93,42 +107,43 @@ jobs:
         with:
           ruby-version: '3.2'
           bundler-cache: true
-          working-directory: ./mobile
+          working-directory: ./mobile/fastlane
 
       - name: Install Fastlane
         run: |
-          if [ ! -f Gemfile ]; then
-            echo 'source "https://rubygems.org"' > Gemfile
-            echo 'gem "fastlane"' >> Gemfile
-          fi
+          cd fastlane
           bundle install
 
       - name: Setup Google Play credentials
         run: |
-          echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' > google-play-key.json
+          echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' > android-service-account.json
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
 
       - name: Generate Fastlane metadata structure
         run: |
+          echo "📦 Generating metadata from store/metadata.json..."
           node scripts/generate-android-metadata.js
 
       - name: Push Android Metadata to Google Play
         run: |
           echo "📝 Syncing Android metadata to Google Play..."
-          bundle exec fastlane supply \
-            --json_key google-play-key.json \
-            --package_name com.slowspot.app \
-            --metadata_path ./fastlane/metadata/android \
-            --skip_upload_apk \
-            --skip_upload_aab \
-            --skip_upload_images \
-            --skip_upload_screenshots
+          INCLUDE_SCREENSHOTS="${{ github.event.inputs.include_screenshots || 'true' }}"
+
+          if [ "$INCLUDE_SCREENSHOTS" == "true" ]; then
+            echo "Including screenshots and graphics..."
+            cd fastlane && bundle exec fastlane android full_sync
+          else
+            echo "Skipping screenshots (text metadata only)..."
+            cd fastlane && bundle exec fastlane android upload_text_metadata
+          fi
+        env:
+          GOOGLE_PLAY_JSON_KEY_FILE: ${{ github.workspace }}/mobile/android-service-account.json
         continue-on-error: true
 
       - name: Cleanup credentials
         if: always()
-        run: rm -f google-play-key.json
+        run: rm -f android-service-account.json
 
       - name: Summary
         run: |
@@ -136,4 +151,35 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Metadata has been pushed to Google Play Console." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Source files:**" >> $GITHUB_STEP_SUMMARY
+          echo "- \`store/metadata.json\` - Localized content" >> $GITHUB_STEP_SUMMARY
+          echo "- \`store/screenshots/android/\` - Screenshots by locale" >> $GITHUB_STEP_SUMMARY
+          echo "- \`store/graphics/android/\` - Feature graphic & icon" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Generated structure:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`fastlane/metadata/android/\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "[View in Google Play Console](https://play.google.com/console)" >> $GITHUB_STEP_SUMMARY
+
+  summary:
+    name: 📊 Sync Summary
+    needs: [sync-ios-metadata, sync-android-metadata]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Generate Summary
+        run: |
+          echo "## 📝 Store Metadata Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Platform | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🍎 iOS (App Store Connect) | ${{ needs.sync-ios-metadata.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🤖 Android (Google Play) | ${{ needs.sync-android-metadata.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Supported Languages" >> $GITHUB_STEP_SUMMARY
+          echo "en-US, pl, de-DE, es-ES, fr-FR, zh-Hans, hi" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Store Links" >> $GITHUB_STEP_SUMMARY
+          echo "- [App Store Connect](https://appstoreconnect.apple.com)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Google Play Console](https://play.google.com/console)" >> $GITHUB_STEP_SUMMARY
