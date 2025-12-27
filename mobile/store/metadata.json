@@ -1,12 +1,12 @@
 {
   "$schema": "./metadata.schema.json",
   "version": "2.0.0",
-  "lastUpdated": "2024-12-27",
+  "lastUpdated": "2025-12-27",
 
   "app": {
     "name": "Slow Spot",
     "bundleId": "com.slowspot.app",
-    "copyright": "2024 Slow Spot",
+    "copyright": "2025 Slow Spot",
     "primaryCategory": "HEALTH_AND_FITNESS",
     "secondaryCategory": "LIFESTYLE",
     "contentRating": "4+",

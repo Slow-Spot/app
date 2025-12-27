@@ -7,14 +7,6 @@
  * Usage:
  *   eas metadata:push --platform ios
  *
- * Supported features:
- *   - App information (name, subtitle, description, keywords)
- *   - Screenshots (all device sizes)
- *   - App previews (video)
- *   - What's New (release notes)
- *   - Promotional text
- *   - App Review information
- *
  * @see https://docs.expo.dev/eas-metadata/introduction/
  */
 
@@ -81,6 +73,9 @@ for (const [localeKey, data] of Object.entries(metadata.locales)) {
     keywords: data.keywords.split(',').map((k) => k.trim()),
     promotionalText: data.promotionalText,
     whatsNew: data.whatsNew,
+    // URLs are required per locale
+    supportUrl: metadata.app.supportUrl,
+    marketingUrl: metadata.app.marketingUrl,
     ...(Object.keys(screenshots).length > 0 && { screenshots }),
   };
 }
@@ -95,38 +90,33 @@ module.exports = {
     primaryCategory: metadata.app.primaryCategory || 'HEALTH_AND_FITNESS',
     secondaryCategory: metadata.app.secondaryCategory || 'LIFESTYLE',
 
-    // Age rating
-    contentRating: {
-      ageRating: metadata.app.contentRating || '4+',
+    // Privacy Policy URL (required)
+    privacyPolicyUrl: metadata.app.privacyPolicyUrl,
+
+    // Content rights - declare that we have rights to all content
+    contentRights: {
+      containsThirdPartyContent: false,
+      hasRights: true,
     },
 
-    // URLs
-    ...(metadata.app.supportUrl && { supportUrl: metadata.app.supportUrl }),
-    ...(metadata.app.marketingUrl && {
-      marketingUrl: metadata.app.marketingUrl,
-    }),
-    ...(metadata.app.privacyPolicyUrl && {
-      privacyPolicyUrl: metadata.app.privacyPolicyUrl,
-    }),
-
-    // Privacy information (required for App Store)
-    privacyManifest: {
-      // App doesn't collect any data
-      NSPrivacyTracking: false,
-      NSPrivacyTrackingDomains: [],
-      NSPrivacyCollectedDataTypes: [],
-      NSPrivacyAccessedAPITypes: [
-        {
-          // File timestamp APIs for AsyncStorage
-          NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryFileTimestamp',
-          NSPrivacyAccessedAPITypeReasons: ['C617.1'],
-        },
-        {
-          // User defaults for app preferences
-          NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryUserDefaults',
-          NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
-        },
-      ],
+    // Age rating questionnaire - meditation app with no objectionable content
+    ageRating: {
+      alcoholTobaccoOrDrugUseOrReferences: 'NONE',
+      contests: 'NONE',
+      gamblingSimulated: 'NONE',
+      horrorOrFearThemes: 'NONE',
+      matureOrSuggestiveThemes: 'NONE',
+      medicalOrTreatmentInformation: 'NONE',
+      profanityOrCrudeHumor: 'NONE',
+      sexualContentGraphicAndNudity: 'NONE',
+      sexualContentOrNudity: 'NONE',
+      violenceCartoonOrFantasy: 'NONE',
+      violenceRealistic: 'NONE',
+      violenceRealisticProlongedGraphicOrSadistic: 'NONE',
+      gambling: false,
+      unrestrictedWebAccess: false,
+      kidsAgeBand: null,
+      seventeenPlus: false,
     },
   },
 
@@ -146,5 +136,8 @@ module.exports = {
       demoAccountRequired: metadata.review.demoAccountRequired,
       notes: metadata.review.notes,
     },
+
+    // Release type
+    releaseType: 'MANUAL',
   },
 };

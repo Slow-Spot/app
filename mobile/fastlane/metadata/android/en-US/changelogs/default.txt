@@ -1,2 +1,0 @@
-• Improved performance and stability
-• Bug fixes and optimizations
