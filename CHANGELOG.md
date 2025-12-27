@@ -1,3 +1,9 @@
+## [1.9.4](https://github.com/Slow-Spot/app/compare/v1.9.3...v1.9.4) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** add monkey-patch to fix Fastlane nil releases bug [#21530](https://github.com/Slow-Spot/app/issues/21530) ([c18c61d](https://github.com/Slow-Spot/app/commit/c18c61dfc35ebfec2ccf3daf4a425cb92ed91ac1)), closes [#21506](https://github.com/Slow-Spot/app/issues/21506)
+
 ## [1.9.3](https://github.com/Slow-Spot/app/compare/v1.9.2...v1.9.3) (2025-12-27)
 
 ### Bug Fixes
