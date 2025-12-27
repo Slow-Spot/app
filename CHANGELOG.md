@@ -1,3 +1,9 @@
+## [1.10.0](https://github.com/Slow-Spot/app/compare/v1.9.10...v1.10.0) (2025-12-27)
+
+### Features
+
+* **mobile:** add complete store metadata with screenshots ([b70ff08](https://github.com/Slow-Spot/app/commit/b70ff08459f1092cbfd58e49feaf29921891172c))
+
 ## [1.9.10](https://github.com/Slow-Spot/app/compare/v1.9.9...v1.9.10) (2025-12-27)
 
 ### Bug Fixes
