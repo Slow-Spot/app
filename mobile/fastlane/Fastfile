@@ -2,6 +2,37 @@
 # Handles Google Play metadata sync (screenshots, descriptions, graphics)
 # @see https://docs.fastlane.tools/
 
+# ============================================
+# MONKEY PATCH: Fix Fastlane bug #21530
+# When production track has no editable releases, releases is nil
+# This patch adds nil-safety to prevent crashes
+# ============================================
+module Supply
+  class Uploader
+    alias_method :original_fetch_track_and_release!, :fetch_track_and_release!
+
+    def fetch_track_and_release!(track:)
+      track_response = client.tracks(track)
+      releases = track_response.releases
+
+      # FIX: Handle nil releases gracefully
+      if releases.nil? || releases.empty?
+        UI.important("No editable releases found on '#{track}' track - skipping release-dependent operations")
+        return nil
+      end
+
+      if releases.size > 1
+        UI.important("More than 1 release found on '#{track}' track - using first one")
+      end
+
+      releases.first
+    rescue => e
+      UI.important("Could not fetch releases: #{e.message}")
+      nil
+    end
+  end
+end
+
 default_platform(:android)
 
 platform :android do
@@ -137,44 +168,20 @@ platform :android do
 
     sh("cd .. && node scripts/generate-android-metadata.js")
 
-    # Step 1: Upload images/screenshots first (doesn't require releases)
-    UI.message("Uploading images and screenshots...")
-    begin
-      upload_to_play_store(
-        package_name: "com.slowspot.app",
-        skip_upload_apk: true,
-        skip_upload_aab: true,
-        skip_upload_metadata: true,  # Skip text to avoid releases bug
-        skip_upload_images: false,
-        skip_upload_screenshots: false,
-        skip_upload_changelogs: true,
-        sync_image_upload: true
-      )
-      UI.success("Images and screenshots uploaded!")
-    rescue => e
-      UI.important("Images upload had issues: #{e.message}")
-    end
-
-    # Step 2: Try to upload text metadata
-    # Note: This may fail if there are no editable releases (Fastlane bug #21530)
-    UI.message("Uploading text metadata...")
-    begin
-      upload_to_play_store(
-        package_name: "com.slowspot.app",
-        track: "production",
-        skip_upload_apk: true,
-        skip_upload_aab: true,
-        skip_upload_metadata: false,
-        skip_upload_images: true,
-        skip_upload_screenshots: true,
-        skip_upload_changelogs: true
-      )
-      UI.success("Text metadata uploaded!")
-    rescue => e
-      UI.important("Text metadata upload failed: #{e.message}")
-      UI.important("This is likely due to Fastlane bug #21530 (no editable releases)")
-      UI.important("Text metadata can be updated manually in Google Play Console")
-    end
+    # Upload all metadata to Google Play
+    # Note: Monkey-patch above fixes nil releases crash (Fastlane bug #21530)
+    upload_to_play_store(
+      package_name: "com.slowspot.app",
+      track: "production",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false,
+      skip_upload_changelogs: true,
+      sync_image_upload: true,
+      validate_only: false
+    )
 
     UI.success("Full sync completed!")
   end
