@@ -1,3 +1,9 @@
+## [1.11.1](https://github.com/Slow-Spot/app/compare/v1.11.0...v1.11.1) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** configure App Store Connect API key for Fastlane ([5ff15e9](https://github.com/Slow-Spot/app/commit/5ff15e9a51be1a55d64dbb953f9496f22b02fb0c))
+
 ## [1.11.0](https://github.com/Slow-Spot/app/compare/v1.10.3...v1.11.0) (2025-12-27)
 
 ### Features
