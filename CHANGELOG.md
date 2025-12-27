@@ -1,3 +1,9 @@
+## [1.10.2](https://github.com/Slow-Spot/app/compare/v1.10.1...v1.10.2) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** correct eas metadata:push command in workflow ([5419e1d](https://github.com/Slow-Spot/app/commit/5419e1d96e01b06aa58f69f2ecf603bb22c630be))
+
 ## [1.10.1](https://github.com/Slow-Spot/app/compare/v1.10.0...v1.10.1) (2025-12-27)
 
 ### Bug Fixes
