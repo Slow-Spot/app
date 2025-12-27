@@ -7,17 +7,18 @@
 # When production track has no editable releases, releases is nil
 # This patch adds nil-safety to prevent crashes
 # ============================================
+require 'supply'
+
 module Supply
   class Uploader
-    alias_method :original_fetch_track_and_release!, :fetch_track_and_release!
-
+    # Override fetch_track_and_release! with nil-safety
     def fetch_track_and_release!(track:)
       track_response = client.tracks(track)
       releases = track_response.releases
 
       # FIX: Handle nil releases gracefully
       if releases.nil? || releases.empty?
-        UI.important("No editable releases found on '#{track}' track - skipping release-dependent operations")
+        UI.important("No editable releases found on '#{track}' track - continuing without release info")
         return nil
       end
 
