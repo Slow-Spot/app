@@ -1,3 +1,9 @@
+## [1.9.0](https://github.com/Slow-Spot/app/compare/v1.8.2...v1.9.0) (2025-12-27)
+
+### Features
+
+* **mobile:** full automation for store metadata sync ([d8b77e7](https://github.com/Slow-Spot/app/commit/d8b77e7294635a1b7ef47cb25430749b08da1cb2))
+
 ## [1.8.2](https://github.com/Slow-Spot/app/compare/v1.8.1...v1.8.2) (2025-12-26)
 
 ### Bug Fixes
