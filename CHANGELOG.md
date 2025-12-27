@@ -1,3 +1,9 @@
+## [1.9.9](https://github.com/Slow-Spot/app/compare/v1.9.8...v1.9.9) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** patch Fastlane bug [#21007](https://github.com/Slow-Spot/app/issues/21007) - changelog error without release ([77b1c54](https://github.com/Slow-Spot/app/commit/77b1c545559d0e62c9cb6f92f022983bb9fa143f))
+
 ## [1.9.8](https://github.com/Slow-Spot/app/compare/v1.9.7...v1.9.8) (2025-12-27)
 
 ### Bug Fixes
