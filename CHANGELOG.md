@@ -1,3 +1,9 @@
+## [1.9.6](https://github.com/Slow-Spot/app/compare/v1.9.5...v1.9.6) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** patch Fastlane gem directly to fix bug [#21530](https://github.com/Slow-Spot/app/issues/21530) ([40273d7](https://github.com/Slow-Spot/app/commit/40273d7d730128f4772f1157475bb8dd46f00036))
+
 ## [1.9.5](https://github.com/Slow-Spot/app/compare/v1.9.4...v1.9.5) (2025-12-27)
 
 ### Bug Fixes
