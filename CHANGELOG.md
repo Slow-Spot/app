@@ -1,3 +1,9 @@
+## [1.10.1](https://github.com/Slow-Spot/app/compare/v1.10.0...v1.10.1) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** use 512x512 icon for Google Play ([9800002](https://github.com/Slow-Spot/app/commit/98000027223c948db8c2c4ac862cf3f2d713efa9))
+
 ## [1.10.0](https://github.com/Slow-Spot/app/compare/v1.9.10...v1.10.0) (2025-12-27)
 
 ### Features
