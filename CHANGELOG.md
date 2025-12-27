@@ -1,3 +1,9 @@
+## [1.9.1](https://github.com/Slow-Spot/app/compare/v1.9.0...v1.9.1) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** skip changelogs in Fastlane - requires active release ([c2e0f14](https://github.com/Slow-Spot/app/commit/c2e0f14ffe5d92f75e2fcfdd235903906901b5e7)), closes [#21530](https://github.com/Slow-Spot/app/issues/21530)
+
 ## [1.9.0](https://github.com/Slow-Spot/app/compare/v1.8.2...v1.9.0) (2025-12-27)
 
 ### Features
