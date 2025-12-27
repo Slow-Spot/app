@@ -1,3 +1,9 @@
+## [1.9.2](https://github.com/Slow-Spot/app/compare/v1.9.1...v1.9.2) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** pin Fastlane to 2.224.0 - avoid nil releases bug ([664b23e](https://github.com/Slow-Spot/app/commit/664b23ec6864e9684f5670d2a99067036fdf86a6))
+
 ## [1.9.1](https://github.com/Slow-Spot/app/compare/v1.9.0...v1.9.1) (2025-12-27)
 
 ### Bug Fixes
