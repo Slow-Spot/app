@@ -18,6 +18,14 @@ team_id("QQHRMJ6B78")
 itc_team_id("128386301")
 
 # ============================================
+# App Store Connect API Key (for CI and local use)
+# ============================================
+# Key file should be at: ~/.appstoreconnect/private_keys/AuthKey_W3TGVKY5Z6.p8
+
+ENV["APP_STORE_CONNECT_API_KEY_ID"] ||= "W3TGVKY5Z6"
+ENV["APP_STORE_CONNECT_API_ISSUER_ID"] ||= "7fbde26f-7ea0-4e56-8d1e-23174a411710"
+
+# ============================================
 # Android Configuration
 # ============================================
 

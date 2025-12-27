@@ -214,21 +214,36 @@ platform :ios do
   # HELPER: App Store Connect API Key
   # ============================================
 
-  # Configure API key authentication for CI environments
-  # Set these environment variables:
-  #   APP_STORE_CONNECT_API_KEY_ID
-  #   APP_STORE_CONNECT_API_ISSUER_ID
-  #   APP_STORE_CONNECT_API_KEY_CONTENT (base64 encoded .p8 content)
+  # Configure API key authentication
+  # Key file location: ~/.appstoreconnect/private_keys/AuthKey_{KEY_ID}.p8
+  # Or set APP_STORE_CONNECT_API_KEY_CONTENT env var for CI
   def get_api_key
-    if ENV["APP_STORE_CONNECT_API_KEY_ID"] && ENV["APP_STORE_CONNECT_API_ISSUER_ID"]
+    key_id = ENV["APP_STORE_CONNECT_API_KEY_ID"]
+    issuer_id = ENV["APP_STORE_CONNECT_API_ISSUER_ID"]
+
+    return nil unless key_id && issuer_id
+
+    # Try to read from file first (local development)
+    key_filepath = File.expand_path("~/.appstoreconnect/private_keys/AuthKey_#{key_id}.p8")
+
+    if File.exist?(key_filepath)
       return app_store_connect_api_key(
-        key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-        issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+        key_id: key_id,
+        issuer_id: issuer_id,
+        key_filepath: key_filepath,
+        in_house: false
+      )
+    elsif ENV["APP_STORE_CONNECT_API_KEY_CONTENT"]
+      # Fall back to env var content (CI)
+      return app_store_connect_api_key(
+        key_id: key_id,
+        issuer_id: issuer_id,
         key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
         is_key_content_base64: false,
         in_house: false
       )
     end
+
     nil
   end
 
