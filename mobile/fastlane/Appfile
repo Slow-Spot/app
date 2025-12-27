@@ -1,5 +1,25 @@
-# Fastlane Appfile for Slow Spot Android
+# Fastlane Appfile for Slow Spot
 # @see https://docs.fastlane.tools/advanced/Appfile/
+
+# ============================================
+# iOS Configuration
+# ============================================
+
+# Apple ID (email) for App Store Connect
+apple_id(ENV["APPLE_ID"] || "leszekszpunar@gmail.com")
+
+# App bundle identifier
+app_identifier("com.slowspot.app")
+
+# Apple Developer Team ID
+team_id("QQHRMJ6B78")
+
+# App Store Connect Team ID (usually same as team_id for individual accounts)
+itc_team_id("128386301")
+
+# ============================================
+# Android Configuration
+# ============================================
 
 # Android package name (must match app.json)
 package_name("com.slowspot.app")

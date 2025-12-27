@@ -6,7 +6,7 @@
   "app": {
     "name": "Slow Spot",
     "bundleId": "com.slowspot.app",
-    "copyright": "2025 Slow Spot",
+    "copyright": "© 2025 Slow Spot",
     "primaryCategory": "HEALTH_AND_FITNESS",
     "secondaryCategory": "LIFESTYLE",
     "contentRating": "4+",
@@ -20,7 +20,7 @@
     "email": "support@slowspot.me",
     "firstName": "Leszek",
     "lastName": "Szpunar",
-    "phone": "+48000000000"
+    "phone": "+48 603 892 927"
   },
 
   "review": {
@@ -33,7 +33,7 @@
   "android": {
     "defaultLanguage": "en-US",
     "contactEmail": "support@slowspot.me",
-    "contactPhone": "+48000000000",
+    "contactPhone": "+48 603 892 927",
     "contactWebsite": "https://slowspot.me"
   },
 

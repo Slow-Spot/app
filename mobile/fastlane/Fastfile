@@ -209,9 +209,151 @@ platform :android do
 end
 
 platform :ios do
-  desc "Note: iOS metadata is handled by EAS Metadata"
-  lane :info do
-    UI.message("iOS metadata is managed via EAS Metadata (store.config.js)")
-    UI.message("Run: cd mobile && eas metadata:push --platform ios")
+
+  # ============================================
+  # HELPER: App Store Connect API Key
+  # ============================================
+
+  # Configure API key authentication for CI environments
+  # Set these environment variables:
+  #   APP_STORE_CONNECT_API_KEY_ID
+  #   APP_STORE_CONNECT_API_ISSUER_ID
+  #   APP_STORE_CONNECT_API_KEY_CONTENT (base64 encoded .p8 content)
+  def get_api_key
+    if ENV["APP_STORE_CONNECT_API_KEY_ID"] && ENV["APP_STORE_CONNECT_API_ISSUER_ID"]
+      return app_store_connect_api_key(
+        key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+        issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+        key_content: ENV["APP_STORE_CONNECT_API_KEY_CONTENT"],
+        is_key_content_base64: false,
+        in_house: false
+      )
+    end
+    nil
   end
+
+  # ============================================
+  # METADATA MANAGEMENT
+  # ============================================
+
+  desc "Upload all metadata to App Store Connect (descriptions, keywords, screenshots)"
+  lane :upload_metadata do
+    # Generate metadata from our central JSON file
+    sh("cd .. && node scripts/generate-ios-metadata.js")
+
+    api_key = get_api_key
+
+    # Upload metadata to App Store Connect
+    deliver(
+      app_identifier: "com.slowspot.app",
+      api_key: api_key,
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      skip_metadata: false,
+      force: true,  # Skip interactive confirmation
+      overwrite_screenshots: true,
+      precheck_include_in_app_purchases: false,
+      metadata_path: "./metadata",
+      screenshots_path: "./screenshots"
+    )
+
+    UI.success("Metadata uploaded successfully to App Store Connect!")
+  end
+
+  desc "Upload only text metadata (no screenshots)"
+  lane :upload_text_metadata do
+    sh("cd .. && node scripts/generate-ios-metadata.js")
+
+    api_key = get_api_key
+
+    deliver(
+      app_identifier: "com.slowspot.app",
+      api_key: api_key,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      skip_metadata: false,
+      force: true,
+      precheck_include_in_app_purchases: false,
+      metadata_path: "./metadata"
+    )
+
+    UI.success("Text metadata uploaded successfully!")
+  end
+
+  desc "Upload only screenshots"
+  lane :upload_screenshots do
+    sh("cd .. && node scripts/generate-ios-metadata.js")
+
+    api_key = get_api_key
+
+    deliver(
+      app_identifier: "com.slowspot.app",
+      api_key: api_key,
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      skip_metadata: true,
+      force: true,
+      overwrite_screenshots: true,
+      precheck_include_in_app_purchases: false,
+      screenshots_path: "./screenshots"
+    )
+
+    UI.success("Screenshots uploaded successfully!")
+  end
+
+  desc "Validate metadata without uploading"
+  lane :validate_metadata do
+    sh("cd .. && node scripts/generate-ios-metadata.js")
+
+    api_key = get_api_key
+
+    deliver(
+      app_identifier: "com.slowspot.app",
+      api_key: api_key,
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      skip_metadata: false,
+      force: true,
+      precheck_include_in_app_purchases: false,
+      metadata_path: "./metadata",
+      screenshots_path: "./screenshots",
+      validate_only: true
+    )
+
+    UI.success("Metadata validation passed!")
+  end
+
+  # ============================================
+  # FULL SYNC
+  # ============================================
+
+  desc "Full sync - upload everything (metadata, screenshots)"
+  lane :full_sync do
+    UI.message("Starting full iOS metadata sync...")
+    upload_metadata
+  end
+
+  # ============================================
+  # DOWNLOAD / UTILITIES
+  # ============================================
+
+  desc "Download current metadata from App Store Connect"
+  lane :download_metadata do
+    deliver(
+      app_identifier: "com.slowspot.app",
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      skip_metadata: true,
+      force: true
+    )
+
+    UI.success("Metadata downloaded to fastlane/metadata/")
+  end
+
+  desc "Generate metadata files locally (without uploading)"
+  lane :generate_metadata do
+    sh("cd .. && node scripts/generate-ios-metadata.js")
+    UI.success("Metadata generated in fastlane/metadata/ and fastlane/screenshots/")
+  end
+
 end

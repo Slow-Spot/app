@@ -54,4 +54,9 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/README.md
+fastlane/.bundle/
+fastlane/vendor/
 Gemfile.lock
+
+# Generated config files (use metadata.json as source of truth)
+store.config.json

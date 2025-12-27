@@ -1,0 +1,1 @@
+This is a meditation timer app. No login is required. All data is stored locally on the device. The app works completely offline.
