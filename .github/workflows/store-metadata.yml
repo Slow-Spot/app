@@ -114,6 +114,22 @@ jobs:
           cd fastlane
           bundle install
 
+      - name: Patch Fastlane bug #21530
+        run: |
+          # Find and patch the uploader.rb file to fix nil releases bug
+          UPLOADER_FILE=$(find fastlane/vendor -name "uploader.rb" -path "*/supply/lib/supply/*" 2>/dev/null | head -1)
+          if [ -n "$UPLOADER_FILE" ]; then
+            echo "Patching: $UPLOADER_FILE"
+            # Replace 'if releases.size > 1' with 'if releases&.size.to_i > 1'
+            sed -i 's/if releases\.size > 1/if releases\&\.size\.to_i > 1/g' "$UPLOADER_FILE"
+            # Replace 'releases.first' with 'releases&.first' for safety
+            sed -i 's/releases\.first$/releases\&\.first/g' "$UPLOADER_FILE"
+            echo "Patch applied successfully"
+            grep -n "releases" "$UPLOADER_FILE" | head -20
+          else
+            echo "Warning: Could not find uploader.rb to patch"
+          fi
+
       - name: Setup Google Play credentials
         run: |
           echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' > android-service-account.json
