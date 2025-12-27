@@ -1,3 +1,9 @@
+## [1.10.3](https://github.com/Slow-Spot/app/compare/v1.10.2...v1.10.3) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** update all locales with accurate content ([4f47b66](https://github.com/Slow-Spot/app/commit/4f47b66ab2ced2923528a8584ffe175ea468e8f9))
+
 ## [1.10.2](https://github.com/Slow-Spot/app/compare/v1.10.1...v1.10.2) (2025-12-27)
 
 ### Bug Fixes
