@@ -1,3 +1,9 @@
+## [1.9.7](https://github.com/Slow-Spot/app/compare/v1.9.6...v1.9.7) (2025-12-27)
+
+### Bug Fixes
+
+* **mobile:** remove changelog generation - requires active release ([5df6d7c](https://github.com/Slow-Spot/app/commit/5df6d7cb049cc818cb3452f2d3e1db8afeeb6476))
+
 ## [1.9.6](https://github.com/Slow-Spot/app/compare/v1.9.5...v1.9.6) (2025-12-27)
 
 ### Bug Fixes
