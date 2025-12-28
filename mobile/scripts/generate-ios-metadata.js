@@ -48,10 +48,13 @@ const LOCALE_MAPPING = {
 };
 
 // Screenshot device type mapping for Fastlane
+// Format: folder name -> Fastlane device name
+// NOTE: iPad Pro 13" uses APP_IPAD_PRO_13 display type (2064x2752)
 const SCREENSHOT_DEVICES = {
   'iPhone 6.5': 'iPhone 6.5"',
   'iPhone 6.7': 'iPhone 6.7"',
   'iPhone 5.5': 'iPhone 5.5"',
+  'iPad Pro 13': 'iPad Pro 13',  // Maps to APP_IPAD_PRO_13 (2064x2752)
   'iPad Pro 12.9': 'iPad Pro (12.9-inch)',
   'iPad Pro 11': 'iPad Pro (11-inch)'
 };
