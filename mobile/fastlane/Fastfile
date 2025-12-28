@@ -34,6 +34,10 @@ module Supply
   end
 end
 
+# NOTE: iPad Pro 13" (M4) support added directly to gem files:
+# - vendor/bundle/ruby/2.6.0/gems/fastlane-2.230.0/spaceship/.../app_screenshot_set.rb
+# - vendor/bundle/ruby/2.6.0/gems/fastlane-2.230.0/deliver/.../app_screenshot.rb
+
 default_platform(:android)
 
 platform :android do
@@ -332,10 +336,41 @@ platform :ios do
       precheck_include_in_app_purchases: false,
       metadata_path: "./metadata",
       screenshots_path: "./screenshots",
-      validate_only: true
+      verify_only: true
     )
 
     UI.success("Metadata validation passed!")
+  end
+
+  # ============================================
+  # SUBMIT FOR REVIEW
+  # ============================================
+
+  desc "Submit app for App Store review"
+  lane :submit_for_review do
+    sh("cd .. && node scripts/generate-ios-metadata.js")
+
+    api_key = get_api_key
+
+    deliver(
+      app_identifier: "com.slowspot.app",
+      api_key: api_key,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      skip_metadata: true,  # Metadata already uploaded
+      force: true,
+      submit_for_review: true,
+      automatic_release: false,
+      run_precheck_before_submit: false,  # Skip precheck
+      precheck_include_in_app_purchases: false,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false,
+        export_compliance_encryption_updated: false
+      }
+    )
+
+    UI.success("App submitted for review!")
   end
 
   # ============================================
