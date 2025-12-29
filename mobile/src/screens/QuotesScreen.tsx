@@ -276,8 +276,9 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingTop: theme.spacing.xl,
     paddingBottom: theme.spacing.xl,
   },
   bottomControls: {
