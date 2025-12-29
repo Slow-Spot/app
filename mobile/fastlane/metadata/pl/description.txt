@@ -1,7 +1,9 @@
 Slow Spot to Twoja osobista przestrzen do codziennej medytacji. Prosta, piekna i calkowicie darmowa.
 
+Ta aplikacja to projekt pasji niezaleznego dewelopera, stworzony jako portfolio. Powstala z jednym celem: niesc prawdziwa wartosc ludziom szukajacym wewnetrznego spokoju - bez jakiejkolwiek monetyzacji. Obecnie i w przewidywalnej przyszlosci wszystko jest w 100% za darmo.
+
 CO WYROZNIA SLOW SPOT?
-• 100% Za darmo - Bez subskrypcji, bez zakupow w aplikacji
+• 100% Za darmo - Bez subskrypcji, bez zakupow w aplikacji, bez ukrytych kosztow
 • Dziala offline - Twoje dane pozostaja na urzadzeniu
 • Bez reklam - Skup sie na tym, co wazne
 • Prywatnosc przede wszystkim - Bez sledzenia, bez zbierania danych

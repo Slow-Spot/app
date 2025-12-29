@@ -54,7 +54,7 @@ const SCREENSHOT_DEVICES = {
   'iPhone 6.5': 'iPhone 6.5"',
   'iPhone 6.7': 'iPhone 6.7"',
   'iPhone 5.5': 'iPhone 5.5"',
-  'iPad Pro 13': 'iPad Pro (12.9-inch) (3rd generation)',  // 2064x2752 -> APP_IPAD_PRO_3GEN_129
+  'iPad Pro (12.9-inch) (3rd generation)': 'iPad Pro (12.9-inch) (3rd generation)',  // 2064x2752 -> APP_IPAD_PRO_3GEN_129
   'iPad Pro 12.9': 'iPad Pro (12.9-inch)',
   'iPad Pro 11': 'iPad Pro (11-inch)'
 };
