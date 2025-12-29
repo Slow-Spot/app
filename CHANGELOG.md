@@ -1,3 +1,9 @@
+## [1.12.1](https://github.com/Slow-Spot/app/compare/v1.12.0...v1.12.1) (2025-12-29)
+
+### Bug Fixes
+
+* **mobile:** improve iPad layout and fix screenshot naming ([3ee946f](https://github.com/Slow-Spot/app/commit/3ee946f9d89c686766b845f155381e20900a2900))
+
 ## [1.12.0](https://github.com/Slow-Spot/app/compare/v1.11.1...v1.12.0) (2025-12-29)
 
 ### Features
