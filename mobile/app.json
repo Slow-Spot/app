@@ -4,6 +4,7 @@
     "slug": "slow-spot",
     "version": "1.11.0",
     "orientation": "portrait",
+    "scheme": "slowspot",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
