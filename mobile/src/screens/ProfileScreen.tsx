@@ -16,7 +16,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   RefreshControl,
-  ActivityIndicator,
   Modal,
   TextInput,
   Keyboard,
@@ -30,6 +29,8 @@ import { Badge } from '../components/Badge';
 import { MoodIcon, getMoodColors } from '../components/MoodIcon';
 import { ResponsiveGrid } from '../components/ResponsiveGrid';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
+import { StatCardSkeleton, SessionCardSkeleton, SkeletonLoader } from '../components/SkeletonLoader';
+import { ErrorBanner, useErrorBanner } from '../components/ErrorBanner';
 import theme, { gradients, getThemeColors, getThemeGradients } from '../theme';
 import { brandColors, primaryColor, featureColorPalettes, semanticColors } from '../theme/colors';
 import {
@@ -69,6 +70,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
   const { currentTheme } = usePersonalization();
   const { userName, setUserName, isLoading: isProfileLoading } = useUserProfile();
   const currentLocale = i18n.language;
+  const errorBanner = useErrorBanner();
 
   // Name editing state
   const [isEditingName, setIsEditingName] = useState(false);
@@ -219,6 +221,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
       setTotalStreakData({ total: streakData.total, imported: streakData.imported });
     } catch (error) {
       logger.error('Error loading profile data:', error);
+      errorBanner.showError(
+        t('profile.loadError') || 'Failed to load profile data. Please try again.',
+        loadProfileData
+      );
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -548,13 +554,37 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
   );
 
   /**
-   * Render loading state
+   * Render loading state with skeleton
    */
   if (loading) {
     return (
       <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={currentTheme.primary} />
+        <View style={styles.skeletonContainer}>
+          {/* Avatar skeleton */}
+          <View style={styles.skeletonHeader}>
+            <SkeletonLoader width={64} height={64} radius="round" />
+            <SkeletonLoader width={150} height={28} radius="md" style={{ marginTop: theme.spacing.md }} />
+          </View>
+
+          {/* Stats skeleton */}
+          <View style={styles.skeletonSection}>
+            <SkeletonLoader width={120} height={24} radius="sm" style={{ marginBottom: theme.spacing.md }} />
+            <View style={styles.skeletonStatsGrid}>
+              <StatCardSkeleton style={{ flex: 1 }} />
+              <StatCardSkeleton style={{ flex: 1 }} />
+            </View>
+            <View style={[styles.skeletonStatsGrid, { marginTop: theme.spacing.md }]}>
+              <StatCardSkeleton style={{ flex: 1 }} />
+              <StatCardSkeleton style={{ flex: 1 }} />
+            </View>
+          </View>
+
+          {/* Sessions skeleton */}
+          <View style={styles.skeletonSection}>
+            <SkeletonLoader width={160} height={24} radius="sm" style={{ marginBottom: theme.spacing.md }} />
+            <SessionCardSkeleton />
+            <SessionCardSkeleton style={{ marginTop: theme.spacing.md }} />
+          </View>
         </View>
       </GradientBackground>
     );
@@ -562,6 +592,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
 
   return (
     <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
+      {/* Error Banner */}
+      <ErrorBanner
+        visible={errorBanner.visible}
+        message={errorBanner.message}
+        type={errorBanner.type}
+        onDismiss={errorBanner.dismiss}
+        onRetry={errorBanner.onRetry}
+      />
       <ResponsiveContainer scrollable scrollViewProps={{
         refreshControl: (
           <RefreshControl
@@ -950,6 +988,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  skeletonContainer: {
+    flex: 1,
+    padding: theme.layout.screenPadding,
+  },
+  skeletonHeader: {
+    alignItems: 'center',
+    paddingVertical: theme.spacing.xl,
+  },
+  skeletonSection: {
+    marginTop: theme.spacing.xl,
+  },
+  skeletonStatsGrid: {
+    flexDirection: 'row',
+    gap: theme.spacing.md,
   },
   header: {
     alignItems: 'center',

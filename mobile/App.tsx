@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, TouchableOpacity, Platform, useColorScheme } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Platform, useColorScheme, Linking } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BlurView } from 'expo-blur';
@@ -110,6 +110,31 @@ function AppContent() {
     };
 
     prepareApp();
+  }, []);
+
+  // Deep linking handler for screenshots automation
+  useEffect(() => {
+    const handleDeepLink = (event: { url: string }) => {
+      const url = event.url;
+      // Handle slowspot://screen/home, slowspot://screen/meditation, etc.
+      const match = url.match(/slowspot:\/\/screen\/(\w+)/);
+      if (match) {
+        const screen = match[1] as Screen;
+        if (['home', 'meditation', 'quotes', 'settings', 'profile'].includes(screen)) {
+          setCurrentScreen(screen);
+          logger.log('Deep link navigation to:', screen);
+        }
+      }
+    };
+
+    // Handle initial URL
+    Linking.getInitialURL().then((url) => {
+      if (url) handleDeepLink({ url });
+    });
+
+    // Listen for URL events
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+    return () => subscription.remove();
   }, []);
 
   const handleSplashFinish = useCallback(() => {

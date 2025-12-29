@@ -1,0 +1,22 @@
+appId: host.exp.Exponent
+---
+# Ekran 1: Home (juz zrobiony)
+- takeScreenshot: home_screen
+
+# Ekran 2: Meditation - kliknij drugi przycisk w dolnej nawigacji
+- tapOn:
+    point: "25%,95%"
+- assertVisible: ".*"
+- takeScreenshot: meditation_screen
+
+# Ekran 3: Quotes - kliknij trzeci przycisk
+- tapOn:
+    point: "50%,95%"
+- assertVisible: ".*"
+- takeScreenshot: quotes_screen
+
+# Ekran 4: Settings - kliknij czwarty przycisk
+- tapOn:
+    point: "75%,95%"
+- assertVisible: ".*"  
+- takeScreenshot: settings_screen

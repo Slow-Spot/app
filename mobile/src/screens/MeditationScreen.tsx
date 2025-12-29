@@ -1,6 +1,6 @@
 import { logger } from '../utils/logger';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { View, Text, ActivityIndicator, FlatList, StyleSheet, Alert, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Alert, TouchableOpacity, Modal } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -15,6 +15,8 @@ import { IntentionScreen } from '../components/IntentionScreen';
 import { CelebrationScreen } from '../components/CelebrationScreen';
 import { GradientBackground } from '../components/GradientBackground';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
+import { SessionCardSkeleton } from '../components/SkeletonLoader';
+import { ErrorBanner, useErrorBanner } from '../components/ErrorBanner';
 import { useResponsive } from '../hooks/useResponsive';
 import { api, MeditationSession } from '../services/api';
 import { audioEngine } from '../services/audio';
@@ -75,6 +77,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   const { t, i18n } = useTranslation();
   const { currentTheme, settings } = usePersonalization();
   const { select, screenPadding } = useResponsive();
+  const errorBanner = useErrorBanner();
 
   // Multi-column layout for tablets/desktop
   const numColumns = select({ phone: 1, tablet: 2, desktop: 2, default: 1 });
@@ -162,6 +165,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
       setSessions(customSessions);
     } catch (error) {
       logger.error('Failed to load sessions:', error);
+      errorBanner.showError(
+        t('meditation.loadError') || 'Failed to load sessions. Please try again.',
+        loadSessions
+      );
     } finally {
       setLoading(false);
     }
@@ -314,7 +321,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     } catch (error) {
       logger.error('Failed to start audio:', error);
       logger.warn('Session will continue in silent mode');
-      // Don't prevent session from starting - just log the error
+      // Show warning but don't prevent session from starting
+      errorBanner.showWarning(
+        t('meditation.audioError') || 'Audio could not be loaded. Session will continue in silent mode.'
+      );
     }
   };
 
@@ -519,8 +529,10 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     () => {
       if (loading) {
         return (
-          <View style={styles.loader}>
-            <ActivityIndicator size="large" color={dynamicStyles.loaderColor} />
+          <View style={styles.skeletonContainer}>
+            <SessionCardSkeleton />
+            <SessionCardSkeleton style={{ marginTop: theme.spacing.lg }} />
+            <SessionCardSkeleton style={{ marginTop: theme.spacing.lg }} />
           </View>
         );
       }
@@ -537,7 +549,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
         </View>
       );
     },
-    [loading, dynamicStyles, colors, t]
+    [loading, colors, t]
   );
 
   // Helper functions to extract settings from custom session config
@@ -649,6 +661,14 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   // Default: show session list
   return (
     <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
+      {/* Error Banner */}
+      <ErrorBanner
+        visible={errorBanner.visible}
+        message={errorBanner.message}
+        type={errorBanner.type}
+        onDismiss={errorBanner.dismiss}
+        onRetry={errorBanner.onRetry}
+      />
       <ResponsiveContainer style={styles.responsiveWrapper}>
         <FlatList
           key={`sessions-${numColumns}`}
@@ -880,9 +900,8 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes.xs,
   },
 
-  loader: {
-    paddingVertical: theme.spacing.xxl,
-    alignItems: 'center',
+  skeletonContainer: {
+    paddingVertical: theme.spacing.md,
   },
   separator: {
     height: theme.spacing.lg, // Increased for shadow space (24px instead of 16px)

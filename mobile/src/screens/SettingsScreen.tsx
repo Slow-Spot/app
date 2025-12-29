@@ -42,6 +42,8 @@ import { GradientCard } from '../components/GradientCard';
 import { AppModal, AppModalButton } from '../components/AppModal';
 import { ResponsiveGrid } from '../components/ResponsiveGrid';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
+import { ErrorBanner, useErrorBanner } from '../components/ErrorBanner';
+import { ListItemSkeleton, SkeletonLoader } from '../components/SkeletonLoader';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import Constants from 'expo-constants';
 import { brandColors, primaryColor, featureColorPalettes, semanticColors, getFeatureIconColors } from '../theme/colors';
@@ -201,6 +203,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     setFollowSystemReduceMotion,
     setFollowSystemFontSize,
   } = usePersonalization();
+  const errorBanner = useErrorBanner();
 
   // Modal states
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);
@@ -427,9 +430,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } catch (error) {
       logger.error('Failed to pick sound:', error);
-      Alert.alert(
-        t('settings.soundPickError', 'Error'),
-        t('settings.soundPickErrorBody', 'Could not load the selected audio file.')
+      errorBanner.showError(
+        t('settings.soundPickErrorBody') || 'Could not load the selected audio file.'
       );
     } finally {
       setIsLoadingSound(false);
@@ -569,6 +571,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
   return (
     <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
+      {/* Error Banner */}
+      <ErrorBanner
+        visible={errorBanner.visible}
+        message={errorBanner.message}
+        type={errorBanner.type}
+        onDismiss={errorBanner.dismiss}
+        onRetry={errorBanner.onRetry}
+      />
       <ResponsiveContainer scrollable contentContainerStyle={styles.scrollContent}>
 
         <Animated.Text

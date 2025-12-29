@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { useTranslation } from 'react-i18next';
 import Svg, { Path, G, Defs, RadialGradient, Stop, Circle } from 'react-native-svg';
+import Constants from 'expo-constants';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
 const { width, height } = Dimensions.get('window');
@@ -411,6 +412,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
             </Text>
           </Animated.View>
         </Animated.View>
+
+        {/* Version number at bottom */}
+        <Animated.View
+          style={[
+            styles.versionContainer,
+            { opacity: subtitleFade }
+          ]}
+        >
+          <Text style={styles.versionText}>
+            v{Constants.expoConfig?.version || '1.0.0'}
+          </Text>
+        </Animated.View>
       </LinearGradient>
     </View>
   );
@@ -478,6 +491,16 @@ const styles = StyleSheet.create({
   particle: {
     position: 'absolute',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  },
+  versionContainer: {
+    position: 'absolute',
+    bottom: 50,
+  },
+  versionText: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: 'rgba(255, 255, 255, 0.5)',
+    letterSpacing: 1,
   },
 });
 
