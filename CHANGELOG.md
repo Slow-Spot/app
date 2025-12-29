@@ -1,3 +1,18 @@
+## [1.12.0](https://github.com/Slow-Spot/app/compare/v1.11.1...v1.12.0) (2025-12-29)
+
+### Features
+
+* **mobile:** add SkeletonLoader and ErrorBanner components ([b7494e0](https://github.com/Slow-Spot/app/commit/b7494e08f0a105ae1ce03292dc027b2aadbd9e17))
+* **mobile:** add version number to splash screen ([f2dd0c6](https://github.com/Slow-Spot/app/commit/f2dd0c624be0dac99bc8f9131e4d59b5f0ba9405))
+* **mobile:** improve App Store metadata and add iPad screenshots ([bafdcd0](https://github.com/Slow-Spot/app/commit/bafdcd089cc0da6c9144da22ef64db39eac2971a))
+* **mobile:** improve App Store metadata and add iPad screenshots ([68a7609](https://github.com/Slow-Spot/app/commit/68a7609d4e760c72b5e5da0da7941492546cc1ee))
+* **mobile:** integrate SkeletonLoader and ErrorBanner in MeditationScreen ([9328dae](https://github.com/Slow-Spot/app/commit/9328dae13629138d82dda3386a276996150ea8cb))
+* **mobile:** integrate SkeletonLoader and ErrorBanner in ProfileScreen and SettingsScreen ([18da718](https://github.com/Slow-Spot/app/commit/18da718db2ba70785c1bc6ae060de756a04597d6))
+
+### Bug Fixes
+
+* **mobile:** replace stretched iPad screenshots with real screenshots ([90e5f48](https://github.com/Slow-Spot/app/commit/90e5f48ba8362d44c2b5a644406e629013006ba6))
+
 ## [1.11.1](https://github.com/Slow-Spot/app/compare/v1.11.0...v1.11.1) (2025-12-27)
 
 ### Bug Fixes
