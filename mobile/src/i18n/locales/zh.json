@@ -1075,6 +1075,8 @@
     "subtitle": "创建符合你需求的冥想",
     "mySavedSessions": "我的保存课程",
     "savedSessionsHint": "点击开始，长按查看选项",
+    "swipeToEdit": "向左滑动以编辑",
+    "defaultSessionName": "正念呼吸",
     "sessionName": "课程名称",
     "sessionNameHint": "可选 - 用于保存",
     "sessionNamePlaceholder": "例如 晨间冥想",

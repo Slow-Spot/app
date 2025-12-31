@@ -13,7 +13,7 @@ import { logger } from '../utils/logger';
 
 const STORAGE_KEYS = {
   SESSIONS: '@slow_spot_custom_sessions',
-  DEFAULT_SESSION_CREATED: '@slow_spot_default_session_v2',
+  DEFAULT_SESSION_CREATED: '@slow_spot_default_session_v3', // v3: added titleKey for i18n
   CUSTOM_SOUNDS: '@slow_spot_custom_sounds',
 } as const;
 
@@ -205,10 +205,13 @@ export const getCustomBellUri = async (): Promise<string | undefined> => {
 export const createSessionFromConfig = (config: SessionConfig, id?: string): CustomSession => {
   const sessionId = id || generateId();
   const needsChime = config.endChimeEnabled || config.intervalBellEnabled;
+  const isDefaultSession = sessionId === DEFAULT_SESSION_ID;
 
   return {
     id: sessionId,
     title: config.name,
+    // Use i18n key for default session title
+    titleKey: isDefaultSession ? 'custom.defaultSessionName' : undefined,
     description: `${config.durationMinutes} min meditation`,
     languageCode: 'en',
     durationSeconds: config.durationMinutes * 60,

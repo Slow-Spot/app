@@ -24,9 +24,9 @@ interface SessionCardProps {
   animationIndex?: number;
 }
 
-const formatDuration = (seconds: number): string => {
+const formatDuration = (seconds: number, t: any): string => {
   const minutes = Math.floor(seconds / 60);
-  return `${minutes} min`;
+  return t('meditation.minutes', '{{count}} min', { count: minutes });
 };
 
 /**
@@ -189,7 +189,7 @@ export const SessionCard = React.memo<SessionCardProps>(({
       style={[styles.card, globalCardStyles.secondary]}
       pressScale={0.98}
       hapticType="light"
-      accessibilityLabel={`${title}, ${formatDuration(session.durationSeconds)}`}
+      accessibilityLabel={`${title}, ${formatDuration(session.durationSeconds, t)}`}
     >
       {/* Icon Section */}
       <View style={[
@@ -216,7 +216,7 @@ export const SessionCard = React.memo<SessionCardProps>(({
         {/* Tags Row - compact info */}
         <View style={styles.tagsRow}>
           <Text style={[styles.tagText, { color: colors.text.secondary }]}>
-            {formatDuration(session.durationSeconds)}
+            {formatDuration(session.durationSeconds, t)}
           </Text>
           {ambientSound && (
             <>

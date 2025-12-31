@@ -817,6 +817,8 @@
     "subtitle": "Crea una meditación adaptada a tus necesidades",
     "mySavedSessions": "Mis Sesiones Guardadas",
     "savedSessionsHint": "Toca para iniciar, mantén presionado para opciones",
+    "swipeToEdit": "Desliza a la izquierda para editar",
+    "defaultSessionName": "Respiración Consciente",
     "sessionName": "Nombre de Sesión",
     "sessionNameHint": "Opcional - para guardar",
     "sessionNamePlaceholder": "Ej. Meditación matutina",

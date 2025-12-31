@@ -1075,6 +1075,8 @@
     "subtitle": "Erstelle eine auf deine Bedürfnisse zugeschnittene Meditation",
     "mySavedSessions": "Meine gespeicherten Sitzungen",
     "savedSessionsHint": "Tippen zum Starten, halten für Optionen",
+    "swipeToEdit": "Nach links wischen zum Bearbeiten",
+    "defaultSessionName": "Achtsames Atmen",
     "sessionName": "Sitzungsname",
     "sessionNameHint": "Optional - zum Speichern",
     "sessionNamePlaceholder": "Z.B. Morgenmeditation",

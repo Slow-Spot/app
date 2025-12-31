@@ -817,6 +817,8 @@
     "subtitle": "Create a meditation tailored to your needs",
     "mySavedSessions": "My Saved Sessions",
     "savedSessionsHint": "Tap to start, hold for options",
+    "swipeToEdit": "Swipe left to edit",
+    "defaultSessionName": "Mindful Breathing",
     "sessionName": "Session Name",
     "sessionNameHint": "Optional - for saving",
     "sessionNamePlaceholder": "E.g. Morning meditation",

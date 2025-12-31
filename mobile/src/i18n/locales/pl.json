@@ -929,6 +929,8 @@
     "subtitle": "Stwórz medytację dopasowaną do swoich potrzeb",
     "mySavedSessions": "Moje zapisane sesje",
     "savedSessionsHint": "Dotknij aby rozpocząć, przytrzymaj dla opcji",
+    "swipeToEdit": "Przesuń w lewo, aby edytować",
+    "defaultSessionName": "Świadomy oddech",
     "sessionName": "Nazwa sesji",
     "sessionNameHint": "Opcjonalne - do zapisania",
     "sessionNamePlaceholder": "Np. Poranna medytacja",

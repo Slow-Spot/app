@@ -1033,6 +1033,8 @@
     "subtitle": "Créez une méditation adaptée à vos besoins",
     "mySavedSessions": "Mes Sessions Enregistrées",
     "savedSessionsHint": "Appuyez pour démarrer, maintenez pour les options",
+    "swipeToEdit": "Glissez vers la gauche pour modifier",
+    "defaultSessionName": "Respiration Consciente",
     "createNew": "Créer nouveau",
     "editSession": "Modifier la Session",
     "sessionName": "Nom de la Session",

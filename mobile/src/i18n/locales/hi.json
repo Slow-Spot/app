@@ -1033,6 +1033,8 @@
     "subtitle": "अपनी आवश्यकताओं के अनुसार ध्यान बनाएं",
     "mySavedSessions": "मेरे सहेजे गए सत्र",
     "savedSessionsHint": "शुरू करने के लिए टैप करें, विकल्पों के लिए दबाए रखें",
+    "swipeToEdit": "संपादित करने के लिए बाएं स्वाइप करें",
+    "defaultSessionName": "सचेत श्वास",
     "createNew": "नया बनाएं",
     "editSession": "संपादित करें",
     "sessionName": "सत्र का नाम",
