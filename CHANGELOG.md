@@ -1,3 +1,9 @@
+## [1.12.2](https://github.com/Slow-Spot/app/compare/v1.12.1...v1.12.2) (2025-12-31)
+
+### Bug Fixes
+
+* **mobile:** improve iPad session card layout ([485554f](https://github.com/Slow-Spot/app/commit/485554f44f256b924f771b4afbaae34db2103f2f))
+
 ## [1.12.1](https://github.com/Slow-Spot/app/compare/v1.12.0...v1.12.1) (2025-12-29)
 
 ### Bug Fixes
