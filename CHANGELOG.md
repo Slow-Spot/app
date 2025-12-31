@@ -1,3 +1,9 @@
+## [1.13.0](https://github.com/Slow-Spot/app/compare/v1.12.3...v1.13.0) (2025-12-31)
+
+### Features
+
+* **mobile:** add pro release workflow with auto-submit ([a23784b](https://github.com/Slow-Spot/app/commit/a23784b196967faace8faa470a212912ce0fdbe6))
+
 ## [1.12.3](https://github.com/Slow-Spot/app/compare/v1.12.2...v1.12.3) (2025-12-31)
 
 ### Bug Fixes
