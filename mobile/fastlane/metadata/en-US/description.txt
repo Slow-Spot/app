@@ -14,19 +14,11 @@ WHAT MAKES SLOW SPOT DIFFERENT?
 
 FEATURES:
 • Customizable meditation timer with ambient sounds
-• 40+ guided meditation sessions across 6 traditions
+• Create unlimited personal meditation sessions
 • Breathing exercises (4-7-8, Box, Equal, Calm)
 • Progress tracking with streaks and achievements
 • Daily inspirational quotes
 • Multiple languages supported
-
-MEDITATION TRADITIONS:
-• Zen (Japanese) - Zazen, Kinhin
-• Vipassana (Buddhist) - Body Scan, Insight
-• Vedic (Hindu) - Om, Transcendental, Chakra
-• Taoist (Chinese) - Qigong, Inner Smile, Wu Wei
-• Sufi (Islamic) - Dhikr, Muraqaba
-• Christian Contemplative - Centering Prayer, Lectio Divina
 
 BACKED BY SCIENCE:
 Research suggests 10-12 minutes of daily meditation can support:

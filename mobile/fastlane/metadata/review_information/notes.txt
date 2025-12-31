@@ -6,7 +6,7 @@ This app is a FREE portfolio/passion project by an independent developer. There 
 
 2. WHERE CAN USERS PURCHASE CONTENT? Nowhere. All content is 100% free. There are no purchases anywhere.
 
-3. WHAT PAID CONTENT CAN USERS ACCESS? None. All 40+ guided meditations, breathing exercises, and features are completely free.
+3. WHAT PAID CONTENT CAN USERS ACCESS? None. The customizable meditation timer, breathing exercises, and all features are completely free.
 
 4. WHAT PAID CONTENT/SUBSCRIPTIONS ARE UNLOCKED? Nothing. There are no subscriptions, no in-app purchases, no premium tiers, no paid features. Everything is free.
 

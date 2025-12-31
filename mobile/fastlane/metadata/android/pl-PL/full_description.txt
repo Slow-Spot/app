@@ -1,26 +1,24 @@
-Slow Spot to Twoja osobista przestrzen do codziennej medytacji. Prosta, piekna i calkowicie darmowa.
+CALKOWICIE ZA DARMO - BEZ HACZYKÓW
+Slow Spot jest w 100% darmowy - bez subskrypcji, bez zakupów w aplikacji, bez reklam i bez ukrytych kosztów. To projekt pasji niezaleznego dewelopera, stworzony jako portfolio do prezentacji umiejetnosci programistycznych. Wszystkie funkcje sa odblokowane od pierwszego dnia.
+
+Slow Spot to Twoja osobista przestrzen do codziennej medytacji. Prosta, piekna i naprawde darmowa.
+
+DLACZEGO JEST ZA DARMO?
+Ta aplikacja powstala z jednym celem: niesc prawdziwa wartosc ludziom szukajacym wewnetrznego spokoju - bez jakiejkolwiek monetyzacji. Deweloper stworzyl ja jako projekt portfolio, aby pokazac swoje umiejetnosci pomagajac innym. Nie ma wersji premium, nie ma paywalla, nie ma nic do odblokowania.
 
 CO WYROZNIA SLOW SPOT?
-• 100% Za darmo - Bez subskrypcji, bez zakupow w aplikacji
-• Dziala offline - Twoje dane pozostaja na urzadzeniu
-• Bez reklam - Skup sie na tym, co wazne
-• Prywatnosc przede wszystkim - Bez sledzenia, bez zbierania danych
+• 100% Za darmo na zawsze - Bez subskrypcji, bez zakupow w aplikacji, bez ukrytych kosztow
+• Bez reklam - Skup sie wylacznie na praktyce
+• Dziala calkowicie offline - Twoje dane pozostaja na urzadzeniu
+• Prywatnosc przede wszystkim - Bez sledzenia, bez zbierania danych, bez konta
 
 FUNKCJE:
 • Konfigurowalny timer medytacji z dzwiekami ambient
-• Ponad 40 sesji medytacji z 6 tradycji
+• Tworzenie nieograniczonych osobistych sesji medytacji
 • Cwiczenia oddechowe (4-7-8, Box, Equal, Calm)
 • Sledzenie postepow ze streak'ami i osiagnieciami
 • Codzienne inspirujace cytaty
 • Wsparcie wielu jezykow
-
-TRADYCJE MEDYTACYJNE:
-• Zen (japonska) - Zazen, Kinhin
-• Vipassana (buddyjska) - Skanowanie ciala, Wglad
-• Wedyjska (hinduska) - Om, Transcendentalna, Czakry
-• Taoistyczna (chinska) - Qigong, Wewnetrzny usmiech, Wu Wei
-• Suficka (islamska) - Dhikr, Muraqaba
-• Chrzescijanska kontemplacyjna - Modlitwa centrujaca, Lectio Divina
 
 POPARTE NAUKA:
 Badania sugeruja, ze 10-12 minut medytacji dziennie moze wspierac:
@@ -28,4 +26,4 @@ Badania sugeruja, ze 10-12 minut medytacji dziennie moze wspierac:
 • Lepsza koncentracje i jasnosc umyslu
 • Glebszy, spokojniejszy sen
 
-Twoja podroz do wewnetrznego spokoju zaczyna sie teraz.
+Twoja podroz do wewnetrznego spokoju zaczyna sie teraz - calkowicie za darmo.
