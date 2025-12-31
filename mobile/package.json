@@ -1,6 +1,6 @@
 {
   "name": "mobile",
-  "version": "1.13.0",
+  "version": "1.13.1",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
@@ -18,10 +18,8 @@
     "store:ios:screenshots": "cd fastlane && bundle exec fastlane ios upload_screenshots",
     "store:ios:metadata": "cd fastlane && bundle exec fastlane ios upload_metadata",
     "store:ios:review": "cd fastlane && bundle exec fastlane ios submit_for_review",
-
     "store:android:metadata": "cd fastlane && bundle exec fastlane android upload_metadata",
     "store:android:screenshots": "cd fastlane && bundle exec fastlane android upload_screenshots",
-
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version"

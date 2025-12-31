@@ -1,3 +1,9 @@
+## [1.13.1](https://github.com/Slow-Spot/app/compare/v1.13.0...v1.13.1) (2025-12-31)
+
+### Bug Fixes
+
+* **mobile:** remove false '40+ meditations' claims from all locales ([0cd7331](https://github.com/Slow-Spot/app/commit/0cd7331f005a8d4e19b8b6c59315a72766ba099a))
+
 ## [1.13.0](https://github.com/Slow-Spot/app/compare/v1.12.3...v1.13.0) (2025-12-31)
 
 ### Features
