@@ -1,3 +1,9 @@
+## [1.12.3](https://github.com/Slow-Spot/app/compare/v1.12.2...v1.12.3) (2025-12-31)
+
+### Bug Fixes
+
+* **mobile:** add missing translations for session card ([d3b5c2a](https://github.com/Slow-Spot/app/commit/d3b5c2ae30b157a9f3facf8713e0524ac7115200))
+
 ## [1.12.2](https://github.com/Slow-Spot/app/compare/v1.12.1...v1.12.2) (2025-12-31)
 
 ### Bug Fixes
