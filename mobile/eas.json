@@ -1,9 +1,19 @@
 {
   "cli": {
     "version": ">= 16.0.0",
-    "appVersionSource": "remote"
+    "appVersionSource": "remote",
+    "promptToConfigurePushNotifications": false
   },
   "build": {
+    "base": {
+      "env": {
+        "APP_ENV": "production"
+      },
+      "cache": {
+        "disabled": false,
+        "paths": ["node_modules"]
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
@@ -39,10 +49,8 @@
       }
     },
     "production": {
+      "extends": "base",
       "channel": "production",
-      "env": {
-        "APP_ENV": "production"
-      },
       "ios": {
         "resourceClass": "m-medium",
         "buildConfiguration": "Release",
@@ -51,28 +59,18 @@
       "android": {
         "buildType": "app-bundle",
         "autoIncrement": "versionCode"
-      },
-      "cache": {
-        "disabled": false,
-        "paths": ["node_modules"]
       }
     },
     "production-simulator": {
-      "extends": "production",
+      "extends": "base",
+      "distribution": "internal",
       "ios": {
         "simulator": true,
         "buildConfiguration": "Release"
-      },
-      "distribution": "internal"
+      }
     }
   },
   "submit": {
-    "preview": {
-      "ios": {
-        "appleId": "leszekszpunar@gmail.com",
-        "appleTeamId": "QQHRMJ6B78"
-      }
-    },
     "production": {
       "ios": {
         "appleId": "leszekszpunar@gmail.com",
@@ -84,7 +82,7 @@
       },
       "android": {
         "serviceAccountKeyPath": "./android-service-account.json",
-        "track": "internal",
+        "track": "production",
         "releaseStatus": "draft",
         "changesNotSentForReview": false
       }
