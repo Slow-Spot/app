@@ -1,12 +1,16 @@
-Slow Spot is your personal space for daily meditation. Simple, beautiful, and completely free.
+COMPLETELY FREE - NO CATCHES
+Slow Spot is 100% free with no subscriptions, no in-app purchases, no ads, and no hidden costs. This is a passion project by an independent developer, created as a portfolio piece to showcase mobile development skills. All features are unlocked from day one.
 
-This app is a passion project created by an independent developer as a portfolio piece. It was built with one goal in mind: to bring genuine value to people seeking inner peace - without any monetization. Currently, and for the foreseeable future, everything is 100% free.
+Slow Spot is your personal space for daily meditation. Simple, beautiful, and genuinely free.
+
+WHY IS IT FREE?
+This app was built with one goal: to bring genuine value to people seeking inner peace - without any monetization. The developer created this as a portfolio project to demonstrate skills while helping others. There is no premium version, no paywall, nothing to unlock.
 
 WHAT MAKES SLOW SPOT DIFFERENT?
-• 100% Free - No subscriptions, no in-app purchases, no hidden costs
-• Works Offline - Your data stays on your device
-• No Ads - Focus on what matters
-• Privacy First - No tracking, no data collection
+• 100% Free Forever - No subscriptions, no in-app purchases, no hidden costs
+• No Ads Ever - Focus purely on your practice
+• Works Completely Offline - Your data stays on your device
+• Privacy First - No tracking, no data collection, no account required
 
 FEATURES:
 • Customizable meditation timer with ambient sounds
@@ -30,4 +34,4 @@ Research suggests 10-12 minutes of daily meditation can support:
 • Better concentration and mental clarity
 • Deeper, more peaceful sleep
 
-Your journey to inner peace begins now.
+Your journey to inner peace begins now - completely free.

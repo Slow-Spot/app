@@ -79,8 +79,8 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   const { select, screenPadding } = useResponsive();
   const errorBanner = useErrorBanner();
 
-  // Multi-column layout for tablets/desktop
-  const numColumns = select({ phone: 1, tablet: 2, desktop: 2, default: 1 });
+  // Single column layout for session cards (better UX, consistent with Home screen)
+  const numColumns = 1;
 
   // Theme-aware colors and gradients
   const colors = useMemo(() => getThemeColors(isDark), [isDark]);
@@ -783,7 +783,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    // Horizontal padding handled by ResponsiveContainer
+    // Add horizontal padding to allow shadows to be visible
+    paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.layout.screenPadding,
     paddingBottom: theme.spacing.xxxl,
     flexGrow: 1,

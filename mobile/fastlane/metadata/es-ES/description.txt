@@ -1,12 +1,16 @@
-Slow Spot es tu espacio personal para la meditacion diaria. Simple, hermoso y completamente gratis.
+COMPLETAMENTE GRATIS - SIN TRUCOS
+Slow Spot es 100% gratis - sin suscripciones, sin compras en la app, sin anuncios y sin costos ocultos. Este es un proyecto de pasion de un desarrollador independiente, creado como portfolio para mostrar habilidades de programacion. Todas las funciones estan desbloqueadas desde el primer dia.
 
-Esta aplicacion es un proyecto de pasion de un desarrollador independiente, creado como pieza de portfolio. Fue construida con un objetivo en mente: aportar valor genuino a las personas que buscan paz interior - sin ninguna monetizacion. Actualmente y en el futuro previsible, todo es 100% gratis.
+Slow Spot es tu espacio personal para la meditacion diaria. Simple, hermoso y genuinamente gratis.
+
+POR QUE ES GRATIS?
+Esta app fue construida con un objetivo: aportar valor genuino a las personas que buscan paz interior - sin ninguna monetizacion. El desarrollador la creo como proyecto de portfolio para demostrar habilidades mientras ayuda a otros. No hay version premium, no hay paywall, nada que desbloquear.
 
 QUE HACE DIFERENTE A SLOW SPOT?
-• 100% Gratis - Sin suscripciones, sin compras en la app, sin costos ocultos
-• Funciona sin conexion - Tus datos permanecen en tu dispositivo
-• Sin anuncios - Concentrate en lo que importa
-• Privacidad primero - Sin rastreo, sin recoleccion de datos
+• 100% Gratis para siempre - Sin suscripciones, sin compras en la app, sin costos ocultos
+• Nunca anuncios - Concentrate solo en tu practica
+• Funciona completamente sin conexion - Tus datos permanecen en tu dispositivo
+• Privacidad primero - Sin rastreo, sin recoleccion de datos, sin cuenta requerida
 
 CARACTERISTICAS:
 • Temporizador de meditacion personalizable con sonidos ambient
@@ -30,4 +34,4 @@ La investigacion sugiere que la meditacion regular puede apoyar:
 • Mejor concentracion y claridad mental
 • Sueno mas profundo y tranquilo
 
-Tu viaje hacia la paz interior comienza ahora.
+Tu viaje hacia la paz interior comienza ahora - completamente gratis.

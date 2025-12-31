@@ -1,12 +1,16 @@
-Slow Spot est votre espace personnel pour la meditation quotidienne. Simple, beau et entierement gratuit.
+ENTIEREMENT GRATUIT - SANS PIEGES
+Slow Spot est 100% gratuit - sans abonnements, sans achats integres, sans publicites et sans couts caches. C'est un projet passion d'un developpeur independant, cree comme portfolio pour presenter ses competences en programmation. Toutes les fonctionnalites sont debloquees des le premier jour.
 
-Cette application est un projet passion d'un developpeur independant, cree comme piece de portfolio. Elle a ete construite avec un seul objectif: apporter une valeur genuine aux personnes cherchant la paix interieure - sans aucune monetisation. Actuellement et dans un avenir previsible, tout est 100% gratuit.
+Slow Spot est votre espace personnel pour la meditation quotidienne. Simple, beau et veritablement gratuit.
+
+POURQUOI EST-CE GRATUIT?
+Cette app a ete construite avec un seul objectif: apporter une valeur genuine aux personnes cherchant la paix interieure - sans aucune monetisation. Le developpeur l'a cree comme projet portfolio pour demontrer ses competences tout en aidant les autres. Il n'y a pas de version premium, pas de paywall, rien a debloquer.
 
 QU'EST-CE QUI REND SLOW SPOT DIFFERENT?
-• 100% Gratuit - Sans abonnements, sans achats integres, sans couts caches
-• Fonctionne hors ligne - Vos donnees restent sur votre appareil
-• Sans publicites - Concentrez-vous sur l'essentiel
-• Vie privee d'abord - Pas de suivi, pas de collecte de donnees
+• 100% Gratuit pour toujours - Sans abonnements, sans achats integres, sans couts caches
+• Jamais de publicites - Concentrez-vous uniquement sur votre pratique
+• Fonctionne entierement hors ligne - Vos donnees restent sur votre appareil
+• Vie privee d'abord - Pas de suivi, pas de collecte de donnees, pas de compte requis
 
 FONCTIONNALITES:
 • Minuteur de meditation personnalisable avec sons ambiants
@@ -30,4 +34,4 @@ La recherche suggere que la meditation reguliere peut soutenir:
 • Meilleure concentration et clarte mentale
 • Sommeil plus profond et paisible
 
-Votre voyage vers la paix interieure commence maintenant.
+Votre voyage vers la paix interieure commence maintenant - entierement gratuit.

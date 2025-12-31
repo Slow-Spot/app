@@ -1,1 +1,20 @@
-This is a meditation timer app. No login is required. All data is stored locally on the device. The app works completely offline.
+BUSINESS MODEL CLARIFICATION:
+
+This app is a FREE portfolio/passion project by an independent developer. There is NO monetization whatsoever.
+
+1. WHO ARE THE USERS? Anyone seeking meditation and mindfulness practice - the general public.
+
+2. WHERE CAN USERS PURCHASE CONTENT? Nowhere. All content is 100% free. There are no purchases anywhere.
+
+3. WHAT PAID CONTENT CAN USERS ACCESS? None. All 40+ guided meditations, breathing exercises, and features are completely free.
+
+4. WHAT PAID CONTENT/SUBSCRIPTIONS ARE UNLOCKED? Nothing. There are no subscriptions, no in-app purchases, no premium tiers, no paid features. Everything is free.
+
+5. HOW DO USERS OBTAIN AN ACCOUNT? No account is needed. The app works immediately after download with no registration, no login, no account creation. All data is stored locally on the device.
+
+ADDITIONAL NOTES:
+- This app serves as a developer portfolio piece to showcase mobile development skills
+- No ads are displayed
+- No user data is collected or transmitted
+- The app works completely offline
+- In the future, the app may be sold or developed into a paid version, but currently and for the foreseeable future, it remains 100% free

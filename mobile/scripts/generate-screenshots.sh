@@ -13,7 +13,7 @@ LOCALES=("en-US" "pl" "de-DE" "es-ES" "fr-FR" "zh-Hans" "hi")
 # Format: "folder_name:width:height"
 IPHONE_65="iPhone 6.5:1284:2778"
 IPHONE_67="iPhone 6.7:1290:2796"
-IPAD_13="iPad Pro 13:2064:2752"
+IPAD_13="iPad Pro (12.9-inch) (3rd generation):2064:2752"
 
 echo "📱 App Store Screenshot Generator"
 echo "=================================="
@@ -124,7 +124,7 @@ echo "⚠️  iPad screenshots need to be taken manually on simulator."
 echo ""
 
 for locale in "${LOCALES[@]}"; do
-    target_ipad="$SCREENSHOTS_DIR/$locale/iPad Pro 13"
+    target_ipad="$SCREENSHOTS_DIR/$locale/iPad Pro (12.9-inch) (3rd generation)"
 
     if [ -d "$target_ipad" ] && [ "$(ls -A "$target_ipad" 2>/dev/null)" ]; then
         echo "✓ $locale: iPad screenshots exist"
@@ -140,7 +140,7 @@ echo "2. Select iPad Pro 13-inch (M4) from File → Open Simulator"
 echo "3. Run: cd mobile && npx expo start"
 echo "4. Press 'i' to open in iOS simulator"
 echo "5. Take screenshots with Cmd+S"
-echo "6. Save to: store/screenshots/ios/{locale}/iPad Pro 13/"
+echo "6. Save to: store/screenshots/ios/{locale}/iPad Pro (12.9-inch) (3rd generation)/"
 echo ""
 echo "Screenshot names should be: 01_home.png, 02_meditation.png, etc."
 echo ""

@@ -129,10 +129,10 @@ function main() {
     writeFile(path.join(localeDir, 'promotional_text.txt'), truncate(localeData.promotionalText, 170));
     writeFile(path.join(localeDir, 'release_notes.txt'), localeData.whatsNew || '');
 
-    // URLs
-    writeFile(path.join(localeDir, 'support_url.txt'), metadata.app.supportUrl || '');
-    writeFile(path.join(localeDir, 'marketing_url.txt'), metadata.app.marketingUrl || '');
-    writeFile(path.join(localeDir, 'privacy_url.txt'), metadata.app.privacyPolicyUrl || '');
+    // URLs (use locale-specific if available, otherwise fall back to global)
+    writeFile(path.join(localeDir, 'support_url.txt'), localeData.supportUrl || metadata.app.supportUrl || '');
+    writeFile(path.join(localeDir, 'marketing_url.txt'), localeData.marketingUrl || metadata.app.marketingUrl || '');
+    writeFile(path.join(localeDir, 'privacy_url.txt'), localeData.privacyPolicyUrl || metadata.app.privacyPolicyUrl || '');
   }
 
   // Copy screenshots
