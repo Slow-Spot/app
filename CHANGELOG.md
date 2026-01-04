@@ -1,3 +1,9 @@
+## [1.14.0-beta.2](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.1...v1.14.0-beta.2) (2026-01-04)
+
+### Features
+
+* **mobile:** add notification system and code cleanup ([79b9b36](https://github.com/Slow-Spot/app/commit/79b9b36050056c17cbb85887d3b7d9ab482e8349))
+
 ## [1.14.0-beta.1](https://github.com/Slow-Spot/app/compare/v1.13.1...v1.14.0-beta.1) (2026-01-04)
 
 ### Features
