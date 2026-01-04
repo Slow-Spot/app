@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - develop
+      - 'release/**'
   workflow_dispatch:
 
 permissions:
@@ -19,6 +21,8 @@ jobs:
     outputs:
       new_release_published: ${{ steps.semantic.outputs.new_release_published }}
       new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+      branch: ${{ steps.branch.outputs.name }}
+      is_prerelease: ${{ steps.branch.outputs.is_prerelease }}
 
     steps:
       - name: Checkout code
@@ -26,6 +30,23 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine branch type
+        id: branch
+        run: |
+          BRANCH="${GITHUB_REF#refs/heads/}"
+          echo "name=$BRANCH" >> $GITHUB_OUTPUT
+
+          if [[ "$BRANCH" == "main" ]]; then
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+            echo "type=production" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH" == "develop" ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            echo "type=beta" >> $GITHUB_OUTPUT
+          elif [[ "$BRANCH" == release/* ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            echo "type=rc" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -62,23 +83,49 @@ jobs:
           echo "## New Release Published" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ steps.branch.outputs.name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Type:** ${{ steps.branch.outputs.type }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### What happens next:" >> $GITHUB_STEP_SUMMARY
-          echo "- Git tag created: v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub Release created" >> $GITHUB_STEP_SUMMARY
-          echo "- CHANGELOG.md updated" >> $GITHUB_STEP_SUMMARY
-          echo "- EAS Production Build will start (triggered by tag)" >> $GITHUB_STEP_SUMMARY
 
-  trigger-mobile-build:
-    name: Trigger Mobile Production Build
+          if [[ "${{ steps.branch.outputs.type }}" == "production" ]]; then
+            echo "### What happens next:" >> $GITHUB_STEP_SUMMARY
+            echo "- Git tag created: v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- GitHub Release created" >> $GITHUB_STEP_SUMMARY
+            echo "- CHANGELOG.md updated" >> $GITHUB_STEP_SUMMARY
+            echo "- EAS Production Build will start (triggered by tag)" >> $GITHUB_STEP_SUMMARY
+          elif [[ "${{ steps.branch.outputs.type }}" == "rc" ]]; then
+            echo "### What happens next:" >> $GITHUB_STEP_SUMMARY
+            echo "- Release Candidate version: v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- Preview build will be triggered" >> $GITHUB_STEP_SUMMARY
+            echo "- QA can test via preview channel" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### What happens next:" >> $GITHUB_STEP_SUMMARY
+            echo "- Beta version: v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
+            echo "- Development OTA update will be triggered" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # Trigger appropriate builds based on branch
+  trigger-builds:
+    name: Trigger Builds
     needs: release
     if: needs.release.outputs.new_release_published == 'true'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger EAS Production Build
-        uses: actions/github-script@v7
-        with:
-          script: |
-            console.log('New release v${{ needs.release.outputs.new_release_version }} created');
-            console.log('EAS Production Build will be triggered by the new tag');
+      - name: Production Build (main only)
+        if: needs.release.outputs.is_prerelease == 'false'
+        run: |
+          echo "🚀 Production release v${{ needs.release.outputs.new_release_version }}"
+          echo "EAS Production Build will be triggered by the new tag"
+
+      - name: RC Build (release branches)
+        if: needs.release.outputs.is_prerelease == 'true' && startsWith(needs.release.outputs.branch, 'release/')
+        run: |
+          echo "🧪 Release Candidate v${{ needs.release.outputs.new_release_version }}"
+          echo "Preview build workflow will handle this"
+
+      - name: Beta Update (develop)
+        if: needs.release.outputs.branch == 'develop'
+        run: |
+          echo "🔧 Beta release v${{ needs.release.outputs.new_release_version }}"
+          echo "Development OTA update will be triggered"

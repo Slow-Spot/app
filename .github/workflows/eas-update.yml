@@ -1,36 +1,35 @@
-name: EAS Update (OTA - Expo Go)
+name: 📱 EAS Update (OTA)
 
-# Szybkie aktualizacje OTA bez rebuildu - idealne do testow UI/UX
-# Testerzy z Expo Go dostana automatyczna aktualizacje
-# Uruchamia sie PO ZAKONCZENIU semantic-release (gdy nowa wersja zostanie opublikowana)
+# OTA updates for all environments
+# - develop → development channel (beta testing)
+# - release/* → preview channel (RC testing)
+# - main → production channel (live users)
 
 on:
   workflow_run:
     workflows: ["Semantic Release"]
     types:
       - completed
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       message:
         description: 'Update message'
         required: true
-        default: 'Latest updates'
-      branch:
-        description: 'Update branch (preview/production)'
+        default: 'Manual update'
+      channel:
+        description: 'Update channel'
         required: true
-        default: 'preview'
+        default: 'development'
         type: choice
         options:
+          - development
           - preview
           - production
 
 jobs:
   update:
-    name: EAS OTA Update
+    name: 📱 Publish OTA Update
     runs-on: ubuntu-latest
-    # Uruchamia sie tylko gdy workflow_run zakonczyl sie sukcesem LUB workflow_dispatch
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     defaults:
       run:
@@ -39,11 +38,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: mobile/package-lock.json
 
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
@@ -54,62 +57,61 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Determine update branch
-        id: branch
+      - name: Determine update channel
+        id: channel
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "branch=${{ github.event.inputs.branch }}" >> $GITHUB_OUTPUT
+            echo "channel=${{ github.event.inputs.channel }}" >> $GITHUB_OUTPUT
             echo "message=${{ github.event.inputs.message }}" >> $GITHUB_OUTPUT
           else
-            # workflow_run - sprawdz ktory branch wywowal release
-            TRIGGER_BRANCH="${{ github.event.workflow_run.head_branch }}"
-            if [ "$TRIGGER_BRANCH" == "main" ]; then
-              echo "branch=production" >> $GITHUB_OUTPUT
+            BRANCH="${{ github.event.workflow_run.head_branch }}"
+            echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+            if [ "$BRANCH" == "main" ]; then
+              echo "channel=production" >> $GITHUB_OUTPUT
+              echo "message=Production release" >> $GITHUB_OUTPUT
+            elif [ "$BRANCH" == "develop" ]; then
+              echo "channel=development" >> $GITHUB_OUTPUT
+              echo "message=Beta update" >> $GITHUB_OUTPUT
+            elif [[ "$BRANCH" == release/* ]]; then
+              echo "channel=preview" >> $GITHUB_OUTPUT
+              echo "message=Release Candidate update" >> $GITHUB_OUTPUT
             else
-              echo "branch=preview" >> $GITHUB_OUTPUT
+              echo "channel=development" >> $GITHUB_OUTPUT
+              echo "message=Development update" >> $GITHUB_OUTPUT
             fi
-            echo "message=Auto-update after release" >> $GITHUB_OUTPUT
           fi
 
       - name: Publish EAS Update
         run: |
+          echo "📱 Publishing to channel: ${{ steps.channel.outputs.channel }}"
           eas update \
-            --branch ${{ steps.branch.outputs.branch }} \
-            --message "${{ steps.branch.outputs.message }}" \
+            --branch ${{ steps.channel.outputs.channel }} \
+            --message "${{ steps.channel.outputs.message }}" \
             --non-interactive
 
-      - name: Generate QR Code for Expo Go
-        id: qr
+      - name: Generate Summary
         run: |
-          # Get project URL (URL-encoded for QR API)
-          PROJECT_URL="exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d"
-          PROJECT_URL_ENCODED="exp%3A%2F%2Fu.expo.dev%2F2b3ebb2e-60e7-4355-922a-db729c41792d"
-          WEB_URL="https://expo.dev/@leszekszpunar/slow-spot"
-          WEB_URL_ENCODED="https%3A%2F%2Fexpo.dev%2F%40leszekszpunar%2Fslow-spot"
+          echo "## 📱 OTA Update Published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Channel:** ${{ steps.channel.outputs.channel }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Message:** ${{ steps.channel.outputs.message }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Testing Instructions" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Generate QR codes using API (with proper URL encoding)
-          QR_DIRECT="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${PROJECT_URL_ENCODED}"
-          QR_WEB="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${WEB_URL_ENCODED}"
-
-          # Add to summary
-          echo "## Expo Go Testing" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### QR Code (Direct Link)" >> $GITHUB_STEP_SUMMARY
-          echo "![QR Code](${QR_DIRECT})" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### QR Code (Web Link)" >> $GITHUB_STEP_SUMMARY
-          echo "![QR Code](${QR_WEB})" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Direct Links" >> $GITHUB_STEP_SUMMARY
-          echo "- **Expo Go**: ${PROJECT_URL}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Web**: ${WEB_URL}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Instructions" >> $GITHUB_STEP_SUMMARY
-          echo "1. Install Expo Go on your phone" >> $GITHUB_STEP_SUMMARY
-          echo "2. Scan QR code or open link" >> $GITHUB_STEP_SUMMARY
-          echo "3. App loads automatically!" >> $GITHUB_STEP_SUMMARY
-
-      - name: Notify success
-        run: |
-          echo "OTA Update published successfully!"
-          echo "Testerzy z Expo Go dostana automatyczna aktualizacje"
+          if [ "${{ steps.channel.outputs.channel }}" == "production" ]; then
+            echo "Users with the production app will receive this update automatically." >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.channel.outputs.channel }}" == "preview" ]; then
+            echo "Testers with preview builds will receive this update." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**To test:**" >> $GITHUB_STEP_SUMMARY
+            echo "1. Install preview build from [Expo Builds](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)" >> $GITHUB_STEP_SUMMARY
+            echo "2. Open the app - update will load automatically" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Development testers will receive this update via Expo Go." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**To test:**" >> $GITHUB_STEP_SUMMARY
+            echo "1. Install [Expo Go](https://expo.dev/go)" >> $GITHUB_STEP_SUMMARY
+            echo "2. Scan QR code or open: exp://u.expo.dev/2b3ebb2e-60e7-4355-922a-db729c41792d" >> $GITHUB_STEP_SUMMARY
+          fi

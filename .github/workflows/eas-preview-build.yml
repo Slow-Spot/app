@@ -1,11 +1,15 @@
-name: 🧪 EAS Preview Build (Beta Testing)
+name: 🧪 EAS Preview Build (RC & Beta Testing)
+
+# Preview builds for pre-production testing:
+# - release/* → RC testing (Release Candidate - full QA)
+# - develop → Beta testing (development integration)
+# - PRs → Preview for code review
 
 on:
   push:
     branches:
       - develop
-      - 'feature/**'
-      - 'fix/**'
+      - 'release/**'
   pull_request:
     branches:
       - main
@@ -21,6 +25,14 @@ on:
           - all
           - android
           - ios
+      build_ios:
+        description: 'Build iOS (both platforms for release branches)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 env:
   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
@@ -36,6 +48,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Determine build context
+        id: context
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+          if [[ "$BRANCH" == release/* ]]; then
+            echo "build_type=rc" >> $GITHUB_OUTPUT
+            echo "build_ios=true" >> $GITHUB_OUTPUT
+            echo "🚀 Release Candidate build for QA testing"
+          elif [[ "$BRANCH" == "develop" ]]; then
+            echo "build_type=beta" >> $GITHUB_OUTPUT
+            echo "build_ios=false" >> $GITHUB_OUTPUT
+            echo "🔧 Beta build for development testing"
+          else
+            echo "build_type=preview" >> $GITHUB_OUTPUT
+            echo "build_ios=false" >> $GITHUB_OUTPUT
+            echo "👀 Preview build for PR review"
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -64,11 +96,13 @@ jobs:
           eas build --platform android --profile preview --non-interactive --no-wait
           echo "android_built=true" >> $GITHUB_OUTPUT
 
-      - name: Build iOS (Preview - Internal)
+      - name: Build iOS (Preview - for RC branches)
         id: ios-build
         if: |
+          steps.context.outputs.build_ios == 'true' ||
           github.event.inputs.platform == 'ios' ||
-          github.event.inputs.platform == 'all'
+          github.event.inputs.platform == 'all' ||
+          github.event.inputs.build_ios == 'true'
         run: |
           echo "🍎 Building iOS Preview..."
           eas build --platform ios --profile preview --non-interactive --no-wait
@@ -77,8 +111,22 @@ jobs:
       - name: Build Summary
         if: always()
         run: |
-          echo "## 🧪 Preview Build Started" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
+          BUILD_TYPE="${{ steps.context.outputs.build_type }}"
+
+          if [[ "$BUILD_TYPE" == "rc" ]]; then
+            echo "## 🚀 Release Candidate Build Started" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Type:** Release Candidate (QA Testing)" >> $GITHUB_STEP_SUMMARY
+          elif [[ "$BUILD_TYPE" == "beta" ]]; then
+            echo "## 🔧 Beta Build Started" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Type:** Beta (Development Testing)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## 🧪 Preview Build Started" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Type:** Preview (PR Review)" >> $GITHUB_STEP_SUMMARY
+          fi
+
           echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
           echo "**Commit:** \`${GITHUB_SHA::7}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -99,7 +147,16 @@ jobs:
           echo "### 📥 Download & Test" >> $GITHUB_STEP_SUMMARY
           echo "- [Expo Builds Dashboard](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)" >> $GITHUB_STEP_SUMMARY
           echo "- Android: Download APK directly" >> $GITHUB_STEP_SUMMARY
-          echo "- iOS: Use Expo Go or TestFlight" >> $GITHUB_STEP_SUMMARY
+          echo "- iOS: Use TestFlight (for RC builds)" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "$BUILD_TYPE" == "rc" ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 🧪 QA Testing Checklist" >> $GITHUB_STEP_SUMMARY
+            echo "- [ ] Test all new features" >> $GITHUB_STEP_SUMMARY
+            echo "- [ ] Verify bug fixes" >> $GITHUB_STEP_SUMMARY
+            echo "- [ ] Performance testing" >> $GITHUB_STEP_SUMMARY
+            echo "- [ ] Approve for production merge" >> $GITHUB_STEP_SUMMARY
+          fi
 
       - name: Comment on PR
         if: github.event_name == 'pull_request'
@@ -115,7 +172,7 @@ jobs:
             | Platform | How to Test |
             |----------|-------------|
             | 🤖 Android | Download APK from [Expo Builds](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds) |
-            | 🍎 iOS | Use [Expo Go](https://apps.apple.com/app/expo-go/id982107779) or wait for TestFlight |
+            | 🍎 iOS | Use TestFlight or Expo Go |
 
             ---
             *Build triggered by PR to \`${{ github.base_ref }}\`*
