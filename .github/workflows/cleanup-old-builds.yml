@@ -3,13 +3,17 @@ name: Cleanup Old Builds
 on:
   # Run automatically after each successful build
   workflow_run:
-    workflows: ["EAS Preview Build (Test Deployment)", "EAS Production Build", "EAS Update (OTA - Expo Go)"]
+    workflows:
+      - "🧪 EAS Preview Build (RC & Beta Testing)"
+      - "🚀 EAS Production Build & Submit"
+      - "📱 EAS Update (OTA)"
+      - "Semantic Release"
     types:
       - completed
 
-  # Run weekly to clean up old builds
+  # Run daily to clean up old builds (more frequent with new branching strategy)
   schedule:
-    - cron: '0 0 * * 0' # Every Sunday at midnight
+    - cron: '0 0 * * *' # Every day at midnight
 
   # Manual trigger
   workflow_dispatch:
