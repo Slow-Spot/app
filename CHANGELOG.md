@@ -1,3 +1,9 @@
+## [1.14.0](https://github.com/Slow-Spot/app/compare/v1.13.1...v1.14.0) (2026-01-04)
+
+### Features
+
+* **release:** implement professional multi-branch CI/CD strategy ([509099c](https://github.com/Slow-Spot/app/commit/509099cdaec4089aeb1746c6917751f2b362bcc9))
+
 ## [1.13.1](https://github.com/Slow-Spot/app/compare/v1.13.0...v1.13.1) (2025-12-31)
 
 ### Bug Fixes
