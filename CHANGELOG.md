@@ -1,3 +1,9 @@
+## [1.14.0-beta.3](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.2...v1.14.0-beta.3) (2026-01-04)
+
+### Bug Fixes
+
+* **release:** update cleanup workflow for new branching strategy ([f63502d](https://github.com/Slow-Spot/app/commit/f63502d9b6eaae8fe3221732f016f706eba310c7))
+
 ## [1.14.0-beta.2](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.1...v1.14.0-beta.2) (2026-01-04)
 
 ### Features
