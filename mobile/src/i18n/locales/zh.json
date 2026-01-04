@@ -1462,5 +1462,27 @@
     "skipIntentionHint": "跳过设定意图并开始冥想",
     "editSessionHint": "编辑此冥想课程",
     "deleteSessionHint": "删除此冥想课程"
+  },
+  "notifications": {
+    "title": "冥想提醒",
+    "description": "温和的提醒，帮助你保持练习",
+    "enableNotifications": "启用通知",
+    "permissionDenied": "通知已禁用",
+    "permissionDeniedDescription": "要接收冥想提醒，请在设备设置中启用通知。",
+    "openSettings": "打开设置",
+    "permissionsRequired": "提醒功能需要通知权限",
+    "dailyReminder": "每日提醒",
+    "dailyReminderDescription": "每天收到温柔的冥想提醒",
+    "reminderTime": "提醒时间",
+    "tapToChangeTime": "点击更改提醒时间",
+    "nextReminderToday": "今天 {{time}}",
+    "nextReminderTomorrow": "明天 {{time}}",
+    "sendTestNotification": "发送测试通知",
+    "testFailed": "测试失败",
+    "testFailedDescription": "无法发送测试通知。请检查您的设置。",
+    "privacyNote": "提醒在本地安排。不会向外部服务器发送任何数据。",
+    "streakAlert": "连续记录保护",
+    "streakAlertDescription": "如果今天还没冥想，晚间提醒",
+    "streakAlertTime": "提醒时间"
   }
 }

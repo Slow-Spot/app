@@ -1462,5 +1462,27 @@
     "skipIntentionHint": "Passe le réglage de l'intention et démarre la méditation",
     "editSessionHint": "Modifier cette session de méditation",
     "deleteSessionHint": "Supprimer cette session de méditation"
+  },
+  "notifications": {
+    "title": "Rappels de Méditation",
+    "description": "Des rappels doux pour maintenir votre pratique régulière",
+    "enableNotifications": "Activer les Notifications",
+    "permissionDenied": "Notifications Désactivées",
+    "permissionDeniedDescription": "Pour recevoir des rappels de méditation, veuillez activer les notifications dans les paramètres de votre appareil.",
+    "openSettings": "Ouvrir les Paramètres",
+    "permissionsRequired": "Les autorisations de notification sont requises pour les rappels",
+    "dailyReminder": "Rappel Quotidien",
+    "dailyReminderDescription": "Recevez un rappel doux pour méditer chaque jour",
+    "reminderTime": "Heure du Rappel",
+    "tapToChangeTime": "Appuyez pour changer l'heure du rappel",
+    "nextReminderToday": "Aujourd'hui à {{time}}",
+    "nextReminderTomorrow": "Demain à {{time}}",
+    "sendTestNotification": "Envoyer une Notification Test",
+    "testFailed": "Échec du Test",
+    "testFailedDescription": "Impossible d'envoyer la notification test. Veuillez vérifier vos paramètres.",
+    "privacyNote": "Les rappels sont programmés localement. Aucune donnée n'est envoyée à des serveurs externes.",
+    "streakAlert": "Protection de Série",
+    "streakAlertDescription": "Rappel du soir si vous n'avez pas médité aujourd'hui",
+    "streakAlertTime": "Heure d'Alerte"
   }
 }

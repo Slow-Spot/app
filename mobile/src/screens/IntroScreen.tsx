@@ -546,10 +546,11 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
       logger.log('IntroScreen: Saving name:', trimmedName || '(empty/clearing)');
       await setUserName(trimmedName || undefined);
 
-      // Save imported streak if provided
+      // Save imported streak if provided (with bounds validation for security)
       const streakDays = parseInt(streakDaysInput, 10);
-      if (!isNaN(streakDays) && streakDays > 0) {
-        logger.log('IntroScreen: Saving imported streak:', streakDays, 'days from', streakSourceInput || '(no source)');
+      const MAX_STREAK_DAYS = 3650; // 10 years max
+      if (!isNaN(streakDays) && streakDays > 0 && streakDays <= MAX_STREAK_DAYS) {
+        logger.log('IntroScreen: Saving imported streak:', streakDays, 'days');
         await saveImportedStreak(streakDays, streakSourceInput.trim() || undefined);
       }
 

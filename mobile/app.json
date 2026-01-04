@@ -92,6 +92,15 @@
       "expo-localization",
       "expo-asset",
       [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#8B5CF6",
+          "sounds": [],
+          "defaultChannel": "daily-reminders"
+        }
+      ],
+      [
         "expo-build-properties",
         {
           "android": {

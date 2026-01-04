@@ -1462,5 +1462,27 @@
     "skipIntentionHint": "इरादा सेटिंग छोड़ता है और ध्यान शुरू करता है",
     "editSessionHint": "इस ध्यान सत्र को संपादित करें",
     "deleteSessionHint": "इस ध्यान सत्र को हटाएं"
+  },
+  "notifications": {
+    "title": "ध्यान अनुस्मारक",
+    "description": "नियमित अभ्यास के लिए सौम्य अनुस्मारक",
+    "enableNotifications": "सूचनाएं सक्षम करें",
+    "permissionDenied": "सूचनाएं अक्षम",
+    "permissionDeniedDescription": "ध्यान अनुस्मारक प्राप्त करने के लिए, कृपया अपनी डिवाइस सेटिंग्स में सूचनाएं सक्षम करें।",
+    "openSettings": "सेटिंग्स खोलें",
+    "permissionsRequired": "अनुस्मारक के लिए सूचना अनुमतियां आवश्यक हैं",
+    "dailyReminder": "दैनिक अनुस्मारक",
+    "dailyReminderDescription": "हर दिन ध्यान करने के लिए एक सौम्य अनुस्मारक प्राप्त करें",
+    "reminderTime": "अनुस्मारक समय",
+    "tapToChangeTime": "अनुस्मारक समय बदलने के लिए टैप करें",
+    "nextReminderToday": "आज {{time}} बजे",
+    "nextReminderTomorrow": "कल {{time}} बजे",
+    "sendTestNotification": "परीक्षण सूचना भेजें",
+    "testFailed": "परीक्षण विफल",
+    "testFailedDescription": "परीक्षण सूचना नहीं भेजी जा सकी। कृपया अपनी सेटिंग्स जांचें।",
+    "privacyNote": "अनुस्मारक स्थानीय रूप से निर्धारित हैं। कोई डेटा बाहरी सर्वर पर नहीं भेजा जाता।",
+    "streakAlert": "स्ट्रीक सुरक्षा",
+    "streakAlertDescription": "यदि आज ध्यान नहीं किया तो शाम का अनुस्मारक",
+    "streakAlertTime": "अलर्ट समय"
   }
 }

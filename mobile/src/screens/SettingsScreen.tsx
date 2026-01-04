@@ -39,6 +39,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
+import { NotificationSettingsCard } from '../components/NotificationSettingsCard';
 import { AppModal, AppModalButton } from '../components/AppModal';
 import { ResponsiveGrid } from '../components/ResponsiveGrid';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
@@ -642,8 +643,13 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </Animated.View>
         )}
 
-        {/* Import Streak Card - For users migrating from other apps */}
+        {/* Notification Settings Card */}
         <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(3) : undefined}>
+          <NotificationSettingsCard isDark={isDark} animationIndex={3} />
+        </Animated.View>
+
+        {/* Import Streak Card - For users migrating from other apps */}
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(4) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -724,7 +730,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Custom Sounds Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(3) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(5) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -818,7 +824,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Language Selection Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(4) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(6) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -852,6 +858,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                   ]}
                   onPress={() => handleLanguageChange(lang.code)}
                   activeOpacity={0.7}
+                  accessible={true}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${lang.name} ${lang.flag}`}
+                  accessibilityState={{ selected: isSelected }}
+                  accessibilityHint={isSelected ? t('accessibility.currentLanguage', 'Currently selected language') : t('accessibility.selectLanguage', 'Double tap to select this language')}
                 >
                   <Text style={styles.optionFlag}>{lang.flag}</Text>
                   <Text
@@ -873,7 +884,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Theme Selection Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(5) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(7) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -907,6 +918,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                   ]}
                   onPress={() => onThemeChange(option.mode)}
                   activeOpacity={0.7}
+                  accessible={true}
+                  accessibilityRole="button"
+                  accessibilityLabel={t(option.labelKey, option.mode)}
+                  accessibilityState={{ selected: isSelected }}
+                  accessibilityHint={isSelected ? t('accessibility.currentTheme', 'Currently selected theme') : t('accessibility.selectTheme', 'Double tap to select this theme')}
                 >
                   <Ionicons
                     name={option.icon}
@@ -929,7 +945,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Accessibility Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(6) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(8) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -975,6 +991,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 }}
                 trackColor={{ false: colors.neutral.gray[300], true: `${currentTheme.primary}80` }}
                 thumbColor={settings.followSystemReduceMotion ? currentTheme.primary : colors.neutral.white}
+                accessibilityLabel={t('settings.followSystemReduceMotion', 'Follow System Reduce Motion')}
               />
             </View>
             {/* Follow System Font Size */}
@@ -1003,6 +1020,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 }}
                 trackColor={{ false: colors.neutral.gray[300], true: `${currentTheme.primary}80` }}
                 thumbColor={settings.followSystemFontSize ? currentTheme.primary : colors.neutral.white}
+                accessibilityLabel={t('settings.followSystemFontSize', 'Follow System Font Size')}
               />
             </View>
             {/* High Contrast Mode */}
@@ -1026,6 +1044,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 }}
                 trackColor={{ false: colors.neutral.gray[300], true: `${currentTheme.primary}80` }}
                 thumbColor={settings.highContrastMode ? currentTheme.primary : colors.neutral.white}
+                accessibilityLabel={t('settings.highContrastMode')}
               />
             </View>
             {/* Larger Text Mode */}
@@ -1054,6 +1073,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 }}
                 trackColor={{ false: colors.neutral.gray[300], true: `${currentTheme.primary}80` }}
                 thumbColor={settings.largerTextMode ? currentTheme.primary : colors.neutral.white}
+                accessibilityLabel={t('settings.largerTextMode')}
               />
             </View>
           </View>
@@ -1061,7 +1081,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* System Info Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(7) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(9) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -1170,7 +1190,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Data & Privacy Card */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(8) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(10) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -1229,7 +1249,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* Legal & Support Card - Required for App Store / Google Play */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(9) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(11) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}
@@ -1258,6 +1278,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 Linking.openURL(`https://slowspot.me/${locale}/privacy`);
               }}
               activeOpacity={0.7}
+              accessible={true}
+              accessibilityRole="link"
+              accessibilityLabel={t('settings.privacyPolicy', 'Privacy policy')}
+              accessibilityHint={t('accessibility.opensInBrowser', 'Opens in browser')}
             >
               <View style={styles.legalLinkContent}>
                 <Ionicons name="shield-checkmark" size={20} color={currentTheme.primary} />
@@ -1276,6 +1300,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 Linking.openURL(`https://slowspot.me/${locale}/terms`);
               }}
               activeOpacity={0.7}
+              accessible={true}
+              accessibilityRole="link"
+              accessibilityLabel={t('settings.termsOfService', 'Terms of Service')}
+              accessibilityHint={t('accessibility.opensInBrowser', 'Opens in browser')}
             >
               <View style={styles.legalLinkContent}>
                 <Ionicons name="document" size={20} color={currentTheme.primary} />
@@ -1294,6 +1322,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 Linking.openURL(`https://slowspot.me/${locale}/support`);
               }}
               activeOpacity={0.7}
+              accessible={true}
+              accessibilityRole="link"
+              accessibilityLabel={t('settings.support', 'Support')}
+              accessibilityHint={t('accessibility.opensInBrowser', 'Opens in browser')}
             >
               <View style={styles.legalLinkContent}>
                 <Ionicons name="help-circle" size={20} color={currentTheme.primary} />
@@ -1308,7 +1340,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </Animated.View>
 
         {/* About Card - At the very bottom */}
-        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(10) : undefined}>
+        <Animated.View entering={effectiveAnimationsEnabled ? screenElementAnimation(12) : undefined}>
         <GradientCard
           gradient={themeGradients.card.whiteCard}
           style={[styles.card, dynamicStyles.cardShadow]}

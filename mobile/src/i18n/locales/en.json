@@ -1462,5 +1462,27 @@
     "skipIntentionHint": "Skips intention setting and starts meditation",
     "editSessionHint": "Edit this meditation session",
     "deleteSessionHint": "Delete this meditation session"
+  },
+  "notifications": {
+    "title": "Meditation Reminders",
+    "description": "Gentle nudges to keep your practice consistent",
+    "enableNotifications": "Enable Notifications",
+    "permissionDenied": "Notifications Disabled",
+    "permissionDeniedDescription": "To receive meditation reminders, please enable notifications in your device settings.",
+    "openSettings": "Open Settings",
+    "permissionsRequired": "Notification permissions are required for reminders",
+    "dailyReminder": "Daily Reminder",
+    "dailyReminderDescription": "Get a gentle reminder to meditate each day",
+    "reminderTime": "Reminder Time",
+    "tapToChangeTime": "Tap to change the reminder time",
+    "nextReminderToday": "Today at {{time}}",
+    "nextReminderTomorrow": "Tomorrow at {{time}}",
+    "sendTestNotification": "Send Test Notification",
+    "testFailed": "Test Failed",
+    "testFailedDescription": "Could not send test notification. Please check your settings.",
+    "streakAlert": "Streak Protection",
+    "streakAlertDescription": "Evening reminder if you haven't meditated today",
+    "streakAlertTime": "Alert Time",
+    "privacyNote": "Reminders are scheduled locally. No data is sent to external servers."
   }
 }

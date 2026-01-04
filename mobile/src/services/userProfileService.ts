@@ -69,7 +69,7 @@ export const saveUserProfile = async (
     }
 
     const jsonData = JSON.stringify(updated);
-    logger.log('userProfileService: Saving profile:', jsonData);
+    // Removed PII logging for security
     await AsyncStorage.setItem(USER_PROFILE_KEY, jsonData);
   } catch (error) {
     logger.error('Failed to save user profile:', error);

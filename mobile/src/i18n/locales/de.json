@@ -1462,5 +1462,27 @@
     "skipIntentionHint": "Überspringt die Absichtseinstellung und startet die Meditation",
     "editSessionHint": "Diese Meditationssitzung bearbeiten",
     "deleteSessionHint": "Diese Meditationssitzung löschen"
+  },
+  "notifications": {
+    "title": "Meditations-Erinnerungen",
+    "description": "Sanfte Erinnerungen für eine regelmäßige Praxis",
+    "enableNotifications": "Benachrichtigungen aktivieren",
+    "permissionDenied": "Benachrichtigungen deaktiviert",
+    "permissionDeniedDescription": "Um Meditations-Erinnerungen zu erhalten, aktivieren Sie bitte Benachrichtigungen in Ihren Geräteeinstellungen.",
+    "openSettings": "Einstellungen öffnen",
+    "permissionsRequired": "Benachrichtigungsberechtigungen sind für Erinnerungen erforderlich",
+    "dailyReminder": "Tägliche Erinnerung",
+    "dailyReminderDescription": "Erhalten Sie täglich eine sanfte Erinnerung zum Meditieren",
+    "reminderTime": "Erinnerungszeit",
+    "tapToChangeTime": "Tippen, um die Erinnerungszeit zu ändern",
+    "nextReminderToday": "Heute um {{time}}",
+    "nextReminderTomorrow": "Morgen um {{time}}",
+    "sendTestNotification": "Testbenachrichtigung senden",
+    "testFailed": "Test fehlgeschlagen",
+    "testFailedDescription": "Testbenachrichtigung konnte nicht gesendet werden. Bitte überprüfen Sie Ihre Einstellungen.",
+    "privacyNote": "Erinnerungen werden lokal geplant. Keine Daten werden an externe Server gesendet.",
+    "streakAlert": "Serien-Schutz",
+    "streakAlertDescription": "Abenderinnerung, wenn du heute noch nicht meditiert hast",
+    "streakAlertTime": "Alarmzeit"
   }
 }

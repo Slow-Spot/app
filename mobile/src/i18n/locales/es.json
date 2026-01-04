@@ -1462,5 +1462,27 @@
     "skipIntentionHint": "Omite la configuración de intención y comienza la meditación",
     "editSessionHint": "Editar esta sesión de meditación",
     "deleteSessionHint": "Eliminar esta sesión de meditación"
+  },
+  "notifications": {
+    "title": "Recordatorios de Meditación",
+    "description": "Recordatorios suaves para mantener tu práctica constante",
+    "enableNotifications": "Activar Notificaciones",
+    "permissionDenied": "Notificaciones Desactivadas",
+    "permissionDeniedDescription": "Para recibir recordatorios de meditación, activa las notificaciones en la configuración de tu dispositivo.",
+    "openSettings": "Abrir Configuración",
+    "permissionsRequired": "Se requieren permisos de notificación para los recordatorios",
+    "dailyReminder": "Recordatorio Diario",
+    "dailyReminderDescription": "Recibe un recordatorio suave para meditar cada día",
+    "reminderTime": "Hora del Recordatorio",
+    "tapToChangeTime": "Toca para cambiar la hora del recordatorio",
+    "nextReminderToday": "Hoy a las {{time}}",
+    "nextReminderTomorrow": "Mañana a las {{time}}",
+    "sendTestNotification": "Enviar Notificación de Prueba",
+    "testFailed": "Prueba Fallida",
+    "testFailedDescription": "No se pudo enviar la notificación de prueba. Por favor, verifica tu configuración.",
+    "privacyNote": "Los recordatorios se programan localmente. No se envían datos a servidores externos.",
+    "streakAlert": "Protección de Racha",
+    "streakAlertDescription": "Recordatorio nocturno si no has meditado hoy",
+    "streakAlertTime": "Hora de Alerta"
   }
 }

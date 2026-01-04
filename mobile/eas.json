@@ -75,13 +75,12 @@
       "ios": {
         "appleId": "leszekszpunar@gmail.com",
         "appleTeamId": "QQHRMJ6B78",
-        "ascApiKeyPath": "./AuthKey_W3TGVKY5Z6.p8",
-        "ascApiKeyIssuerId": "7fbde26f-7ea0-4e56-8d1e-23174a411710",
-        "ascApiKeyId": "W3TGVKY5Z6",
-        "ascAppId": "6757082765"
+        "ascApiKeyPath": "$ASC_API_KEY_PATH",
+        "ascApiKeyIssuerId": "$ASC_API_KEY_ISSUER_ID",
+        "ascApiKeyId": "$ASC_API_KEY_ID"
       },
       "android": {
-        "serviceAccountKeyPath": "./android-service-account.json",
+        "serviceAccountKeyPath": "$GOOGLE_SERVICE_ACCOUNT_KEY_PATH",
         "track": "production",
         "releaseStatus": "draft",
         "changesNotSentForReview": false
