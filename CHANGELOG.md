@@ -1,3 +1,9 @@
+## [1.14.0-beta.6](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.5...v1.14.0-beta.6) (2026-01-08)
+
+### Bug Fixes
+
+* **mobile:** shorten shortDescription to comply with Google Play 80-char limit ([c0a2839](https://github.com/Slow-Spot/app/commit/c0a2839d43e02ffa7238c3d04824260e66929cf0))
+
 ## [1.14.0-beta.5](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.4...v1.14.0-beta.5) (2026-01-08)
 
 ### Bug Fixes
