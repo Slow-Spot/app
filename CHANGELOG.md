@@ -1,3 +1,9 @@
+## [1.14.0-beta.7](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.6...v1.14.0-beta.7) (2026-01-08)
+
+### Features
+
+* **mobile:** add metadata validation script for Google Play ([af64309](https://github.com/Slow-Spot/app/commit/af643092dd0e7a8bb39574025ac3cacca52c187f))
+
 ## [1.14.0-beta.6](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.5...v1.14.0-beta.6) (2026-01-08)
 
 ### Bug Fixes
