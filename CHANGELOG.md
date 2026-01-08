@@ -1,3 +1,13 @@
+## [1.15.0](https://github.com/Slow-Spot/app/compare/v1.14.0...v1.15.0) (2026-01-08)
+
+### Features
+
+* **mobile:** add metadata validation script for Google Play ([1046f14](https://github.com/Slow-Spot/app/commit/1046f1402394931757c59b4caf4651f3a81fedd6))
+
+### Bug Fixes
+
+* **mobile:** shorten shortDescription to comply with Google Play 80-char limit ([2c3d4fc](https://github.com/Slow-Spot/app/commit/2c3d4fcf40818a60460b8fd1c04bd85edc4357ac))
+
 ## [1.14.0](https://github.com/Slow-Spot/app/compare/v1.13.1...v1.14.0) (2026-01-04)
 
 ### Features
