@@ -1,3 +1,9 @@
+## [1.14.0-beta.5](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.4...v1.14.0-beta.5) (2026-01-08)
+
+### Bug Fixes
+
+* **mobile:** complete truncated short descriptions for Google Play ([fca8841](https://github.com/Slow-Spot/app/commit/fca88413b5c4a5a04dcec9ac3e089545a61e8525))
+
 ## [1.14.0-beta.4](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.3...v1.14.0-beta.4) (2026-01-04)
 
 ### Features
