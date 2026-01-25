@@ -1,3 +1,9 @@
+## [1.14.0-beta.12](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.11...v1.14.0-beta.12) (2026-01-25)
+
+### Bug Fixes
+
+* **mobile:** use custom App Group identifier for Live Activity ([9553988](https://github.com/Slow-Spot/app/commit/9553988062ee76049ebe1e30c3102cc8c7018b7e))
+
 ## [1.14.0-beta.11](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.10...v1.14.0-beta.11) (2026-01-25)
 
 ### Bug Fixes
