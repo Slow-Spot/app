@@ -1,3 +1,9 @@
+## [1.14.0-beta.8](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.7...v1.14.0-beta.8) (2026-01-25)
+
+### Features
+
+* **mobile:** add background timer, widgets, Apple Watch app and UX improvements ([bd652c6](https://github.com/Slow-Spot/app/commit/bd652c684e578b8201dba64ce598cadd415064f1))
+
 ## [1.14.0-beta.7](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.6...v1.14.0-beta.7) (2026-01-08)
 
 ### Features
