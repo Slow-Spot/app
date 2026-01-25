@@ -1,3 +1,9 @@
+## [1.14.0-beta.10](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.9...v1.14.0-beta.10) (2026-01-25)
+
+### Bug Fixes
+
+* **mobile:** resolve Live Activity configuration conflict ([b8dea6e](https://github.com/Slow-Spot/app/commit/b8dea6efd74816aff935e41ca1c1c021a352a44a))
+
 ## [1.14.0-beta.9](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.8...v1.14.0-beta.9) (2026-01-25)
 
 ### Bug Fixes
