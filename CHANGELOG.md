@@ -1,3 +1,9 @@
+## [1.14.0-beta.9](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.8...v1.14.0-beta.9) (2026-01-25)
+
+### Bug Fixes
+
+* **mobile:** clean up iOS deployment target and remove duplicate proguard rule ([8b3480f](https://github.com/Slow-Spot/app/commit/8b3480f658af9303094ba0313fc981b61aa9cef7))
+
 ## [1.14.0-beta.8](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.7...v1.14.0-beta.8) (2026-01-25)
 
 ### Features
