@@ -1484,5 +1484,35 @@
     "streakAlert": "Protection de Série",
     "streakAlertDescription": "Rappel du soir si vous n'avez pas médité aujourd'hui",
     "streakAlertTime": "Heure d'Alerte"
+  },
+  "welcome": {
+    "returning": {
+      "morning": "Bonjour",
+      "afternoon": "Bon retour",
+      "evening": "Bonsoir",
+      "night": "Bonne nuit",
+      "morningPersonal": "Bonjour, {{name}}",
+      "afternoonPersonal": "Bon retour, {{name}}",
+      "eveningPersonal": "Bonsoir, {{name}}",
+      "nightPersonal": "Bonne nuit, {{name}}",
+      "subtitle1": "Prêt pour un moment de calme ?",
+      "subtitle2": "Votre espace de paix vous attend",
+      "subtitle3": "Respirez, vous êtes ici maintenant"
+    },
+    "tapToDismiss": "Appuyez pour continuer"
+  },
+  "celebration": {
+    "firstLaunch": "Bienvenue dans votre voyage de pleine conscience",
+    "milestone": {
+      "firstSession": "Vous avez terminé votre première séance !",
+      "sessions10": "10 séances accomplies !",
+      "sessions25": "25 séances - Progrès incroyable !",
+      "sessions50": "50 séances - Vous êtes dévoué !",
+      "sessions100": "100 séances - Vrai maître !",
+      "streak7": "Série de 7 jours - Une semaine forte !",
+      "streak14": "Série de 14 jours - Deux semaines de calme !",
+      "streak30": "Série de 30 jours - Jalon d'un mois !",
+      "streak100": "Série de 100 jours - Légendaire !"
+    }
   }
 }

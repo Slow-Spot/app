@@ -1484,5 +1484,35 @@
     "streakAlertDescription": "Wieczorne przypomnienie, jeśli nie medytowałeś dziś",
     "streakAlertTime": "Godzina alertu",
     "privacyNote": "Przypomnienia są planowane lokalnie. Żadne dane nie są wysyłane na zewnętrzne serwery."
+  },
+  "welcome": {
+    "returning": {
+      "morning": "Dzień dobry",
+      "afternoon": "Witaj ponownie",
+      "evening": "Dobry wieczór",
+      "night": "Spokojnej nocy",
+      "morningPersonal": "Dzień dobry, {{name}}",
+      "afternoonPersonal": "Witaj ponownie, {{name}}",
+      "eveningPersonal": "Dobry wieczór, {{name}}",
+      "nightPersonal": "Spokojnej nocy, {{name}}",
+      "subtitle1": "Gotowy na chwilę spokoju?",
+      "subtitle2": "Twoja przestrzeń ciszy czeka",
+      "subtitle3": "Weź oddech, jesteś tutaj"
+    },
+    "tapToDismiss": "Dotknij, aby kontynuować"
+  },
+  "celebration": {
+    "firstLaunch": "Witaj w podróży uważności",
+    "milestone": {
+      "firstSession": "Ukończyłeś pierwszą sesję!",
+      "sessions10": "10 sesji za Tobą!",
+      "sessions25": "25 sesji - Niesamowity postęp!",
+      "sessions50": "50 sesji - Jesteś wytrwały!",
+      "sessions100": "100 sesji - Prawdziwy mistrz!",
+      "streak7": "7-dniowa seria - Cały tydzień!",
+      "streak14": "14-dniowa seria - Dwa tygodnie spokoju!",
+      "streak30": "30-dniowa seria - Miesiąc praktyki!",
+      "streak100": "100-dniowa seria - Legenda!"
+    }
   }
 }

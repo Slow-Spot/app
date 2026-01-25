@@ -109,7 +109,28 @@
             "extraProguardRules": "-keep class com.facebook.hermes.unicode.** { *; }\n-keep class com.facebook.jni.** { *; }\n-keep class com.swmansion.reanimated.** { *; }\n-keep class com.swmansion.gesturehandler.** { *; }\n-keep class com.swmansion.rnscreens.** { *; }\n-keep public class com.horcrux.svg.** { *; }\n-keep class expo.modules.** { *; }\n-keep class com.airbnb.lottie.** { *; }\n-keepattributes SourceFile,LineNumberTable\n-renamesourcefileattribute SourceFile"
           }
         }
-      ]
+      ],
+      "expo-live-activity",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "MeditationTimer",
+              "label": "Meditation Timer",
+              "description": "Shows current meditation session timer",
+              "minWidth": "250dp",
+              "minHeight": "100dp",
+              "targetCellWidth": 3,
+              "targetCellHeight": 2,
+              "previewImage": "./assets/widget-preview/meditation-timer.png",
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 0
+            }
+          ]
+        }
+      ],
+      "@bacons/apple-targets"
     ]
   }
 }

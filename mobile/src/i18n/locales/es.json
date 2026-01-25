@@ -1484,5 +1484,35 @@
     "streakAlert": "Protección de Racha",
     "streakAlertDescription": "Recordatorio nocturno si no has meditado hoy",
     "streakAlertTime": "Hora de Alerta"
+  },
+  "welcome": {
+    "returning": {
+      "morning": "Buenos días",
+      "afternoon": "Bienvenido de nuevo",
+      "evening": "Buenas tardes",
+      "night": "Buenas noches",
+      "morningPersonal": "Buenos días, {{name}}",
+      "afternoonPersonal": "Bienvenido de nuevo, {{name}}",
+      "eveningPersonal": "Buenas tardes, {{name}}",
+      "nightPersonal": "Buenas noches, {{name}}",
+      "subtitle1": "¿Listo para un momento de calma?",
+      "subtitle2": "Tu espacio de paz te espera",
+      "subtitle3": "Respira, ya estás aquí"
+    },
+    "tapToDismiss": "Toca para continuar"
+  },
+  "celebration": {
+    "firstLaunch": "Bienvenido a tu viaje de mindfulness",
+    "milestone": {
+      "firstSession": "¡Completaste tu primera sesión!",
+      "sessions10": "¡10 sesiones completadas!",
+      "sessions25": "25 sesiones - ¡Progreso increíble!",
+      "sessions50": "50 sesiones - ¡Eres dedicado!",
+      "sessions100": "100 sesiones - ¡Verdadero maestro!",
+      "streak7": "Racha de 7 días - ¡Una semana fuerte!",
+      "streak14": "Racha de 14 días - ¡Dos semanas de calma!",
+      "streak30": "Racha de 30 días - ¡Hito de un mes!",
+      "streak100": "Racha de 100 días - ¡Legendario!"
+    }
   }
 }

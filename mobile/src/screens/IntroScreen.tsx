@@ -48,8 +48,10 @@ import { brandColors } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { useUserProfile } from '../contexts/UserProfileContext';
 import { AnimatedPressable } from '../components/AnimatedPressable';
+import { ConfettiOverlay } from '../components/ConfettiOverlay';
 import { logger } from '../utils/logger';
 import { saveImportedStreak } from '../services/progressTracker';
+import { markMilestoneCelebrated } from '../services/userProfileService';
 
 const { width, height } = Dimensions.get('window');
 
@@ -427,15 +429,27 @@ const PaginationDots: React.FC<{
   );
 };
 
-// Success celebration component with confetti-like animation
+// Success celebration component with confetti animation
 const SuccessCelebration: React.FC<{
   primaryColor: string;
+  gradient: string[];
   onComplete: () => void;
   animationsEnabled: boolean;
-}> = ({ primaryColor, onComplete, animationsEnabled }) => {
+}> = ({ primaryColor, gradient, onComplete, animationsEnabled }) => {
   const { t } = useTranslation();
   const scale = useSharedValue(0);
   const checkOpacity = useSharedValue(0);
+  const [showConfetti, setShowConfetti] = React.useState(true);
+
+  // Confetti colors based on theme
+  const confettiColors = React.useMemo(() => [
+    primaryColor,
+    gradient[0],
+    gradient[1],
+    '#FFD700', // Gold
+    '#FF6B6B', // Coral
+    '#4ECDC4', // Teal
+  ], [primaryColor, gradient]);
 
   React.useEffect(() => {
     if (animationsEnabled) {
@@ -446,10 +460,15 @@ const SuccessCelebration: React.FC<{
       checkOpacity.value = 1;
     }
 
-    // Auto-complete after animation
+    // Mark first_launch milestone as celebrated
+    markMilestoneCelebrated('first_launch').catch((err) => {
+      logger.error('Failed to mark first_launch milestone:', err);
+    });
+
+    // Auto-complete after animation (extended for confetti)
     const timeout = setTimeout(() => {
       onComplete();
-    }, animationsEnabled ? 1800 : 500);
+    }, animationsEnabled ? 2500 : 500);
 
     return () => clearTimeout(timeout);
   }, [animationsEnabled]);
@@ -464,6 +483,15 @@ const SuccessCelebration: React.FC<{
 
   return (
     <View style={styles.successContainer}>
+      {/* Confetti celebration for first launch */}
+      <ConfettiOverlay
+        visible={showConfetti && animationsEnabled}
+        colors={confettiColors}
+        particleCount={40}
+        duration={2500}
+        onComplete={() => setShowConfetti(false)}
+      />
+
       <Animated.View style={[styles.successCircle, { backgroundColor: `${primaryColor}20` }, circleStyle]}>
         <Animated.View style={[styles.successInnerCircle, { backgroundColor: primaryColor }, checkStyle]}>
           <Ionicons name="checkmark" size={48} color="#FFF" />
@@ -623,6 +651,7 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
         />
         <SuccessCelebration
           primaryColor={primaryColor}
+          gradient={[...currentTheme.gradient]}
           onComplete={handleSuccessComplete}
           animationsEnabled={effectiveAnimationsEnabled}
         />

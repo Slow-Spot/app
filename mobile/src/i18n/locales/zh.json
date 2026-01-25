@@ -1484,5 +1484,35 @@
     "streakAlert": "连续记录保护",
     "streakAlertDescription": "如果今天还没冥想，晚间提醒",
     "streakAlertTime": "提醒时间"
+  },
+  "welcome": {
+    "returning": {
+      "morning": "早上好",
+      "afternoon": "欢迎回来",
+      "evening": "晚上好",
+      "night": "晚安",
+      "morningPersonal": "早上好，{{name}}",
+      "afternoonPersonal": "欢迎回来，{{name}}",
+      "eveningPersonal": "晚上好，{{name}}",
+      "nightPersonal": "晚安，{{name}}",
+      "subtitle1": "准备好享受片刻宁静了吗？",
+      "subtitle2": "你的宁静空间在等待",
+      "subtitle3": "深呼吸，你已经在这里了"
+    },
+    "tapToDismiss": "点击继续"
+  },
+  "celebration": {
+    "firstLaunch": "欢迎开启正念之旅",
+    "milestone": {
+      "firstSession": "你完成了第一次冥想！",
+      "sessions10": "完成10次冥想！",
+      "sessions25": "25次冥想 - 进步惊人！",
+      "sessions50": "50次冥想 - 你很专注！",
+      "sessions100": "100次冥想 - 真正的大师！",
+      "streak7": "连续7天 - 一周坚持！",
+      "streak14": "连续14天 - 两周宁静！",
+      "streak30": "连续30天 - 一个月里程碑！",
+      "streak100": "连续100天 - 传奇！"
+    }
   }
 }

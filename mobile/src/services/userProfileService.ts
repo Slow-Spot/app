@@ -17,6 +17,21 @@ import { logger } from '../utils/logger';
 const USER_PROFILE_KEY = '@slow_spot_user_profile';
 
 /**
+ * Milestone types for celebration tracking
+ */
+export type MilestoneId =
+  | 'first_launch'
+  | 'first_session'
+  | 'sessions_10'
+  | 'sessions_25'
+  | 'sessions_50'
+  | 'sessions_100'
+  | 'streak_7'
+  | 'streak_14'
+  | 'streak_30'
+  | 'streak_100';
+
+/**
  * User profile interface
  */
 export interface UserProfile {
@@ -24,6 +39,14 @@ export interface UserProfile {
   name?: string;
   /** Timestamp when the profile was last updated */
   lastUpdated: string;
+  /** Timestamp of first app launch (ISO 8601) */
+  firstLaunchDate?: string;
+  /** Timestamp of last app activity (ISO 8601) - used for returning user detection */
+  lastActiveDate?: string;
+  /** Total number of app opens */
+  totalAppOpens?: number;
+  /** List of milestone IDs that have been celebrated (prevents duplicate celebrations) */
+  celebratedMilestones?: MilestoneId[];
 }
 
 /**
@@ -32,6 +55,10 @@ export interface UserProfile {
 const DEFAULT_PROFILE: UserProfile = {
   name: undefined,
   lastUpdated: new Date().toISOString(),
+  firstLaunchDate: undefined,
+  lastActiveDate: undefined,
+  totalAppOpens: 0,
+  celebratedMilestones: [],
 };
 
 /**
@@ -66,6 +93,18 @@ export const saveUserProfile = async (
     // Explicitly handle each field to properly support undefined/deletion
     if ('name' in profile) {
       updated.name = profile.name;
+    }
+    if ('firstLaunchDate' in profile) {
+      updated.firstLaunchDate = profile.firstLaunchDate;
+    }
+    if ('lastActiveDate' in profile) {
+      updated.lastActiveDate = profile.lastActiveDate;
+    }
+    if ('totalAppOpens' in profile) {
+      updated.totalAppOpens = profile.totalAppOpens;
+    }
+    if ('celebratedMilestones' in profile) {
+      updated.celebratedMilestones = profile.celebratedMilestones;
     }
 
     const jsonData = JSON.stringify(updated);
@@ -111,5 +150,99 @@ export const clearUserProfile = async (): Promise<void> => {
   } catch (error) {
     logger.error('Failed to clear user profile:', error);
     throw error;
+  }
+};
+
+/**
+ * Record app open - updates lastActiveDate, totalAppOpens, and sets firstLaunchDate if first launch
+ */
+export const recordAppOpen = async (): Promise<{
+  isFirstLaunch: boolean;
+  isReturningAfterLongAbsence: boolean;
+  hoursSinceLastActive: number | null;
+}> => {
+  try {
+    const profile = await loadUserProfile();
+    const now = new Date().toISOString();
+
+    const isFirstLaunch = !profile.firstLaunchDate;
+    let hoursSinceLastActive: number | null = null;
+    let isReturningAfterLongAbsence = false;
+
+    if (profile.lastActiveDate) {
+      const lastActive = new Date(profile.lastActiveDate);
+      const msSinceLastActive = Date.now() - lastActive.getTime();
+      hoursSinceLastActive = msSinceLastActive / (1000 * 60 * 60);
+      // Consider user "returning" if absent for more than 4 hours
+      isReturningAfterLongAbsence = hoursSinceLastActive >= 4;
+    }
+
+    await saveUserProfile({
+      firstLaunchDate: profile.firstLaunchDate || now,
+      lastActiveDate: now,
+      totalAppOpens: (profile.totalAppOpens || 0) + 1,
+    });
+
+    return {
+      isFirstLaunch,
+      isReturningAfterLongAbsence,
+      hoursSinceLastActive,
+    };
+  } catch (error) {
+    logger.error('Failed to record app open:', error);
+    return {
+      isFirstLaunch: false,
+      isReturningAfterLongAbsence: false,
+      hoursSinceLastActive: null,
+    };
+  }
+};
+
+/**
+ * Check if a milestone has been celebrated
+ */
+export const hasCelebratedMilestone = async (
+  milestoneId: MilestoneId
+): Promise<boolean> => {
+  try {
+    const profile = await loadUserProfile();
+    return profile.celebratedMilestones?.includes(milestoneId) ?? false;
+  } catch (error) {
+    logger.error('Failed to check milestone:', error);
+    return false;
+  }
+};
+
+/**
+ * Mark a milestone as celebrated
+ */
+export const markMilestoneCelebrated = async (
+  milestoneId: MilestoneId
+): Promise<void> => {
+  try {
+    const profile = await loadUserProfile();
+    const currentMilestones = profile.celebratedMilestones || [];
+
+    if (!currentMilestones.includes(milestoneId)) {
+      await saveUserProfile({
+        celebratedMilestones: [...currentMilestones, milestoneId],
+      });
+    }
+  } catch (error) {
+    logger.error('Failed to mark milestone celebrated:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get all celebrated milestones
+ */
+export const getCelebratedMilestones = async (): Promise<MilestoneId[]> => {
+  try {
+    const profile = await loadUserProfile();
+    return profile.celebratedMilestones || [];
+  } catch (error) {
+    logger.error('Failed to get celebrated milestones:', error);
+    return [];
   }
 };

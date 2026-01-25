@@ -1484,5 +1484,35 @@
     "streakAlertDescription": "Evening reminder if you haven't meditated today",
     "streakAlertTime": "Alert Time",
     "privacyNote": "Reminders are scheduled locally. No data is sent to external servers."
+  },
+  "welcome": {
+    "returning": {
+      "morning": "Good morning",
+      "afternoon": "Welcome back",
+      "evening": "Good evening",
+      "night": "Peaceful night",
+      "morningPersonal": "Good morning, {{name}}",
+      "afternoonPersonal": "Welcome back, {{name}}",
+      "eveningPersonal": "Good evening, {{name}}",
+      "nightPersonal": "Peaceful night, {{name}}",
+      "subtitle1": "Ready for a moment of calm?",
+      "subtitle2": "Your space of peace awaits",
+      "subtitle3": "Take a breath, you're here now"
+    },
+    "tapToDismiss": "Tap to continue"
+  },
+  "celebration": {
+    "firstLaunch": "Welcome to your mindfulness journey",
+    "milestone": {
+      "firstSession": "You completed your first session!",
+      "sessions10": "10 sessions completed!",
+      "sessions25": "25 sessions - Amazing progress!",
+      "sessions50": "50 sessions - You're dedicated!",
+      "sessions100": "100 sessions - True master!",
+      "streak7": "7 day streak - One week strong!",
+      "streak14": "14 day streak - Two weeks of calm!",
+      "streak30": "30 day streak - One month milestone!",
+      "streak100": "100 day streak - Legendary!"
+    }
   }
 }

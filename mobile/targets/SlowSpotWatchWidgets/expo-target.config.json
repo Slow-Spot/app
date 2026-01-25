@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/evanbacon/apple-targets/main/schema/expo-target.config.schema.json",
+  "type": "widget",
+  "name": "SlowSpotWatchWidgets",
+  "bundleIdentifier": ".watch.widgets",
+  "deploymentTarget": "9.0",
+  "entitlements": {
+    "com.apple.security.application-groups": ["group.com.slowspot.app"]
+  },
+  "infoPlist": {
+    "CFBundleDisplayName": "Slow Spot Widgets"
+  },
+  "frameworks": [
+    "WidgetKit",
+    "SwiftUI"
+  ]
+}

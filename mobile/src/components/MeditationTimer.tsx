@@ -21,6 +21,9 @@ import { ChimePoint } from '../types/customSession';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { ConfirmationModal } from './ConfirmationModal';
 import { BreathingPattern, BreathingTiming } from '../services/customSessionStorage';
+import { backgroundTimer } from '../services/backgroundTimer';
+import { liveActivityService } from '../services/liveActivityService';
+import { androidWidgetService } from '../services/androidWidgetService';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -488,23 +491,105 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     }
   }, [remainingSeconds, adjustableChimes, totalSeconds]);
 
-  // Timer countdown
+  // Background Timer - utrzymuje sesję gdy app jest w tle
+  const sessionStartedRef = useRef(false);
+  const backgroundSessionIdRef = useRef<string | null>(null);
+  const liveActivityIdRef = useRef<string | null>(null);
+
+  // Inicjalizacja background timer i Live Activity przy starcie sesji
   useEffect(() => {
-    if (!isRunning || remainingSeconds <= 0) return;
+    const startBackgroundTimer = async () => {
+      if (sessionStartedRef.current) return;
+      sessionStartedRef.current = true;
 
-    const interval = setInterval(() => {
-      setRemainingSeconds((prev) => {
-        if (prev <= 1) {
-          setIsRunning(false);
-          onComplete();
-          return 0;
+      try {
+        // Start background timer
+        const sessionId = await backgroundTimer.startSession(
+          totalSeconds,
+          (remaining, _elapsed) => {
+            setRemainingSeconds(remaining);
+            if (remaining <= 0) {
+              setIsRunning(false);
+              // Zakończ Live Activity i Android widget z komunikatem sukcesu
+              liveActivityService.endActivity(true);
+              androidWidgetService.endSession();
+              onComplete();
+            }
+          },
+          async () => {
+            setIsRunning(false);
+            // Zakończ Live Activity i Android widget z komunikatem sukcesu
+            await liveActivityService.endActivity(true);
+            await androidWidgetService.endSession();
+            onComplete();
+          }
+        );
+        backgroundSessionIdRef.current = sessionId;
+        logger.log(`Background timer session started: ${sessionId}`);
+
+        // Start iOS Live Activity (lock screen widget)
+        const activityId = await liveActivityService.startMeditationActivity(
+          totalSeconds,
+          t('meditation.title', 'Meditation')
+        );
+        if (activityId) {
+          liveActivityIdRef.current = activityId;
+          logger.log(`Live Activity started: ${activityId}`);
         }
-        return prev - 1;
-      });
-    }, 1000);
 
-    return () => clearInterval(interval);
-  }, [isRunning, remainingSeconds, onComplete]);
+        // Start Android widget
+        await androidWidgetService.startSession(totalSeconds);
+      } catch (error) {
+        logger.error('Failed to start background timer:', error);
+      }
+    };
+
+    startBackgroundTimer();
+
+    // Cleanup przy unmount
+    return () => {
+      backgroundTimer.stopSession();
+      liveActivityService.endActivity(false);
+      androidWidgetService.endSession();
+      sessionStartedRef.current = false;
+      backgroundSessionIdRef.current = null;
+      liveActivityIdRef.current = null;
+    };
+  }, [totalSeconds, onComplete, t]);
+
+  // Obsługa pause/resume z background timer, Live Activity i Android widget
+  useEffect(() => {
+    const handlePauseResume = async () => {
+      if (!sessionStartedRef.current) return;
+
+      try {
+        if (isRunning) {
+          await backgroundTimer.resumeFromPause();
+          // Aktualizuj Live Activity z nowym czasem końca
+          if (liveActivityIdRef.current) {
+            await liveActivityService.updateRemainingTime(remainingSeconds, false);
+          }
+          // Aktualizuj Android widget
+          await androidWidgetService.resumeSession(remainingSeconds, totalSeconds);
+        } else {
+          await backgroundTimer.pauseSession();
+          // Aktualizuj Live Activity jako spauzowane
+          if (liveActivityIdRef.current) {
+            await liveActivityService.updateRemainingTime(remainingSeconds, true);
+          }
+          // Aktualizuj Android widget
+          await androidWidgetService.pauseSession(remainingSeconds, totalSeconds);
+        }
+      } catch (error) {
+        logger.error('Failed to pause/resume background timer:', error);
+      }
+    };
+
+    // Pomijamy pierwszą inicjalizację (isRunning=true na starcie)
+    if (backgroundSessionIdRef.current) {
+      handlePauseResume();
+    }
+  }, [isRunning, remainingSeconds]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
