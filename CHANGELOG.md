@@ -1,3 +1,9 @@
+## [1.14.0-beta.11](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.10...v1.14.0-beta.11) (2026-01-25)
+
+### Bug Fixes
+
+* **mobile:** configure App Groups for Live Activity on lock screen ([8dccecc](https://github.com/Slow-Spot/app/commit/8dccecc37565cd8d8b436cc7f2103039d9c73016))
+
 ## [1.14.0-beta.10](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.9...v1.14.0-beta.10) (2026-01-25)
 
 ### Bug Fixes
