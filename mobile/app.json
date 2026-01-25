@@ -22,6 +22,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.slowspot.app",
+      "appleTeamId": "QQHRMJ6B78",
       "privacyManifests": {
         "NSPrivacyAccessedAPITypes": [
           {

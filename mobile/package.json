@@ -6,6 +6,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
+    "prebuild": "expo prebuild && node scripts/fix-live-activity-entitlements.js",
+    "prebuild:clean": "expo prebuild --clean && node scripts/fix-live-activity-entitlements.js",
     "web": "expo start --web",
     "build:ios": "eas build --platform ios --profile production",
     "build:android": "eas build --platform android --profile production",
