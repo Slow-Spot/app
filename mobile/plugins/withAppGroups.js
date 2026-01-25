@@ -12,7 +12,7 @@ const plist = require('@expo/plist');
 const fs = require('fs');
 const path = require('path');
 
-const APP_GROUP_IDENTIFIER = 'group.expoLiveActivity.sharedData';
+const APP_GROUP_IDENTIFIER = 'group.com.slowspot.app.shared';
 
 /**
  * Dodaje App Group do glownej aplikacji

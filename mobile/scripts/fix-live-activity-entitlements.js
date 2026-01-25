@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 /**
- * Post-prebuild script - Fix Live Activity Entitlements
+ * Post-prebuild script - Fix Live Activity Entitlements & App Group
  *
- * Ten skrypt dodaje App Group do entitlements dla LiveActivity widget.
+ * Ten skrypt:
+ * 1. Dodaje App Group do entitlements dla LiveActivity widget
+ * 2. Aktualizuje App Group identifier w kodzie Swift
+ *
  * Uruchamiany automatycznie po prebuild przez npm script.
  */
 
@@ -10,14 +13,19 @@ const plist = require('@expo/plist').default;
 const fs = require('fs');
 const path = require('path');
 
-const APP_GROUP_IDENTIFIER = 'group.expoLiveActivity.sharedData';
+// WAZNE: Ten identyfikator musi byc taki sam jak w Apple Developer Portal
+const APP_GROUP_IDENTIFIER = 'group.com.slowspot.app.shared';
+
+// Stary identyfikator z expo-live-activity (do zamiany)
+const OLD_APP_GROUP_IDENTIFIER = 'group.expoLiveActivity.sharedData';
 
 const projectRoot = path.resolve(__dirname, '..');
 const iosRoot = path.join(projectRoot, 'ios');
 
-// Sciezki do plikow entitlements
+// Sciezki do plikow
 const mainAppEntitlements = path.join(iosRoot, 'SlowSpot', 'SlowSpot.entitlements');
 const widgetEntitlements = path.join(iosRoot, 'LiveActivity', 'LiveActivity.entitlements');
+const swiftImageFile = path.join(iosRoot, 'LiveActivity', 'Image+dynamic.swift');
 
 function fixEntitlements(filePath, name) {
   if (!fs.existsSync(filePath)) {
@@ -32,28 +40,62 @@ function fixEntitlements(filePath, name) {
     try {
       entitlements = plist.parse(content);
     } catch (e) {
-      // Jesli parsowanie sie nie powiedzie, zacznij od pustego obiektu
       entitlements = {};
     }
 
-    // Dodaj App Group jesli nie istnieje
-    if (!entitlements['com.apple.security.application-groups'] ||
-        !entitlements['com.apple.security.application-groups'].includes(APP_GROUP_IDENTIFIER)) {
+    // Dodaj App Group jesli nie istnieje lub ma stary identyfikator
+    const currentGroups = entitlements['com.apple.security.application-groups'] || [];
+    const hasCorrectGroup = currentGroups.includes(APP_GROUP_IDENTIFIER);
 
-      entitlements['com.apple.security.application-groups'] = [APP_GROUP_IDENTIFIER];
+    if (!hasCorrectGroup) {
+      // Usun stary identyfikator jesli istnieje
+      const filteredGroups = currentGroups.filter(g => g !== OLD_APP_GROUP_IDENTIFIER);
+      entitlements['com.apple.security.application-groups'] = [...filteredGroups, APP_GROUP_IDENTIFIER];
 
       fs.writeFileSync(filePath, plist.build(entitlements));
       console.log(`[fix-entitlements] Added App Group to ${name}: ${APP_GROUP_IDENTIFIER}`);
     } else {
-      console.log(`[fix-entitlements] ${name} already has App Group configured`);
+      console.log(`[fix-entitlements] ${name} already has correct App Group`);
     }
   } catch (error) {
     console.error(`[fix-entitlements] Error processing ${name}:`, error);
   }
 }
 
+function fixSwiftAppGroup(filePath) {
+  if (!fs.existsSync(filePath)) {
+    console.log(`[fix-swift] Image+dynamic.swift not found: ${filePath}`);
+    return;
+  }
+
+  try {
+    let content = fs.readFileSync(filePath, 'utf8');
+
+    if (content.includes(OLD_APP_GROUP_IDENTIFIER)) {
+      content = content.replace(
+        new RegExp(OLD_APP_GROUP_IDENTIFIER.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+        APP_GROUP_IDENTIFIER
+      );
+      fs.writeFileSync(filePath, content);
+      console.log(`[fix-swift] Updated App Group in Image+dynamic.swift: ${APP_GROUP_IDENTIFIER}`);
+    } else if (content.includes(APP_GROUP_IDENTIFIER)) {
+      console.log(`[fix-swift] Image+dynamic.swift already has correct App Group`);
+    } else {
+      console.log(`[fix-swift] No App Group identifier found in Image+dynamic.swift`);
+    }
+  } catch (error) {
+    console.error(`[fix-swift] Error processing Image+dynamic.swift:`, error);
+  }
+}
+
 // Uruchom poprawki
-console.log('[fix-entitlements] Fixing Live Activity entitlements...');
+console.log('[fix-live-activity] Fixing Live Activity configuration...');
+console.log(`[fix-live-activity] App Group: ${APP_GROUP_IDENTIFIER}`);
+console.log('');
+
 fixEntitlements(mainAppEntitlements, 'Main App');
 fixEntitlements(widgetEntitlements, 'LiveActivity Widget');
-console.log('[fix-entitlements] Done!');
+fixSwiftAppGroup(swiftImageFile);
+
+console.log('');
+console.log('[fix-live-activity] Done!');
