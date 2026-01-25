@@ -46,9 +46,7 @@
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
           "NSExceptionDomains": {}
-        },
-        "LSMinimumSystemVersion": "13.0",
-        "MinimumOSVersion": "13.0"
+        }
       },
       "config": {
         "usesNonExemptEncryption": false
@@ -103,6 +101,9 @@
       [
         "expo-build-properties",
         {
+          "ios": {
+            "deploymentTarget": "15.1"
+          },
           "android": {
             "enableProguardInReleaseBuilds": true,
             "enableShrinkResourcesInReleaseBuilds": true,
