@@ -26,7 +26,8 @@ const withMainAppGroup = (config) => {
 
 /**
  * Naprawia wersje we wszystkich targetach - ustawia taka sama jak glowna aplikacja
- * Problem: @bacons/apple-targets ustawia 11400 zamiast buildNumber
+ * Problem: @bacons/apple-targets i Watch app moga miec inne wersje niz glowna aplikacja
+ * Rozwiazanie: Ujednolicamy wszystkie CURRENT_PROJECT_VERSION do wartosci z EAS
  */
 const fixBuildVersions = (projectRoot) => {
   const pbxprojPath = path.join(projectRoot, 'SlowSpot.xcodeproj', 'project.pbxproj');
@@ -41,13 +42,28 @@ const fixBuildVersions = (projectRoot) => {
   // Pobierz buildNumber z EAS lub ustaw domyslna wartosc
   const targetVersion = process.env.EAS_BUILD_IOS_BUILD_NUMBER || '1';
 
-  // Zamien 11400 na prawidlowa wersje
-  if (content.includes('CURRENT_PROJECT_VERSION = 11400;')) {
-    content = content.replace(/CURRENT_PROJECT_VERSION = 11400;/g, `CURRENT_PROJECT_VERSION = ${targetVersion};`);
+  // Znajdz wszystkie unikalne wersje w projekcie
+  const versionMatches = content.match(/CURRENT_PROJECT_VERSION = (\d+);/g) || [];
+  const uniqueVersions = [...new Set(versionMatches.map(m => m.match(/\d+/)[0]))];
+
+  console.log(`[withAppGroups] Found versions: ${uniqueVersions.join(', ')}, target: ${targetVersion}`);
+
+  // Zamien wszystkie wersje ktore NIE sa targetVersion na targetVersion
+  let modified = false;
+  for (const version of uniqueVersions) {
+    if (version !== targetVersion) {
+      const regex = new RegExp(`CURRENT_PROJECT_VERSION = ${version};`, 'g');
+      content = content.replace(regex, `CURRENT_PROJECT_VERSION = ${targetVersion};`);
+      console.log(`[withAppGroups] Fixed version: ${version} -> ${targetVersion}`);
+      modified = true;
+    }
+  }
+
+  if (modified) {
     fs.writeFileSync(pbxprojPath, content);
-    console.log(`[withAppGroups] Fixed build versions: 11400 -> ${targetVersion}`);
+    console.log(`[withAppGroups] All versions synchronized to ${targetVersion}`);
   } else {
-    console.log('[withAppGroups] No 11400 versions found, versions OK');
+    console.log('[withAppGroups] All versions already match, no changes needed');
   }
 };
 
