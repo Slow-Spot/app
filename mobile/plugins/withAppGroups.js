@@ -27,7 +27,7 @@ const withMainAppGroup = (config) => {
 /**
  * Naprawia wersje we wszystkich targetach - ustawia taka sama jak glowna aplikacja
  * Problem: @bacons/apple-targets i Watch app moga miec inne wersje niz glowna aplikacja
- * Rozwiazanie: Ujednolicamy wszystkie CURRENT_PROJECT_VERSION do wartosci z EAS
+ * Rozwiazanie: Ujednolicamy wszystkie CURRENT_PROJECT_VERSION do wartosci z app.json
  */
 const fixBuildVersions = (projectRoot) => {
   const pbxprojPath = path.join(projectRoot, 'SlowSpot.xcodeproj', 'project.pbxproj');
@@ -39,8 +39,18 @@ const fixBuildVersions = (projectRoot) => {
 
   let content = fs.readFileSync(pbxprojPath, 'utf8');
 
-  // Pobierz buildNumber z EAS lub ustaw domyslna wartosc
-  const targetVersion = process.env.EAS_BUILD_IOS_BUILD_NUMBER || '1';
+  // Pobierz buildNumber z app.json jako zrodlo prawdy
+  let targetVersion = '1';
+  try {
+    const appJsonPath = path.join(projectRoot, '..', 'app.json');
+    const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
+    targetVersion = appJson.expo?.ios?.buildNumber || '1';
+    console.log(`[withAppGroups] Read buildNumber from app.json: ${targetVersion}`);
+  } catch (e) {
+    // Fallback do zmiennej srodowiskowej EAS
+    targetVersion = process.env.EAS_BUILD_IOS_BUILD_NUMBER || '1';
+    console.log(`[withAppGroups] Using EAS_BUILD_IOS_BUILD_NUMBER: ${targetVersion}`);
+  }
 
   // Znajdz wszystkie unikalne wersje w projekcie
   const versionMatches = content.match(/CURRENT_PROJECT_VERSION = (\d+);/g) || [];

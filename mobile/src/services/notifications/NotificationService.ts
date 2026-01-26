@@ -523,6 +523,13 @@ class NotificationService {
   /**
    * Schedule a notification for when meditation session completes
    * Used to play sound when app is in background/suspended
+   *
+   * Custom Sound Setup:
+   * 1. Convert meditation-bell.mp3 to .wav format (iOS requirement)
+   *    Command: ffmpeg -i meditation-bell.mp3 -acodec pcm_s16le -ar 44100 meditation-bell.wav
+   * 2. Place the .wav file in assets/sounds/
+   * 3. Add to app.json expo-notifications plugin sounds array
+   * 4. Rebuild the app (expo prebuild && npx pod-install)
    */
   async scheduleSessionCompletionNotification(secondsUntilEnd: number): Promise<string | null> {
     try {
@@ -531,11 +538,16 @@ class NotificationService {
 
       if (secondsUntilEnd <= 0) return null;
 
+      // Custom meditation bell sound - falls back to default if not available
+      // iOS: requires .wav/.caf/.aiff file in app bundle (configured in app.json)
+      // Android: can use any sound file
+      const customSound = Platform.OS === 'ios' ? 'meditation-bell.wav' : 'meditation_bell';
+
       const identifier = await Notifications.scheduleNotificationAsync({
         content: {
           title: i18n.t('meditation.sessionComplete', 'Session Complete'),
           body: i18n.t('meditation.wellDone', 'Well done! Take a moment to enjoy the stillness.'),
-          sound: 'default', // iOS will play default notification sound
+          sound: customSound,
           data: { type: 'session_complete' },
         },
         trigger: {
