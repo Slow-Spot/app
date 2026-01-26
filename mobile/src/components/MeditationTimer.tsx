@@ -1,6 +1,6 @@
 import { logger } from '../utils/logger';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Pressable, AppState, AppStateStatus } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
 import { useTranslation } from 'react-i18next';
 import { createAudioPlayer, AudioPlayer } from 'expo-audio';
@@ -24,6 +24,7 @@ import { BreathingPattern, BreathingTiming } from '../services/customSessionStor
 import { backgroundTimer } from '../services/backgroundTimer';
 import { liveActivityService } from '../services/liveActivityService';
 import { androidWidgetService } from '../services/androidWidgetService';
+import { notificationService } from '../services/notifications/NotificationService';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -539,6 +540,9 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
         // Start Android widget
         await androidWidgetService.startSession(totalSeconds);
+
+        // Schedule notification for session completion (plays sound when app in background)
+        await notificationService.scheduleSessionCompletionNotification(totalSeconds);
       } catch (error) {
         logger.error('Failed to start background timer:', error);
       }
@@ -551,6 +555,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       backgroundTimer.stopSession();
       liveActivityService.endActivity(false);
       androidWidgetService.endSession();
+      notificationService.cancelSessionCompletionNotification();
       sessionStartedRef.current = false;
       backgroundSessionIdRef.current = null;
       liveActivityIdRef.current = null;
@@ -571,6 +576,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           }
           // Aktualizuj Android widget
           await androidWidgetService.resumeSession(remainingSeconds, totalSeconds);
+          // Reschedule session completion notification
+          await notificationService.rescheduleSessionCompletionNotification(remainingSeconds);
         } else {
           await backgroundTimer.pauseSession();
           // Aktualizuj Live Activity jako spauzowane
@@ -579,6 +586,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           }
           // Aktualizuj Android widget
           await androidWidgetService.pauseSession(remainingSeconds, totalSeconds);
+          // Cancel session completion notification when paused
+          await notificationService.cancelSessionCompletionNotification();
         }
       } catch (error) {
         logger.error('Failed to pause/resume background timer:', error);
@@ -590,6 +599,41 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       handlePauseResume();
     }
   }, [isRunning, remainingSeconds]);
+
+  // Synchronizacja stanu przy powrocie z background
+  // Naprawia problem gdy użytkownik klika w Live Activity widget
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active' && sessionStartedRef.current) {
+        // App wraca na pierwszy plan - synchronizuj czas z backgroundTimer
+        const actualRemaining = backgroundTimer.getRemainingSeconds();
+        const isPaused = backgroundTimer.isSessionPaused();
+
+        logger.log(`App returned to foreground, syncing timer: ${actualRemaining}s, paused: ${isPaused}`);
+
+        // Cancel completion notification when user returns to app (will hear gong in app)
+        await notificationService.cancelSessionCompletionNotification();
+
+        // Aktualizuj stan UI
+        setRemainingSeconds(actualRemaining);
+        setIsRunning(!isPaused);
+
+        // Sprawdź czy sesja się skończyła w tle
+        if (actualRemaining <= 0) {
+          setIsRunning(false);
+          liveActivityService.endActivity(true);
+          androidWidgetService.endSession();
+          onComplete();
+        } else if (!isPaused) {
+          // Reschedule notification for remaining time if session still running
+          await notificationService.rescheduleSessionCompletionNotification(actualRemaining);
+        }
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription.remove();
+  }, [onComplete]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);

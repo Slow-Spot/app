@@ -515,6 +515,69 @@ class NotificationService {
   }
 
   // ══════════════════════════════════════════════════════════════
+  // SESSION COMPLETION NOTIFICATION
+  // ══════════════════════════════════════════════════════════════
+
+  private sessionCompletionNotificationId: string | null = null;
+
+  /**
+   * Schedule a notification for when meditation session completes
+   * Used to play sound when app is in background/suspended
+   */
+  async scheduleSessionCompletionNotification(secondsUntilEnd: number): Promise<string | null> {
+    try {
+      // Cancel any existing session completion notification
+      await this.cancelSessionCompletionNotification();
+
+      if (secondsUntilEnd <= 0) return null;
+
+      const identifier = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: i18n.t('meditation.sessionComplete', 'Session Complete'),
+          body: i18n.t('meditation.wellDone', 'Well done! Take a moment to enjoy the stillness.'),
+          sound: 'default', // iOS will play default notification sound
+          data: { type: 'session_complete' },
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: secondsUntilEnd,
+        },
+      });
+
+      this.sessionCompletionNotificationId = identifier;
+      logger.log(`Session completion notification scheduled in ${secondsUntilEnd}s, ID: ${identifier}`);
+      return identifier;
+    } catch (error) {
+      logger.error('Failed to schedule session completion notification:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Cancel session completion notification
+   * Called when session is cancelled, paused, or user returns to app
+   */
+  async cancelSessionCompletionNotification(): Promise<void> {
+    try {
+      if (this.sessionCompletionNotificationId) {
+        await Notifications.cancelScheduledNotificationAsync(this.sessionCompletionNotificationId);
+        logger.log(`Session completion notification cancelled: ${this.sessionCompletionNotificationId}`);
+        this.sessionCompletionNotificationId = null;
+      }
+    } catch (error) {
+      logger.error('Failed to cancel session completion notification:', error);
+    }
+  }
+
+  /**
+   * Reschedule session completion notification with new time
+   * Called when session is resumed from pause
+   */
+  async rescheduleSessionCompletionNotification(secondsUntilEnd: number): Promise<string | null> {
+    return this.scheduleSessionCompletionNotification(secondsUntilEnd);
+  }
+
+  // ══════════════════════════════════════════════════════════════
   // UTILITIES
   // ══════════════════════════════════════════════════════════════
 
