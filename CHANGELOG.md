@@ -1,3 +1,9 @@
+## [1.14.0-beta.14](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.13...v1.14.0-beta.14) (2026-01-26)
+
+### Bug Fixes
+
+* **mobile:** register withAppGroups plugin and add EAS pre-build hook ([0f02bff](https://github.com/Slow-Spot/app/commit/0f02bff08aaa5645f6b84b5bd47e48b6eaf320be))
+
 ## [1.14.0-beta.13](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.12...v1.14.0-beta.13) (2026-01-26)
 
 ### Bug Fixes
