@@ -71,6 +71,9 @@
     }
   },
   "submit": {
+    "preview": {
+      "extends": "production"
+    },
     "production": {
       "ios": {
         "appleId": "leszekszpunar@gmail.com",
