@@ -159,7 +159,10 @@
     "saveSession": "Save Session",
     "sessionNotesPlaceholder": "Add notes about your session...",
     "sessionComplete": "Session Complete",
-    "sessionEnded": "Session Ended"
+    "sessionEnded": "Session Ended",
+    "minSession": "{{count}} min session",
+    "minRemaining": "{{count}} min remaining",
+    "paused": "Paused"
   },
   "instructions": {
     "timeOfDay": {

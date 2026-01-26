@@ -159,7 +159,10 @@
     "saveSession": "Zapisz sesję",
     "sessionNotesPlaceholder": "Dodaj notatki o sesji...",
     "sessionComplete": "Sesja zakończona",
-    "sessionEnded": "Sesja zakończona"
+    "sessionEnded": "Sesja zakończona",
+    "minSession": "{{count}} min sesja",
+    "minRemaining": "{{count}} min pozostało",
+    "paused": "Wstrzymano"
   },
   "instructions": {
     "timeOfDay": {

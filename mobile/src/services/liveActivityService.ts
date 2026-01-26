@@ -12,6 +12,7 @@
 
 import { Platform } from 'react-native';
 import { logger } from '../utils/logger';
+import i18n from '../i18n';
 
 // Brand colors dla Slow Spot
 const BRAND_COLORS = {
@@ -82,7 +83,7 @@ class LiveActivityService {
     try {
       const state: import('expo-live-activity').LiveActivityState = {
         title: sessionTitle,
-        subtitle: `${minutes} min session`,
+        subtitle: i18n.t('meditation.minSession', { count: minutes }),
         progressBar: {
           date: endTime,
         },
@@ -110,7 +111,7 @@ class LiveActivityService {
         this.currentActivityId = activityId;
         lastCachedState = {
           title: sessionTitle,
-          subtitle: `${minutes} min session`,
+          subtitle: i18n.t('meditation.minSession', { count: minutes }),
           imageName: 'meditation_timer',
           dynamicIslandImageName: 'meditation_small',
         };
@@ -143,7 +144,7 @@ class LiveActivityService {
 
     try {
       const minutes = Math.ceil(remainingSeconds / 60);
-      const subtitle = isPaused ? 'Paused' : `${minutes} min remaining`;
+      const subtitle = isPaused ? i18n.t('meditation.paused', 'Paused') : i18n.t('meditation.minRemaining', { count: minutes });
       const endTime = Date.now() + remainingSeconds * 1000;
 
       const updateState: import('expo-live-activity').LiveActivityState = {
@@ -182,8 +183,8 @@ class LiveActivityService {
 
     try {
       const completionState: import('expo-live-activity').LiveActivityState = {
-        title: showCompletionState ? 'Session Complete' : (lastCachedState?.title || 'Meditation'),
-        subtitle: showCompletionState ? 'Well done!' : (lastCachedState?.subtitle || ''),
+        title: showCompletionState ? i18n.t('meditation.sessionComplete', 'Session Complete') : (lastCachedState?.title || i18n.t('meditation.title', 'Meditation')),
+        subtitle: showCompletionState ? i18n.t('meditation.wellDone', 'Well done!') : (lastCachedState?.subtitle || ''),
         progressBar: { progress: 1 },
         imageName: lastCachedState?.imageName || 'meditation_timer',
         dynamicIslandImageName: lastCachedState?.dynamicIslandImageName || 'meditation_small',
