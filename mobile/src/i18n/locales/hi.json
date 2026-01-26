@@ -1450,6 +1450,8 @@
     "animationsDescription": "ऐप में एनिमेशन सक्षम या अक्षम करें",
     "hapticFeedback": "हैप्टिक फीडबैक",
     "hapticFeedbackDescription": "इंटरैक्शन पर सूक्ष्म स्पर्श प्रतिक्रिया",
+    "zenMode": "ज़ेन मोड",
+    "zenModeDesc": "ध्यान के दौरान UI छुपाएं, केवल सांस पर ध्यान दें",
     "themes": {
       "purple": "शांत बैंगनी",
       "teal": "सामंजस्यपूर्ण टील",

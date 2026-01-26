@@ -1450,6 +1450,8 @@
     "animationsDescription": "Activer ou désactiver les animations dans l'application",
     "hapticFeedback": "Retour Haptique",
     "hapticFeedbackDescription": "Retour tactile subtil sur les interactions",
+    "zenMode": "Mode Zen",
+    "zenModeDesc": "Masquer l'interface pendant la méditation, se concentrer uniquement sur la respiration",
     "themes": {
       "purple": "Violet Calme",
       "teal": "Bleu-Vert Harmonieux",

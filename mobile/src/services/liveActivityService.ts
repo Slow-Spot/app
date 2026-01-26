@@ -4,6 +4,12 @@
  * Wrapper dla iOS Live Activities - pokazuje timer na lock screen i Dynamic Island.
  * Używa expo-live-activity dla natywnej integracji.
  *
+ * Filozofia UX (Mindful Updates):
+ * - Timer countdown jest obsługiwany NATYWNIE przez iOS (progressBar.date)
+ * - updateRemainingTime() wywoływane TYLKO przy zmianie stanu (pause/resume)
+ * - Minimalna liczba update'ów = płynna animacja bez skoków
+ * - iOS sam liczy czas - nie potrzebujemy co-sekundowych aktualizacji
+ *
  * Ograniczenia:
  * - Tylko iOS 16.1+
  * - Max 8 godzin aktywności
@@ -129,6 +135,13 @@ class LiveActivityService {
 
   /**
    * Aktualizuje pozostały czas w Live Activity
+   *
+   * UWAGA: Wywołuj TYLKO przy:
+   * - Pause (isPaused=true) - pokazuje "Paused" i zatrzymuje timer
+   * - Resume (isPaused=false) - ustawia nowy endTime i wznawia odliczanie
+   *
+   * NIE wywołuj co sekundę - iOS sam obsługuje countdown natywnie!
+   * Dzięki temu animacja jest płynna bez "skoków".
    */
   async updateRemainingTime(remainingSeconds: number, isPaused: boolean = false): Promise<boolean> {
     if (!this.currentActivityId || !lastCachedState) {

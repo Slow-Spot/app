@@ -1454,6 +1454,8 @@
     "animationsDescription": "Włącz lub wyłącz animacje w aplikacji",
     "hapticFeedback": "Wibracje",
     "hapticFeedbackDescription": "Subtelny feedback dotykowy przy interakcjach",
+    "zenMode": "Tryb Zen",
+    "zenModeDesc": "Ukryj interfejs podczas medytacji, skup się tylko na oddychaniu",
     "themes": {
       "purple": "Spokojny fiolet",
       "teal": "Harmonijny turkus",

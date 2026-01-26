@@ -1450,6 +1450,8 @@
     "animationsDescription": "启用或禁用应用中的动画",
     "hapticFeedback": "触觉反馈",
     "hapticFeedbackDescription": "交互时的微妙触感反馈",
+    "zenMode": "禅修模式",
+    "zenModeDesc": "冥想时隐藏界面，仅专注于呼吸",
     "themes": {
       "purple": "平静紫",
       "teal": "和谐青",

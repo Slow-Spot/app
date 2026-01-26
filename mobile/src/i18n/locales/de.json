@@ -1450,6 +1450,8 @@
     "animationsDescription": "Aktiviere oder deaktiviere Animationen in der App",
     "hapticFeedback": "Haptisches Feedback",
     "hapticFeedbackDescription": "Subtiles Berührungsfeedback bei Interaktionen",
+    "zenMode": "Zen-Modus",
+    "zenModeDesc": "UI während der Meditation ausblenden, nur auf die Atmung konzentrieren",
     "themes": {
       "purple": "Ruhiges Lila",
       "teal": "Harmonisches Türkis",
