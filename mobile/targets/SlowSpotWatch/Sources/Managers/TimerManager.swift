@@ -161,7 +161,7 @@ class TimerManager: ObservableObject {
         haptic.sessionComplete()
 
         // Save to HealthKit
-        if let startTime = sessionStartTime {
+        if sessionStartTime != nil {
             let actualDuration = completedSeconds - Int(pausedTime)
             healthKit.saveMindfulSession(duration: actualDuration) { success, error in
                 if success {
