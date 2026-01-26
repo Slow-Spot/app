@@ -1,3 +1,9 @@
+## [1.14.0-beta.15](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.14...v1.14.0-beta.15) (2026-01-26)
+
+### Bug Fixes
+
+* **mobile:** remove unused variable warning in TimerManager ([9e04e85](https://github.com/Slow-Spot/app/commit/9e04e856e950c177f9be4a9d5a9e9416aceb0357))
+
 ## [1.14.0-beta.14](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.13...v1.14.0-beta.14) (2026-01-26)
 
 ### Bug Fixes
