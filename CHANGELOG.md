@@ -1,3 +1,9 @@
+## [1.14.0-beta.16](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.15...v1.14.0-beta.16) (2026-01-26)
+
+### Bug Fixes
+
+* **mobile:** resolve CFBundleVersion mismatch for Watch app ([2929171](https://github.com/Slow-Spot/app/commit/292917150dd502c6d708cb0f369e7adc3ae1fba7))
+
 ## [1.14.0-beta.15](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.14...v1.14.0-beta.15) (2026-01-26)
 
 ### Bug Fixes
