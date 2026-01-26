@@ -113,6 +113,7 @@
         }
       ],
       "expo-live-activity",
+      "./plugins/withAppGroups",
       [
         "react-native-android-widget",
         {

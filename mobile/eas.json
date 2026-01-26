@@ -12,9 +12,6 @@
       "cache": {
         "disabled": false,
         "paths": ["node_modules"]
-      },
-      "ios": {
-        "prebuildCommand": "npm run prebuild:clean"
       }
     },
     "development": {
@@ -25,7 +22,6 @@
         "APP_ENV": "development"
       },
       "ios": {
-        "prebuildCommand": "npm run prebuild:clean",
         "simulator": true,
         "buildConfiguration": "Debug"
       },
@@ -41,7 +37,6 @@
         "APP_ENV": "preview"
       },
       "ios": {
-        "prebuildCommand": "npm run prebuild:clean",
         "simulator": false,
         "resourceClass": "m-medium",
         "buildConfiguration": "Release",
@@ -57,7 +52,6 @@
       "extends": "base",
       "channel": "production",
       "ios": {
-        "prebuildCommand": "npm run prebuild:clean",
         "resourceClass": "m-medium",
         "buildConfiguration": "Release",
         "autoIncrement": "buildNumber"
@@ -71,7 +65,6 @@
       "extends": "base",
       "distribution": "internal",
       "ios": {
-        "prebuildCommand": "npm run prebuild:clean",
         "simulator": true,
         "buildConfiguration": "Release"
       }
