@@ -159,7 +159,12 @@
     "saveSession": "保存课程",
     "sessionNotesPlaceholder": "添加课程笔记...",
     "sessionComplete": "课程完成",
-    "sessionEnded": "课程结束"
+    "sessionEnded": "课程结束",
+    "minSession_one": "1分钟课程",
+    "minSession_other": "{{count}}分钟课程",
+    "minRemaining_one": "剩余1分钟",
+    "minRemaining_other": "剩余{{count}}分钟",
+    "paused": "已暂停"
   },
   "instructions": {
     "timeOfDay": {

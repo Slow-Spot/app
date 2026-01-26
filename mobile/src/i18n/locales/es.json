@@ -159,7 +159,12 @@
     "saveSession": "Guardar sesión",
     "sessionNotesPlaceholder": "Añade notas sobre tu sesión...",
     "sessionComplete": "Sesión completada",
-    "sessionEnded": "Sesión terminada"
+    "sessionEnded": "Sesión terminada",
+    "minSession_one": "Sesión de 1 minuto",
+    "minSession_other": "Sesión de {{count}} minutos",
+    "minRemaining_one": "Queda 1 minuto",
+    "minRemaining_other": "Quedan {{count}} minutos",
+    "paused": "Pausado"
   },
   "instructions": {
     "timeOfDay": {

@@ -159,7 +159,12 @@
     "endSessionCancel": "Continuer",
     "endSessionConfirm": "End Session",
     "sessionComplete": "Séance terminée",
-    "sessionEnded": "Séance terminée"
+    "sessionEnded": "Séance terminée",
+    "minSession_one": "Séance de 1 minute",
+    "minSession_other": "Séance de {{count}} minutes",
+    "minRemaining_one": "1 minute restante",
+    "minRemaining_other": "{{count}} minutes restantes",
+    "paused": "En pause"
   },
   "quotes": {
     "title": "Inspirations",

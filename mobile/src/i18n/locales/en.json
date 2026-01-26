@@ -160,8 +160,10 @@
     "sessionNotesPlaceholder": "Add notes about your session...",
     "sessionComplete": "Session Complete",
     "sessionEnded": "Session Ended",
-    "minSession": "{{count}} min session",
-    "minRemaining": "{{count}} min remaining",
+    "minSession_one": "1 minute session",
+    "minSession_other": "{{count}} minute session",
+    "minRemaining_one": "1 minute remaining",
+    "minRemaining_other": "{{count}} minutes remaining",
     "paused": "Paused"
   },
   "instructions": {

@@ -159,7 +159,12 @@
     "saveSession": "Sitzung speichern",
     "sessionNotesPlaceholder": "Notizen zur Sitzung hinzufügen...",
     "sessionComplete": "Sitzung abgeschlossen",
-    "sessionEnded": "Sitzung beendet"
+    "sessionEnded": "Sitzung beendet",
+    "minSession_one": "1 Minute Sitzung",
+    "minSession_other": "{{count}} Minuten Sitzung",
+    "minRemaining_one": "Noch 1 Minute",
+    "minRemaining_other": "Noch {{count}} Minuten",
+    "paused": "Pausiert"
   },
   "quotes": {
     "title": "Inspirierende Zitate",

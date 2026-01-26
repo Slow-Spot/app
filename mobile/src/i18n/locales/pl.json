@@ -160,8 +160,14 @@
     "sessionNotesPlaceholder": "Dodaj notatki o sesji...",
     "sessionComplete": "Sesja zakończona",
     "sessionEnded": "Sesja zakończona",
-    "minSession": "{{count}} min sesja",
-    "minRemaining": "{{count}} min pozostało",
+    "minSession_one": "1 minuta",
+    "minSession_few": "{{count}} minuty",
+    "minSession_many": "{{count}} minut",
+    "minSession_other": "{{count}} minut",
+    "minRemaining_one": "Pozostała 1 minuta",
+    "minRemaining_few": "Pozostały {{count}} minuty",
+    "minRemaining_many": "Pozostało {{count}} minut",
+    "minRemaining_other": "Pozostało {{count}} minut",
     "paused": "Wstrzymano"
   },
   "instructions": {

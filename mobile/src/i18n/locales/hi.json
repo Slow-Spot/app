@@ -159,7 +159,12 @@
     "endSessionCancel": "जारी रखें",
     "endSessionConfirm": "सत्र समाप्त करें",
     "sessionComplete": "सत्र पूर्ण",
-    "sessionEnded": "सत्र समाप्त"
+    "sessionEnded": "सत्र समाप्त",
+    "minSession_one": "1 मिनट का सत्र",
+    "minSession_other": "{{count}} मिनट का सत्र",
+    "minRemaining_one": "1 मिनट शेष",
+    "minRemaining_other": "{{count}} मिनट शेष",
+    "paused": "रुका हुआ"
   },
   "quotes": {
     "title": "प्रेरक उद्धरण",
