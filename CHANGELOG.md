@@ -1,3 +1,9 @@
+## [1.14.0-beta.13](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.12...v1.14.0-beta.13) (2026-01-26)
+
+### Bug Fixes
+
+* **mobile:** add prebuildCommand to EAS config for Live Activity entitlements ([ba51ea7](https://github.com/Slow-Spot/app/commit/ba51ea7c14b6a01cbbbe01a3b1f16bc5bac1e962))
+
 ## [1.14.0-beta.12](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.11...v1.14.0-beta.12) (2026-01-25)
 
 ### Bug Fixes
