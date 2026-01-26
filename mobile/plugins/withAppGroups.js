@@ -25,6 +25,33 @@ const withMainAppGroup = (config) => {
 };
 
 /**
+ * Naprawia wersje we wszystkich targetach - ustawia taka sama jak glowna aplikacja
+ * Problem: @bacons/apple-targets ustawia 11400 zamiast buildNumber
+ */
+const fixBuildVersions = (projectRoot) => {
+  const pbxprojPath = path.join(projectRoot, 'SlowSpot.xcodeproj', 'project.pbxproj');
+
+  if (!fs.existsSync(pbxprojPath)) {
+    console.log('[withAppGroups] project.pbxproj not found');
+    return;
+  }
+
+  let content = fs.readFileSync(pbxprojPath, 'utf8');
+
+  // Pobierz buildNumber z EAS lub ustaw domyslna wartosc
+  const targetVersion = process.env.EAS_BUILD_IOS_BUILD_NUMBER || '1';
+
+  // Zamien 11400 na prawidlowa wersje
+  if (content.includes('CURRENT_PROJECT_VERSION = 11400;')) {
+    content = content.replace(/CURRENT_PROJECT_VERSION = 11400;/g, `CURRENT_PROJECT_VERSION = ${targetVersion};`);
+    fs.writeFileSync(pbxprojPath, content);
+    console.log(`[withAppGroups] Fixed build versions: 11400 -> ${targetVersion}`);
+  } else {
+    console.log('[withAppGroups] No 11400 versions found, versions OK');
+  }
+};
+
+/**
  * Dodaje App Group do LiveActivity widget extension
  * Uzywa withDangerousMod ktory dziala na samym koncu procesu prebuild
  */
@@ -57,6 +84,9 @@ const withWidgetAppGroup = (config) => {
           console.warn(`[withAppGroups] LiveActivity directory not found at ${widgetDir}`);
         }
       }
+
+      // Napraw wersje po zakonczeniu wszystkich pluginow
+      fixBuildVersions(projectRoot);
 
       return config;
     },

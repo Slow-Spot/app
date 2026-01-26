@@ -40,12 +40,12 @@
         "simulator": false,
         "resourceClass": "m-medium",
         "buildConfiguration": "Release",
-        "autoIncrement": "buildNumber"
+        "autoIncrement": false
       },
       "android": {
         "buildType": "apk",
         "gradleCommand": ":app:assembleRelease",
-        "autoIncrement": "versionCode"
+        "autoIncrement": false
       }
     },
     "production": {

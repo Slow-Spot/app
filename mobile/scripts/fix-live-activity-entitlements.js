@@ -21,6 +21,7 @@ const OLD_APP_GROUP_IDENTIFIER = 'group.expoLiveActivity.sharedData';
 
 const projectRoot = path.resolve(__dirname, '..');
 const iosRoot = path.join(projectRoot, 'ios');
+const pbxprojPath = path.join(iosRoot, 'SlowSpot.xcodeproj', 'project.pbxproj');
 
 // Sciezki do plikow
 const mainAppEntitlements = path.join(iosRoot, 'SlowSpot', 'SlowSpot.entitlements');
@@ -88,6 +89,63 @@ function fixSwiftAppGroup(filePath) {
   }
 }
 
+function syncBuildVersions() {
+  if (!fs.existsSync(pbxprojPath)) {
+    console.log('[fix-versions] project.pbxproj not found');
+    return;
+  }
+
+  try {
+    let content = fs.readFileSync(pbxprojPath, 'utf8');
+
+    // Pobierz buildNumber z EAS lub z zmiennej srodowiskowej
+    let targetBuildNumber = process.env.EAS_BUILD_IOS_BUILD_NUMBER;
+
+    if (!targetBuildNumber) {
+      // Znajdz buildNumber z glownej aplikacji SlowSpot (szukamy w sekcji SlowSpot)
+      // Szukamy pierwszej wersji ktora NIE jest 11400 (wersja z @bacons/apple-targets)
+      const allVersions = content.match(/CURRENT_PROJECT_VERSION = (\d+);/g) || [];
+      const versionNumbers = allVersions.map(v => parseInt(v.match(/\d+/)[0]));
+
+      // Znajdz wersje rozne od 11400 (to sa prawdopodobnie wersje z glownej app)
+      const nonAppleTargetsVersions = versionNumbers.filter(v => v !== 11400);
+
+      if (nonAppleTargetsVersions.length > 0) {
+        // Uzyj pierwszej znalezionej wersji (powinna byc z glownej app)
+        targetBuildNumber = String(Math.max(...nonAppleTargetsVersions));
+      } else {
+        // Fallback - uzyj 1
+        targetBuildNumber = '1';
+      }
+    }
+
+    console.log(`[fix-versions] Target buildNumber: ${targetBuildNumber}`);
+
+    // Sprawdz czy sa wersje 11400 do zamiany
+    if (content.includes('CURRENT_PROJECT_VERSION = 11400;')) {
+      content = content.replace(/CURRENT_PROJECT_VERSION = 11400;/g, `CURRENT_PROJECT_VERSION = ${targetBuildNumber};`);
+      fs.writeFileSync(pbxprojPath, content);
+      console.log(`[fix-versions] Replaced 11400 with ${targetBuildNumber} in all targets`);
+    } else {
+      console.log('[fix-versions] No 11400 versions found, checking for mismatches...');
+
+      const allVersions = content.match(/CURRENT_PROJECT_VERSION = (\d+);/g) || [];
+      const versionNumbers = [...new Set(allVersions.map(v => parseInt(v.match(/\d+/)[0])))];
+
+      if (versionNumbers.length > 1) {
+        console.log(`[fix-versions] Found multiple versions: ${versionNumbers.join(', ')}`);
+        content = content.replace(/CURRENT_PROJECT_VERSION = \d+;/g, `CURRENT_PROJECT_VERSION = ${targetBuildNumber};`);
+        fs.writeFileSync(pbxprojPath, content);
+        console.log(`[fix-versions] Synchronized all to ${targetBuildNumber}`);
+      } else {
+        console.log(`[fix-versions] All targets have same version: ${versionNumbers[0]}`);
+      }
+    }
+  } catch (error) {
+    console.error('[fix-versions] Error syncing versions:', error);
+  }
+}
+
 // Uruchom poprawki
 console.log('[fix-live-activity] Fixing Live Activity configuration...');
 console.log(`[fix-live-activity] App Group: ${APP_GROUP_IDENTIFIER}`);
@@ -96,6 +154,7 @@ console.log('');
 fixEntitlements(mainAppEntitlements, 'Main App');
 fixEntitlements(widgetEntitlements, 'LiveActivity Widget');
 fixSwiftAppGroup(swiftImageFile);
+syncBuildVersions();
 
 console.log('');
 console.log('[fix-live-activity] Done!');

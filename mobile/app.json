@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slow Spot",
     "slug": "slow-spot",
-    "version": "1.14.0-beta.15",
+    "version": "1.14.0",
     "orientation": "portrait",
     "scheme": "slowspot",
     "icon": "./assets/icon.png",
@@ -52,7 +52,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "11400"
+      "buildNumber": "26"
     },
     "android": {
       "package": "com.slowspot.app",
@@ -68,7 +68,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
-      "versionCode": 11400
+      "versionCode": 26
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -113,7 +113,6 @@
         }
       ],
       "expo-live-activity",
-      "./plugins/withAppGroups",
       [
         "react-native-android-widget",
         {
@@ -133,7 +132,8 @@
           ]
         }
       ],
-      "@bacons/apple-targets"
+      "@bacons/apple-targets",
+      "./plugins/withAppGroups"
     ]
   }
 }
