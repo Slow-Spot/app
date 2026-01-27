@@ -1,3 +1,9 @@
+## [1.14.0-beta.18](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.17...v1.14.0-beta.18) (2026-01-27)
+
+### Bug Fixes
+
+* **mobile:** add notification sound and configure local versioning ([202fce3](https://github.com/Slow-Spot/app/commit/202fce3a775e79f6271d331001fa06b2568a40fe))
+
 ## [1.14.0-beta.17](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.16...v1.14.0-beta.17) (2026-01-27)
 
 ### Features
