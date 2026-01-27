@@ -118,6 +118,48 @@
   --transition-fast: 150ms ease;
   --transition-base: 300ms ease;
   --transition-slow: 500ms ease;
+  --transition-smooth: 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ============================================
+     2026 DESIGN TRENDS - Premium Effects
+     ============================================ */
+
+  /* Glassmorphism */
+  --glass-light: rgba(255, 255, 255, 0.7);
+  --glass-dark: rgba(20, 20, 35, 0.85);
+  --glass-blur: blur(24px);
+  --glass-border-light: rgba(255, 255, 255, 0.2);
+  --glass-border-dark: rgba(255, 255, 255, 0.08);
+
+  /* Neon Glow Effects */
+  --neon-violet: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.3);
+  --neon-pink: 0 0 20px rgba(236, 72, 153, 0.5), 0 0 40px rgba(236, 72, 153, 0.3);
+  --neon-cyan: 0 0 20px rgba(34, 211, 238, 0.5), 0 0 40px rgba(34, 211, 238, 0.3);
+
+  /* Depth Layers */
+  --depth-1: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --depth-2: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --depth-3: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --depth-4: 0 16px 48px rgba(0, 0, 0, 0.16);
+  --depth-5: 0 24px 64px rgba(0, 0, 0, 0.2);
+
+  /* Section Heights */
+  --section-height: 100vh;
+  --section-min-height: 100svh;
+
+  /* Phone Mockup - iPhone 17 Pro Style */
+  --phone-width: 280px;
+  --phone-height: 580px;
+  --phone-radius: 52px;
+  --phone-bezel: 8px;
+  /* iPhone 17 Pro: Under-display camera - tiny pill cutout */
+  --phone-notch-width: 12px;
+  --phone-notch-height: 12px;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
 
   /* Legacy support (deprecated - use brand colors above) */
   --primary-gradient: var(--gradient-brand);
@@ -132,6 +174,8 @@ html {
   scroll-behavior: smooth;
   /* Default to dark, will be overridden by media query or JS class */
   color-scheme: dark;
+  /* 2026 Scroll Snap - smooth page transitions */
+  scroll-snap-type: y proximity;
 }
 
 html.light {
@@ -253,6 +297,81 @@ body {
   box-shadow: 0 0 80px rgba(118, 75, 162, 0.4);
 }
 
+/* ==========================================================================
+   2026 FULLSCREEN SECTIONS - Premium Scroll Snap Experience
+   ========================================================================== */
+
+/* Base fullscreen section */
+.section-fullscreen {
+  min-height: var(--section-min-height);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Section with padding */
+.section-padded {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+/* Scroll indicator animation */
+@keyframes scroll-bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(8px); }
+  60% { transform: translateY(4px); }
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.scroll-indicator:hover {
+  opacity: 1;
+}
+
+.scroll-indicator-icon {
+  width: 24px;
+  height: 40px;
+  border: 2px solid currentColor;
+  border-radius: 12px;
+  position: relative;
+}
+
+.scroll-indicator-icon::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 8px;
+  background: currentColor;
+  border-radius: 2px;
+  animation: scroll-bounce 2s infinite;
+}
+
+.scroll-indicator-text {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
 /* Background Effects */
 .hero-bg {
   position: relative;
@@ -330,62 +449,62 @@ body {
   background-size: 60px 60px;
 }
 
-/* Animated Gradient Orbs - Enhanced with glow and pulse */
+/* ==========================================================================
+   Animated Gradient Orbs - REFINED 2025 Design
+   Calmer, more elegant ambiance with reduced motion
+   ========================================================================== */
 .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  animation: orb-float 18s ease-in-out infinite;
+  filter: blur(100px);
+  animation: orb-float 30s ease-in-out infinite;
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
 }
 
+/* Primary orb - subtle top-right glow */
 .orb-1 {
-  width: 900px;
-  height: 900px;
+  width: 600px;
+  height: 600px;
   background:
-    radial-gradient(circle at 30% 30%, rgba(var(--brand-violet-rgb), 0.9) 0%, transparent 40%),
-    radial-gradient(circle at center, rgba(var(--brand-indigo-rgb), 0.6) 0%, rgba(var(--brand-purple-rgb), 0.3) 50%, transparent 70%);
-  top: -30%;
-  right: -20%;
-  opacity: 0.85;
-  animation: orb-float 18s ease-in-out infinite, orb-pulse 6s ease-in-out infinite;
+    radial-gradient(circle at 40% 40%, rgba(var(--brand-violet-rgb), 0.6) 0%, transparent 50%),
+    radial-gradient(circle at center, rgba(var(--brand-indigo-rgb), 0.35) 0%, transparent 70%);
+  top: -20%;
+  right: -15%;
+  opacity: 0.5;
+  animation: orb-float 35s ease-in-out infinite, orb-pulse 12s ease-in-out infinite;
 }
 
+/* Secondary orb - subtle bottom-left accent */
 .orb-2 {
-  width: 700px;
-  height: 700px;
+  width: 500px;
+  height: 500px;
   background:
-    radial-gradient(circle at 70% 70%, rgba(var(--brand-purple-rgb), 0.85) 0%, transparent 40%),
-    radial-gradient(circle at center, rgba(168, 85, 247, 0.5) 0%, rgba(var(--brand-violet-rgb), 0.25) 50%, transparent 70%);
-  bottom: 0%;
-  left: -20%;
-  opacity: 0.75;
-  animation: orb-float 22s ease-in-out infinite reverse, orb-pulse 8s ease-in-out infinite 2s;
+    radial-gradient(circle at 60% 60%, rgba(var(--brand-purple-rgb), 0.55) 0%, transparent 50%),
+    radial-gradient(circle at center, rgba(168, 85, 247, 0.3) 0%, transparent 70%);
+  bottom: 5%;
+  left: -15%;
+  opacity: 0.4;
+  animation: orb-float 40s ease-in-out infinite reverse, orb-pulse 15s ease-in-out infinite 3s;
 }
 
+/* Third orb - HIDDEN by default for cleaner look */
 .orb-3 {
-  width: 550px;
-  height: 550px;
-  background:
-    radial-gradient(circle at 50% 30%, rgba(var(--brand-indigo-rgb), 0.8) 0%, transparent 40%),
-    radial-gradient(circle at center, rgba(99, 102, 241, 0.5) 0%, rgba(var(--brand-violet-rgb), 0.2) 50%, transparent 70%);
-  top: 35%;
-  right: -5%;
-  opacity: 0.7;
-  animation: orb-float 25s ease-in-out infinite, orb-pulse 10s ease-in-out infinite 4s;
+  display: none;
 }
 
+/* Slow, gentle floating motion */
 @keyframes orb-float {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(50px, -60px) scale(1.12); }
-  50% { transform: translate(-40px, 50px) scale(0.88); }
-  75% { transform: translate(45px, 25px) scale(1.08); }
+  33% { transform: translate(20px, -25px) scale(1.03); }
+  66% { transform: translate(-15px, 20px) scale(0.97); }
 }
 
+/* Subtle breathing pulse */
 @keyframes orb-pulse {
-  0%, 100% { opacity: 0.7; filter: blur(80px); }
-  50% { opacity: 0.95; filter: blur(70px); }
+  0%, 100% { opacity: 0.4; filter: blur(100px); }
+  50% { opacity: 0.55; filter: blur(90px); }
 }
 
 /* Breathing Circle Animation - 4-4-4 Cycle */
@@ -567,39 +686,50 @@ body {
 }
 
 /* ==========================================================================
-   FEATURES SECTION - Clean Professional Style
-   Solid white background with subtle accent orbs
+   FEATURES SECTION - WARM & LUXURIOUS 2025 Design
+   Cream-tinted background with subtle aurora accents
    ========================================================================== */
 .features-section {
   position: relative;
   padding: 6rem 0 8rem;
-  background: #FFFFFF;
+  background: linear-gradient(180deg,
+    #FAF9F7 0%,      /* Warm cream */
+    #F8F6F3 50%,     /* Soft warm */
+    #F5F3F0 100%     /* Warm base */
+  );
   overflow: hidden;
 }
 
-/* Decorative Orbs - Subtle and Professional */
+/* Aurora accent - top right (lavender) */
 .features-section::before {
-  content: '';
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
-  top: -200px;
-  right: -200px;
-  pointer-events: none;
-  filter: blur(60px);
-}
-
-.features-section::after {
   content: '';
   position: absolute;
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 60%);
-  bottom: -150px;
-  left: -150px;
+  background: radial-gradient(circle,
+    rgba(167, 139, 250, 0.08) 0%,
+    rgba(139, 92, 246, 0.04) 40%,
+    transparent 70%);
+  top: -150px;
+  right: -150px;
+  pointer-events: none;
+  filter: blur(60px);
+}
+
+/* Aurora accent - bottom left (soft peach blend) */
+.features-section::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(251, 207, 232, 0.06) 0%,
+    rgba(196, 181, 253, 0.04) 50%,
+    transparent 70%);
+  bottom: -100px;
+  left: -100px;
   pointer-events: none;
   filter: blur(50px);
 }
@@ -646,23 +776,76 @@ body {
   }
 }
 
+/* ==========================================================================
+   FEATURE CARDS - 2025 Bold Glassmorphism + Neon Glow
+   Heavy glass effect with neon accent borders and dramatic hover
+   ========================================================================== */
 .feature-card {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 1.25rem;
-  padding: 1.75rem;
-  transition: all 0.3s ease;
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(250, 250, 255, 0.85) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  border-radius: 1.75rem;
+  padding: 2rem;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.07),
-    0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    0 8px 32px -8px rgba(139, 92, 246, 0.2),
+    0 4px 16px -4px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(139, 92, 246, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Neon glow accent - top edge */
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.6) 20%,
+    rgba(236, 72, 153, 0.6) 50%,
+    rgba(139, 92, 246, 0.6) 80%,
+    transparent 100%);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* Gradient shine overlay */
+.feature-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    transparent 100%);
+  border-radius: 1.75rem 1.75rem 0 0;
+  pointer-events: none;
+  opacity: 0.8;
 }
 
 .feature-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-12px) scale(1.02);
+  border-color: rgba(139, 92, 246, 0.35);
   box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  border-color: rgba(139, 92, 246, 0.3);
+    0 32px 64px -16px rgba(139, 92, 246, 0.35),
+    0 16px 32px -8px rgba(236, 72, 153, 0.15),
+    0 0 0 1px rgba(139, 92, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.feature-card:hover::before {
+  opacity: 1;
 }
 
 .feature-card-large {
@@ -682,18 +865,31 @@ body {
 }
 
 .feature-icon-new {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.75rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.feature-card:hover .feature-icon-new {
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
 }
 
 .feature-icon-new svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-new svg {
+  transform: scale(1.1);
 }
 
 .feature-card-title {
@@ -723,15 +919,42 @@ html:not(.light) .features-subtitle {
 }
 
 html:not(.light) .feature-card {
-  background: rgba(30, 30, 50, 0.6);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(145deg,
+    rgba(30, 30, 55, 0.85) 0%,
+    rgba(25, 25, 45, 0.75) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(139, 92, 246, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+html:not(.light) .feature-card::before {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(139, 92, 246, 0.8) 20%,
+    rgba(236, 72, 153, 0.8) 50%,
+    rgba(139, 92, 246, 0.8) 80%,
+    transparent 100%);
+}
+
+html:not(.light) .feature-card::after {
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 100%);
+  opacity: 1;
 }
 
 html:not(.light) .feature-card:hover {
-  background: rgba(40, 40, 60, 0.8);
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 0 40px rgba(139, 92, 246, 0.1);
+  background: linear-gradient(145deg,
+    rgba(40, 40, 70, 0.9) 0%,
+    rgba(35, 35, 60, 0.85) 100%);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(139, 92, 246, 0.2),
+    0 0 30px rgba(236, 72, 153, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 html:not(.light) .feature-card-title {
@@ -781,68 +1004,250 @@ html:not(.light) .text-indigo-600 {
   color: #818CF8 !important;
 }
 
-/* Phone Mockup */
+/* ==========================================================================
+   PHONE MOCKUP - iPhone 15 Pro Style with Dynamic Island
+   Premium titanium frame with realistic depth
+   ========================================================================== */
 .phone-mockup-container {
   position: relative;
-  perspective: 1000px;
+  perspective: 1200px;
+  transform-style: preserve-3d;
 }
 
 .phone-mockup {
   position: relative;
-  width: 280px;
-  height: 580px;
-  background: linear-gradient(145deg, #2d2d42 0%, #1a1a2e 100%);
-  border-radius: 45px;
-  padding: 12px;
+  width: var(--phone-width);
+  height: var(--phone-height);
+  /* Titanium frame gradient */
+  background: linear-gradient(145deg,
+    #3d3d4a 0%,
+    #2a2a35 20%,
+    #1f1f28 50%,
+    #2a2a35 80%,
+    #3d3d4a 100%);
+  border-radius: var(--phone-radius);
+  padding: 10px;
   box-shadow:
-    0 50px 100px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255,255,255,0.15),
-    inset 0 0 0 1px rgba(255,255,255,0.08);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+    /* Main depth shadow */
+    0 60px 120px -20px rgba(0, 0, 0, 0.5),
+    0 30px 60px -10px rgba(0, 0, 0, 0.3),
+    /* Frame edge highlight */
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    /* Inner frame depth */
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+    /* Subtle glow */
+    0 0 80px rgba(var(--brand-violet-rgb), 0.15);
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+  transform-origin: center center;
+}
+
+/* Side buttons - power button (right) */
+.phone-mockup::before {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 120px;
+  width: 3px;
+  height: 60px;
+  background: linear-gradient(180deg, #4a4a55 0%, #35353e 50%, #4a4a55 100%);
+  border-radius: 0 2px 2px 0;
+  box-shadow: 1px 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Side buttons - volume (left) */
+.phone-mockup::after {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 100px;
+  width: 3px;
+  height: 80px;
+  background: linear-gradient(180deg, #4a4a55 0%, #35353e 50%, #4a4a55 100%);
+  border-radius: 2px 0 0 2px;
+  box-shadow: -1px 0 2px rgba(0, 0, 0, 0.3);
 }
 
 .phone-mockup:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px) rotateX(2deg);
   box-shadow:
-    0 60px 120px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255,255,255,0.2),
-    inset 0 0 0 1px rgba(255,255,255,0.1);
+    0 80px 160px -30px rgba(0, 0, 0, 0.55),
+    0 40px 80px -15px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    inset 0 2px 4px rgba(255, 255, 255, 0.15),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25),
+    0 0 100px rgba(var(--brand-violet-rgb), 0.25);
 }
 
 .phone-screen {
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, #1e1e2e 0%, #0f0f1a 100%);
-  border-radius: 38px;
+  background: linear-gradient(180deg, #0f0f14 0%, #0a0a0f 100%);
+  border-radius: 36px;
   overflow: hidden;
   position: relative;
+  /* Screen edge shadow for depth */
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* iPhone 17 Pro - Under-display camera (minimal pill cutout) */
 .phone-notch {
   position: absolute;
-  top: 0;
+  top: 14px;
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 30px;
-  background: #0a0a0f;
-  border-radius: 0 0 20px 20px;
+  width: var(--phone-notch-width);
+  height: var(--phone-notch-height);
+  background: #000000;
+  border-radius: 50%;
   z-index: 10;
+  /* No animation - static element */
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(30, 30, 35, 0.5);
 }
 
-/* Testimonial Cards */
+/* Screen reflection overlay */
+.phone-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ==========================================================================
+   TESTIMONIAL CARDS - 2026 Premium Glass Design
+   Floating cards with depth and elegant hover animations
+   ========================================================================== */
 .testimonial-card {
   position: relative;
-  border-radius: 1.5rem;
-  padding: 2rem;
-  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: all 0.3s ease;
+  border-radius: 2rem;
+  padding: 2.5rem;
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.5s var(--ease-out-expo);
+  overflow: hidden;
+}
+
+/* Quote accent line */
+.testimonial-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 2rem;
+  width: 40px;
+  height: 3px;
+  background: linear-gradient(90deg,
+    rgba(var(--brand-violet-rgb), 0.8) 0%,
+    rgba(var(--brand-purple-rgb), 0.6) 100%);
+  border-radius: 2px;
+  opacity: 0.7;
+  transition: all 0.4s ease;
+}
+
+/* Subtle glow overlay */
+.testimonial-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center,
+    rgba(var(--brand-violet-rgb), 0.1) 0%,
+    transparent 50%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
 }
 
 .testimonial-card:hover {
-  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
-  border-color: rgba(102, 126, 234, 0.2);
+  transform: translateY(-8px) scale(1.02);
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 100%);
+  border-color: rgba(var(--brand-violet-rgb), 0.3);
+  box-shadow:
+    0 30px 60px -15px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(var(--brand-violet-rgb), 0.15);
+}
+
+.testimonial-card:hover::before {
+  width: 60px;
+  opacity: 1;
+}
+
+.testimonial-card:hover::after {
+  opacity: 1;
+}
+
+/* Testimonial quote icon */
+.testimonial-quote-icon {
+  font-size: 4rem;
+  line-height: 1;
+  color: rgba(var(--brand-violet-rgb), 0.3);
+  font-family: Georgia, serif;
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  pointer-events: none;
+}
+
+/* Testimonial text */
+.testimonial-text {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Testimonial author */
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand-violet) 0%, var(--brand-purple) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: white;
+  box-shadow: 0 4px 12px rgba(var(--brand-violet-rgb), 0.3);
+}
+
+.testimonial-author-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.testimonial-author-title {
+  font-size: 0.875rem;
+  color: var(--text-muted);
 }
 
 /* CTA Section */
@@ -925,11 +1330,12 @@ html:not(.light) .text-indigo-600 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* Footer */
+/* ==========================================================================
+   Footer - CLEAN & MINIMAL 2025 Design
+   Simplified background without competing gradients
+   ========================================================================== */
 .footer-gradient {
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(var(--brand-violet-rgb), 0.08) 0%, transparent 50%),
-    linear-gradient(180deg, #0a0a0f 0%, #060609 50%, #030305 100%);
+  background: linear-gradient(180deg, #0a0a0f 0%, #050508 100%);
   position: relative;
 }
 
@@ -937,14 +1343,14 @@ html:not(.light) .text-indigo-600 {
   content: '';
   position: absolute;
   top: 0;
-  left: 10%;
-  right: 10%;
+  left: 15%;
+  right: 15%;
   height: 1px;
   background: linear-gradient(90deg,
     transparent 0%,
-    rgba(var(--brand-violet-rgb), 0.3) 30%,
-    rgba(var(--brand-purple-rgb), 0.5) 50%,
-    rgba(var(--brand-violet-rgb), 0.3) 70%,
+    rgba(255, 255, 255, 0.08) 30%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 70%,
     transparent 100%);
 }
 
@@ -1080,8 +1486,12 @@ html:not(.light) .text-indigo-600 {
   --slate-50: #F8FAFC;
 }
 
+/* ==========================================================================
+   LIGHT MODE BODY - WARM & INVITING 2025 Design
+   Cream undertones, subtle warmth, professional depth
+   ========================================================================== */
 html.light body {
-  background: #FFFFFF;
+  background: linear-gradient(180deg, #FDFCFB 0%, #FAF9F7 50%, #F8F7F5 100%);
   color: var(--slate-900);
 }
 
@@ -1118,47 +1528,84 @@ html.light .text-gray-600 {
   color: var(--slate-700);
 }
 
-/* Modern glass effect with subtle shadow */
+/* ==========================================================================
+   LIGHT MODE GLASS - Luxurious Glassmorphism 2025
+   Frosted glass with warm undertones and depth
+   ========================================================================== */
 html.light .glass {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--slate-200);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.85) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(139, 92, 246, 0.08);
+  box-shadow:
+    0 4px 24px -4px rgba(139, 92, 246, 0.1),
+    0 2px 8px -2px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 /* ============================================
-   LIGHT MODE HERO - CLEAN & PROFESSIONAL
-   Subtle lavender gradient with clean look
+   LIGHT MODE HERO - 2025 GRADIENT MESH Design
+   Bold gradient mesh with neon violet accents
    ============================================ */
 html.light .hero-bg {
-  background: linear-gradient(180deg, #FAFAFA 0%, #F8F7FF 50%, #F3F0FF 100%);
+  background:
+    /* Gradient mesh effect */
+    radial-gradient(ellipse 100% 100% at 100% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 80% at 0% 100%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #FAFAFA 0%, #F5F5F7 50%, #EFEFEF 100%);
   position: relative;
   overflow: hidden;
 }
 
-/* Subtle gradient accent - top right */
+/* NEON GLOW - top right (violet/purple) */
 html.light .hero-bg::before {
   content: '';
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 60%;
-  height: 100%;
-  background: radial-gradient(ellipse at top right, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+  top: -20%;
+  right: -10%;
+  width: 70%;
+  height: 70%;
+  background:
+    radial-gradient(circle at center,
+      rgba(139, 92, 246, 0.5) 0%,
+      rgba(124, 58, 237, 0.3) 25%,
+      rgba(99, 102, 241, 0.15) 50%,
+      transparent 70%);
+  filter: blur(80px);
   pointer-events: none;
+  animation: neon-pulse 8s ease-in-out infinite;
 }
 
-/* Subtle gradient accent - bottom left */
+/* NEON GLOW - bottom left (pink/rose) */
 html.light .hero-bg::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 50%;
-  height: 80%;
-  background: radial-gradient(ellipse at bottom left, rgba(168, 85, 247, 0.06) 0%, transparent 50%);
+  bottom: -20%;
+  left: -10%;
+  width: 60%;
+  height: 60%;
+  background:
+    radial-gradient(circle at center,
+      rgba(236, 72, 153, 0.4) 0%,
+      rgba(219, 39, 119, 0.2) 30%,
+      rgba(190, 24, 93, 0.1) 50%,
+      transparent 70%);
+  filter: blur(80px);
   pointer-events: none;
+  animation: neon-pulse 10s ease-in-out infinite reverse;
+}
+
+@keyframes neon-pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes aurora-shift {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+  50% { transform: translate(20px, 10px) scale(1.05); opacity: 1; }
 }
 
 /* Hide animated orbs in light mode - keep it clean */
@@ -1266,36 +1713,63 @@ html.light .bento-card::before {
   display: none;
 }
 
-/* Phone mockup - ELEGANT SILVER frame for light theme */
+/* ==========================================================================
+   PHONE MOCKUP LIGHT MODE - iPhone 15 Pro Natural Titanium Style
+   Premium silver/titanium frame matching Apple's design
+   ========================================================================== */
 html.light .phone-mockup {
-  background: linear-gradient(145deg, #E8E8EC 0%, #D4D4DC 50%, #C8C8D4 100%);
+  /* Natural Titanium gradient */
+  background: linear-gradient(145deg,
+    #E5E5EA 0%,
+    #D1D1D6 20%,
+    #C7C7CC 50%,
+    #D1D1D6 80%,
+    #E5E5EA 100%);
   box-shadow:
-    0 30px 60px -15px rgba(139, 92, 246, 0.25),
-    0 15px 30px -10px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(139, 92, 246, 0.1),
-    inset 0 1px 1px rgba(255, 255, 255, 0.8),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.05);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    0 60px 120px -20px rgba(139, 92, 246, 0.2),
+    0 30px 60px -10px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 2px 4px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.08),
+    0 0 80px rgba(139, 92, 246, 0.1);
+  transition: all var(--transition-smooth);
+}
+
+/* Light mode side buttons */
+html.light .phone-mockup::before {
+  background: linear-gradient(180deg, #D8D8DC 0%, #B8B8BC 50%, #D8D8DC 100%);
+}
+
+html.light .phone-mockup::after {
+  background: linear-gradient(180deg, #D8D8DC 0%, #B8B8BC 50%, #D8D8DC 100%);
 }
 
 html.light .phone-mockup:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-8px) rotateX(2deg);
   box-shadow:
-    0 40px 80px -15px rgba(139, 92, 246, 0.35),
-    0 25px 50px -15px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(139, 92, 246, 0.15),
-    inset 0 1px 1px rgba(255, 255, 255, 0.9),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.05);
+    0 80px 160px -30px rgba(139, 92, 246, 0.25),
+    0 40px 80px -15px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    inset 0 2px 4px rgba(255, 255, 255, 1),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1),
+    0 0 100px rgba(139, 92, 246, 0.2);
 }
 
-/* Light mode phone screen - richer lavender gradient */
+/* Light mode phone screen - elegant lavender */
 html.light .phone-screen {
-  background: linear-gradient(180deg, #FAF8FF 0%, #F3EEFF 40%, #E9DFFF 100%);
-  box-shadow: inset 0 0 30px rgba(139, 92, 246, 0.08);
+  background: linear-gradient(180deg, #FAFAFE 0%, #F5F2FF 50%, #EDE8FF 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 2px 4px rgba(0, 0, 0, 0.03),
+    inset 0 0 40px rgba(139, 92, 246, 0.05);
 }
 
+/* Light mode - iPhone 17 Pro camera cutout */
 html.light .phone-notch {
-  background: linear-gradient(180deg, #2D2D35 0%, #1A1A22 100%);
+  background: #000000;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(0, 0, 0, 0.3);
 }
 
 html.light .phone-brand-text {
@@ -1409,6 +1883,54 @@ html.light .footer-gradient .font-semibold,
 html.light .footer-gradient .font-bold {
   color: #FFFFFF !important;
   -webkit-text-fill-color: #FFFFFF !important;
+}
+
+/* ==========================================================================
+   TESTIMONIAL CARDS - Light Mode: Premium White Glass
+   ========================================================================== */
+html.light .testimonial-card {
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(250, 250, 255, 0.9) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.12);
+  box-shadow:
+    0 8px 32px -8px rgba(139, 92, 246, 0.15),
+    0 4px 16px -4px rgba(0, 0, 0, 0.05);
+}
+
+html.light .testimonial-card::before {
+  background: linear-gradient(90deg,
+    rgba(139, 92, 246, 0.7) 0%,
+    rgba(236, 72, 153, 0.5) 100%);
+}
+
+html.light .testimonial-card::after {
+  background: radial-gradient(circle at center,
+    rgba(139, 92, 246, 0.08) 0%,
+    transparent 50%);
+}
+
+html.light .testimonial-card:hover {
+  background: linear-gradient(145deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(250, 248, 255, 0.98) 100%);
+  border-color: rgba(139, 92, 246, 0.25);
+  box-shadow:
+    0 32px 64px -16px rgba(139, 92, 246, 0.2),
+    0 16px 32px -8px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(139, 92, 246, 0.08);
+}
+
+html.light .testimonial-text {
+  color: #475569;
+}
+
+html.light .testimonial-author-name {
+  color: #1E293B;
+}
+
+html.light .testimonial-author-title {
+  color: #64748B;
 }
 
 /* ==========================================================================
@@ -2515,18 +3037,7 @@ html.light .cta-section .store-btn svg {
 }
 
 /* Footer in light mode - ensure good contrast */
-html.light .footer-gradient .text-white {
-  color: var(--slate-900);
-}
-
-html.light .footer-gradient .text-gray-400,
-html.light .footer-gradient .text-gray-500 {
-  color: var(--slate-600);
-}
-
-html.light .footer-gradient a:hover {
-  color: var(--lavender-primary);
-}
+/* Footer in light mode - white text on purple gradient (no override needed) */
 
 /* ==========================================================================
    SUBPAGES - Unified styling for Privacy, Terms, Support pages
@@ -3585,10 +4096,6 @@ html.light .features-section {
 
 html.light .cta-section {
   background-color: #E2E8F0;
-}
-
-html.light .footer-gradient {
-  background-color: #F8FAFC;
 }
 
 /* iOS fix for rgba colors in borders */

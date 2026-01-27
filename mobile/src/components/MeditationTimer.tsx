@@ -1,6 +1,6 @@
 import { logger } from '../utils/logger';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Pressable, AppState, AppStateStatus } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
 import { useTranslation } from 'react-i18next';
 import { createAudioPlayer, AudioPlayer } from 'expo-audio';
@@ -21,6 +21,10 @@ import { ChimePoint } from '../types/customSession';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { ConfirmationModal } from './ConfirmationModal';
 import { BreathingPattern, BreathingTiming } from '../services/customSessionStorage';
+import { backgroundTimer } from '../services/backgroundTimer';
+import { liveActivityService } from '../services/liveActivityService';
+import { androidWidgetService } from '../services/androidWidgetService';
+import { notificationService } from '../services/notifications/NotificationService';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -55,6 +59,8 @@ interface MeditationTimerProps {
   breathingHaptics?: boolean;
   /** Haptic feedback for interval bells */
   intervalBellHaptics?: boolean;
+  /** Zen Mode: hide all UI except breathing circle, tap to show controls for 3s */
+  zenMode?: boolean;
 }
 
 export const MeditationTimer: React.FC<MeditationTimerProps> = ({
@@ -72,6 +78,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   sessionHaptics = true,
   breathingHaptics = true,
   intervalBellHaptics = true,
+  zenMode = false,
 }) => {
   const { t } = useTranslation();
   const { currentTheme, settings } = usePersonalization();
@@ -97,10 +104,25 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     hapticPulseCountRef.current = 0;
   }, []);
 
-  // Trigger a single haptic pulse at phase transition
-  // Simple: one pulse per phase change to signal what to do next
-  const triggerPhaseTransitionHaptic = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  // Trigger haptic pulse at phase transition with phase-appropriate intensity
+  // Inhale: Light feedback (noticeable but gentle)
+  // Exhale: Soft feedback (barely perceptible, calming)
+  // Hold phases: Light feedback (subtle reminder)
+  const triggerPhaseTransitionHaptic = useCallback((phase: string) => {
+    switch (phase) {
+      case 'inhale':
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        break;
+      case 'exhale':
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+        break;
+      case 'hold':
+      case 'rest':
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        break;
+      default:
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
   }, []);
 
   const triggerBreathingHaptic = useCallback((phase: string, _phaseDuration?: number) => {
@@ -113,8 +135,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     // Stop any existing continuous haptic (cleanup from old implementation)
     stopContinuousHaptic();
 
-    // Trigger single haptic pulse at phase transition
-    triggerPhaseTransitionHaptic();
+    // Trigger phase-appropriate haptic pulse at transition
+    triggerPhaseTransitionHaptic(phase);
   }, [isBreathingHapticEnabled, stopContinuousHaptic, triggerPhaseTransitionHaptic]);
 
   // Cleanup haptic interval on unmount
@@ -229,8 +251,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   // Focus Mode: Animated opacity for controls
   const controlsOpacity = useSharedValue(1);
 
-  // Auto-hide controls after 5 seconds of inactivity when running
-  const CONTROLS_HIDE_DELAY = 5000;
+  // Auto-hide controls - shorter delay in Zen Mode for minimal distraction
+  const CONTROLS_HIDE_DELAY = zenMode ? 3000 : 5000;
 
   // Reset hide timer on any interaction
   const resetHideTimer = useCallback(() => {
@@ -488,23 +510,162 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
     }
   }, [remainingSeconds, adjustableChimes, totalSeconds]);
 
-  // Timer countdown
+  // Background Timer - utrzymuje sesję gdy app jest w tle
+  const sessionStartedRef = useRef(false);
+  const backgroundSessionIdRef = useRef<string | null>(null);
+  const liveActivityIdRef = useRef<string | null>(null);
+
+  // Inicjalizacja background timer i Live Activity przy starcie sesji
   useEffect(() => {
-    if (!isRunning || remainingSeconds <= 0) return;
+    const startBackgroundTimer = async () => {
+      if (sessionStartedRef.current) return;
+      sessionStartedRef.current = true;
 
-    const interval = setInterval(() => {
-      setRemainingSeconds((prev) => {
-        if (prev <= 1) {
-          setIsRunning(false);
-          onComplete();
-          return 0;
+      try {
+        // Start background timer
+        const sessionId = await backgroundTimer.startSession(
+          totalSeconds,
+          (remaining, _elapsed) => {
+            setRemainingSeconds(remaining);
+            if (remaining <= 0) {
+              setIsRunning(false);
+              // Zakończ Live Activity i Android widget z komunikatem sukcesu
+              liveActivityService.endActivity(true);
+              androidWidgetService.endSession();
+              onComplete();
+            }
+          },
+          async () => {
+            setIsRunning(false);
+            // Zakończ Live Activity i Android widget z komunikatem sukcesu
+            await liveActivityService.endActivity(true);
+            await androidWidgetService.endSession();
+            onComplete();
+          }
+        );
+        backgroundSessionIdRef.current = sessionId;
+        logger.log(`Background timer session started: ${sessionId}`);
+
+        // Start iOS Live Activity (lock screen widget)
+        const activityId = await liveActivityService.startMeditationActivity(
+          totalSeconds,
+          t('meditation.title', 'Meditation')
+        );
+        if (activityId) {
+          liveActivityIdRef.current = activityId;
+          logger.log(`Live Activity started: ${activityId}`);
         }
-        return prev - 1;
-      });
-    }, 1000);
 
-    return () => clearInterval(interval);
-  }, [isRunning, remainingSeconds, onComplete]);
+        // Start Android widget
+        await androidWidgetService.startSession(totalSeconds);
+
+        // Schedule notification for session completion (plays sound when app in background)
+        await notificationService.scheduleSessionCompletionNotification(totalSeconds);
+      } catch (error) {
+        logger.error('Failed to start background timer:', error);
+      }
+    };
+
+    startBackgroundTimer();
+
+    // Cleanup przy unmount
+    return () => {
+      backgroundTimer.stopSession();
+      liveActivityService.endActivity(false);
+      androidWidgetService.endSession();
+      notificationService.cancelSessionCompletionNotification();
+      sessionStartedRef.current = false;
+      backgroundSessionIdRef.current = null;
+      liveActivityIdRef.current = null;
+    };
+  }, [totalSeconds, onComplete, t]);
+
+  // Obsługa pause/resume z background timer, Live Activity i Android widget
+  useEffect(() => {
+    const handlePauseResume = async () => {
+      if (!sessionStartedRef.current) return;
+
+      try {
+        if (isRunning) {
+          await backgroundTimer.resumeFromPause();
+          // Aktualizuj Live Activity z nowym czasem końca
+          if (liveActivityIdRef.current) {
+            await liveActivityService.updateRemainingTime(remainingSeconds, false);
+          }
+          // Aktualizuj Android widget
+          await androidWidgetService.resumeSession(remainingSeconds, totalSeconds);
+          // Reschedule session completion notification
+          await notificationService.rescheduleSessionCompletionNotification(remainingSeconds);
+        } else {
+          await backgroundTimer.pauseSession();
+          // Aktualizuj Live Activity jako spauzowane
+          if (liveActivityIdRef.current) {
+            await liveActivityService.updateRemainingTime(remainingSeconds, true);
+          }
+          // Aktualizuj Android widget
+          await androidWidgetService.pauseSession(remainingSeconds, totalSeconds);
+          // Cancel session completion notification when paused
+          await notificationService.cancelSessionCompletionNotification();
+        }
+      } catch (error) {
+        logger.error('Failed to pause/resume background timer:', error);
+      }
+    };
+
+    // Pomijamy pierwszą inicjalizację (isRunning=true na starcie)
+    if (backgroundSessionIdRef.current) {
+      handlePauseResume();
+    }
+  }, [isRunning, remainingSeconds]);
+
+  // Synchronizacja stanu przy powrocie z background
+  // Naprawia problem gdy użytkownik klika w Live Activity widget
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (nextAppState === 'active' && sessionStartedRef.current) {
+        // App wraca na pierwszy plan - synchronizuj czas z backgroundTimer
+        const actualRemaining = backgroundTimer.getRemainingSeconds();
+        const isPaused = backgroundTimer.isSessionPaused();
+
+        logger.log(`App returned to foreground, syncing timer: ${actualRemaining}s, paused: ${isPaused}`);
+
+        // Haptyczny feedback przy powrocie - informuje użytkownika, że sesja nadal trwa
+        if (sessionHaptics && settings.hapticEnabled && actualRemaining > 0) {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        }
+
+        // Cancel completion notification when user returns to app (will hear gong in app)
+        await notificationService.cancelSessionCompletionNotification();
+
+        // Aktualizuj stan UI
+        setRemainingSeconds(actualRemaining);
+        setIsRunning(!isPaused);
+
+        // Sprawdź czy sesja się skończyła w tle
+        if (actualRemaining <= 0) {
+          setIsRunning(false);
+          liveActivityService.endActivity(true);
+          androidWidgetService.endSession();
+          onComplete();
+        } else {
+          // KLUCZOWA NAPRAWA: Synchronizuj Live Activity z aktualnym czasem
+          // To naprawia problem gdy Live Activity pokazuje inny czas niż ekran medytacji
+          if (liveActivityIdRef.current) {
+            await liveActivityService.updateRemainingTime(actualRemaining, isPaused);
+            logger.log(`Live Activity synced: ${actualRemaining}s, paused: ${isPaused}`);
+          }
+
+          if (!isPaused) {
+            // Reschedule notification for remaining time if session still running
+            await notificationService.rescheduleSessionCompletionNotification(actualRemaining);
+          }
+        }
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription.remove();
+  }, [onComplete]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -563,29 +724,33 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         )}
       </Animated.View>
 
-      {/* Breathing guidance - only show if breathing pattern is enabled */}
-      {showBreathingGuide ? (
-        <View style={styles.breathingSection}>
-          <Text style={[styles.instructionLabel, dynamicStyles.instructionLabel]}>
-            {t('meditation.focusOnBreath', 'FOCUS ON YOUR BREATH')}
-          </Text>
-          <Animated.Text style={[styles.breathingText, dynamicStyles.breathingText]}>
-            {breathingPhase === 'inhale' && t('meditation.breatheIn', 'Inhale')}
-            {breathingPhase === 'hold' && t('meditation.hold', 'Hold')}
-            {breathingPhase === 'exhale' && t('meditation.breatheOut', 'Exhale')}
-            {breathingPhase === 'rest' && t('meditation.hold', 'Hold')}
-          </Animated.Text>
-        </View>
-      ) : (
-        <View style={styles.breathingSection}>
-          <Text style={[styles.instructionLabel, dynamicStyles.instructionLabel]}>
-            {t('meditation.meditationInProgress', 'MEDITATION IN PROGRESS')}
-          </Text>
-          <Text style={[styles.breathingText, dynamicStyles.breathingText]}>
-            {t('meditation.breatheNaturally', 'Breathe naturally')}
-          </Text>
-        </View>
+      {/* Breathing guidance - hide text in Zen Mode for minimal distraction */}
+      {!zenMode && (
+        showBreathingGuide ? (
+          <Animated.View style={[styles.breathingSection, controlsAnimatedStyle]}>
+            <Text style={[styles.instructionLabel, dynamicStyles.instructionLabel]}>
+              {t('meditation.focusOnBreath', 'FOCUS ON YOUR BREATH')}
+            </Text>
+            <Animated.Text style={[styles.breathingText, dynamicStyles.breathingText]}>
+              {breathingPhase === 'inhale' && t('meditation.breatheIn', 'Inhale')}
+              {breathingPhase === 'hold' && t('meditation.hold', 'Hold')}
+              {breathingPhase === 'exhale' && t('meditation.breatheOut', 'Exhale')}
+              {breathingPhase === 'rest' && t('meditation.hold', 'Hold')}
+            </Animated.Text>
+          </Animated.View>
+        ) : (
+          <Animated.View style={[styles.breathingSection, controlsAnimatedStyle]}>
+            <Text style={[styles.instructionLabel, dynamicStyles.instructionLabel]}>
+              {t('meditation.meditationInProgress', 'MEDITATION IN PROGRESS')}
+            </Text>
+            <Text style={[styles.breathingText, dynamicStyles.breathingText]}>
+              {t('meditation.breatheNaturally', 'Breathe naturally')}
+            </Text>
+          </Animated.View>
+        )
       )}
+      {/* Zen Mode spacer - maintains layout when breathing text is hidden */}
+      {zenMode && <View style={styles.zenModeSpacer} />}
 
       {/* Main circle with timer */}
       <View style={styles.circleWrapper}>
@@ -654,17 +819,17 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           })}
         </Svg>
 
-        {/* Timer display in center - conditionally hidden for distraction-free meditation */}
+        {/* Timer display in center - hidden in Zen Mode or when hideTimer is set */}
         <View style={styles.timerCenter}>
-          {!hideTimer && (
+          {!hideTimer && !zenMode && (
             <Text style={[styles.timerText, dynamicStyles.timerText]}>{formatTime(remainingSeconds)}</Text>
           )}
         </View>
       </View>
 
-      {/* Progress bar with chime markers */}
-      {adjustableChimes.length > 0 && (
-        <View style={styles.progressSection}>
+      {/* Progress bar with chime markers - hidden in Zen Mode */}
+      {!zenMode && adjustableChimes.length > 0 && (
+        <Animated.View style={[styles.progressSection, controlsAnimatedStyle]}>
           <View style={[styles.progressTrack, dynamicStyles.progressTrack]}>
             <View style={[styles.progressFill, dynamicStyles.progressFill, { width: `${progress}%` }]} />
 
@@ -685,7 +850,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
               );
             })}
           </View>
-        </View>
+        </Animated.View>
       )}
 
       {/* Bottom controls - Animated for Focus Mode */}
@@ -837,6 +1002,10 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     color: theme.colors.neutral.gray[800],
     letterSpacing: 1,
+  },
+  // Zen Mode spacer - maintains layout when breathing text is hidden
+  zenModeSpacer: {
+    height: 60, // Approximate height of breathing section
   },
 
   // Circle

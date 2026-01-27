@@ -40,6 +40,11 @@ end
 
 default_platform(:android)
 
+# Helper to get absolute path for Android metadata
+def android_metadata_path
+  File.expand_path(File.join(__dir__, "metadata", "android"))
+end
+
 platform :android do
 
   # ============================================
@@ -53,8 +58,10 @@ platform :android do
 
     # Upload metadata to Google Play
     # Note: No track specified - metadata is app-level, not track-specific
+    # For draft apps, we must NOT specify track options to avoid release creation
     upload_to_play_store(
       package_name: "com.slowspot.app",
+      metadata_path: android_metadata_path,
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
@@ -73,6 +80,7 @@ platform :android do
 
     upload_to_play_store(
       package_name: "com.slowspot.app",
+      metadata_path: android_metadata_path,
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
@@ -91,6 +99,7 @@ platform :android do
 
     upload_to_play_store(
       package_name: "com.slowspot.app",
+      metadata_path: android_metadata_path,
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: true,
@@ -109,6 +118,7 @@ platform :android do
 
     upload_to_play_store(
       package_name: "com.slowspot.app",
+      metadata_path: android_metadata_path,
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,
@@ -145,6 +155,7 @@ platform :android do
 
     upload_to_play_store(
       package_name: "com.slowspot.app",
+      metadata_path: android_metadata_path,
       track: "production",
       skip_upload_apk: true,
       skip_upload_aab: true,
@@ -173,6 +184,7 @@ platform :android do
     # This avoids Fastlane bug #21007 where skip_upload_changelogs still checks for releases
     upload_to_play_store(
       package_name: "com.slowspot.app",
+      metadata_path: android_metadata_path,
       skip_upload_apk: true,
       skip_upload_aab: true,
       skip_upload_metadata: false,

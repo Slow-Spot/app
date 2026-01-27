@@ -51,6 +51,7 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
     setColorTheme,
     setCustomTheme,
     setAnimationsEnabled,
+    setZenMode,
     currentTheme,
   } = usePersonalization();
 
@@ -316,6 +317,32 @@ export const PersonalizationScreen: React.FC<PersonalizationScreenProps> = ({
               thumbColor={settings.animationsEnabled ? currentTheme.primary : colors.neutral.gray[100]}
             />
           </View>
+
+          {/* Zen Mode */}
+          <View style={[styles.settingRow, { backgroundColor: dynamicStyles.settingRowBg }]}>
+            <View style={styles.settingLeft}>
+              <View style={[styles.settingIcon, { backgroundColor: `${currentTheme.primary}15` }]}>
+                <Ionicons name="leaf-outline" size={20} color={currentTheme.primary} />
+              </View>
+              <View style={styles.settingTextContainer}>
+                <Text style={[styles.settingTitle, dynamicStyles.title]}>
+                  {t('personalization.zenMode', 'Zen Mode')}
+                </Text>
+                <Text style={[styles.settingDescription, dynamicStyles.subtitle]}>
+                  {t('personalization.zenModeDesc', 'Hide UI during meditation, focus only on breathing')}
+                </Text>
+              </View>
+            </View>
+            <Switch
+              value={settings.zenMode}
+              onValueChange={async (value) => {
+                if (settings.hapticEnabled) Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                await setZenMode(value);
+              }}
+              trackColor={{ false: colors.neutral.gray[300], true: `${currentTheme.primary}60` }}
+              thumbColor={settings.zenMode ? currentTheme.primary : colors.neutral.gray[100]}
+            />
+          </View>
         </GradientCard>
 
         {/* Info Card */}
@@ -578,6 +605,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  settingTextContainer: {
+    flex: 1,
   },
   settingTitle: {
     fontSize: theme.typography.fontSizes.sm,

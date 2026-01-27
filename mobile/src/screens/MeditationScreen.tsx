@@ -640,6 +640,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
           sessionHaptics={getSessionHaptics()}
           breathingHaptics={getBreathingHaptics()}
           intervalBellHaptics={getIntervalBellHaptics()}
+          zenMode={settings.zenMode}
         />
       </GradientBackground>
     );

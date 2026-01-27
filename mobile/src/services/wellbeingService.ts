@@ -6,6 +6,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { WellbeingAssessment, WellbeingAnswer } from '../types/wellbeing';
 import { logger } from '../utils/logger';
+import { formatDateKey, parseISO } from '../utils/dateUtils';
 
 const STORAGE_KEY = '@wellbeing_assessments';
 
@@ -125,7 +126,7 @@ export const getMoodTrends = async (
   const byDate: { [key: string]: { pre: number[]; post: number[] } } = {};
 
   recent.forEach((assessment) => {
-    const date = new Date(assessment.completedAt).toISOString().split('T')[0];
+    const date = formatDateKey(parseISO(assessment.completedAt));
 
     if (!byDate[date]) {
       byDate[date] = { pre: [], post: [] };

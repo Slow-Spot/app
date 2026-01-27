@@ -112,17 +112,32 @@ function AppContent() {
     prepareApp();
   }, []);
 
-  // Deep linking handler for screenshots automation
+  // Deep linking handler for Live Activity and screenshots automation
   useEffect(() => {
     const handleDeepLink = (event: { url: string }) => {
       const url = event.url;
-      // Handle slowspot://screen/home, slowspot://screen/meditation, etc.
-      const match = url.match(/slowspot:\/\/screen\/(\w+)/);
-      if (match) {
-        const screen = match[1] as Screen;
+      logger.log('Deep link received:', url);
+
+      // Handle direct screen links: slowspot://meditation, slowspot://home, etc.
+      // Used by Live Activity widget
+      const directMatch = url.match(/slowspot:\/\/(\w+)$/);
+      if (directMatch) {
+        const screen = directMatch[1] as Screen;
         if (['home', 'meditation', 'quotes', 'settings', 'profile'].includes(screen)) {
           setCurrentScreen(screen);
-          logger.log('Deep link navigation to:', screen);
+          logger.log('Deep link navigation (direct) to:', screen);
+          return;
+        }
+      }
+
+      // Handle screen path links: slowspot://screen/home, slowspot://screen/meditation, etc.
+      // Used for screenshots automation
+      const screenMatch = url.match(/slowspot:\/\/screen\/(\w+)/);
+      if (screenMatch) {
+        const screen = screenMatch[1] as Screen;
+        if (['home', 'meditation', 'quotes', 'settings', 'profile'].includes(screen)) {
+          setCurrentScreen(screen);
+          logger.log('Deep link navigation (screen path) to:', screen);
         }
       }
     };

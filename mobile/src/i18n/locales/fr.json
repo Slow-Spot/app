@@ -159,7 +159,12 @@
     "endSessionCancel": "Continuer",
     "endSessionConfirm": "End Session",
     "sessionComplete": "Séance terminée",
-    "sessionEnded": "Séance terminée"
+    "sessionEnded": "Séance terminée",
+    "minSession_one": "Séance de 1 minute",
+    "minSession_other": "Séance de {{count}} minutes",
+    "minRemaining_one": "1 minute restante",
+    "minRemaining_other": "{{count}} minutes restantes",
+    "paused": "En pause"
   },
   "quotes": {
     "title": "Inspirations",
@@ -1445,6 +1450,8 @@
     "animationsDescription": "Activer ou désactiver les animations dans l'application",
     "hapticFeedback": "Retour Haptique",
     "hapticFeedbackDescription": "Retour tactile subtil sur les interactions",
+    "zenMode": "Mode Zen",
+    "zenModeDesc": "Masquer l'interface pendant la méditation, se concentrer uniquement sur la respiration",
     "themes": {
       "purple": "Violet Calme",
       "teal": "Bleu-Vert Harmonieux",
@@ -1462,5 +1469,57 @@
     "skipIntentionHint": "Passe le réglage de l'intention et démarre la méditation",
     "editSessionHint": "Modifier cette session de méditation",
     "deleteSessionHint": "Supprimer cette session de méditation"
+  },
+  "notifications": {
+    "title": "Rappels de Méditation",
+    "description": "Des rappels doux pour maintenir votre pratique régulière",
+    "enableNotifications": "Activer les Notifications",
+    "permissionDenied": "Notifications Désactivées",
+    "permissionDeniedDescription": "Pour recevoir des rappels de méditation, veuillez activer les notifications dans les paramètres de votre appareil.",
+    "openSettings": "Ouvrir les Paramètres",
+    "permissionsRequired": "Les autorisations de notification sont requises pour les rappels",
+    "dailyReminder": "Rappel Quotidien",
+    "dailyReminderDescription": "Recevez un rappel doux pour méditer chaque jour",
+    "reminderTime": "Heure du Rappel",
+    "tapToChangeTime": "Appuyez pour changer l'heure du rappel",
+    "nextReminderToday": "Aujourd'hui à {{time}}",
+    "nextReminderTomorrow": "Demain à {{time}}",
+    "sendTestNotification": "Envoyer une Notification Test",
+    "testFailed": "Échec du Test",
+    "testFailedDescription": "Impossible d'envoyer la notification test. Veuillez vérifier vos paramètres.",
+    "privacyNote": "Les rappels sont programmés localement. Aucune donnée n'est envoyée à des serveurs externes.",
+    "streakAlert": "Protection de Série",
+    "streakAlertDescription": "Rappel du soir si vous n'avez pas médité aujourd'hui",
+    "streakAlertTime": "Heure d'Alerte"
+  },
+  "welcome": {
+    "returning": {
+      "morning": "Bonjour",
+      "afternoon": "Bon retour",
+      "evening": "Bonsoir",
+      "night": "Bonne nuit",
+      "morningPersonal": "Bonjour, {{name}}",
+      "afternoonPersonal": "Bon retour, {{name}}",
+      "eveningPersonal": "Bonsoir, {{name}}",
+      "nightPersonal": "Bonne nuit, {{name}}",
+      "subtitle1": "Prêt pour un moment de calme ?",
+      "subtitle2": "Votre espace de paix vous attend",
+      "subtitle3": "Respirez, vous êtes ici maintenant"
+    },
+    "tapToDismiss": "Appuyez pour continuer"
+  },
+  "celebration": {
+    "firstLaunch": "Bienvenue dans votre voyage de pleine conscience",
+    "milestone": {
+      "firstSession": "Vous avez terminé votre première séance !",
+      "sessions10": "10 séances accomplies !",
+      "sessions25": "25 séances - Progrès incroyable !",
+      "sessions50": "50 séances - Vous êtes dévoué !",
+      "sessions100": "100 séances - Vrai maître !",
+      "streak7": "Série de 7 jours - Une semaine forte !",
+      "streak14": "Série de 14 jours - Deux semaines de calme !",
+      "streak30": "Série de 30 jours - Jalon d'un mois !",
+      "streak100": "Série de 100 jours - Légendaire !"
+    }
   }
 }

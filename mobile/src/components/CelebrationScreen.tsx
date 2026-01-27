@@ -20,7 +20,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  Dimensions,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -44,14 +43,13 @@ import * as Haptics from 'expo-haptics';
 import { GradientBackground } from './GradientBackground';
 import { GradientCard } from './GradientCard';
 import { MoodIcon, getMoodColors } from './MoodIcon';
+import { ConfettiOverlay } from './ConfettiOverlay';
 import { api, Quote } from '../services/api';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { AnimatedPressable } from './AnimatedPressable';
 import { StreakBadge } from './StreakBadge';
 import { getProgressStats, getTotalStreak, ProgressStats } from '../services/progressTracker';
-
-const { width, height } = Dimensions.get('window');
 
 interface CelebrationScreenProps {
   durationMinutes: number;
@@ -62,70 +60,6 @@ interface CelebrationScreenProps {
 }
 
 type MoodRating = 1 | 2 | 3 | 4 | 5;
-
-// Confetti particle component - memoized for performance (30 instances rendered)
-const ConfettiParticle = React.memo<{
-  delay: number;
-  color: string;
-  startX: number;
-  animationsEnabled: boolean;
-}>(({ delay, color, startX, animationsEnabled }) => {
-  const translateY = useSharedValue(-50);
-  const translateX = useSharedValue(startX);
-  const rotate = useSharedValue(0);
-  const opacity = useSharedValue(1);
-
-  useEffect(() => {
-    if (animationsEnabled) {
-      translateY.value = withDelay(
-        delay,
-        withTiming(height + 100, {
-          duration: 3000,
-          easing: Easing.out(Easing.cubic),
-        })
-      );
-      translateX.value = withDelay(
-        delay,
-        withTiming(startX + (Math.random() - 0.5) * 100, {
-          duration: 3000,
-          easing: Easing.inOut(Easing.ease),
-        })
-      );
-      rotate.value = withDelay(
-        delay,
-        withTiming(Math.random() * 720, {
-          duration: 3000,
-          easing: Easing.linear,
-        })
-      );
-      opacity.value = withDelay(
-        delay + 2000,
-        withTiming(0, { duration: 1000 })
-      );
-    }
-  }, [animationsEnabled]);
-
-  const particleStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateY: translateY.value },
-      { translateX: translateX.value },
-      { rotate: `${rotate.value}deg` },
-    ],
-    opacity: opacity.value,
-  }));
-
-  if (!animationsEnabled) return null;
-
-  return (
-    <Animated.View
-      style={[
-        styles.confettiParticle,
-        { backgroundColor: color },
-        particleStyle,
-      ]}
-    />
-  );
-});
 
 // Celebration checkmark with glow effect - memoized for performance
 const CelebrationCheckmark = React.memo<{
@@ -275,17 +209,6 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
     '#4ECDC4', // Teal
   ], [currentTheme]);
 
-  // Generate confetti particles
-  const confettiParticles = useMemo(() => {
-    if (!settings.animationsEnabled) return [];
-    return Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      delay: Math.random() * 500,
-      color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
-      startX: Math.random() * width,
-    }));
-  }, [confettiColors, settings.animationsEnabled]);
-
   // Dynamic styles
   const dynamicStyles = useMemo(() => ({
     title: { color: colors.text.primary },
@@ -379,20 +302,14 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
 
   return (
     <GradientBackground gradient={themeGradients.screen.home} style={styles.container}>
-      {/* Confetti overlay */}
-      {showConfetti && settings.animationsEnabled && (
-        <View style={styles.confettiContainer} pointerEvents="none">
-          {confettiParticles.map((particle) => (
-            <ConfettiParticle
-              key={particle.id}
-              delay={particle.delay}
-              color={particle.color}
-              startX={particle.startX}
-              animationsEnabled={settings.animationsEnabled}
-            />
-          ))}
-        </View>
-      )}
+      {/* Confetti overlay - uses reusable ConfettiOverlay component */}
+      <ConfettiOverlay
+        visible={showConfetti}
+        colors={confettiColors}
+        particleCount={30}
+        duration={3000}
+        onComplete={() => setShowConfetti(false)}
+      />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -662,17 +579,6 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  confettiContainer: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 100,
-    pointerEvents: 'none',
-  },
-  confettiParticle: {
-    position: 'absolute',
-    width: 10,
-    height: 10,
-    borderRadius: 3,
   },
   scrollView: {
     flex: 1,

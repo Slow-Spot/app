@@ -159,7 +159,12 @@
     "saveSession": "保存课程",
     "sessionNotesPlaceholder": "添加课程笔记...",
     "sessionComplete": "课程完成",
-    "sessionEnded": "课程结束"
+    "sessionEnded": "课程结束",
+    "minSession_one": "1分钟课程",
+    "minSession_other": "{{count}}分钟课程",
+    "minRemaining_one": "剩余1分钟",
+    "minRemaining_other": "剩余{{count}}分钟",
+    "paused": "已暂停"
   },
   "instructions": {
     "timeOfDay": {
@@ -1445,6 +1450,8 @@
     "animationsDescription": "启用或禁用应用中的动画",
     "hapticFeedback": "触觉反馈",
     "hapticFeedbackDescription": "交互时的微妙触感反馈",
+    "zenMode": "禅修模式",
+    "zenModeDesc": "冥想时隐藏界面，仅专注于呼吸",
     "themes": {
       "purple": "平静紫",
       "teal": "和谐青",
@@ -1462,5 +1469,57 @@
     "skipIntentionHint": "跳过设定意图并开始冥想",
     "editSessionHint": "编辑此冥想课程",
     "deleteSessionHint": "删除此冥想课程"
+  },
+  "notifications": {
+    "title": "冥想提醒",
+    "description": "温和的提醒，帮助你保持练习",
+    "enableNotifications": "启用通知",
+    "permissionDenied": "通知已禁用",
+    "permissionDeniedDescription": "要接收冥想提醒，请在设备设置中启用通知。",
+    "openSettings": "打开设置",
+    "permissionsRequired": "提醒功能需要通知权限",
+    "dailyReminder": "每日提醒",
+    "dailyReminderDescription": "每天收到温柔的冥想提醒",
+    "reminderTime": "提醒时间",
+    "tapToChangeTime": "点击更改提醒时间",
+    "nextReminderToday": "今天 {{time}}",
+    "nextReminderTomorrow": "明天 {{time}}",
+    "sendTestNotification": "发送测试通知",
+    "testFailed": "测试失败",
+    "testFailedDescription": "无法发送测试通知。请检查您的设置。",
+    "privacyNote": "提醒在本地安排。不会向外部服务器发送任何数据。",
+    "streakAlert": "连续记录保护",
+    "streakAlertDescription": "如果今天还没冥想，晚间提醒",
+    "streakAlertTime": "提醒时间"
+  },
+  "welcome": {
+    "returning": {
+      "morning": "早上好",
+      "afternoon": "欢迎回来",
+      "evening": "晚上好",
+      "night": "晚安",
+      "morningPersonal": "早上好，{{name}}",
+      "afternoonPersonal": "欢迎回来，{{name}}",
+      "eveningPersonal": "晚上好，{{name}}",
+      "nightPersonal": "晚安，{{name}}",
+      "subtitle1": "准备好享受片刻宁静了吗？",
+      "subtitle2": "你的宁静空间在等待",
+      "subtitle3": "深呼吸，你已经在这里了"
+    },
+    "tapToDismiss": "点击继续"
+  },
+  "celebration": {
+    "firstLaunch": "欢迎开启正念之旅",
+    "milestone": {
+      "firstSession": "你完成了第一次冥想！",
+      "sessions10": "完成10次冥想！",
+      "sessions25": "25次冥想 - 进步惊人！",
+      "sessions50": "50次冥想 - 你很专注！",
+      "sessions100": "100次冥想 - 真正的大师！",
+      "streak7": "连续7天 - 一周坚持！",
+      "streak14": "连续14天 - 两周宁静！",
+      "streak30": "连续30天 - 一个月里程碑！",
+      "streak100": "连续100天 - 传奇！"
+    }
   }
 }

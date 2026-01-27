@@ -1,24 +1,38 @@
-name: Cleanup Old Builds
+name: 🧹 Cleanup Old Builds & Branches
 
 on:
   # Run automatically after each successful build
   workflow_run:
-    workflows: ["EAS Preview Build (Test Deployment)", "EAS Production Build", "EAS Update (OTA - Expo Go)"]
+    workflows:
+      - "🧪 EAS Preview Build (RC & Beta Testing)"
+      - "🚀 EAS Production Build & Submit"
+      - "📱 EAS Update (OTA)"
+      - "Semantic Release"
     types:
       - completed
 
-  # Run weekly to clean up old builds
+  # Run daily to clean up old builds and stale branches
   schedule:
-    - cron: '0 0 * * 0' # Every Sunday at midnight
+    - cron: '0 2 * * *' # Every day at 2 AM UTC
 
   # Manual trigger
   workflow_dispatch:
     inputs:
       keep_count:
-        description: 'Number of recent workflow runs to keep'
+        description: 'Number of recent workflow runs to keep per workflow'
         required: true
         default: '5'
         type: string
+      stale_branch_days:
+        description: 'Delete branches with no commits for X days (0 = skip)'
+        required: true
+        default: '30'
+        type: string
+      dry_run:
+        description: 'Dry run (show what would be deleted without deleting)'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   cleanup:
@@ -129,3 +143,104 @@ jobs:
           echo "Cache cleanup is handled automatically by GitHub"
           echo "   - Removes entries older than 7 days"
           echo "   - Maintains max 10GB total cache size"
+
+  cleanup-stale-branches:
+    name: Cleanup Stale Branches
+    runs-on: ubuntu-latest
+    # Only run on schedule or manual trigger (not after every build)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Delete stale branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STALE_DAYS: ${{ github.event.inputs.stale_branch_days || '30' }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          echo "🧹 Cleaning up stale branches..."
+          echo "   Stale threshold: ${STALE_DAYS} days"
+          echo "   Dry run: ${DRY_RUN}"
+          echo ""
+
+          # Protected branches that should NEVER be deleted
+          PROTECTED_BRANCHES="main develop"
+
+          # Branch patterns to check for staleness
+          # - feature/* branches older than STALE_DAYS
+          # - release/* branches that are merged and older than 7 days
+          # - fix/*, hotfix/*, chore/* branches older than STALE_DAYS
+
+          deleted_count=0
+          skipped_count=0
+
+          # Get all remote branches
+          echo "📋 Fetching branch list..."
+          branches=$(git branch -r --format='%(refname:short)' | grep -v 'origin/HEAD' | sed 's|origin/||')
+
+          for branch in $branches; do
+            # Skip protected branches
+            if echo "$PROTECTED_BRANCHES" | grep -qw "$branch"; then
+              echo "🛡️  [PROTECTED] $branch - skipping"
+              continue
+            fi
+
+            # Get last commit date for the branch
+            last_commit_date=$(git log -1 --format='%ci' "origin/$branch" 2>/dev/null || echo "")
+            if [ -z "$last_commit_date" ]; then
+              echo "⚠️  [UNKNOWN] $branch - could not get last commit date"
+              continue
+            fi
+
+            # Calculate days since last commit
+            last_commit_ts=$(date -d "$last_commit_date" +%s 2>/dev/null || date -j -f "%Y-%m-%d %H:%M:%S %z" "$last_commit_date" +%s 2>/dev/null)
+            current_ts=$(date +%s)
+            days_old=$(( (current_ts - last_commit_ts) / 86400 ))
+
+            # Check if branch is stale
+            if [ "$days_old" -ge "$STALE_DAYS" ]; then
+              # Check if it's a release branch - these get shorter grace period if merged
+              if [[ "$branch" == release/* ]]; then
+                # Check if release branch is merged to main
+                if git branch -r --merged origin/main | grep -q "origin/$branch"; then
+                  if [ "$days_old" -ge 7 ]; then
+                    if [ "$DRY_RUN" = "true" ]; then
+                      echo "🔍 [DRY RUN] Would delete merged release branch: $branch (${days_old} days old)"
+                    else
+                      echo "🗑️  [DELETING] Merged release branch: $branch (${days_old} days old)"
+                      git push origin --delete "$branch" 2>/dev/null && deleted_count=$((deleted_count + 1)) || echo "      ⚠️  Failed to delete"
+                    fi
+                  else
+                    echo "⏳ [RECENT] $branch - merged but only ${days_old} days old (keeping for 7 days)"
+                    skipped_count=$((skipped_count + 1))
+                  fi
+                else
+                  echo "⏳ [ACTIVE] $branch - release branch not yet merged (${days_old} days old)"
+                  skipped_count=$((skipped_count + 1))
+                fi
+              else
+                # Regular feature/fix/chore branches
+                if [ "$DRY_RUN" = "true" ]; then
+                  echo "🔍 [DRY RUN] Would delete stale branch: $branch (${days_old} days old)"
+                else
+                  echo "🗑️  [DELETING] Stale branch: $branch (${days_old} days old)"
+                  git push origin --delete "$branch" 2>/dev/null && deleted_count=$((deleted_count + 1)) || echo "      ⚠️  Failed to delete"
+                fi
+              fi
+            else
+              echo "✅ [ACTIVE] $branch - ${days_old} days old"
+              skipped_count=$((skipped_count + 1))
+            fi
+          done
+
+          echo ""
+          echo "📊 Summary:"
+          echo "   Deleted: ${deleted_count} branches"
+          echo "   Skipped: ${skipped_count} branches"
+          echo "   Protected: main, develop (never deleted)"

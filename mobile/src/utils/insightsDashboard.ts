@@ -8,6 +8,7 @@ import {
   SessionCompletion,
   MoodEntry,
 } from '../types/userProgress';
+import { formatDateKey, parseISO, getWeekKey } from './dateUtils';
 
 // ══════════════════════════════════════════════════════════════
 // OVERALL STATISTICS
@@ -175,9 +176,9 @@ export const calculateMoodTrends = (
   const dailyData = new Map<string, MoodEntry[]>();
 
   moodEntries.forEach(entry => {
-    const entryDate = new Date(entry.date);
+    const entryDate = parseISO(entry.date);
     if (entryDate >= startDate) {
-      const dateKey = entryDate.toISOString().split('T')[0];
+      const dateKey = formatDateKey(entryDate);
       if (!dailyData.has(dateKey)) {
         dailyData.set(dateKey, []);
       }
@@ -474,16 +475,14 @@ export const calculateProgressOverTime = (
   const weeklyGroups = new Map<string, SessionCompletion[]>();
 
   sorted.forEach(completion => {
-    const date = new Date(completion.completedAt);
+    const date = parseISO(completion.completedAt);
     if (date >= startDate) {
-      const weekStart = new Date(date);
-      weekStart.setDate(date.getDate() - date.getDay()); // Start of week
-      const weekKey = weekStart.toISOString().split('T')[0];
+      const weekKeyValue = getWeekKey(date);
 
-      if (!weeklyGroups.has(weekKey)) {
-        weeklyGroups.set(weekKey, []);
+      if (!weeklyGroups.has(weekKeyValue)) {
+        weeklyGroups.set(weekKeyValue, []);
       }
-      weeklyGroups.get(weekKey)!.push(completion);
+      weeklyGroups.get(weekKeyValue)!.push(completion);
     }
   });
 

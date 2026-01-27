@@ -10,8 +10,14 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { SessionConfiguration } from '../types/meditation';
 import { logger } from '../utils/logger';
+import {
+  getCompletedSessions,
+  getProgressStats,
+  getImportedStreak,
+} from './progressTracker';
 
 /**
  * Storage keys
@@ -80,6 +86,37 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   collectAnonymousData: false,
   lastUpdated: new Date().toISOString(),
 };
+
+/**
+ * Zod schemas for import validation (security hardening)
+ */
+const ImportDataSchema = z.object({
+  version: z.string().optional(),
+  schemaVersion: z.number().int().positive().optional(),
+  exportDate: z.string().optional(),
+  configurations: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    totalDuration: z.number().min(0).max(86400), // max 24h in seconds
+    phases: z.array(z.any()).optional(),
+  }).passthrough()).optional(),
+  preferences: z.object({
+    chimeVolume: z.number().min(0).max(1).optional(),
+    ambientVolume: z.number().min(0).max(1).optional(),
+    enableHaptics: z.boolean().optional(),
+    enableReminders: z.boolean().optional(),
+    reminderTime: z.string().optional(),
+    reminderDays: z.array(z.number().int().min(0).max(6)).optional(),
+    keepScreenOn: z.boolean().optional(),
+    displayMode: z.enum(['light', 'dark', 'auto']).optional(),
+    defaultDurationMinutes: z.number().int().min(1).max(240).optional(),
+    autoStartTimer: z.boolean().optional(),
+    showPreSessionScreen: z.boolean().optional(),
+    showPostSessionScreen: z.boolean().optional(),
+    collectAnonymousData: z.boolean().optional(),
+    lastUpdated: z.string().optional(),
+  }).passthrough().optional(),
+});
 
 /**
  * Session Configurations Storage
@@ -332,19 +369,28 @@ export const clearAllData = async (): Promise<void> => {
 
 /**
  * Export all data (for backup)
+ * Includes session history and progress for GDPR Art. 20 compliance
  */
 export const exportAllData = async (): Promise<string> => {
   try {
-    const [configurations, preferences] = await Promise.all([
-      loadConfigurations(),
-      loadPreferences(),
-    ]);
+    const [configurations, preferences, sessions, progressStats, importedStreak] =
+      await Promise.all([
+        loadConfigurations(),
+        loadPreferences(),
+        getCompletedSessions(),
+        getProgressStats(),
+        getImportedStreak(),
+      ]);
 
     const exportData = {
-      version: '1.0',
+      version: '1.1',
+      schemaVersion: STORAGE_SCHEMA_VERSION,
       exportDate: new Date().toISOString(),
       configurations,
       preferences,
+      sessions,
+      progressStats,
+      importedStreak,
     };
 
     return JSON.stringify(exportData, null, 2);
@@ -356,10 +402,26 @@ export const exportAllData = async (): Promise<string> => {
 
 /**
  * Import data (from backup)
+ * Validates data with Zod schema before importing (security hardening)
  */
 export const importData = async (jsonData: string): Promise<void> => {
   try {
-    const data = JSON.parse(jsonData);
+    // Parse JSON first
+    let rawData: unknown;
+    try {
+      rawData = JSON.parse(jsonData);
+    } catch {
+      throw new Error('Invalid JSON format in import data');
+    }
+
+    // Validate with Zod schema
+    const parseResult = ImportDataSchema.safeParse(rawData);
+    if (!parseResult.success) {
+      logger.error('Import validation failed:', parseResult.error.issues);
+      throw new Error('Import data validation failed: invalid data structure');
+    }
+
+    const data = parseResult.data;
 
     // Honor version in backup if provided
     if (data.schemaVersion) {
@@ -382,6 +444,8 @@ export const importData = async (jsonData: string): Promise<void> => {
         JSON.stringify(data.preferences)
       );
     }
+
+    logger.log('Data imported successfully');
   } catch (error) {
     logger.error('Failed to import data:', error);
     throw error;

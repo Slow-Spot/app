@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slow Spot",
     "slug": "slow-spot",
-    "version": "1.15.0",
+    "version": "1.14.0-beta.20",
     "orientation": "portrait",
     "scheme": "slowspot",
     "icon": "./assets/icon.png",
@@ -22,6 +22,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.slowspot.app",
+      "appleTeamId": "QQHRMJ6B78",
       "privacyManifests": {
         "NSPrivacyAccessedAPITypes": [
           {
@@ -46,14 +47,12 @@
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": false,
           "NSExceptionDomains": {}
-        },
-        "LSMinimumSystemVersion": "13.0",
-        "MinimumOSVersion": "13.0"
+        }
       },
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "11500"
+      "buildNumber": "11400"
     },
     "android": {
       "package": "com.slowspot.app",
@@ -69,7 +68,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
-      "versionCode": 11500
+      "versionCode": 11400
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -92,15 +91,51 @@
       "expo-localization",
       "expo-asset",
       [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#8B5CF6",
+          "sounds": [
+            "./assets/sounds/meditation-bell.wav"
+          ],
+          "defaultChannel": "daily-reminders"
+        }
+      ],
+      [
         "expo-build-properties",
         {
+          "ios": {
+            "deploymentTarget": "15.1"
+          },
           "android": {
             "enableProguardInReleaseBuilds": true,
             "enableShrinkResourcesInReleaseBuilds": true,
             "extraProguardRules": "-keep class com.facebook.hermes.unicode.** { *; }\n-keep class com.facebook.jni.** { *; }\n-keep class com.swmansion.reanimated.** { *; }\n-keep class com.swmansion.gesturehandler.** { *; }\n-keep class com.swmansion.rnscreens.** { *; }\n-keep public class com.horcrux.svg.** { *; }\n-keep class expo.modules.** { *; }\n-keep class com.airbnb.lottie.** { *; }\n-keepattributes SourceFile,LineNumberTable\n-renamesourcefileattribute SourceFile"
           }
         }
-      ]
+      ],
+      "expo-live-activity",
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "MeditationTimer",
+              "label": "Meditation Timer",
+              "description": "Shows current meditation session timer",
+              "minWidth": "250dp",
+              "minHeight": "100dp",
+              "targetCellWidth": 3,
+              "targetCellHeight": 2,
+              "previewImage": "./assets/widget-preview/meditation-timer.png",
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 0
+            }
+          ]
+        }
+      ],
+      "@bacons/apple-targets",
+      "./plugins/withAppGroups"
     ]
   }
 }

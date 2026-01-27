@@ -159,7 +159,12 @@
     "endSessionCancel": "जारी रखें",
     "endSessionConfirm": "सत्र समाप्त करें",
     "sessionComplete": "सत्र पूर्ण",
-    "sessionEnded": "सत्र समाप्त"
+    "sessionEnded": "सत्र समाप्त",
+    "minSession_one": "1 मिनट का सत्र",
+    "minSession_other": "{{count}} मिनट का सत्र",
+    "minRemaining_one": "1 मिनट शेष",
+    "minRemaining_other": "{{count}} मिनट शेष",
+    "paused": "रुका हुआ"
   },
   "quotes": {
     "title": "प्रेरक उद्धरण",
@@ -1445,6 +1450,8 @@
     "animationsDescription": "ऐप में एनिमेशन सक्षम या अक्षम करें",
     "hapticFeedback": "हैप्टिक फीडबैक",
     "hapticFeedbackDescription": "इंटरैक्शन पर सूक्ष्म स्पर्श प्रतिक्रिया",
+    "zenMode": "ज़ेन मोड",
+    "zenModeDesc": "ध्यान के दौरान UI छुपाएं, केवल सांस पर ध्यान दें",
     "themes": {
       "purple": "शांत बैंगनी",
       "teal": "सामंजस्यपूर्ण टील",
@@ -1462,5 +1469,57 @@
     "skipIntentionHint": "इरादा सेटिंग छोड़ता है और ध्यान शुरू करता है",
     "editSessionHint": "इस ध्यान सत्र को संपादित करें",
     "deleteSessionHint": "इस ध्यान सत्र को हटाएं"
+  },
+  "notifications": {
+    "title": "ध्यान अनुस्मारक",
+    "description": "नियमित अभ्यास के लिए सौम्य अनुस्मारक",
+    "enableNotifications": "सूचनाएं सक्षम करें",
+    "permissionDenied": "सूचनाएं अक्षम",
+    "permissionDeniedDescription": "ध्यान अनुस्मारक प्राप्त करने के लिए, कृपया अपनी डिवाइस सेटिंग्स में सूचनाएं सक्षम करें।",
+    "openSettings": "सेटिंग्स खोलें",
+    "permissionsRequired": "अनुस्मारक के लिए सूचना अनुमतियां आवश्यक हैं",
+    "dailyReminder": "दैनिक अनुस्मारक",
+    "dailyReminderDescription": "हर दिन ध्यान करने के लिए एक सौम्य अनुस्मारक प्राप्त करें",
+    "reminderTime": "अनुस्मारक समय",
+    "tapToChangeTime": "अनुस्मारक समय बदलने के लिए टैप करें",
+    "nextReminderToday": "आज {{time}} बजे",
+    "nextReminderTomorrow": "कल {{time}} बजे",
+    "sendTestNotification": "परीक्षण सूचना भेजें",
+    "testFailed": "परीक्षण विफल",
+    "testFailedDescription": "परीक्षण सूचना नहीं भेजी जा सकी। कृपया अपनी सेटिंग्स जांचें।",
+    "privacyNote": "अनुस्मारक स्थानीय रूप से निर्धारित हैं। कोई डेटा बाहरी सर्वर पर नहीं भेजा जाता।",
+    "streakAlert": "स्ट्रीक सुरक्षा",
+    "streakAlertDescription": "यदि आज ध्यान नहीं किया तो शाम का अनुस्मारक",
+    "streakAlertTime": "अलर्ट समय"
+  },
+  "welcome": {
+    "returning": {
+      "morning": "सुप्रभात",
+      "afternoon": "वापसी पर स्वागत",
+      "evening": "शुभ संध्या",
+      "night": "शुभ रात्रि",
+      "morningPersonal": "सुप्रभात, {{name}}",
+      "afternoonPersonal": "वापसी पर स्वागत, {{name}}",
+      "eveningPersonal": "शुभ संध्या, {{name}}",
+      "nightPersonal": "शुभ रात्रि, {{name}}",
+      "subtitle1": "शांति के एक पल के लिए तैयार?",
+      "subtitle2": "आपका शांति का स्थान प्रतीक्षा में है",
+      "subtitle3": "सांस लें, आप यहां हैं"
+    },
+    "tapToDismiss": "जारी रखने के लिए टैप करें"
+  },
+  "celebration": {
+    "firstLaunch": "माइंडफुलनेस यात्रा में आपका स्वागत है",
+    "milestone": {
+      "firstSession": "आपने अपना पहला सत्र पूरा किया!",
+      "sessions10": "10 सत्र पूरे!",
+      "sessions25": "25 सत्र - अद्भुत प्रगति!",
+      "sessions50": "50 सत्र - आप समर्पित हैं!",
+      "sessions100": "100 सत्र - सच्चे मास्टर!",
+      "streak7": "7 दिन की स्ट्रीक - एक सप्ताह मजबूत!",
+      "streak14": "14 दिन की स्ट्रीक - दो सप्ताह की शांति!",
+      "streak30": "30 दिन की स्ट्रीक - एक महीने का मील का पत्थर!",
+      "streak100": "100 दिन की स्ट्रीक - महान!"
+    }
   }
 }

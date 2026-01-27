@@ -324,6 +324,8 @@ export interface PersonalizationSettings {
   // System preference overrides
   followSystemReduceMotion: boolean; // When true, respects system reduce motion setting
   followSystemFontSize: boolean; // When true, respects system font scale
+  // Meditation UX options
+  zenMode: boolean; // When true, hides all UI during meditation except breathing circle
 }
 
 // Default settings
@@ -336,6 +338,7 @@ const DEFAULT_SETTINGS: PersonalizationSettings = {
   largerTextMode: false,
   followSystemReduceMotion: true, // Respect system accessibility by default
   followSystemFontSize: true, // Respect system font size by default
+  zenMode: false, // Show full UI by default
 };
 
 // Helper function to generate gradient from primary color
@@ -407,6 +410,7 @@ interface PersonalizationContextType {
   setLargerTextMode: (enabled: boolean) => Promise<void>;
   setFollowSystemReduceMotion: (enabled: boolean) => Promise<void>;
   setFollowSystemFontSize: (enabled: boolean) => Promise<void>;
+  setZenMode: (enabled: boolean) => Promise<void>;
   resetToDefaults: () => Promise<void>;
   isLoading: boolean;
   // Formatting helpers from locale
@@ -576,6 +580,11 @@ export const PersonalizationProvider: React.FC<{ children: React.ReactNode }> = 
     await saveSettings({ ...settings, followSystemFontSize: enabled });
   }, [settings, saveSettings]);
 
+  // Set zen mode (hide UI during meditation)
+  const setZenMode = useCallback(async (enabled: boolean) => {
+    await saveSettings({ ...settings, zenMode: enabled });
+  }, [settings, saveSettings]);
+
   // Reset to defaults
   const resetToDefaults = useCallback(async () => {
     await saveSettings(DEFAULT_SETTINGS);
@@ -617,6 +626,7 @@ export const PersonalizationProvider: React.FC<{ children: React.ReactNode }> = 
         setLargerTextMode,
         setFollowSystemReduceMotion,
         setFollowSystemFontSize,
+        setZenMode,
         resetToDefaults,
         isLoading,
         formatNumber: localeInfo.formatNumber,

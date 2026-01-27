@@ -159,7 +159,12 @@
     "saveSession": "Sitzung speichern",
     "sessionNotesPlaceholder": "Notizen zur Sitzung hinzufügen...",
     "sessionComplete": "Sitzung abgeschlossen",
-    "sessionEnded": "Sitzung beendet"
+    "sessionEnded": "Sitzung beendet",
+    "minSession_one": "1 Minute Sitzung",
+    "minSession_other": "{{count}} Minuten Sitzung",
+    "minRemaining_one": "Noch 1 Minute",
+    "minRemaining_other": "Noch {{count}} Minuten",
+    "paused": "Pausiert"
   },
   "quotes": {
     "title": "Inspirierende Zitate",
@@ -1445,6 +1450,8 @@
     "animationsDescription": "Aktiviere oder deaktiviere Animationen in der App",
     "hapticFeedback": "Haptisches Feedback",
     "hapticFeedbackDescription": "Subtiles Berührungsfeedback bei Interaktionen",
+    "zenMode": "Zen-Modus",
+    "zenModeDesc": "UI während der Meditation ausblenden, nur auf die Atmung konzentrieren",
     "themes": {
       "purple": "Ruhiges Lila",
       "teal": "Harmonisches Türkis",
@@ -1462,5 +1469,57 @@
     "skipIntentionHint": "Überspringt die Absichtseinstellung und startet die Meditation",
     "editSessionHint": "Diese Meditationssitzung bearbeiten",
     "deleteSessionHint": "Diese Meditationssitzung löschen"
+  },
+  "notifications": {
+    "title": "Meditations-Erinnerungen",
+    "description": "Sanfte Erinnerungen für eine regelmäßige Praxis",
+    "enableNotifications": "Benachrichtigungen aktivieren",
+    "permissionDenied": "Benachrichtigungen deaktiviert",
+    "permissionDeniedDescription": "Um Meditations-Erinnerungen zu erhalten, aktivieren Sie bitte Benachrichtigungen in Ihren Geräteeinstellungen.",
+    "openSettings": "Einstellungen öffnen",
+    "permissionsRequired": "Benachrichtigungsberechtigungen sind für Erinnerungen erforderlich",
+    "dailyReminder": "Tägliche Erinnerung",
+    "dailyReminderDescription": "Erhalten Sie täglich eine sanfte Erinnerung zum Meditieren",
+    "reminderTime": "Erinnerungszeit",
+    "tapToChangeTime": "Tippen, um die Erinnerungszeit zu ändern",
+    "nextReminderToday": "Heute um {{time}}",
+    "nextReminderTomorrow": "Morgen um {{time}}",
+    "sendTestNotification": "Testbenachrichtigung senden",
+    "testFailed": "Test fehlgeschlagen",
+    "testFailedDescription": "Testbenachrichtigung konnte nicht gesendet werden. Bitte überprüfen Sie Ihre Einstellungen.",
+    "privacyNote": "Erinnerungen werden lokal geplant. Keine Daten werden an externe Server gesendet.",
+    "streakAlert": "Serien-Schutz",
+    "streakAlertDescription": "Abenderinnerung, wenn du heute noch nicht meditiert hast",
+    "streakAlertTime": "Alarmzeit"
+  },
+  "welcome": {
+    "returning": {
+      "morning": "Guten Morgen",
+      "afternoon": "Willkommen zurück",
+      "evening": "Guten Abend",
+      "night": "Gute Nacht",
+      "morningPersonal": "Guten Morgen, {{name}}",
+      "afternoonPersonal": "Willkommen zurück, {{name}}",
+      "eveningPersonal": "Guten Abend, {{name}}",
+      "nightPersonal": "Gute Nacht, {{name}}",
+      "subtitle1": "Bereit für einen Moment der Ruhe?",
+      "subtitle2": "Dein Raum des Friedens wartet",
+      "subtitle3": "Atme durch, du bist jetzt hier"
+    },
+    "tapToDismiss": "Tippen zum Fortfahren"
+  },
+  "celebration": {
+    "firstLaunch": "Willkommen auf deiner Achtsamkeitsreise",
+    "milestone": {
+      "firstSession": "Du hast deine erste Sitzung abgeschlossen!",
+      "sessions10": "10 Sitzungen geschafft!",
+      "sessions25": "25 Sitzungen - Erstaunlicher Fortschritt!",
+      "sessions50": "50 Sitzungen - Du bist engagiert!",
+      "sessions100": "100 Sitzungen - Wahrer Meister!",
+      "streak7": "7-Tage-Serie - Eine Woche stark!",
+      "streak14": "14-Tage-Serie - Zwei Wochen Ruhe!",
+      "streak30": "30-Tage-Serie - Ein Monat Meilenstein!",
+      "streak100": "100-Tage-Serie - Legendär!"
+    }
   }
 }

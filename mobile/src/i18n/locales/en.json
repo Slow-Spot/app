@@ -159,7 +159,12 @@
     "saveSession": "Save Session",
     "sessionNotesPlaceholder": "Add notes about your session...",
     "sessionComplete": "Session Complete",
-    "sessionEnded": "Session Ended"
+    "sessionEnded": "Session Ended",
+    "minSession_one": "1 minute session",
+    "minSession_other": "{{count}} minute session",
+    "minRemaining_one": "1 minute remaining",
+    "minRemaining_other": "{{count}} minutes remaining",
+    "paused": "Paused"
   },
   "instructions": {
     "timeOfDay": {
@@ -1445,6 +1450,8 @@
     "animationsDescription": "Enable or disable animations in the app",
     "hapticFeedback": "Haptic Feedback",
     "hapticFeedbackDescription": "Subtle touch feedback on interactions",
+    "zenMode": "Zen Mode",
+    "zenModeDesc": "Hide UI during meditation, focus only on breathing",
     "themes": {
       "purple": "Calm Purple",
       "teal": "Harmonious Teal",
@@ -1462,5 +1469,57 @@
     "skipIntentionHint": "Skips intention setting and starts meditation",
     "editSessionHint": "Edit this meditation session",
     "deleteSessionHint": "Delete this meditation session"
+  },
+  "notifications": {
+    "title": "Meditation Reminders",
+    "description": "Gentle nudges to keep your practice consistent",
+    "enableNotifications": "Enable Notifications",
+    "permissionDenied": "Notifications Disabled",
+    "permissionDeniedDescription": "To receive meditation reminders, please enable notifications in your device settings.",
+    "openSettings": "Open Settings",
+    "permissionsRequired": "Notification permissions are required for reminders",
+    "dailyReminder": "Daily Reminder",
+    "dailyReminderDescription": "Get a gentle reminder to meditate each day",
+    "reminderTime": "Reminder Time",
+    "tapToChangeTime": "Tap to change the reminder time",
+    "nextReminderToday": "Today at {{time}}",
+    "nextReminderTomorrow": "Tomorrow at {{time}}",
+    "sendTestNotification": "Send Test Notification",
+    "testFailed": "Test Failed",
+    "testFailedDescription": "Could not send test notification. Please check your settings.",
+    "streakAlert": "Streak Protection",
+    "streakAlertDescription": "Evening reminder if you haven't meditated today",
+    "streakAlertTime": "Alert Time",
+    "privacyNote": "Reminders are scheduled locally. No data is sent to external servers."
+  },
+  "welcome": {
+    "returning": {
+      "morning": "Good morning",
+      "afternoon": "Welcome back",
+      "evening": "Good evening",
+      "night": "Peaceful night",
+      "morningPersonal": "Good morning, {{name}}",
+      "afternoonPersonal": "Welcome back, {{name}}",
+      "eveningPersonal": "Good evening, {{name}}",
+      "nightPersonal": "Peaceful night, {{name}}",
+      "subtitle1": "Ready for a moment of calm?",
+      "subtitle2": "Your space of peace awaits",
+      "subtitle3": "Take a breath, you're here now"
+    },
+    "tapToDismiss": "Tap to continue"
+  },
+  "celebration": {
+    "firstLaunch": "Welcome to your mindfulness journey",
+    "milestone": {
+      "firstSession": "You completed your first session!",
+      "sessions10": "10 sessions completed!",
+      "sessions25": "25 sessions - Amazing progress!",
+      "sessions50": "50 sessions - You're dedicated!",
+      "sessions100": "100 sessions - True master!",
+      "streak7": "7 day streak - One week strong!",
+      "streak14": "14 day streak - Two weeks of calm!",
+      "streak30": "30 day streak - One month milestone!",
+      "streak100": "100 day streak - Legendary!"
+    }
   }
 }

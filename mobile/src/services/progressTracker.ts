@@ -5,6 +5,14 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logger } from '../utils/logger';
+import {
+  formatDateKey,
+  getTodayKey,
+  getYesterdayKey,
+  parseISO,
+  subDays,
+  areConsecutiveDays,
+} from '../utils/dateUtils';
 
 const STORAGE_KEY = 'meditation_progress';
 const SESSIONS_KEY = 'completed_sessions';
@@ -93,12 +101,7 @@ export const getCompletedSessions = async (): Promise<CompletedSession[]> => {
  * Get unique dates when user meditated (YYYY-MM-DD format)
  */
 const getUniqueMeditationDates = (sessions: CompletedSession[]): string[] => {
-  const dates = sessions.map((s) => {
-    const date = new Date(s.date);
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD
-  });
-
-  // Remove duplicates and sort
+  const dates = sessions.map((s) => formatDateKey(parseISO(s.date)));
   return [...new Set(dates)].sort();
 };
 
@@ -109,35 +112,25 @@ export const calculateCurrentStreak = (sessions: CompletedSession[]): number => 
   if (sessions.length === 0) return 0;
 
   const uniqueDates = getUniqueMeditationDates(sessions);
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayKey();
+  const yesterday = getYesterdayKey();
 
+  // Check most recent date - must be today or yesterday for active streak
+  const lastDateKey = uniqueDates[uniqueDates.length - 1];
+  if (lastDateKey !== today && lastDateKey !== yesterday) {
+    return 0; // Streak is broken
+  }
+
+  // Count consecutive days backwards
   let streak = 0;
-  let currentDate = new Date();
+  let expectedDateKey = lastDateKey === today ? today : yesterday;
 
-  // Check if user meditated today or yesterday (to keep streak alive)
   for (let i = uniqueDates.length - 1; i >= 0; i--) {
-    const meditationDate = uniqueDates[i];
-    const checkDate = new Date(currentDate);
-    checkDate.setDate(checkDate.getDate() - streak);
-    const expectedDate = checkDate.toISOString().split('T')[0];
-
-    if (meditationDate === expectedDate) {
+    if (uniqueDates[i] === expectedDateKey) {
       streak++;
-    } else if (streak === 0 && meditationDate < today) {
-      // Haven't meditated today, check if yesterday
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-      if (meditationDate === yesterdayStr) {
-        streak = 1;
-      } else {
-        // Streak is broken
-        break;
-      }
+      expectedDateKey = formatDateKey(subDays(parseISO(expectedDateKey), 1));
     } else {
-      // Gap in streak
-      break;
+      break; // Gap found
     }
   }
 
@@ -151,23 +144,19 @@ export const calculateLongestStreak = (sessions: CompletedSession[]): number => 
   if (sessions.length === 0) return 0;
 
   const uniqueDates = getUniqueMeditationDates(sessions);
+  if (uniqueDates.length === 1) return 1;
+
   let longestStreak = 1;
   let currentStreak = 1;
 
   for (let i = 1; i < uniqueDates.length; i++) {
-    const prevDate = new Date(uniqueDates[i - 1]);
-    const currDate = new Date(uniqueDates[i]);
+    const prevDate = parseISO(uniqueDates[i - 1]);
+    const currDate = parseISO(uniqueDates[i]);
 
-    // Calculate difference in days
-    const diffTime = currDate.getTime() - prevDate.getTime();
-    const diffDays = diffTime / (1000 * 3600 * 24);
-
-    if (diffDays === 1) {
-      // Consecutive day
+    if (areConsecutiveDays(prevDate, currDate)) {
       currentStreak++;
       longestStreak = Math.max(longestStreak, currentStreak);
     } else {
-      // Gap - reset current streak
       currentStreak = 1;
     }
   }
