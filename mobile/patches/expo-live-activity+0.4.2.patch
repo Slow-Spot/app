@@ -1,0 +1,35 @@
+diff --git a/node_modules/expo-live-activity/ios-files/LiveActivityView.swift b/node_modules/expo-live-activity/ios-files/LiveActivityView.swift
+index 1a00e92..6ba3f36 100644
+--- a/node_modules/expo-live-activity/ios-files/LiveActivityView.swift
++++ b/node_modules/expo-live-activity/ios-files/LiveActivityView.swift
+@@ -135,7 +135,8 @@ import WidgetKit
+           }
+         }
+       }
+-      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: imageAlignment)
++      // Removed frame(maxWidth: .infinity) - it was causing logo to shift left
++      // Now the image has natural size defined by computedWidth/computedHeight
+       .background(
+         GeometryReader { proxy in
+           Color.clear
+@@ -188,7 +189,7 @@ import WidgetKit
+         let hasImage = contentState.imageName != nil
+         let effectiveStretch = isStretch && hasImage
+ 
+-        HStack(alignment: .center) {
++        HStack(alignment: .center, spacing: 12) {
+           if hasImage, isLeftImage {
+             if let imageName = contentState.imageName {
+               alignedImage(imageName: imageName)
+@@ -220,6 +221,11 @@ import WidgetKit
+             }
+           }.layoutPriority(1)
+ 
++          // Spacer for text alignment when image is on left
++          if hasImage, isLeftImage {
++            Spacer()
++          }
++
+           if hasImage, !isLeftImage { // right side (default)
+             Spacer()
+             if let imageName = contentState.imageName {

@@ -647,9 +647,18 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           liveActivityService.endActivity(true);
           androidWidgetService.endSession();
           onComplete();
-        } else if (!isPaused) {
-          // Reschedule notification for remaining time if session still running
-          await notificationService.rescheduleSessionCompletionNotification(actualRemaining);
+        } else {
+          // KLUCZOWA NAPRAWA: Synchronizuj Live Activity z aktualnym czasem
+          // To naprawia problem gdy Live Activity pokazuje inny czas niż ekran medytacji
+          if (liveActivityIdRef.current) {
+            await liveActivityService.updateRemainingTime(actualRemaining, isPaused);
+            logger.log(`Live Activity synced: ${actualRemaining}s, paused: ${isPaused}`);
+          }
+
+          if (!isPaused) {
+            // Reschedule notification for remaining time if session still running
+            await notificationService.rescheduleSessionCompletionNotification(actualRemaining);
+          }
         }
       }
     };

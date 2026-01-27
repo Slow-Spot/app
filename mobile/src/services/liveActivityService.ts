@@ -107,8 +107,10 @@ class LiveActivityService {
         timerType: 'circular',
         padding: 16,
         imagePosition: 'left',
-        imageSize: { width: 60, height: 60 },
+        imageWidth: 52,
+        imageHeight: 52,
         imageAlign: 'center',
+        contentFit: 'contain',
       };
 
       const activityId = LiveActivity.startActivity(state, config);
