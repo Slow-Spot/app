@@ -1,3 +1,17 @@
+## [1.14.0-beta.17](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.16...v1.14.0-beta.17) (2026-01-27)
+
+### Features
+
+* **mobile:** add Live Activity i18n with pluralization ([747350b](https://github.com/Slow-Spot/app/commit/747350b9ffe66d7de7305c44e503805365bdf00a))
+* **mobile:** add Zen Mode and improve meditation haptics ([c13c868](https://github.com/Slow-Spot/app/commit/c13c868ccecb66a483d84318b6b87051bf4b41c6))
+
+### Bug Fixes
+
+* **mobile:** add custom notification sound and sync build versions ([2f7d2f3](https://github.com/Slow-Spot/app/commit/2f7d2f3db2f547e61b8356a46648ed3468892bd7))
+* **mobile:** add i18n translations for Live Activity ([ac06a72](https://github.com/Slow-Spot/app/commit/ac06a72bd648c6dd01fb918adb274c68c43882d8))
+* **mobile:** sync all target versions to EAS build number ([89a9fb9](https://github.com/Slow-Spot/app/commit/89a9fb9ce8dc692f2a47fe36b6bab13d969e7425))
+* **mobile:** sync Live Activity with app state and add completion notification ([2b0f91c](https://github.com/Slow-Spot/app/commit/2b0f91c2942464fb7910f1d121dbec6c0f62a372))
+
 ## [1.14.0-beta.16](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.15...v1.14.0-beta.16) (2026-01-26)
 
 ### Bug Fixes
