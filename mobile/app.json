@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slow Spot",
     "slug": "slow-spot",
-    "version": "1.14.1",
+    "version": "1.14.0-beta.16",
     "orientation": "portrait",
     "scheme": "slowspot",
     "icon": "./assets/icon.png",
@@ -52,7 +52,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "30"
+      "buildNumber": "11400"
     },
     "android": {
       "package": "com.slowspot.app",
@@ -68,7 +68,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
-      "versionCode": 30
+      "versionCode": 11400
     },
     "web": {
       "favicon": "./assets/favicon.png"
