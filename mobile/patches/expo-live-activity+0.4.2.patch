@@ -1,5 +1,5 @@
 diff --git a/node_modules/expo-live-activity/ios-files/LiveActivityView.swift b/node_modules/expo-live-activity/ios-files/LiveActivityView.swift
-index 1a00e92..6ba3f36 100644
+index 1a00e92..a39d96c 100644
 --- a/node_modules/expo-live-activity/ios-files/LiveActivityView.swift
 +++ b/node_modules/expo-live-activity/ios-files/LiveActivityView.swift
 @@ -135,7 +135,8 @@ import WidgetKit
@@ -21,6 +21,15 @@ index 1a00e92..6ba3f36 100644
            if hasImage, isLeftImage {
              if let imageName = contentState.imageName {
                alignedImage(imageName: imageName)
+@@ -209,7 +210,7 @@ import WidgetKit
+ 
+             if effectiveStretch {
+               if let date = contentState.timerEndDateInMilliseconds {
+-                ProgressView(timerInterval: Date.toTimerInterval(miliseconds: date))
++                ProgressView(timerInterval: Date.toTimerInterval(miliseconds: date), countsDown: true)
+                   .tint(progressViewTint)
+                   .modifier(ConditionalForegroundViewModifier(color: attributes.progressViewLabelColor))
+               } else if let progress = contentState.progress {
 @@ -220,6 +221,11 @@ import WidgetKit
              }
            }.layoutPriority(1)
@@ -33,3 +42,34 @@ index 1a00e92..6ba3f36 100644
            if hasImage, !isLeftImage { // right side (default)
              Spacer()
              if let imageName = contentState.imageName {
+@@ -230,7 +236,7 @@ import WidgetKit
+ 
+         if !effectiveStretch {
+           if let date = contentState.timerEndDateInMilliseconds {
+-            ProgressView(timerInterval: Date.toTimerInterval(miliseconds: date))
++            ProgressView(timerInterval: Date.toTimerInterval(miliseconds: date), countsDown: true)
+               .tint(progressViewTint)
+               .modifier(ConditionalForegroundViewModifier(color: attributes.progressViewLabelColor))
+           } else if let progress = contentState.progress {
+diff --git a/node_modules/expo-live-activity/ios-files/LiveActivityWidget.swift b/node_modules/expo-live-activity/ios-files/LiveActivityWidget.swift
+index 24cd8c5..3d5adec 100644
+--- a/node_modules/expo-live-activity/ios-files/LiveActivityWidget.swift
++++ b/node_modules/expo-live-activity/ios-files/LiveActivityWidget.swift
+@@ -149,7 +149,7 @@ struct LiveActivityWidget: Widget {
+   }
+ 
+   private func dynamicIslandExpandedBottom(endDate: Double, progressViewTint: String?) -> some View {
+-    ProgressView(timerInterval: Date.toTimerInterval(miliseconds: endDate))
++    ProgressView(timerInterval: Date.toTimerInterval(miliseconds: endDate), countsDown: true)
+       .foregroundStyle(.white)
+       .tint(progressViewTint.map { Color(hex: $0) })
+       .padding(.top, 5)
+@@ -158,7 +158,7 @@ struct LiveActivityWidget: Widget {
+   private func circularTimer(endDate: Double) -> some View {
+     ProgressView(
+       timerInterval: Date.toTimerInterval(miliseconds: endDate),
+-      countsDown: false,
++      countsDown: true,
+       label: { EmptyView() },
+       currentValueLabel: {
+         EmptyView()
