@@ -52,7 +52,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "11600"
+      "buildNumber": "11602"
     },
     "android": {
       "package": "com.slowspot.app",
