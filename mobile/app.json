@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slow Spot",
     "slug": "slow-spot",
-    "version": "1.14.0-beta.18",
+    "version": "1.14.0-beta.19",
     "orientation": "portrait",
     "scheme": "slowspot",
     "icon": "./assets/icon.png",

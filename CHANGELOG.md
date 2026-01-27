@@ -1,3 +1,9 @@
+## [1.14.0-beta.19](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.18...v1.14.0-beta.19) (2026-01-27)
+
+### Bug Fixes
+
+* **mobile:** fix Live Activity sync and logo alignment ([940e379](https://github.com/Slow-Spot/app/commit/940e379f1f2d8b52c6d127ffef83b77c1be61cc1))
+
 ## [1.14.0-beta.18](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.17...v1.14.0-beta.18) (2026-01-27)
 
 ### Bug Fixes
