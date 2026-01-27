@@ -1,3 +1,9 @@
+## [1.14.0-beta.20](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.19...v1.14.0-beta.20) (2026-01-27)
+
+### Bug Fixes
+
+* **mobile:** add countsDown: true to Live Activity progress bars ([3611a3a](https://github.com/Slow-Spot/app/commit/3611a3abc01543a14cc37559867bf11aea2ec076))
+
 ## [1.14.0-beta.19](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.18...v1.14.0-beta.19) (2026-01-27)
 
 ### Bug Fixes
