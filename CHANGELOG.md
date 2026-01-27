@@ -1,3 +1,35 @@
+## [1.16.0](https://github.com/Slow-Spot/app/compare/v1.15.0...v1.16.0) (2026-01-27)
+
+### Features
+
+* **mobile:** add background timer, widgets, Apple Watch app and UX improvements ([bd652c6](https://github.com/Slow-Spot/app/commit/bd652c684e578b8201dba64ce598cadd415064f1))
+* **mobile:** add Live Activity i18n with pluralization ([747350b](https://github.com/Slow-Spot/app/commit/747350b9ffe66d7de7305c44e503805365bdf00a))
+* **mobile:** add metadata validation script for Google Play ([af64309](https://github.com/Slow-Spot/app/commit/af643092dd0e7a8bb39574025ac3cacca52c187f))
+* **mobile:** add notification system and code cleanup ([79b9b36](https://github.com/Slow-Spot/app/commit/79b9b36050056c17cbb85887d3b7d9ab482e8349))
+* **mobile:** add Zen Mode and improve meditation haptics ([c13c868](https://github.com/Slow-Spot/app/commit/c13c868ccecb66a483d84318b6b87051bf4b41c6))
+* **release:** enhance cleanup workflow for multi-branch strategy ([7d651c6](https://github.com/Slow-Spot/app/commit/7d651c6922c95c325ba64508d0a6f082b42242e6))
+
+### Bug Fixes
+
+* **mobile:** add countsDown: true to Live Activity progress bars ([3611a3a](https://github.com/Slow-Spot/app/commit/3611a3abc01543a14cc37559867bf11aea2ec076))
+* **mobile:** add custom notification sound and sync build versions ([2f7d2f3](https://github.com/Slow-Spot/app/commit/2f7d2f3db2f547e61b8356a46648ed3468892bd7))
+* **mobile:** add i18n translations for Live Activity ([ac06a72](https://github.com/Slow-Spot/app/commit/ac06a72bd648c6dd01fb918adb274c68c43882d8))
+* **mobile:** add notification sound and configure local versioning ([202fce3](https://github.com/Slow-Spot/app/commit/202fce3a775e79f6271d331001fa06b2568a40fe))
+* **mobile:** add prebuildCommand to EAS config for Live Activity entitlements ([ba51ea7](https://github.com/Slow-Spot/app/commit/ba51ea7c14b6a01cbbbe01a3b1f16bc5bac1e962))
+* **mobile:** clean up iOS deployment target and remove duplicate proguard rule ([8b3480f](https://github.com/Slow-Spot/app/commit/8b3480f658af9303094ba0313fc981b61aa9cef7))
+* **mobile:** complete truncated short descriptions for Google Play ([fca8841](https://github.com/Slow-Spot/app/commit/fca88413b5c4a5a04dcec9ac3e089545a61e8525))
+* **mobile:** configure App Groups for Live Activity on lock screen ([8dccecc](https://github.com/Slow-Spot/app/commit/8dccecc37565cd8d8b436cc7f2103039d9c73016))
+* **mobile:** fix Live Activity sync and logo alignment ([940e379](https://github.com/Slow-Spot/app/commit/940e379f1f2d8b52c6d127ffef83b77c1be61cc1))
+* **mobile:** register withAppGroups plugin and add EAS pre-build hook ([0f02bff](https://github.com/Slow-Spot/app/commit/0f02bff08aaa5645f6b84b5bd47e48b6eaf320be))
+* **mobile:** remove unused variable warning in TimerManager ([9e04e85](https://github.com/Slow-Spot/app/commit/9e04e856e950c177f9be4a9d5a9e9416aceb0357))
+* **mobile:** resolve CFBundleVersion mismatch for Watch app ([2929171](https://github.com/Slow-Spot/app/commit/292917150dd502c6d708cb0f369e7adc3ae1fba7))
+* **mobile:** resolve Live Activity configuration conflict ([b8dea6e](https://github.com/Slow-Spot/app/commit/b8dea6efd74816aff935e41ca1c1c021a352a44a))
+* **mobile:** shorten shortDescription to comply with Google Play 80-char limit ([c0a2839](https://github.com/Slow-Spot/app/commit/c0a2839d43e02ffa7238c3d04824260e66929cf0))
+* **mobile:** sync all target versions to EAS build number ([89a9fb9](https://github.com/Slow-Spot/app/commit/89a9fb9ce8dc692f2a47fe36b6bab13d969e7425))
+* **mobile:** sync Live Activity with app state and add completion notification ([2b0f91c](https://github.com/Slow-Spot/app/commit/2b0f91c2942464fb7910f1d121dbec6c0f62a372))
+* **mobile:** use custom App Group identifier for Live Activity ([9553988](https://github.com/Slow-Spot/app/commit/9553988062ee76049ebe1e30c3102cc8c7018b7e))
+* **release:** update cleanup workflow for new branching strategy ([f63502d](https://github.com/Slow-Spot/app/commit/f63502d9b6eaae8fe3221732f016f706eba310c7))
+
 ## [1.14.0-beta.20](https://github.com/Slow-Spot/app/compare/v1.14.0-beta.19...v1.14.0-beta.20) (2026-01-27)
 
 ### Bug Fixes
