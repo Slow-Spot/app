@@ -1,3 +1,9 @@
+## [1.16.5](https://github.com/Slow-Spot/app/compare/v1.16.4...v1.16.5) (2026-01-28)
+
+### Bug Fixes
+
+* **web:** correct Google Play package ID from app.slowspot to com.slowspot.app ([97c5640](https://github.com/Slow-Spot/app/commit/97c56406b42218178c85485b9655e7279274b23b))
+
 ## [1.16.4](https://github.com/Slow-Spot/app/compare/v1.16.3...v1.16.4) (2026-01-28)
 
 ### Bug Fixes
