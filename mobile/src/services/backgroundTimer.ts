@@ -264,17 +264,26 @@ class BackgroundTimerService {
 
   /**
    * Zatrzymuje sesję (kończy lub anuluje)
+   *
+   * Guard: po operacjach async sprawdza czy sesja nie została podmieniona
+   * przez startSession() (race condition gdy stopSession jest fire-and-forget)
    */
   async stopSession(): Promise<void> {
+    const stoppingSessionId = this.currentSession?.sessionId ?? null;
+
     this.stopTickInterval();
     await this.stopSilentAudio();
     await this.clearSessionState();
 
-    this.currentSession = null;
-    this.onTick = null;
-    this.onComplete = null;
-
-    logger.log('Session stopped');
+    // Guard: nie nadpisuj stanu jeśli w międzyczasie startSession() utworzył nową sesję
+    if (this.currentSession?.sessionId === stoppingSessionId) {
+      this.currentSession = null;
+      this.onTick = null;
+      this.onComplete = null;
+      logger.log('Session stopped');
+    } else {
+      logger.log('Session stop skipped - new session already started');
+    }
   }
 
   /**

@@ -1,5 +1,5 @@
 import { logger } from '../utils/logger';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { View, Text, FlatList, StyleSheet, Alert, TouchableOpacity, Modal } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -111,6 +111,11 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   const [userIntention, setUserIntention] = useState('');
   const [sessionMood, setSessionMood] = useState<1 | 2 | 3 | 4 | 5 | undefined>();
   const [actionModalSession, setActionModalSession] = useState<CustomSession | null>(null);
+
+  // Ref do selectedSession - stabilna referencja dla useCallback
+  // Zapobiega tworzeniu nowych referencji handleComplete/handleCancel przy renderach
+  const selectedSessionRef = useRef<MeditationSession | CustomSession | null>(null);
+  selectedSessionRef.current = selectedSession;
 
   useEffect(() => {
     loadSessions();
@@ -355,12 +360,13 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     }
   };
 
-  const handleComplete = async () => {
+  const handleComplete = useCallback(async () => {
     try {
+      const session = selectedSessionRef.current;
       const sessionHapticsEnabled = getSessionHaptics() && settings.hapticEnabled;
 
       // Play ending chime with haptic feedback
-      if (selectedSession?.chimeUrl) {
+      if (session?.chimeUrl) {
         await audioEngine.play('chime');
         // Strong haptic feedback to signal session completion (if enabled)
         if (sessionHapticsEnabled) {
@@ -383,9 +389,9 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     } catch (error) {
       logger.error('Failed to complete session:', error);
     }
-  };
+  }, [settings.hapticEnabled]);
 
-  const handleCancel = async () => {
+  const handleCancel = useCallback(async () => {
     try {
       await audioEngine.stopAll();
       await audioEngine.cleanup();
@@ -397,7 +403,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
     } catch (error) {
       logger.error('Failed to cancel session:', error);
     }
-  };
+  }, [onMeditationStateChange]);
 
   const handleCelebrationContinue = async (mood?: 1 | 2 | 3 | 4 | 5, notes?: string) => {
     try {

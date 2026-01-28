@@ -515,6 +515,13 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const backgroundSessionIdRef = useRef<string | null>(null);
   const liveActivityIdRef = useRef<string | null>(null);
 
+  // Stabilne referencje do callbacków - zapobiega restartowi background timera
+  // przy re-renderach rodzica (race condition: stopSession async vs startSession)
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+  const onCancelRef = useRef(onCancel);
+  onCancelRef.current = onCancel;
+
   // Inicjalizacja background timer i Live Activity przy starcie sesji
   useEffect(() => {
     const startBackgroundTimer = async () => {
@@ -532,7 +539,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
               // Zakończ Live Activity i Android widget z komunikatem sukcesu
               liveActivityService.endActivity(true);
               androidWidgetService.endSession();
-              onComplete();
+              onCompleteRef.current();
             }
           },
           async () => {
@@ -540,7 +547,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             // Zakończ Live Activity i Android widget z komunikatem sukcesu
             await liveActivityService.endActivity(true);
             await androidWidgetService.endSession();
-            onComplete();
+            onCompleteRef.current();
           }
         );
         backgroundSessionIdRef.current = sessionId;
@@ -578,7 +585,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       backgroundSessionIdRef.current = null;
       liveActivityIdRef.current = null;
     };
-  }, [totalSeconds, onComplete, t]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- onComplete/onCancel through refs
+  }, [totalSeconds, t]);
 
   // Obsługa pause/resume z background timer, Live Activity i Android widget
   useEffect(() => {
@@ -646,7 +654,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           setIsRunning(false);
           liveActivityService.endActivity(true);
           androidWidgetService.endSession();
-          onComplete();
+          onCompleteRef.current();
         } else {
           // KLUCZOWA NAPRAWA: Synchronizuj Live Activity z aktualnym czasem
           // To naprawia problem gdy Live Activity pokazuje inny czas niż ekran medytacji
@@ -665,7 +673,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
     const subscription = AppState.addEventListener('change', handleAppStateChange);
     return () => subscription.remove();
-  }, [onComplete]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- onComplete through ref
+  }, [sessionHaptics, settings.hapticEnabled]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
