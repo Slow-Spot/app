@@ -133,8 +133,8 @@ export const metadata: Metadata = {
       url: 'https://apps.apple.com/app/slow-spot-calm-meditate/id6757082765',
     },
     android: {
-      package: 'app.slowspot',
-      url: 'https://play.google.com/store/apps/details?id=app.slowspot',
+      package: 'com.slowspot.app',
+      url: 'https://play.google.com/store/apps/details?id=com.slowspot.app',
     },
     web: {
       url: siteUrl,
