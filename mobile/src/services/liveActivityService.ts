@@ -107,8 +107,7 @@ class LiveActivityService {
         timerType: 'circular',
         padding: 16,
         imagePosition: 'left',
-        imageWidth: 52,
-        imageHeight: 52,
+        imageSize: { width: 52, height: 52 },
         imageAlign: 'center',
         contentFit: 'contain',
       };
