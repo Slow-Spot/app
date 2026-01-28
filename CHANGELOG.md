@@ -1,3 +1,10 @@
+## [1.16.2](https://github.com/Slow-Spot/app/compare/v1.16.1...v1.16.2) (2026-01-28)
+
+### Bug Fixes
+
+* Restrict CORS policy to specific allowed origins instead of allowing any origin ([565e763](https://github.com/Slow-Spot/app/commit/565e7634220b90419fb12a005a19429a35f323b9))
+* Update Next.js from 15.5.6 to 15.5.10 to fix security vulnerabilities ([6c42755](https://github.com/Slow-Spot/app/commit/6c427555123452fe50610368bba21f51cac59a55))
+
 ## [1.16.1](https://github.com/Slow-Spot/app/compare/v1.16.0...v1.16.1) (2026-01-28)
 
 ### Bug Fixes
