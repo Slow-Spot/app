@@ -129,8 +129,8 @@ export const metadata: Metadata = {
   // App Links
   appLinks: {
     ios: {
-      app_store_id: 'slow-spot',
-      url: 'https://apps.apple.com/app/slow-spot',
+      app_store_id: '6757082765',
+      url: 'https://apps.apple.com/app/slow-spot-calm-meditate/id6757082765',
     },
     android: {
       package: 'app.slowspot',
