@@ -1,3 +1,9 @@
+## [1.16.4](https://github.com/Slow-Spot/app/compare/v1.16.3...v1.16.4) (2026-01-28)
+
+### Bug Fixes
+
+* **web:** correct App Store link with proper Apple ID 6757082765 ([fd3e92c](https://github.com/Slow-Spot/app/commit/fd3e92c1cbbeb7cc11516e82e3f83802bc6ceb0c))
+
 ## [1.16.3](https://github.com/Slow-Spot/app/compare/v1.16.2...v1.16.3) (2026-01-28)
 
 ### Bug Fixes
