@@ -1,3 +1,9 @@
+## [1.16.1](https://github.com/Slow-Spot/app/compare/v1.16.0...v1.16.1) (2026-01-28)
+
+### Bug Fixes
+
+* **mobile:** prevent session termination on Live Activity tap during active meditation ([738e8d7](https://github.com/Slow-Spot/app/commit/738e8d7777887e2965b5fe411f9c5199689249d6))
+
 ## [1.16.0](https://github.com/Slow-Spot/app/compare/v1.15.0...v1.16.0) (2026-01-27)
 
 ### Features
