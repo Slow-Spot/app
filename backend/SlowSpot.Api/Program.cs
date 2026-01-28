@@ -11,8 +11,8 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        // Configure specific allowed origins instead of allowing any origin
-        // Update this list with actual frontend URLs when deploying
+        // Configure specific allowed origins for security
+        // Production URLs are set as defaults, development URLs are loaded from appsettings.Development.json
         var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
             ?? new[] { "https://slowspot.me", "https://www.slowspot.me" };
         
