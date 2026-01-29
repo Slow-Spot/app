@@ -92,7 +92,7 @@ jobs:
             echo "- Git tag created: v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
             echo "- GitHub Release created" >> $GITHUB_STEP_SUMMARY
             echo "- CHANGELOG.md updated" >> $GITHUB_STEP_SUMMARY
-            echo "- EAS Production Build will start (triggered by tag)" >> $GITHUB_STEP_SUMMARY
+            echo "- EAS Production Build will start (triggered by workflow_run)" >> $GITHUB_STEP_SUMMARY
           elif [[ "${{ steps.branch.outputs.type }}" == "rc" ]]; then
             echo "### What happens next:" >> $GITHUB_STEP_SUMMARY
             echo "- Release Candidate version: v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
@@ -104,28 +104,6 @@ jobs:
             echo "- Development OTA update will be triggered" >> $GITHUB_STEP_SUMMARY
           fi
 
-  # Trigger appropriate builds based on branch
-  trigger-builds:
-    name: Trigger Builds
-    needs: release
-    if: needs.release.outputs.new_release_published == 'true'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Production Build (main only)
-        if: needs.release.outputs.is_prerelease == 'false'
-        run: |
-          echo "🚀 Production release v${{ needs.release.outputs.new_release_version }}"
-          echo "EAS Production Build will be triggered by the new tag"
-
-      - name: RC Build (release branches)
-        if: needs.release.outputs.is_prerelease == 'true' && startsWith(needs.release.outputs.branch, 'release/')
-        run: |
-          echo "🧪 Release Candidate v${{ needs.release.outputs.new_release_version }}"
-          echo "Preview build workflow will handle this"
-
-      - name: Beta Update (develop)
-        if: needs.release.outputs.branch == 'develop'
-        run: |
-          echo "🔧 Beta release v${{ needs.release.outputs.new_release_version }}"
-          echo "Development OTA update will be triggered"
+  # Downstream workflows are triggered via workflow_run event:
+  # - eas-production-build.yml (main branch, production builds + store submit)
+  # - eas-update.yml (all branches, OTA updates)

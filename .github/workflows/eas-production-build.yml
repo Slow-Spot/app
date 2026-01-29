@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_run:
+    workflows: ["Semantic Release"]
+    types:
+      - completed
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       platform:
@@ -31,20 +37,49 @@ jobs:
   prepare:
     name: 📋 Prepare Release
     runs-on: ubuntu-latest
+    if: |
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     outputs:
       version: ${{ steps.version.outputs.version }}
       release_notes: ${{ steps.notes.outputs.notes }}
       should_submit: ${{ steps.check.outputs.submit }}
+      should_build: ${{ steps.release_check.outputs.should_build }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+          fetch-depth: 0
 
-      - name: Extract version from tag
-        id: version
+      - name: Check if new release exists
+        id: release_check
+        env:
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            VERSION="${GITHUB_REF#refs/tags/v}"
+          if [[ "$EVENT_NAME" == "workflow_run" ]]; then
+            VERSION=$(cat mobile/package.json | jq -r '.version')
+            TAG_EXISTS=$(git tag -l "v$VERSION")
+            if [[ -n "$TAG_EXISTS" ]]; then
+              echo "should_build=true" >> $GITHUB_OUTPUT
+              echo "📦 New release v$VERSION detected, triggering build"
+            else
+              echo "should_build=false" >> $GITHUB_OUTPUT
+              echo "⏭️ No new release tag v$VERSION found, skipping build"
+            fi
+          else
+            echo "should_build=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract version
+        id: version
+        if: steps.release_check.outputs.should_build == 'true'
+        env:
+          GIT_REF: ${{ github.ref }}
+        run: |
+          if [[ "$GIT_REF" == refs/tags/* ]]; then
+            VERSION="${GIT_REF#refs/tags/v}"
           else
             VERSION=$(cat mobile/package.json | jq -r '.version')
           fi
@@ -53,28 +88,27 @@ jobs:
 
       - name: Get release notes
         id: notes
-        run: |
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            # Get release notes from GitHub Release
-            NOTES=$(gh release view "v${{ steps.version.outputs.version }}" --json body -q '.body' 2>/dev/null || echo "Bug fixes and improvements")
-            # Truncate for store requirements (500 chars)
-            NOTES=$(echo "$NOTES" | head -c 450)
-          else
-            NOTES="Bug fixes and improvements"
-          fi
-          # Escape for JSON
-          NOTES=$(echo "$NOTES" | jq -Rs .)
-          echo "notes=$NOTES" >> $GITHUB_OUTPUT
+        if: steps.release_check.outputs.should_build == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          NOTES=$(gh release view "v${RELEASE_VERSION}" --json body -q '.body' 2>/dev/null || echo "Bug fixes and improvements")
+          NOTES=$(echo "$NOTES" | head -c 450)
+          NOTES=$(echo "$NOTES" | jq -Rs .)
+          echo "notes=$NOTES" >> $GITHUB_OUTPUT
 
       - name: Check if should submit
         id: check
+        if: steps.release_check.outputs.should_build == 'true'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_SUBMIT: ${{ github.event.inputs.submit }}
         run: |
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            echo "submit=true" >> $GITHUB_OUTPUT
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "submit=$INPUT_SUBMIT" >> $GITHUB_OUTPUT
           else
-            echo "submit=${{ github.event.inputs.submit }}" >> $GITHUB_OUTPUT
+            echo "submit=true" >> $GITHUB_OUTPUT
           fi
 
   build-ios:
@@ -82,9 +116,12 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'push' ||
-      github.event.inputs.platform == 'ios' ||
-      github.event.inputs.platform == 'all'
+      needs.prepare.outputs.should_build == 'true' && (
+        github.event_name == 'push' ||
+        github.event_name == 'workflow_run' ||
+        github.event.inputs.platform == 'ios' ||
+        github.event.inputs.platform == 'all'
+      )
     defaults:
       run:
         working-directory: ./mobile
@@ -95,6 +132,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -122,12 +161,18 @@ jobs:
 
       - name: Setup App Store Connect API Key
         if: needs.prepare.outputs.should_submit == 'true'
+        env:
+          ASC_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
         run: |
-          echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | base64 -d > AuthKey_W3TGVKY5Z6.p8
+          echo "$ASC_API_KEY_BASE64" | base64 -d > AuthKey_W3TGVKY5Z6.p8
           echo "✅ App Store Connect API Key configured"
 
       - name: Submit to App Store
         if: needs.prepare.outputs.should_submit == 'true'
+        env:
+          ASC_API_KEY_PATH: ${{ github.workspace }}/mobile/AuthKey_W3TGVKY5Z6.p8
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_KEY_ISSUER_ID: ${{ secrets.ASC_API_KEY_ISSUER_ID }}
         run: |
           echo "📤 Submitting iOS to App Store..."
           eas submit --platform ios --profile production --non-interactive --latest
@@ -141,9 +186,12 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'push' ||
-      github.event.inputs.platform == 'android' ||
-      github.event.inputs.platform == 'all'
+      needs.prepare.outputs.should_build == 'true' && (
+        github.event_name == 'push' ||
+        github.event_name == 'workflow_run' ||
+        github.event.inputs.platform == 'android' ||
+        github.event.inputs.platform == 'all'
+      )
     defaults:
       run:
         working-directory: ./mobile
@@ -154,6 +202,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -181,12 +231,16 @@ jobs:
 
       - name: Setup Google Play Service Account
         if: needs.prepare.outputs.should_submit == 'true'
+        env:
+          GPLAY_SA_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
-          echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' > android-service-account.json
+          echo "$GPLAY_SA_JSON" > android-service-account.json
           echo "✅ Google Play Service Account configured"
 
       - name: Submit to Google Play
         if: needs.prepare.outputs.should_submit == 'true'
+        env:
+          GOOGLE_SERVICE_ACCOUNT_KEY_PATH: ${{ github.workspace }}/mobile/android-service-account.json
         run: |
           echo "📤 Submitting Android to Google Play..."
           eas submit --platform android --profile production --non-interactive --latest
@@ -199,22 +253,29 @@ jobs:
     name: 📊 Build Summary
     needs: [prepare, build-ios, build-android]
     runs-on: ubuntu-latest
-    if: always()
+    if: always() && needs.prepare.outputs.should_build == 'true'
 
     steps:
       - name: Generate Summary
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+          SHOULD_SUBMIT: ${{ needs.prepare.outputs.should_submit }}
+          IOS_RESULT: ${{ needs.build-ios.result }}
+          IOS_BUILD_ID: ${{ needs.build-ios.outputs.build_id }}
+          ANDROID_RESULT: ${{ needs.build-android.result }}
+          ANDROID_BUILD_ID: ${{ needs.build-android.outputs.build_id }}
         run: |
           echo "## 🚀 Production Build Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Version:** v${{ needs.prepare.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Auto-Submit:** ${{ needs.prepare.outputs.should_submit }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** v${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "**Auto-Submit:** ${SHOULD_SUBMIT}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Build Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Platform | Status | Build ID |" >> $GITHUB_STEP_SUMMARY
           echo "|----------|--------|----------|" >> $GITHUB_STEP_SUMMARY
-          echo "| 🍎 iOS | ${{ needs.build-ios.result }} | ${{ needs.build-ios.outputs.build_id || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| 🤖 Android | ${{ needs.build-android.result }} | ${{ needs.build-android.outputs.build_id || 'N/A' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🍎 iOS | ${IOS_RESULT} | ${IOS_BUILD_ID:-N/A} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🤖 Android | ${ANDROID_RESULT} | ${ANDROID_BUILD_ID:-N/A} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Links" >> $GITHUB_STEP_SUMMARY
           echo "- [EAS Builds](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)" >> $GITHUB_STEP_SUMMARY
@@ -222,22 +283,38 @@ jobs:
           echo "- [Google Play Console](https://play.google.com/console)" >> $GITHUB_STEP_SUMMARY
 
   notify-release:
-    name: 📢 Create GitHub Release
+    name: 📢 Update GitHub Release
     needs: [prepare, build-ios, build-android]
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    if: |
+      needs.prepare.outputs.should_build == 'true' && (
+        (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')) ||
+        github.event_name == 'workflow_run'
+      )
 
     steps:
       - name: Update Release with Build Info
         uses: actions/github-script@v7
+        env:
+          RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
+          IOS_RESULT: ${{ needs.build-ios.result }}
+          ANDROID_RESULT: ${{ needs.build-android.result }}
+          SHOULD_SUBMIT: ${{ needs.prepare.outputs.should_submit }}
         with:
           script: |
-            const tag = context.ref.replace('refs/tags/', '');
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag: tag
-            });
+            const tag = `v${process.env.RELEASE_VERSION}`;
+
+            let release;
+            try {
+              release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag: tag
+              });
+            } catch (e) {
+              console.log(`No release found for tag ${tag}, skipping update`);
+              return;
+            }
 
             const buildInfo = `
 
@@ -247,10 +324,10 @@ jobs:
 
             | Platform | Status |
             |----------|--------|
-            | 🍎 iOS | ${{ needs.build-ios.result }} |
-            | 🤖 Android | ${{ needs.build-android.result }} |
+            | 🍎 iOS | ${process.env.IOS_RESULT} |
+            | 🤖 Android | ${process.env.ANDROID_RESULT} |
 
-            **Auto-submitted to stores:** ${{ needs.prepare.outputs.should_submit }}
+            **Auto-submitted to stores:** ${process.env.SHOULD_SUBMIT}
 
             [View builds on Expo](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)
             `;
