@@ -78,6 +78,7 @@
       "ios": {
         "appleId": "leszekszpunar@gmail.com",
         "appleTeamId": "QQHRMJ6B78",
+        "ascAppId": "6757082765",
         "ascApiKeyPath": "$ASC_API_KEY_PATH",
         "ascApiKeyIssuerId": "$ASC_API_KEY_ISSUER_ID",
         "ascApiKeyId": "$ASC_API_KEY_ID"
