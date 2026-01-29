@@ -1,3 +1,9 @@
+## [1.16.8](https://github.com/Slow-Spot/app/compare/v1.16.7...v1.16.8) (2026-01-29)
+
+### Bug Fixes
+
+* **release:** atomic EAS production pipeline with gate and submit-by-id ([eabf4b5](https://github.com/Slow-Spot/app/commit/eabf4b5f1a6f8b6b8be0de37dfe820538f682ccc))
+
 ## [1.16.7](https://github.com/Slow-Spot/app/compare/v1.16.6...v1.16.7) (2026-01-29)
 
 ### Bug Fixes
