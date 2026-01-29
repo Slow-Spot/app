@@ -1,3 +1,9 @@
+## [1.16.6](https://github.com/Slow-Spot/app/compare/v1.16.5...v1.16.6) (2026-01-29)
+
+### Bug Fixes
+
+* **release:** add workflow_run trigger and fix ASC submit credentials ([8bae588](https://github.com/Slow-Spot/app/commit/8bae58893244063b460982c3427fcdaba9fc647a))
+
 ## [1.16.5](https://github.com/Slow-Spot/app/compare/v1.16.4...v1.16.5) (2026-01-28)
 
 ### Bug Fixes
