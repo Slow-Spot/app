@@ -1,3 +1,9 @@
+## [1.16.9](https://github.com/Slow-Spot/app/compare/v1.16.8...v1.16.9) (2026-01-29)
+
+### Bug Fixes
+
+* **mobile:** rename notification sound files to valid Android resource names ([a8c569f](https://github.com/Slow-Spot/app/commit/a8c569fd45d330ba0e926348bdcbff3f3ded75f1))
+
 ## [1.16.8](https://github.com/Slow-Spot/app/compare/v1.16.7...v1.16.8) (2026-01-29)
 
 ### Bug Fixes
