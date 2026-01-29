@@ -1,3 +1,9 @@
+## [1.16.7](https://github.com/Slow-Spot/app/compare/v1.16.6...v1.16.7) (2026-01-29)
+
+### Bug Fixes
+
+* **mobile:** add ascAppId to eas.json submit profile ([9550b36](https://github.com/Slow-Spot/app/commit/9550b361a19438cee3503ef73bdb2fb07358e58a))
+
 ## [1.16.6](https://github.com/Slow-Spot/app/compare/v1.16.5...v1.16.6) (2026-01-29)
 
 ### Bug Fixes
