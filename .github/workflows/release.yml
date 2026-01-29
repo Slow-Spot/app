@@ -92,7 +92,7 @@ jobs:
             echo "- Git tag created: v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
             echo "- GitHub Release created" >> $GITHUB_STEP_SUMMARY
             echo "- CHANGELOG.md updated" >> $GITHUB_STEP_SUMMARY
-            echo "- EAS Production Build will start (triggered by workflow_run)" >> $GITHUB_STEP_SUMMARY
+            echo "- EAS Production Build pipeline will start (build -> gate -> submit)" >> $GITHUB_STEP_SUMMARY
           elif [[ "${{ steps.branch.outputs.type }}" == "rc" ]]; then
             echo "### What happens next:" >> $GITHUB_STEP_SUMMARY
             echo "- Release Candidate version: v${{ steps.semantic.outputs.new_release_version }}" >> $GITHUB_STEP_SUMMARY
@@ -105,5 +105,5 @@ jobs:
           fi
 
   # Downstream workflows are triggered via workflow_run event:
-  # - eas-production-build.yml (main branch, production builds + store submit)
+  # - eas-production-build.yml (main branch: build -> gate -> atomic submit via --id)
   # - eas-update.yml (all branches, OTA updates)

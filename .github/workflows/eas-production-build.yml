@@ -1,4 +1,4 @@
-name: 🚀 EAS Production Build & Submit
+name: EAS Production Build & Submit
 
 on:
   push:
@@ -30,12 +30,16 @@ on:
           - 'true'
           - 'false'
 
+concurrency:
+  group: eas-production-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
   EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
 jobs:
   prepare:
-    name: 📋 Prepare Release
+    name: Prepare Release
     runs-on: ubuntu-latest
     if: |
       github.event_name != 'workflow_run' ||
@@ -45,8 +49,70 @@ jobs:
       release_notes: ${{ steps.notes.outputs.notes }}
       should_submit: ${{ steps.check.outputs.submit }}
       should_build: ${{ steps.release_check.outputs.should_build }}
+      build_ios: ${{ steps.platforms.outputs.build_ios }}
+      build_android: ${{ steps.platforms.outputs.build_android }}
 
     steps:
+      - name: Validate required secrets
+        env:
+          HAS_EXPO_TOKEN: ${{ secrets.EXPO_TOKEN != '' }}
+          HAS_ASC_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY != '' }}
+          HAS_ASC_KEY_ID: ${{ secrets.ASC_API_KEY_ID != '' }}
+          HAS_ASC_ISSUER_ID: ${{ secrets.ASC_API_KEY_ISSUER_ID != '' }}
+          HAS_GPLAY_SA: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON != '' }}
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_PLATFORM: ${{ github.event.inputs.platform }}
+          INPUT_SUBMIT: ${{ github.event.inputs.submit }}
+        run: |
+          ERRORS=""
+
+          if [[ "$HAS_EXPO_TOKEN" != "true" ]]; then
+            ERRORS="${ERRORS}EXPO_TOKEN is missing.\n"
+          fi
+
+          # Okreslenie platform do sprawdzenia
+          NEED_IOS="true"
+          NEED_ANDROID="true"
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            if [[ "$INPUT_PLATFORM" == "ios" ]]; then
+              NEED_ANDROID="false"
+            elif [[ "$INPUT_PLATFORM" == "android" ]]; then
+              NEED_IOS="false"
+            fi
+          fi
+
+          # Sprawdzenie submit -- jesli submit=false, nie wymagamy kluczy store
+          NEED_SUBMIT="true"
+          if [[ "$EVENT_NAME" == "workflow_dispatch" && "$INPUT_SUBMIT" == "false" ]]; then
+            NEED_SUBMIT="false"
+          fi
+
+          if [[ "$NEED_SUBMIT" == "true" && "$NEED_IOS" == "true" ]]; then
+            if [[ "$HAS_ASC_API_KEY" != "true" ]]; then
+              ERRORS="${ERRORS}APP_STORE_CONNECT_API_KEY is missing (required for iOS submit).\n"
+            fi
+            if [[ "$HAS_ASC_KEY_ID" != "true" ]]; then
+              ERRORS="${ERRORS}ASC_API_KEY_ID is missing (required for iOS submit).\n"
+            fi
+            if [[ "$HAS_ASC_ISSUER_ID" != "true" ]]; then
+              ERRORS="${ERRORS}ASC_API_KEY_ISSUER_ID is missing (required for iOS submit).\n"
+            fi
+          fi
+
+          if [[ "$NEED_SUBMIT" == "true" && "$NEED_ANDROID" == "true" ]]; then
+            if [[ "$HAS_GPLAY_SA" != "true" ]]; then
+              ERRORS="${ERRORS}GOOGLE_PLAY_SERVICE_ACCOUNT_JSON is missing (required for Android submit).\n"
+            fi
+          fi
+
+          if [[ -n "$ERRORS" ]]; then
+            echo "::error::Missing required secrets:"
+            echo -e "$ERRORS"
+            exit 1
+          fi
+
+          echo "All required secrets are present."
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -63,13 +129,40 @@ jobs:
             TAG_EXISTS=$(git tag -l "v$VERSION")
             if [[ -n "$TAG_EXISTS" ]]; then
               echo "should_build=true" >> $GITHUB_OUTPUT
-              echo "📦 New release v$VERSION detected, triggering build"
+              echo "New release v$VERSION detected, triggering build"
             else
               echo "should_build=false" >> $GITHUB_OUTPUT
-              echo "⏭️ No new release tag v$VERSION found, skipping build"
+              echo "No new release tag v$VERSION found, skipping build"
             fi
           else
             echo "should_build=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine platforms to build
+        id: platforms
+        if: steps.release_check.outputs.should_build == 'true'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_PLATFORM: ${{ github.event.inputs.platform }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            case "$INPUT_PLATFORM" in
+              ios)
+                echo "build_ios=true" >> $GITHUB_OUTPUT
+                echo "build_android=false" >> $GITHUB_OUTPUT
+                ;;
+              android)
+                echo "build_ios=false" >> $GITHUB_OUTPUT
+                echo "build_android=true" >> $GITHUB_OUTPUT
+                ;;
+              *)
+                echo "build_ios=true" >> $GITHUB_OUTPUT
+                echo "build_android=true" >> $GITHUB_OUTPUT
+                ;;
+            esac
+          else
+            echo "build_ios=true" >> $GITHUB_OUTPUT
+            echo "build_android=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Extract version
@@ -84,7 +177,7 @@ jobs:
             VERSION=$(cat mobile/package.json | jq -r '.version')
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "📦 Version: $VERSION"
+          echo "Version: $VERSION"
 
       - name: Get release notes
         id: notes
@@ -112,16 +205,12 @@ jobs:
           fi
 
   build-ios:
-    name: 🍎 Build iOS
+    name: Build iOS
     needs: prepare
     runs-on: ubuntu-latest
     if: |
-      needs.prepare.outputs.should_build == 'true' && (
-        github.event_name == 'push' ||
-        github.event_name == 'workflow_run' ||
-        github.event.inputs.platform == 'ios' ||
-        github.event.inputs.platform == 'all'
-      )
+      needs.prepare.outputs.should_build == 'true' &&
+      needs.prepare.outputs.build_ios == 'true'
     defaults:
       run:
         working-directory: ./mobile
@@ -154,44 +243,40 @@ jobs:
       - name: Build iOS
         id: build
         run: |
-          BUILD_OUTPUT=$(eas build --platform ios --profile production --non-interactive --json)
+          set -o pipefail
+
+          BUILD_OUTPUT=$(eas build --platform ios --profile production --non-interactive --json 2>build_stderr.log) || {
+            EXIT_CODE=$?
+            STDERR=$(cat build_stderr.log)
+
+            if echo "$STDERR" | grep -qi "quota\|limit.*reached\|plan.*upgrade\|exceeded.*builds"; then
+              echo "::error::EAS build quota exhausted. Upgrade your EAS plan or wait for quota reset."
+              echo "Stderr: $STDERR"
+            else
+              echo "::error::EAS build failed with exit code $EXIT_CODE"
+              echo "Stderr: $STDERR"
+            fi
+
+            exit $EXIT_CODE
+          }
+
           BUILD_ID=$(echo "$BUILD_OUTPUT" | jq -r '.[0].id')
+
+          if [[ -z "$BUILD_ID" || "$BUILD_ID" == "null" ]]; then
+            echo "::error::Build completed but no build ID returned. Output: $BUILD_OUTPUT"
+            exit 1
+          fi
+
           echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
-          echo "🍎 iOS Build ID: $BUILD_ID"
-
-      - name: Setup App Store Connect API Key
-        if: needs.prepare.outputs.should_submit == 'true'
-        env:
-          ASC_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-        run: |
-          echo "$ASC_API_KEY_BASE64" | base64 -d > AuthKey_W3TGVKY5Z6.p8
-          echo "✅ App Store Connect API Key configured"
-
-      - name: Submit to App Store
-        if: needs.prepare.outputs.should_submit == 'true'
-        env:
-          ASC_API_KEY_PATH: ${{ github.workspace }}/mobile/AuthKey_W3TGVKY5Z6.p8
-          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
-          ASC_API_KEY_ISSUER_ID: ${{ secrets.ASC_API_KEY_ISSUER_ID }}
-        run: |
-          echo "📤 Submitting iOS to App Store..."
-          eas submit --platform ios --profile production --non-interactive --latest
-
-      - name: Cleanup iOS credentials
-        if: always()
-        run: rm -f AuthKey_W3TGVKY5Z6.p8
+          echo "iOS Build ID: $BUILD_ID"
 
   build-android:
-    name: 🤖 Build Android
+    name: Build Android
     needs: prepare
     runs-on: ubuntu-latest
     if: |
-      needs.prepare.outputs.should_build == 'true' && (
-        github.event_name == 'push' ||
-        github.event_name == 'workflow_run' ||
-        github.event.inputs.platform == 'android' ||
-        github.event.inputs.platform == 'all'
-      )
+      needs.prepare.outputs.should_build == 'true' &&
+      needs.prepare.outputs.build_android == 'true'
     defaults:
       run:
         working-directory: ./mobile
@@ -224,34 +309,174 @@ jobs:
       - name: Build Android
         id: build
         run: |
-          BUILD_OUTPUT=$(eas build --platform android --profile production --non-interactive --json)
+          set -o pipefail
+
+          BUILD_OUTPUT=$(eas build --platform android --profile production --non-interactive --json 2>build_stderr.log) || {
+            EXIT_CODE=$?
+            STDERR=$(cat build_stderr.log)
+
+            if echo "$STDERR" | grep -qi "quota\|limit.*reached\|plan.*upgrade\|exceeded.*builds"; then
+              echo "::error::EAS build quota exhausted. Upgrade your EAS plan or wait for quota reset."
+              echo "Stderr: $STDERR"
+            else
+              echo "::error::EAS build failed with exit code $EXIT_CODE"
+              echo "Stderr: $STDERR"
+            fi
+
+            exit $EXIT_CODE
+          }
+
           BUILD_ID=$(echo "$BUILD_OUTPUT" | jq -r '.[0].id')
+
+          if [[ -z "$BUILD_ID" || "$BUILD_ID" == "null" ]]; then
+            echo "::error::Build completed but no build ID returned. Output: $BUILD_OUTPUT"
+            exit 1
+          fi
+
           echo "build_id=$BUILD_ID" >> $GITHUB_OUTPUT
-          echo "🤖 Android Build ID: $BUILD_ID"
+          echo "Android Build ID: $BUILD_ID"
+
+  gate:
+    name: Build Gate
+    needs: [prepare, build-ios, build-android]
+    runs-on: ubuntu-latest
+    if: always() && needs.prepare.outputs.should_build == 'true'
+
+    outputs:
+      ios_build_id: ${{ steps.validate.outputs.ios_build_id }}
+      android_build_id: ${{ steps.validate.outputs.android_build_id }}
+      gate_passed: ${{ steps.validate.outputs.gate_passed }}
+
+    steps:
+      - name: Validate build results
+        id: validate
+        env:
+          IOS_RESULT: ${{ needs.build-ios.result }}
+          ANDROID_RESULT: ${{ needs.build-android.result }}
+          IOS_BUILD_ID: ${{ needs.build-ios.outputs.build_id }}
+          ANDROID_BUILD_ID: ${{ needs.build-android.outputs.build_id }}
+          BUILD_IOS: ${{ needs.prepare.outputs.build_ios }}
+          BUILD_ANDROID: ${{ needs.prepare.outputs.build_android }}
+        run: |
+          GATE_PASSED="true"
+
+          # Walidacja iOS
+          if [[ "$BUILD_IOS" == "true" ]]; then
+            if [[ "$IOS_RESULT" != "success" ]]; then
+              echo "::error::iOS build did not succeed (result: $IOS_RESULT). Gate blocked."
+              GATE_PASSED="false"
+            elif [[ -z "$IOS_BUILD_ID" || "$IOS_BUILD_ID" == "null" ]]; then
+              echo "::error::iOS build succeeded but build ID is empty. Gate blocked."
+              GATE_PASSED="false"
+            else
+              echo "iOS build passed: $IOS_BUILD_ID"
+              echo "ios_build_id=$IOS_BUILD_ID" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "iOS build skipped (not requested)."
+          fi
+
+          # Walidacja Android
+          if [[ "$BUILD_ANDROID" == "true" ]]; then
+            if [[ "$ANDROID_RESULT" != "success" ]]; then
+              echo "::error::Android build did not succeed (result: $ANDROID_RESULT). Gate blocked."
+              GATE_PASSED="false"
+            elif [[ -z "$ANDROID_BUILD_ID" || "$ANDROID_BUILD_ID" == "null" ]]; then
+              echo "::error::Android build succeeded but build ID is empty. Gate blocked."
+              GATE_PASSED="false"
+            else
+              echo "Android build passed: $ANDROID_BUILD_ID"
+              echo "android_build_id=$ANDROID_BUILD_ID" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "Android build skipped (not requested)."
+          fi
+
+          echo "gate_passed=$GATE_PASSED" >> $GITHUB_OUTPUT
+
+          if [[ "$GATE_PASSED" == "false" ]]; then
+            echo "::error::Gate did not pass. Submissions will be blocked."
+            exit 1
+          fi
+
+          echo "Gate passed. All requested builds succeeded."
+
+  submit:
+    name: Submit to Stores
+    needs: [prepare, gate]
+    runs-on: ubuntu-latest
+    if: |
+      needs.gate.outputs.gate_passed == 'true' &&
+      needs.prepare.outputs.should_submit == 'true'
+    defaults:
+      run:
+        working-directory: ./mobile
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup App Store Connect API Key
+        if: needs.gate.outputs.ios_build_id != ''
+        env:
+          ASC_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        run: |
+          echo "$ASC_API_KEY_BASE64" | base64 -d > AuthKey_W3TGVKY5Z6.p8
+
+      - name: Submit iOS to App Store
+        if: needs.gate.outputs.ios_build_id != ''
+        env:
+          ASC_API_KEY_PATH: ${{ github.workspace }}/mobile/AuthKey_W3TGVKY5Z6.p8
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_KEY_ISSUER_ID: ${{ secrets.ASC_API_KEY_ISSUER_ID }}
+          IOS_BUILD_ID: ${{ needs.gate.outputs.ios_build_id }}
+        run: |
+          echo "Submitting iOS build $IOS_BUILD_ID to App Store..."
+          eas submit --platform ios --profile production --non-interactive --id "$IOS_BUILD_ID"
 
       - name: Setup Google Play Service Account
-        if: needs.prepare.outputs.should_submit == 'true'
+        if: needs.gate.outputs.android_build_id != ''
         env:
           GPLAY_SA_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
           echo "$GPLAY_SA_JSON" > android-service-account.json
-          echo "✅ Google Play Service Account configured"
 
-      - name: Submit to Google Play
-        if: needs.prepare.outputs.should_submit == 'true'
+      - name: Submit Android to Google Play
+        if: needs.gate.outputs.android_build_id != ''
         env:
           GOOGLE_SERVICE_ACCOUNT_KEY_PATH: ${{ github.workspace }}/mobile/android-service-account.json
+          ANDROID_BUILD_ID: ${{ needs.gate.outputs.android_build_id }}
         run: |
-          echo "📤 Submitting Android to Google Play..."
-          eas submit --platform android --profile production --non-interactive --latest
+          echo "Submitting Android build $ANDROID_BUILD_ID to Google Play..."
+          eas submit --platform android --profile production --non-interactive --id "$ANDROID_BUILD_ID"
 
-      - name: Cleanup Android credentials
+      - name: Cleanup credentials
         if: always()
-        run: rm -f android-service-account.json
+        run: |
+          rm -f AuthKey_W3TGVKY5Z6.p8
+          rm -f android-service-account.json
 
   summary:
-    name: 📊 Build Summary
-    needs: [prepare, build-ios, build-android]
+    name: Build Summary
+    needs: [prepare, build-ios, build-android, gate, submit]
     runs-on: ubuntu-latest
     if: always() && needs.prepare.outputs.should_build == 'true'
 
@@ -264,29 +489,42 @@ jobs:
           IOS_BUILD_ID: ${{ needs.build-ios.outputs.build_id }}
           ANDROID_RESULT: ${{ needs.build-android.result }}
           ANDROID_BUILD_ID: ${{ needs.build-android.outputs.build_id }}
+          GATE_RESULT: ${{ needs.gate.result }}
+          GATE_PASSED: ${{ needs.gate.outputs.gate_passed }}
+          SUBMIT_RESULT: ${{ needs.submit.result }}
         run: |
-          echo "## 🚀 Production Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Production Build Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Version:** v${VERSION}" >> $GITHUB_STEP_SUMMARY
           echo "**Auto-Submit:** ${SHOULD_SUBMIT}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+
           echo "### Build Status" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Platform | Status | Build ID |" >> $GITHUB_STEP_SUMMARY
-          echo "|----------|--------|----------|" >> $GITHUB_STEP_SUMMARY
-          echo "| 🍎 iOS | ${IOS_RESULT} | ${IOS_BUILD_ID:-N/A} |" >> $GITHUB_STEP_SUMMARY
-          echo "| 🤖 Android | ${ANDROID_RESULT} | ${ANDROID_BUILD_ID:-N/A} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Stage | Status | Details |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| iOS Build | ${IOS_RESULT} | ${IOS_BUILD_ID:-N/A} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Android Build | ${ANDROID_RESULT} | ${ANDROID_BUILD_ID:-N/A} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Gate | ${GATE_RESULT} | passed=${GATE_PASSED:-N/A} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Submit | ${SUBMIT_RESULT} | |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "$GATE_PASSED" != "true" && "$GATE_RESULT" != "skipped" ]]; then
+            echo "> **Gate did not pass. Submissions were blocked.**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
           echo "### Links" >> $GITHUB_STEP_SUMMARY
           echo "- [EAS Builds](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)" >> $GITHUB_STEP_SUMMARY
           echo "- [App Store Connect](https://appstoreconnect.apple.com)" >> $GITHUB_STEP_SUMMARY
           echo "- [Google Play Console](https://play.google.com/console)" >> $GITHUB_STEP_SUMMARY
 
   notify-release:
-    name: 📢 Update GitHub Release
-    needs: [prepare, build-ios, build-android]
+    name: Update GitHub Release
+    needs: [prepare, build-ios, build-android, gate, submit]
     runs-on: ubuntu-latest
     if: |
+      always() &&
       needs.prepare.outputs.should_build == 'true' && (
         (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')) ||
         github.event_name == 'workflow_run'
@@ -299,6 +537,8 @@ jobs:
           RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
           IOS_RESULT: ${{ needs.build-ios.result }}
           ANDROID_RESULT: ${{ needs.build-android.result }}
+          GATE_RESULT: ${{ needs.gate.result }}
+          SUBMIT_RESULT: ${{ needs.submit.result }}
           SHOULD_SUBMIT: ${{ needs.prepare.outputs.should_submit }}
         with:
           script: |
@@ -316,18 +556,27 @@ jobs:
               return;
             }
 
+            const gateStatus = process.env.GATE_RESULT === 'success' ? 'passed' : 'BLOCKED';
+            const submitStatus = process.env.SUBMIT_RESULT === 'success'
+              ? 'submitted'
+              : process.env.SUBMIT_RESULT === 'skipped'
+                ? 'skipped'
+                : 'FAILED';
+
             const buildInfo = `
 
             ---
 
-            ## 📱 Build Status
+            ## Build Status
 
-            | Platform | Status |
-            |----------|--------|
-            | 🍎 iOS | ${process.env.IOS_RESULT} |
-            | 🤖 Android | ${process.env.ANDROID_RESULT} |
+            | Stage | Status |
+            |-------|--------|
+            | iOS Build | ${process.env.IOS_RESULT} |
+            | Android Build | ${process.env.ANDROID_RESULT} |
+            | Gate | ${gateStatus} |
+            | Store Submit | ${submitStatus} |
 
-            **Auto-submitted to stores:** ${process.env.SHOULD_SUBMIT}
+            **Auto-submit:** ${process.env.SHOULD_SUBMIT}
 
             [View builds on Expo](https://expo.dev/accounts/leszekszpunar/projects/slow-spot/builds)
             `;
