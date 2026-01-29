@@ -99,7 +99,7 @@ export interface CustomSoundsConfig {
 // ============================================================================
 
 const AUDIO = {
-  BELL: require('../../assets/sounds/meditation-bell.mp3'),
+  BELL: require('../../assets/sounds/meditation_bell.mp3'),
   AMBIENT: {
     nature: require('../../assets/sounds/ambient/nature.mp3'),
     ocean: require('../../assets/sounds/ambient/ocean.mp3'),

@@ -525,8 +525,8 @@ class NotificationService {
    * Used to play sound when app is in background/suspended
    *
    * Custom Sound Setup:
-   * 1. Convert meditation-bell.mp3 to .wav format (iOS requirement)
-   *    Command: ffmpeg -i meditation-bell.mp3 -acodec pcm_s16le -ar 44100 meditation-bell.wav
+   * 1. Convert meditation_bell.mp3 to .wav format (iOS requirement)
+   *    Command: ffmpeg -i meditation_bell.mp3 -acodec pcm_s16le -ar 44100 meditation_bell.wav
    * 2. Place the .wav file in assets/sounds/
    * 3. Add to app.json expo-notifications plugin sounds array
    * 4. Rebuild the app (expo prebuild && npx pod-install)
@@ -541,7 +541,7 @@ class NotificationService {
       // Custom meditation bell sound - falls back to default if not available
       // iOS: requires .wav/.caf/.aiff file in app bundle (configured in app.json)
       // Android: can use any sound file
-      const customSound = Platform.OS === 'ios' ? 'meditation-bell.wav' : 'meditation_bell';
+      const customSound = Platform.OS === 'ios' ? 'meditation_bell.wav' : 'meditation_bell';
 
       const identifier = await Notifications.scheduleNotificationAsync({
         content: {

@@ -338,7 +338,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         // Use custom chime URI if provided (from settings), otherwise use default
         const source = customChimeUri
           ? { uri: customChimeUri }
-          : require('../../assets/sounds/meditation-bell.mp3');
+          : require('../../assets/sounds/meditation_bell.mp3');
 
         logger.log('Loading chime sound:', customChimeUri ? 'custom' : 'default');
         const player = createAudioPlayer(source);
@@ -353,7 +353,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           try {
             logger.warn('Custom chime failed, falling back to default');
             const fallbackPlayer = createAudioPlayer(
-              require('../../assets/sounds/meditation-bell.mp3')
+              require('../../assets/sounds/meditation_bell.mp3')
             );
             fallbackPlayer.loop = false;
             chimeSound.current = fallbackPlayer;

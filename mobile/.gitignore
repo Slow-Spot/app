@@ -41,6 +41,12 @@ yarn-error.*
 android-service-account.json
 ios-distribution-cert.p12
 
+# Local build artifacts
+*.aab
+*.ipa
+*.apk
+build-*
+
 # typescript
 *.tsbuildinfo
 

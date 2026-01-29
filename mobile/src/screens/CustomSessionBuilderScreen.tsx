@@ -137,7 +137,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
   const loadAudio = async () => {
     try {
       const player = createAudioPlayer(
-        require('../../assets/sounds/meditation-bell.mp3')
+        require('../../assets/sounds/meditation_bell.mp3')
       );
       setChimeSound(player);
     } catch (error) {

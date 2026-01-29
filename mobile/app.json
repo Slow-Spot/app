@@ -68,7 +68,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
-      "versionCode": 11608
+      "versionCode": 11609
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -96,7 +96,7 @@
           "icon": "./assets/notification-icon.png",
           "color": "#8B5CF6",
           "sounds": [
-            "./assets/sounds/meditation-bell.wav"
+            "./assets/sounds/meditation_bell.wav"
           ],
           "defaultChannel": "daily-reminders"
         }
