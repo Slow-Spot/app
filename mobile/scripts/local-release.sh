@@ -124,6 +124,35 @@ check_android_tools() {
     fi
     export ANDROID_HOME="$sdk_path"
     log_ok "Android SDK: $sdk_path"
+
+    # Java 17 -- Gradle nie obsluguje Java 21+
+    if [[ -z "${JAVA_HOME:-}" ]]; then
+      local java17=""
+      # Homebrew (Apple Silicon)
+      if [[ -d "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home" ]]; then
+        java17="/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+      # Homebrew (Intel)
+      elif [[ -d "/usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home" ]]; then
+        java17="/usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+      fi
+      if [[ -n "$java17" ]]; then
+        export JAVA_HOME="$java17"
+        log_ok "JAVA_HOME ustawione na Java 17: $java17"
+      else
+        log_warn "Java 17 nie znaleziona. Gradle moze nie dzialac z nowszymi wersjami Java."
+        log_warn "Zainstaluj: brew install openjdk@17"
+      fi
+    else
+      log_ok "JAVA_HOME: $JAVA_HOME"
+    fi
+
+    # Gradle -- zapobieganie OutOfMemoryError: Metaspace
+    if [[ -z "${GRADLE_OPTS:-}" ]]; then
+      export GRADLE_OPTS="-Xmx4g -XX:MaxMetaspaceSize=1g"
+      log_ok "GRADLE_OPTS ustawione: $GRADLE_OPTS"
+    else
+      log_ok "GRADLE_OPTS: $GRADLE_OPTS"
+    fi
   fi
 }
 

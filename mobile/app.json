@@ -68,7 +68,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW"
       ],
-      "versionCode": 11609
+      "versionCode": 11612
     },
     "web": {
       "favicon": "./assets/favicon.png"
