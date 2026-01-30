@@ -1,3 +1,9 @@
+## [1.16.10](https://github.com/Slow-Spot/app/compare/v1.16.9...v1.16.10) (2026-01-30)
+
+### Bug Fixes
+
+* **mobile:** add Java 17 and Gradle memory settings to local-release script ([caef513](https://github.com/Slow-Spot/app/commit/caef51301abd73007cfdf0ffb0ea8078772ddd1c))
+
 ## [1.16.9](https://github.com/Slow-Spot/app/compare/v1.16.8...v1.16.9) (2026-01-29)
 
 ### Bug Fixes
