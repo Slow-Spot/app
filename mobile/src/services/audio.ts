@@ -102,6 +102,11 @@ class AudioEngine {
     }
 
     try {
+      // Przewin na poczatek dla krotkich dzwiekow (chime/bell),
+      // zeby mozna bylo odtworzyc ponownie po zakonczeniu
+      if (layer === 'chime') {
+        player.seekTo(0);
+      }
       if (!player.playing) {
         player.play();
         logger.log(`Playing ${layer} track`);

@@ -366,7 +366,9 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
       const sessionHapticsEnabled = getSessionHaptics() && settings.hapticEnabled;
 
       // Play ending chime with haptic feedback
+      // Przywroc glosnosc chime (mogla byc wyzerowana przez wyciszenie audio)
       if (session?.chimeUrl) {
+        await audioEngine.setVolume('chime', 0.6);
         await audioEngine.play('chime');
         // Strong haptic feedback to signal session completion (if enabled)
         if (sessionHapticsEnabled) {
