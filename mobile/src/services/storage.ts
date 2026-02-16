@@ -90,23 +90,32 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 /**
  * Zod schemas for import validation (security hardening)
  */
+// Maksymalny rozmiar importowanych danych (10 MB)
+const MAX_IMPORT_SIZE = 10 * 1024 * 1024;
+
+const PhaseSchema = z.object({
+  type: z.string().max(50),
+  duration: z.number().min(0).max(86400),
+  label: z.string().max(200).optional(),
+}).strict();
+
 const ImportDataSchema = z.object({
-  version: z.string().optional(),
-  schemaVersion: z.number().int().positive().optional(),
-  exportDate: z.string().optional(),
+  version: z.string().max(20).optional(),
+  schemaVersion: z.number().int().positive().max(100).optional(),
+  exportDate: z.string().max(50).optional(),
   configurations: z.array(z.object({
-    id: z.string(),
-    name: z.string(),
+    id: z.string().max(100),
+    name: z.string().max(200),
     totalDuration: z.number().min(0).max(86400), // max 24h in seconds
-    phases: z.array(z.any()).optional(),
-  }).passthrough()).optional(),
+    phases: z.array(PhaseSchema).max(50).optional(),
+  }).strict()).max(100).optional(),
   preferences: z.object({
     chimeVolume: z.number().min(0).max(1).optional(),
     ambientVolume: z.number().min(0).max(1).optional(),
     enableHaptics: z.boolean().optional(),
     enableReminders: z.boolean().optional(),
-    reminderTime: z.string().optional(),
-    reminderDays: z.array(z.number().int().min(0).max(6)).optional(),
+    reminderTime: z.string().max(10).optional(),
+    reminderDays: z.array(z.number().int().min(0).max(6)).max(7).optional(),
     keepScreenOn: z.boolean().optional(),
     displayMode: z.enum(['light', 'dark', 'auto']).optional(),
     defaultDurationMinutes: z.number().int().min(1).max(240).optional(),
@@ -114,9 +123,9 @@ const ImportDataSchema = z.object({
     showPreSessionScreen: z.boolean().optional(),
     showPostSessionScreen: z.boolean().optional(),
     collectAnonymousData: z.boolean().optional(),
-    lastUpdated: z.string().optional(),
-  }).passthrough().optional(),
-});
+    lastUpdated: z.string().max(50).optional(),
+  }).strict().optional(),
+}).strict();
 
 /**
  * Session Configurations Storage
@@ -406,6 +415,11 @@ export const exportAllData = async (): Promise<string> => {
  */
 export const importData = async (jsonData: string): Promise<void> => {
   try {
+    // Walidacja rozmiaru danych wejsciowych
+    if (jsonData.length > MAX_IMPORT_SIZE) {
+      throw new Error('Import data exceeds maximum allowed size (10 MB)');
+    }
+
     // Parse JSON first
     let rawData: unknown;
     try {
