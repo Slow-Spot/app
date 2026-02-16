@@ -53,8 +53,9 @@ upload() {
     fi
 
     lftp -c "
-        set ssl:verify-certificate no
+        set ssl:verify-certificate yes
         set ftp:ssl-allow yes
+        set ftp:ssl-force yes
         set ftp:ssl-protect-data yes
         set net:timeout 60
         open -u $FTP_USER,'$FTP_PASS' ftp://$FTP_HOST
