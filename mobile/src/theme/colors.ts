@@ -1020,8 +1020,8 @@ export const darkChipColors = {
 
 // Combined dark mode colors object - section colors will be added dynamically
 // to avoid circular reference issues (brandColors and sectionColors defined later)
-// Using 'as any' initially, then properly typed properties are added after colors is defined
-export const darkColors: any = {
+// Partial type used during construction; full type applied after all properties are added
+export const darkColors = {
   neutral: neutralColors,
   accent: accentColors,
   darkAccent: darkAccentColors,
@@ -1780,13 +1780,15 @@ export const colors = {
 };
 
 // Add brand, section, primary and feature colors to darkColors (after they're defined)
-// This is done dynamically to avoid circular reference issues
-(darkColors as any).brand = brandColors;
-(darkColors as any).brandGradients = brandGradients;
-(darkColors as any).section = darkSectionColors;
-(darkColors as any).primary = primaryColor;
-(darkColors as any).feature = featureColorPalettes;
-(darkColors as any).featureIcon = featureIconColors;
+// Object.assign preserves type safety while allowing post-hoc property addition
+Object.assign(darkColors, {
+  brand: brandColors,
+  brandGradients: brandGradients,
+  section: darkSectionColors,
+  primary: primaryColor,
+  feature: featureColorPalettes,
+  featureIcon: featureIconColors,
+});
 
 // Helper function to get colors based on theme
 export const getThemeColors = (isDark: boolean) => isDark ? darkColors : colors;

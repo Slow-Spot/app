@@ -19,6 +19,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Reanimated, {
   useAnimatedStyle,
@@ -85,7 +86,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
 
 interface Props {
   isDark?: boolean;
-  navigation: any;
+  navigation: { goBack: () => void };
 }
 
 // Breathing techniques research - scientific evidence
@@ -292,7 +293,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
               <View key={pattern.id} style={[styles.card, dynamicStyles.card]}>
                 <View style={styles.cardHeader}>
                   <View style={[styles.breathingIconBox, { backgroundColor: isDark ? `${currentTheme.primary}33` : `${currentTheme.primary}1A` }]}>
-                    <Ionicons name={pattern.icon as any} size={24} color={currentTheme.primary} />
+                    <Ionicons name={pattern.icon as keyof typeof Ionicons.glyphMap} size={24} color={currentTheme.primary} />
                   </View>
                   <View style={styles.breathingTitleContainer}>
                     <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
@@ -563,7 +564,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                           { backgroundColor: selectedPattern === pattern.id ? currentTheme.primary : (isDark ? `${currentTheme.primary}33` : `${currentTheme.primary}1A`) }
                         ]}>
                           <Ionicons
-                            name={pattern.icon as any}
+                            name={pattern.icon as keyof typeof Ionicons.glyphMap}
                             size={18}
                             color={selectedPattern === pattern.id ? neutralColors.white : currentTheme.primary}
                           />
@@ -1061,7 +1062,7 @@ const AnimatedBreathingCircle: React.FC<{
   isRunning: boolean;
   pattern: 'box' | '4-7-8' | 'equal' | 'calm';
   isDark?: boolean;
-  t: any;
+  t: TFunction;
 }> = ({ isRunning, pattern, isDark, t }) => {
   const { currentTheme, settings } = usePersonalization();
   const scale = useSharedValue(1);

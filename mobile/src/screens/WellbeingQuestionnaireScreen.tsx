@@ -26,7 +26,7 @@ import { saveAssessment } from '../services/wellbeingService';
 import WellbeingQuestion from '../components/WellbeingQuestion';
 
 interface Props {
-  navigation: any;
+  navigation: { goBack: () => void };
   route: {
     params: {
       type: 'pre' | 'post';

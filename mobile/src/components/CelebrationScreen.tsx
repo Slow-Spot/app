@@ -20,6 +20,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ViewStyle,
+  TextStyle,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -119,7 +121,7 @@ const MoodButton = React.memo<{
   isSelected: boolean;
   gradient: string[];
   onSelect: (mood: MoodRating) => void;
-  dynamicStyles: any;
+  dynamicStyles: Record<string, unknown>;
   animationsEnabled: boolean;
 }>(({ mood, label, isSelected, gradient, onSelect, dynamicStyles, animationsEnabled }) => {
   const scale = useSharedValue(1);

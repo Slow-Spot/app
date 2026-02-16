@@ -198,7 +198,7 @@ export const useSystemSettings = (): SystemSettings & {
     if (AccessibilityInfo.addEventListener) {
       try {
         const boldTextSubscription = AccessibilityInfo.addEventListener(
-          'boldTextChanged' as any,
+          'boldTextChanged',
           (isEnabled: boolean) => {
             setSettings((prev) => ({ ...prev, boldTextEnabled: isEnabled }));
             logger.log('System: Bold text changed:', isEnabled);
@@ -211,7 +211,7 @@ export const useSystemSettings = (): SystemSettings & {
 
       try {
         const grayscaleSubscription = AccessibilityInfo.addEventListener(
-          'grayscaleChanged' as any,
+          'grayscaleChanged',
           (isEnabled: boolean) => {
             setSettings((prev) => ({ ...prev, grayscaleEnabled: isEnabled }));
             logger.log('System: Grayscale changed:', isEnabled);
@@ -224,7 +224,7 @@ export const useSystemSettings = (): SystemSettings & {
 
       try {
         const invertColorsSubscription = AccessibilityInfo.addEventListener(
-          'invertColorsChanged' as any,
+          'invertColorsChanged',
           (isEnabled: boolean) => {
             setSettings((prev) => ({ ...prev, invertColorsEnabled: isEnabled }));
             logger.log('System: Invert colors changed:', isEnabled);

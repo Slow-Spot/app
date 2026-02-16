@@ -19,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -54,7 +55,7 @@ interface MeditationIntroGuideProps {
 // Utility: Get proper timezone-based greeting
 // ══════════════════════════════════════════════════════════════
 
-const getTimeBasedGreeting = (t: any): { greeting: string; context: string } => {
+const getTimeBasedGreeting = (t: TFunction): { greeting: string; context: string } => {
   const now = new Date();
   const hour = now.getHours();
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -167,7 +168,7 @@ export const MeditationIntroGuide: React.FC<MeditationIntroGuideProps> = ({
           {/* Icon */}
           <View style={[styles.iconBox, { backgroundColor: dynamicStyles.iconBoxBg }]}>
             {item.iconType === 'ionicons' ? (
-              <Ionicons name={item.icon as any} size={48} color={currentTheme.primary} />
+              <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={48} color={currentTheme.primary} />
             ) : (
               <FontAwesome5 name={item.icon} size={40} color={currentTheme.primary} solid />
             )}

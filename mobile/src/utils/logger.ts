@@ -11,7 +11,7 @@ export const logger = {
   /**
    * Log general information (disabled in production)
    */
-  log: (...args: any[]) => {
+  log: (...args: unknown[]) => {
     if (isDevelopment) {
       console.log('[INFO]', ...args);
     }
@@ -20,7 +20,7 @@ export const logger = {
   /**
    * Log warnings (disabled in production)
    */
-  warn: (...args: any[]) => {
+  warn: (...args: unknown[]) => {
     if (isDevelopment) {
       console.warn('[WARN]', ...args);
     }
@@ -30,7 +30,7 @@ export const logger = {
    * Log errors (always enabled, but sanitized)
    * Never log sensitive user data in errors
    */
-  error: (...args: any[]) => {
+  error: (...args: unknown[]) => {
     // In production, only log error messages, not full objects
     if (isDevelopment) {
       console.error('[ERROR]', ...args);
@@ -52,7 +52,7 @@ export const logger = {
   /**
    * Log debug information (only in development)
    */
-  debug: (...args: any[]) => {
+  debug: (...args: unknown[]) => {
     if (isDevelopment) {
       console.debug('[DEBUG]', ...args);
     }

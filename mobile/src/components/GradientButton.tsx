@@ -29,7 +29,7 @@ interface GradientButtonProps {
   disabled?: boolean;
   loading?: boolean;
   size?: 'sm' | 'md' | 'lg';
-  icon?: any; // optional icon support when passed by callers
+  icon?: React.ReactNode;
   /** Accessibility label for screen readers. Defaults to title if not provided. */
   accessibilityLabel?: string;
   /** Accessibility hint describing what happens when the button is pressed. */

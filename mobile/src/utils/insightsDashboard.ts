@@ -127,7 +127,7 @@ export const calculateOverallStats = (
 
   const favoriteTimeOfDay =
     timeOfDayCounts.size > 0
-      ? (Array.from(timeOfDayCounts.entries()).sort((a, b) => b[1] - a[1])[0][0] as any)
+      ? (Array.from(timeOfDayCounts.entries()).sort((a, b) => b[1] - a[1])[0][0] as OverallStats['favoriteTimeOfDay'])
       : undefined;
 
   return {

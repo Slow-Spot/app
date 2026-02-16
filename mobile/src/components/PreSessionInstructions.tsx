@@ -5,7 +5,7 @@ import { logger } from '../utils/logger';
 // ══════════════════════════════════════════════════════════════
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, ScrollView, StyleSheet, Pressable, Animated, TextInput, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Pressable, Animated, TextInput, TouchableOpacity, Modal, ViewStyle, TextStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import Reanimated, {
@@ -16,6 +16,7 @@ import Reanimated, {
   Easing,
 } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PreSessionInstruction, ChecklistItem } from '../types/instructions';
@@ -366,10 +367,10 @@ interface OverviewStepProps {
   timeGreeting: string;
   onNext: () => void;
   onSkip: () => void;
-  t: any;
+  t: TFunction;
   isDark?: boolean;
-  themeGradients: any;
-  dynamicStyles: any;
+  themeGradients: ReturnType<typeof getThemeGradients>;
+  dynamicStyles: Record<string, unknown>;
 }
 
 const OverviewStep: React.FC<OverviewStepProps> = ({ instruction, timeGreeting, onNext, onSkip, t, isDark, themeGradients, dynamicStyles }) => {
@@ -466,10 +467,10 @@ interface PhysicalSetupStepProps {
   onNext: () => void;
   onSkip: () => void;
   canContinue: boolean;
-  t: any;
+  t: TFunction;
   isDark?: boolean;
-  themeGradients: any;
-  dynamicStyles: any;
+  themeGradients: ReturnType<typeof getThemeGradients>;
+  dynamicStyles: Record<string, unknown>;
 }
 
 const PhysicalSetupStep: React.FC<PhysicalSetupStepProps> = ({
@@ -561,10 +562,10 @@ interface BreathingPrepStepProps {
   onComplete: () => void;
   onSkipStep: () => void;
   onSkipAll: () => void;
-  t: any;
+  t: TFunction;
   isDark?: boolean;
-  themeGradients: any;
-  dynamicStyles: any;
+  themeGradients: ReturnType<typeof getThemeGradients>;
+  dynamicStyles: Record<string, unknown>;
 }
 
 const BreathingPrepStep: React.FC<BreathingPrepStepProps> = ({
@@ -690,10 +691,10 @@ interface IntentionStepProps {
   onBegin: () => void;
   alwaysSkip: boolean;
   onToggleSkip: () => void;
-  t: any;
+  t: TFunction;
   isDark?: boolean;
-  themeGradients: any;
-  dynamicStyles: any;
+  themeGradients: ReturnType<typeof getThemeGradients>;
+  dynamicStyles: Record<string, unknown>;
 }
 
 const IntentionStep: React.FC<IntentionStepProps> = ({
@@ -818,10 +819,10 @@ const ChecklistItemCard: React.FC<{
   isOptional: boolean;
   isCompleted: boolean;
   onToggle: () => void;
-  t: any;
+  t: TFunction;
   isDark?: boolean;
-  themeGradients: any;
-  dynamicStyles: any;
+  themeGradients: ReturnType<typeof getThemeGradients>;
+  dynamicStyles: Record<string, unknown>;
 }> = ({ icon, title, description, isOptional, isCompleted, onToggle, t, isDark, themeGradients, dynamicStyles }) => {
   return (
     <Pressable onPress={onToggle}>
@@ -869,9 +870,9 @@ const ChecklistItemCard: React.FC<{
 const AnimatedBreathingCircle: React.FC<{
   isRunning: boolean;
   pattern: 'box' | '4-7-8' | 'equal' | 'calm';
-  t: any;
+  t: TFunction;
   isDark?: boolean;
-  dynamicStyles: any;
+  dynamicStyles: Record<string, unknown>;
 }> = ({ isRunning, pattern, t, isDark, dynamicStyles }) => {
   const scale = useSharedValue(1);
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'rest'>('inhale');
@@ -974,7 +975,7 @@ const AnimatedBreathingCircle: React.FC<{
   );
 };
 
-const StepProgress: React.FC<{ currentStep: string; t: any; isDark?: boolean }> = ({ currentStep, t, isDark }) => {
+const StepProgress: React.FC<{ currentStep: string; t: TFunction; isDark?: boolean }> = ({ currentStep, t, isDark }) => {
   const { currentTheme } = usePersonalization();
   const steps = ['overview', 'setup', 'breathing', 'intention'];
   const currentIndex = steps.indexOf(currentStep);

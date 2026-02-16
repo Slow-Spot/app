@@ -16,7 +16,7 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { GradientCard } from './GradientCard';
 import { GradientButton } from './GradientButton';
@@ -59,7 +59,7 @@ export const ScheduleReminderModal: React.FC<ScheduleReminderModalProps> = ({
   /**
    * Handle time change from picker
    */
-  const handleTimeChange = (event: any, date?: Date) => {
+  const handleTimeChange = (_event: DateTimePickerEvent, date?: Date) => {
     if (Platform.OS === 'android') {
       setShowPicker(false);
     }
