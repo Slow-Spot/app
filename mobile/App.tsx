@@ -34,6 +34,7 @@ import { SplashScreen as CustomSplashScreen } from './src/components/SplashScree
 import { ensureStorageSchema } from './src/services/storage';
 import { PersonalizationProvider, usePersonalization } from './src/contexts/PersonalizationContext';
 import { UserProfileProvider, useUserProfile } from './src/contexts/UserProfileContext';
+import { ErrorBoundary } from './src/components/ErrorBoundary';
 
 type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile' | 'instructions' | 'personalization';
 
@@ -458,15 +459,17 @@ function AppContent() {
 
 export default function App() {
   return (
-    <GestureHandlerRootView style={styles.gestureRoot}>
-      <SafeAreaProvider>
-        <UserProfileProvider>
-          <PersonalizationProvider>
-            <AppContent />
-          </PersonalizationProvider>
-        </UserProfileProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <ErrorBoundary>
+      <GestureHandlerRootView style={styles.gestureRoot}>
+        <SafeAreaProvider>
+          <UserProfileProvider>
+            <PersonalizationProvider>
+              <AppContent />
+            </PersonalizationProvider>
+          </UserProfileProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }
 
