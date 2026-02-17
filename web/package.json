@@ -9,7 +9,9 @@
     "lint": "next lint",
     "deploy": "./deploy.sh",
     "deploy:build": "./deploy.sh --build-only",
-    "deploy:upload": "./deploy.sh --upload-only"
+    "deploy:upload": "./deploy.sh --upload-only",
+    "check:deps": "node ../scripts/check-deps.js --web",
+    "predeploy": "node ../scripts/check-deps.js --audit --web"
   },
   "dependencies": {
     "next": "^16.1.6",

@@ -28,7 +28,11 @@
     "version:major": "npm version major --no-git-tag-version",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "check:deps": "node ../scripts/check-deps.js --mobile",
+    "prerelease:ios": "node ../scripts/check-deps.js --audit --mobile",
+    "prerelease:android": "node ../scripts/check-deps.js --audit --mobile",
+    "prerelease:all": "node ../scripts/check-deps.js --audit --mobile"
   },
   "jest": {
     "preset": "jest-expo",
