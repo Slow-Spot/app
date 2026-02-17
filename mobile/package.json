@@ -25,7 +25,25 @@
     "store:android:screenshots": "cd fastlane && bundle exec fastlane android upload_screenshots",
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
-    "version:major": "npm version major --no-git-tag-version"
+    "version:major": "npm version major --no-git-tag-version",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.test.{ts,tsx}"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@shopify/react-native-skia|@ui-kitten/.*|date-fns|zod)"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ]
   },
   "dependencies": {
     "@bacons/apple-targets": "^3.0.7",
@@ -83,9 +101,11 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
     "@types/react-dom": "~19.1.0",
     "babel-preset-expo": "^54.0.7",
+    "jest-expo": "^54.0.17",
     "patch-package": "^8.0.1",
     "react-dom": "19.1.0",
     "react-refresh": "^0.18.0",
