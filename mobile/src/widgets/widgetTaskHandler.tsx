@@ -10,6 +10,7 @@ import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
+import { logger } from '../utils/logger';
 import { MeditationTimerWidget, MeditationTimerWidgetProps } from './MeditationTimerWidget';
 
 /**
@@ -41,10 +42,10 @@ async function getWidgetState(): Promise<MeditationTimerWidgetProps> {
       if (parsed.success) {
         return parsed.data;
       }
-      console.warn('Invalid widget state data in storage, using defaults');
+      logger.warn('Invalid widget state data in storage, using defaults');
     }
   } catch (error) {
-    console.warn('Failed to get widget state:', error);
+    logger.warn('Failed to get widget state:', error);
   }
 
   // Domyślny stan - brak aktywnej sesji
@@ -60,7 +61,7 @@ export async function setWidgetState(state: MeditationTimerWidgetProps): Promise
   try {
     await AsyncStorage.setItem(WIDGET_STATE_KEY, JSON.stringify(state));
   } catch (error) {
-    console.warn('Failed to set widget state:', error);
+    logger.warn('Failed to set widget state:', error);
   }
 }
 
@@ -71,7 +72,7 @@ export async function clearWidgetState(): Promise<void> {
   try {
     await AsyncStorage.removeItem(WIDGET_STATE_KEY);
   } catch (error) {
-    console.warn('Failed to clear widget state:', error);
+    logger.warn('Failed to clear widget state:', error);
   }
 }
 
@@ -85,7 +86,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps): Promise<
   const Widget = nameToWidget[widgetInfo.widgetName as keyof typeof nameToWidget];
 
   if (!Widget) {
-    console.warn(`Unknown widget: ${widgetInfo.widgetName}`);
+    logger.warn(`Unknown widget: ${widgetInfo.widgetName}`);
     return;
   }
 
@@ -112,7 +113,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps): Promise<
             await Linking.openURL('slowspot://');
           }
         } catch (error) {
-          console.warn('Failed to open app:', error);
+          logger.warn('Failed to open app:', error);
         }
       }
       break;

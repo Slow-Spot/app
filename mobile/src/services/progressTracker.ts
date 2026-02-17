@@ -187,8 +187,11 @@ export const calculateLongestStreak = (sessions: CompletedSession[]): number => 
   let currentStreak = 1;
 
   for (let i = 1; i < uniqueDates.length; i++) {
-    const prevDate = parseISO(uniqueDates[i - 1]);
-    const currDate = parseISO(uniqueDates[i]);
+    const prevDateStr = uniqueDates[i - 1];
+    const currDateStr = uniqueDates[i];
+    if (!prevDateStr || !currDateStr) continue;
+    const prevDate = parseISO(prevDateStr);
+    const currDate = parseISO(currDateStr);
 
     if (areConsecutiveDays(prevDate, currDate)) {
       currentStreak++;
@@ -215,7 +218,7 @@ export const getProgressStats = async (): Promise<ProgressStats> => {
     const currentStreak = calculateCurrentStreak(sessions);
     const longestStreak = calculateLongestStreak(sessions);
     const lastSessionDate =
-      sessions.length > 0 ? sessions[sessions.length - 1].date : null;
+      sessions.length > 0 ? (sessions[sessions.length - 1]?.date ?? null) : null;
 
     return {
       totalSessions,

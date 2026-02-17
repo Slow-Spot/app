@@ -127,11 +127,18 @@ export const getUniqueRandomQuote = async <T extends { id: number }>(
   // If all quotes have been shown, reset and show all quotes again
   if (unseenQuotes.length === 0) {
     await resetQuoteHistory(languageCode);
-    return quotes[Math.floor(Math.random() * quotes.length)];
+    const randomQuoteFromAll = quotes[Math.floor(Math.random() * quotes.length)];
+    if (!randomQuoteFromAll) {
+      throw new Error('No quotes available after reset');
+    }
+    return randomQuoteFromAll;
   }
 
   // Pick a random unseen quote
   const randomQuote = unseenQuotes[Math.floor(Math.random() * unseenQuotes.length)];
+  if (!randomQuote) {
+    throw new Error('No unseen quotes available');
+  }
 
   // Mark as shown
   await markQuoteAsShown(languageCode, randomQuote.id);

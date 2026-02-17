@@ -871,7 +871,11 @@ export const getInstructionForSession = (
   technique: string = 'breath_awareness'
 ): PreSessionInstruction => {
   const key = `level${level}_${technique}`;
-  return PRE_SESSION_INSTRUCTIONS[key] || PRE_SESSION_INSTRUCTIONS['level1_breath'];
+  const instruction = PRE_SESSION_INSTRUCTIONS[key] ?? PRE_SESSION_INSTRUCTIONS['level1_breath'];
+  if (!instruction) {
+    throw new Error(`No instruction found for key: ${key}`);
+  }
+  return instruction;
 };
 
 // ══════════════════════════════════════════════════════════════

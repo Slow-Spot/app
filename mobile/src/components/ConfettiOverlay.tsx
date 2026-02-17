@@ -166,7 +166,7 @@ export const ConfettiOverlay: React.FC<ConfettiOverlayProps> = ({
     return Array.from({ length: particleCount }, (_, i) => ({
       id: i,
       delay: Math.random() * 500,
-      color: colors[Math.floor(Math.random() * colors.length)],
+      color: colors[Math.floor(Math.random() * colors.length)] ?? colors[0] ?? '#FFD700',
       startX: Math.random() * width,
     }));
   }, [animationsEnabled, visible, particleCount, colors]);

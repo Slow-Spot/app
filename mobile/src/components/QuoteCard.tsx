@@ -17,7 +17,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote, isDark = false }) =
   const isOriginalLanguage = quote.originalLanguage === userLanguage;
 
   // Get the translation for user's language, or fallback to English
-  const translation = quote.translations?.[userLanguage] || quote.translations?.en || quote.text;
+  const translation = quote.translations?.[userLanguage] ?? quote.translations?.['en'] ?? quote.text;
 
   // Show original + transliteration + translation only if quote is in different language
   const showOriginal = !isOriginalLanguage && quote.originalLanguage !== 'en';

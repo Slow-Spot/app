@@ -468,6 +468,7 @@
     "dataPrivacy": "Daten & Datenschutz",
     "dataPrivacyDescription": "Alle Daten bleiben auf diesem Gerät",
     "exportData": "Daten exportieren",
+    "backupTitle": "Slow Spot Sicherung (JSON)",
     "clearData": "Daten löschen",
     "clearDataTitle": "Lokale Daten löschen?",
     "clearDataBody": "Dies entfernt deine Sitzungen, Fortschritt, Erinnerungen und Einstellungen von diesem Gerät.",
@@ -1521,5 +1522,20 @@
       "streak30": "30-Tage-Serie - Ein Monat Meilenstein!",
       "streak100": "100-Tage-Serie - Legendär!"
     }
+  },
+  "wellbeing": {
+    "preTitle": "Bevor du beginnst",
+    "postTitle": "Wie war es?",
+    "preSubtitle": "Nimm dir einen Moment, um in dich hineinzuhorchen",
+    "postSubtitle": "Reflektiere deine Meditationserfahrung",
+    "missingAnswersTitle": "Bitte beantworte alle Fragen",
+    "missingAnswersMessage": "Einige Pflichtfragen sind noch unbeantwortet",
+    "errorTitle": "Fehler",
+    "errorSaveMessage": "Bewertung konnte nicht gespeichert werden",
+    "saving": "Speichern...",
+    "continue": "Weiter",
+    "complete": "Abschließen",
+    "skip": "Überspringen",
+    "placeholder": "Deine Gedanken..."
   }
 }

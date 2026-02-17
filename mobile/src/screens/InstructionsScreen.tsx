@@ -1107,8 +1107,8 @@ const AnimatedBreathingCircle: React.FC<{
       };
 
       const scheduleNextPhase = () => {
-        const currentPhase = config.phases[phaseIndex];
-        const currentPhaseDuration = config.durations[phaseIndex];
+        const currentPhase = config.phases[phaseIndex] ?? 'inhale';
+        const currentPhaseDuration = config.durations[phaseIndex] ?? 4000;
 
         setBreathingPhase(currentPhase);
         triggerBreathingHaptic(currentPhase);

@@ -45,8 +45,8 @@ export const ScheduleReminderModal: React.FC<ScheduleReminderModalProps> = ({
   const getInitialDate = () => {
     const now = new Date();
     if (initialTime) {
-      const [hours, minutes] = initialTime.split(':').map(Number);
-      now.setHours(hours, minutes, 0, 0);
+      const [hours = 9, minutes = 0] = initialTime.split(':').map(Number);
+      now.setHours(hours ?? 9, minutes ?? 0, 0, 0);
     } else {
       now.setHours(9, 0, 0, 0); // Default 9:00 AM
     }

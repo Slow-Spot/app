@@ -12,6 +12,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import theme from '../theme';
 import { brandColors, primaryColor } from '../theme/colors';
 import { WellbeingQuestion as QuestionType } from '../types/wellbeing';
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export const WellbeingQuestion: React.FC<Props> = ({ question, value, onChange }) => {
+  const { t } = useTranslation();
   const { currentTheme } = usePersonalization();
   const [textValue, setTextValue] = useState(typeof value === 'string' ? value : '');
 
@@ -106,7 +108,7 @@ export const WellbeingQuestion: React.FC<Props> = ({ question, value, onChange }
           setTextValue(text);
           onChange(text);
         }}
-        placeholder="Your thoughts..."
+        placeholder={t('wellbeing.placeholder')}
         placeholderTextColor={theme.colors.neutral.gray[400]}
         multiline
         numberOfLines={4}
@@ -126,7 +128,7 @@ export const WellbeingQuestion: React.FC<Props> = ({ question, value, onChange }
   );
 };
 
-const styles = StyleSheet.create<any>({
+const styles = StyleSheet.create({
   container: {
     marginBottom: theme.spacing.xl,
   },

@@ -96,7 +96,7 @@ describe('meditationHelpers', () => {
       const points = getChimePointsFromSession(session as any);
 
       expect(points).toHaveLength(1); // tylko 5min, nie 10min
-      expect(points[0].timeInSeconds).toBe(300);
+      expect(points[0]!.timeInSeconds).toBe(300);
     });
   });
 

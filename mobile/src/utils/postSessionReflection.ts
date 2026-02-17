@@ -280,7 +280,7 @@ export const getSuggestedNextSession = (
     );
 
     if (similarSessions.length > 0) {
-      return similarSessions[Math.floor(Math.random() * similarSessions.length)];
+      return similarSessions[Math.floor(Math.random() * similarSessions.length)] ?? null;
     }
   }
 
@@ -294,7 +294,7 @@ export const getSuggestedNextSession = (
     );
 
     if (harderSessions.length > 0) {
-      return harderSessions[0];
+      return harderSessions[0] ?? null;
     }
   }
 
@@ -308,7 +308,7 @@ export const getSuggestedNextSession = (
     );
 
     if (easierSessions.length > 0) {
-      return easierSessions[0];
+      return easierSessions[0] ?? null;
     }
   }
 

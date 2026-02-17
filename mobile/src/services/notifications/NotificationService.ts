@@ -323,7 +323,9 @@ class NotificationService {
       await this.cancelDailyReminder();
 
       // Parse time
-      const [hours, minutes] = time.split(':').map(Number);
+      const [hours = 9, minutes = 0] = time.split(':').map(Number);
+      const parsedHours = hours ?? 9;
+      const parsedMinutes = minutes ?? 0;
 
       // Generate inspiring content
       const content = await notificationContentGenerator.generateDaily(i18n.language);
@@ -338,8 +340,8 @@ class NotificationService {
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DAILY,
-          hour: hours,
-          minute: minutes,
+          hour: parsedHours,
+          minute: parsedMinutes,
         },
       });
 
@@ -350,7 +352,7 @@ class NotificationService {
       await this.saveSettings();
 
       // Calculate next trigger date
-      const nextTrigger = this.calculateNextTriggerDate(hours, minutes);
+      const nextTrigger = this.calculateNextTriggerDate(parsedHours, parsedMinutes);
 
       logger.log(`Scheduled daily reminder at ${time}, ID: ${identifier}`);
       this.notifyListeners();
@@ -379,7 +381,9 @@ class NotificationService {
       await this.cancelStreakAlert();
 
       // Parse time
-      const [hours, minutes] = time.split(':').map(Number);
+      const [hours = 20, minutes = 0] = time.split(':').map(Number);
+      const parsedHours = hours ?? 20;
+      const parsedMinutes = minutes ?? 0;
 
       // Generate streak protection content
       const content = await notificationContentGenerator.generateStreakAlert(i18n.language);
@@ -394,8 +398,8 @@ class NotificationService {
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DAILY,
-          hour: hours,
-          minute: minutes,
+          hour: parsedHours,
+          minute: parsedMinutes,
         },
       });
 
@@ -406,7 +410,7 @@ class NotificationService {
       await this.saveSettings();
 
       // Calculate next trigger date
-      const nextTrigger = this.calculateNextTriggerDate(hours, minutes);
+      const nextTrigger = this.calculateNextTriggerDate(parsedHours, parsedMinutes);
 
       logger.log(`Scheduled streak alert at ${time}, ID: ${identifier}`);
       this.notifyListeners();
@@ -640,8 +644,8 @@ class NotificationService {
       return undefined;
     }
 
-    const [hours, minutes] = this.settings.dailyReminder.time.split(':').map(Number);
-    return this.calculateNextTriggerDate(hours, minutes);
+    const [hours = 9, minutes = 0] = this.settings.dailyReminder.time.split(':').map(Number);
+    return this.calculateNextTriggerDate(hours ?? 9, minutes ?? 0);
   }
 
   /**
@@ -652,8 +656,8 @@ class NotificationService {
       return undefined;
     }
 
-    const [hours, minutes] = this.settings.streakAlert.time.split(':').map(Number);
-    return this.calculateNextTriggerDate(hours, minutes);
+    const [hours = 20, minutes = 0] = this.settings.streakAlert.time.split(':').map(Number);
+    return this.calculateNextTriggerDate(hours ?? 20, minutes ?? 0);
   }
 
   /**

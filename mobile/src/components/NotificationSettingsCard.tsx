@@ -219,9 +219,9 @@ export const NotificationSettingsCard: React.FC<NotificationSettingsCardProps> =
    * Format current time setting for display
    */
   const formattedTime = useMemo(() => {
-    const [hours, minutes] = settings.dailyReminder.time.split(':').map(Number);
+    const [hours = 0, minutes = 0] = settings.dailyReminder.time.split(':').map(Number);
     const date = new Date();
-    date.setHours(hours, minutes, 0, 0);
+    date.setHours(hours ?? 0, minutes ?? 0, 0, 0);
     return date.toLocaleTimeString(i18n.language, {
       hour: '2-digit',
       minute: '2-digit',
@@ -255,9 +255,9 @@ export const NotificationSettingsCard: React.FC<NotificationSettingsCardProps> =
    * Format current streak alert time setting for display
    */
   const formattedStreakAlertTime = useMemo(() => {
-    const [hours, minutes] = settings.streakAlert.time.split(':').map(Number);
+    const [hours = 0, minutes = 0] = settings.streakAlert.time.split(':').map(Number);
     const date = new Date();
-    date.setHours(hours, minutes, 0, 0);
+    date.setHours(hours ?? 0, minutes ?? 0, 0, 0);
     return date.toLocaleTimeString(i18n.language, {
       hour: '2-digit',
       minute: '2-digit',

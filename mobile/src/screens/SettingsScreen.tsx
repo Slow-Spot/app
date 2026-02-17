@@ -249,7 +249,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     return Array.from({ length: 50 }, (_, i) => ({
       id: i,
       delay: Math.random() * 300,
-      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)] ?? '#7C3AED',
       startX: Math.random() * SCREEN_WIDTH,
     }));
   }, [showConfetti]);
@@ -548,7 +548,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const handleExportData = async () => {
     try {
       const payload = await exportAllData();
-      await Share.share({ message: payload, title: 'Slow Spot backup (JSON)' });
+      await Share.share({ message: payload, title: t('settings.backupTitle') });
     } catch (error) {
       logger.error('Failed to export data:', error);
       setShowExportErrorModal(true);

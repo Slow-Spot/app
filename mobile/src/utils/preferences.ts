@@ -422,22 +422,19 @@ export const deserializePreferences = (data: string): UserPreferences => {
  */
 export const migratePreferences = (
   oldPrefs: Partial<Record<string, unknown>>,
-  version: string
+  _version: string
 ): UserPreferences => {
-  // Start with defaults
-  const migrated: Record<string, unknown> = { ...DEFAULT_PREFERENCES };
+  // Wyciagamy tylko klucze istniejace w DEFAULT_PREFERENCES
+  const validKeys = Object.keys(DEFAULT_PREFERENCES) as (keyof UserPreferences)[];
+  const filtered: Partial<UserPreferences> = {};
 
-  // Apply old preferences that are still valid
   if (oldPrefs) {
-    Object.keys(DEFAULT_PREFERENCES).forEach(key => {
+    for (const key of validKeys) {
       if (oldPrefs[key] !== undefined) {
-        migrated[key] = oldPrefs[key];
+        (filtered as Record<string, unknown>)[key] = oldPrefs[key];
       }
-    });
+    }
   }
 
-  // Version-specific migrations can go here
-  // if (version === '1.0') { ... }
-
-  return migrated as unknown as UserPreferences;
+  return mergeWithDefaults(filtered);
 };

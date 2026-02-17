@@ -65,7 +65,7 @@ export const calculateOverallStats = (
   const daysSinceStart =
     completions.length > 0
       ? Math.ceil(
-          (Date.now() - new Date(completions[0].completedAt).getTime()) /
+          (Date.now() - new Date(completions[0]!.completedAt).getTime()) /
             (1000 * 60 * 60 * 24)
         )
       : 0;
@@ -117,17 +117,17 @@ export const calculateOverallStats = (
 
   const favoriteCulture =
     cultureCounts.size > 0
-      ? Array.from(cultureCounts.entries()).sort((a, b) => b[1] - a[1])[0][0]
+      ? Array.from(cultureCounts.entries()).sort((a, b) => b[1] - a[1])[0]?.[0]
       : undefined;
 
   const favoritePurpose =
     purposeCounts.size > 0
-      ? Array.from(purposeCounts.entries()).sort((a, b) => b[1] - a[1])[0][0]
+      ? Array.from(purposeCounts.entries()).sort((a, b) => b[1] - a[1])[0]?.[0]
       : undefined;
 
   const favoriteTimeOfDay =
     timeOfDayCounts.size > 0
-      ? (Array.from(timeOfDayCounts.entries()).sort((a, b) => b[1] - a[1])[0][0] as OverallStats['favoriteTimeOfDay'])
+      ? (Array.from(timeOfDayCounts.entries()).sort((a, b) => b[1] - a[1])[0]?.[0] as OverallStats['favoriteTimeOfDay'])
       : undefined;
 
   return {

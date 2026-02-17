@@ -126,18 +126,20 @@ function AppContent() {
       // Handle direct screen links: slowspot://meditation, slowspot://home, etc.
       // Used by Live Activity widget
       const directMatch = url.match(/slowspot:\/\/(\w+)$/);
-      if (directMatch && isDeepLinkScreen(directMatch[1])) {
-        setCurrentScreen(directMatch[1]);
-        logger.log('Deep link navigation (direct) to:', directMatch[1]);
+      const directScreen = directMatch?.[1];
+      if (directScreen && isDeepLinkScreen(directScreen)) {
+        setCurrentScreen(directScreen);
+        logger.log('Deep link navigation (direct) to:', directScreen);
         return;
       }
 
       // Handle screen path links: slowspot://screen/home, slowspot://screen/meditation, etc.
       // Used for screenshots automation
       const screenMatch = url.match(/slowspot:\/\/screen\/(\w+)/);
-      if (screenMatch && isDeepLinkScreen(screenMatch[1])) {
-        setCurrentScreen(screenMatch[1]);
-        logger.log('Deep link navigation (screen path) to:', screenMatch[1]);
+      const screenPath = screenMatch?.[1];
+      if (screenPath && isDeepLinkScreen(screenPath)) {
+        setCurrentScreen(screenPath);
+        logger.log('Deep link navigation (screen path) to:', screenPath);
       }
     };
 

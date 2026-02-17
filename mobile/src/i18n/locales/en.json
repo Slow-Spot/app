@@ -468,6 +468,7 @@
     "dataPrivacy": "Data & Privacy",
     "dataPrivacyDescription": "All data stays on this device",
     "exportData": "Export data",
+    "backupTitle": "Slow Spot backup (JSON)",
     "clearData": "Clear data",
     "clearDataTitle": "Clear local data?",
     "clearDataBody": "This removes your sessions, progress, reminders, and preferences from this device.",
@@ -1521,5 +1522,20 @@
       "streak30": "30 day streak - One month milestone!",
       "streak100": "100 day streak - Legendary!"
     }
+  },
+  "wellbeing": {
+    "preTitle": "Before You Begin",
+    "postTitle": "How Did It Go?",
+    "preSubtitle": "Take a moment to check in with yourself",
+    "postSubtitle": "Reflect on your meditation experience",
+    "missingAnswersTitle": "Please answer all questions",
+    "missingAnswersMessage": "Some required questions are missing answers",
+    "errorTitle": "Error",
+    "errorSaveMessage": "Failed to save assessment",
+    "saving": "Saving...",
+    "continue": "Continue",
+    "complete": "Complete",
+    "skip": "Skip",
+    "placeholder": "Your thoughts..."
   }
 }

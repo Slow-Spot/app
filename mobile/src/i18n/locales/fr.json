@@ -477,6 +477,7 @@
     "featurePrivacy": "Pas de publicités ni de suivi",
     "featureLocal": "Données sur l'appareil",
     "exportData": "Exporter les Données",
+    "backupTitle": "Sauvegarde Slow Spot (JSON)",
     "exportDataDescription": "Exporter l'historique de méditation",
     "skipInstructions": "Ignorer les Instructions",
     "skipInstructionsDescription": "Pour méditants expérimentés",
@@ -1521,5 +1522,20 @@
       "streak30": "Série de 30 jours - Jalon d'un mois !",
       "streak100": "Série de 100 jours - Légendaire !"
     }
+  },
+  "wellbeing": {
+    "preTitle": "Avant de commencer",
+    "postTitle": "Comment c'était ?",
+    "preSubtitle": "Prenez un moment pour vous connecter à vous-même",
+    "postSubtitle": "Réfléchissez à votre expérience de méditation",
+    "missingAnswersTitle": "Veuillez répondre à toutes les questions",
+    "missingAnswersMessage": "Certaines questions obligatoires n'ont pas de réponse",
+    "errorTitle": "Erreur",
+    "errorSaveMessage": "Impossible de sauvegarder l'évaluation",
+    "saving": "Enregistrement...",
+    "continue": "Continuer",
+    "complete": "Terminer",
+    "skip": "Passer",
+    "placeholder": "Vos pensées..."
   }
 }

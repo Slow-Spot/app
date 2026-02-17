@@ -119,7 +119,7 @@ export function selectByBreakpoint<T>(
 
   for (let i = startIndex; i < cascadeOrder.length; i++) {
     const bp = cascadeOrder[i];
-    if (values[bp] !== undefined) {
+    if (bp !== undefined && values[bp] !== undefined) {
       return values[bp] as T;
     }
   }

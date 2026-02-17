@@ -23,7 +23,8 @@ const BreathingCircle = () => {
 
     const interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % 3;
-      setPhase(phases[currentIndex]);
+      const nextPhase = phases[currentIndex];
+      if (nextPhase) setPhase(nextPhase);
     }, 4000);
 
     return () => clearInterval(interval);

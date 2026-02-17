@@ -56,17 +56,21 @@ export const getInstructionWithFallback = (
   };
 
   // Try level-appropriate fallbacks
-  const fallbacks = levelFallbacks[sessionLevel] || levelFallbacks[1];
+  const fallbacks = levelFallbacks[sessionLevel] ?? levelFallbacks[1] ?? [];
   for (const fallbackId of fallbacks) {
     const fallbackInstruction = PRE_SESSION_INSTRUCTIONS[fallbackId];
     if (fallbackInstruction) {
-      logger.log(`✓ Using fallback instruction: ${fallbackId} for level ${sessionLevel}`);
+      logger.log(`Using fallback instruction: ${fallbackId} for level ${sessionLevel}`);
       return fallbackInstruction;
     }
   }
 
   // Ultimate fallback - always exists
-  return PRE_SESSION_INSTRUCTIONS['level1_breath'];
+  const ultimateFallback = PRE_SESSION_INSTRUCTIONS['level1_breath'];
+  if (!ultimateFallback) {
+    throw new Error('No fallback instruction found for level1_breath');
+  }
+  return ultimateFallback;
 };
 
 /**

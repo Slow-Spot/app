@@ -122,7 +122,7 @@ export function useResponsive(): ResponsiveInfo {
 
       for (let i = startIndex; i < cascadeOrder.length; i++) {
         const bp = cascadeOrder[i];
-        if (options[bp] !== undefined) {
+        if (bp !== undefined && options[bp] !== undefined) {
           return options[bp] as T;
         }
       }

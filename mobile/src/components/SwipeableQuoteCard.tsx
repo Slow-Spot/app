@@ -70,7 +70,7 @@ export const SwipeableQuoteCard: React.FC<SwipeableQuoteCardProps> = ({
 
   const userLanguage = i18n.language;
   const isOriginalLanguage = quote.originalLanguage === userLanguage;
-  const translation = quote.translations?.[userLanguage] || quote.translations?.en || quote.text;
+  const translation = quote.translations?.[userLanguage] ?? quote.translations?.['en'] ?? quote.text;
   const showOriginal = !isOriginalLanguage && quote.originalLanguage !== 'en';
 
   const triggerHaptic = (type: 'light' | 'medium') => {

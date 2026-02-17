@@ -352,8 +352,11 @@ export const updateSession = async (id: string, config: SessionConfig): Promise<
       throw new Error(`Session not found: ${id}`);
     }
 
+    const existingSession = sessions[index];
     const updatedSession = createSessionFromConfig(config, id);
-    updatedSession.createdAt = sessions[index].createdAt;
+    if (existingSession) {
+      updatedSession.createdAt = existingSession.createdAt;
+    }
     sessions[index] = updatedSession;
 
     await AsyncStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));

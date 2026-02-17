@@ -468,6 +468,7 @@
     "dataPrivacy": "Datos y Privacidad",
     "dataPrivacyDescription": "Todos los datos permanecen en este dispositivo",
     "exportData": "Exportar datos",
+    "backupTitle": "Copia de seguridad Slow Spot (JSON)",
     "clearData": "Borrar datos",
     "clearDataTitle": "¿Borrar datos locales?",
     "clearDataBody": "Esto elimina tus sesiones, progreso, recordatorios y preferencias de este dispositivo.",
@@ -1521,5 +1522,20 @@
       "streak30": "Racha de 30 días - ¡Hito de un mes!",
       "streak100": "Racha de 100 días - ¡Legendario!"
     }
+  },
+  "wellbeing": {
+    "preTitle": "Antes de empezar",
+    "postTitle": "¿Cómo fue?",
+    "preSubtitle": "Tómate un momento para conectar contigo",
+    "postSubtitle": "Reflexiona sobre tu experiencia de meditación",
+    "missingAnswersTitle": "Responde todas las preguntas",
+    "missingAnswersMessage": "Faltan respuestas a algunas preguntas obligatorias",
+    "errorTitle": "Error",
+    "errorSaveMessage": "No se pudo guardar la evaluación",
+    "saving": "Guardando...",
+    "continue": "Continuar",
+    "complete": "Completar",
+    "skip": "Omitir",
+    "placeholder": "Tus pensamientos..."
   }
 }

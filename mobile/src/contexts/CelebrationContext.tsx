@@ -179,6 +179,7 @@ export const CelebrationProvider: React.FC<CelebrationProviderProps> = ({
       // Check session milestones (in reverse order to get highest uncelebrated)
       for (let i = MILESTONE_THRESHOLDS.sessions.length - 1; i >= 0; i--) {
         const milestone = MILESTONE_THRESHOLDS.sessions[i];
+        if (!milestone) continue;
         if (stats.totalSessions >= milestone.count) {
           const alreadyCelebrated = await hasCelebratedMilestone(milestone.id);
           if (!alreadyCelebrated) {
@@ -195,6 +196,7 @@ export const CelebrationProvider: React.FC<CelebrationProviderProps> = ({
       // Check streak milestones
       for (let i = MILESTONE_THRESHOLDS.streak.length - 1; i >= 0; i--) {
         const milestone = MILESTONE_THRESHOLDS.streak[i];
+        if (!milestone) continue;
         if (streak >= milestone.days) {
           const alreadyCelebrated = await hasCelebratedMilestone(milestone.id);
           if (!alreadyCelebrated) {

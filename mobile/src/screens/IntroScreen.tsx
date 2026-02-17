@@ -444,8 +444,8 @@ const SuccessCelebration: React.FC<{
   // Confetti colors based on theme
   const confettiColors = React.useMemo(() => [
     primaryColor,
-    gradient[0],
-    gradient[1],
+    gradient[0] ?? primaryColor,
+    gradient[1] ?? primaryColor,
     '#FFD700', // Gold
     '#FF6B6B', // Coral
     '#4ECDC4', // Teal
@@ -623,8 +623,9 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
   }, [settings.hapticEnabled, handleDone]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: { viewableItems: ViewToken[] }) => {
-    if (viewableItems.length > 0 && viewableItems[0].index !== null) {
-      setCurrentIndex(viewableItems[0].index);
+    const firstItem = viewableItems[0];
+    if (viewableItems.length > 0 && firstItem && firstItem.index !== null && firstItem.index !== undefined) {
+      setCurrentIndex(firstItem.index);
     }
   }, []);
 
