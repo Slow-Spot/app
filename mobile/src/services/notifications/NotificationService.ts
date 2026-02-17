@@ -13,6 +13,7 @@
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import { z } from 'zod';
 import i18n from '../../i18n';
 import { logger } from '../../utils/logger';
 import {
@@ -26,6 +27,25 @@ import {
 import { notificationContentGenerator } from './NotificationContentGenerator';
 import { STORAGE_KEYS, CHANNEL_ID, NOTIFICATION_ACCENT_COLOR } from './constants';
 import { getTodayMinutes, getTotalStreak } from '../progressTracker';
+
+/**
+ * Zod schema dla walidacji NotificationSettings z AsyncStorage
+ */
+const NotificationSettingsSchema = z.object({
+  enabled: z.boolean().optional(),
+  dailyReminder: z.object({
+    enabled: z.boolean(),
+    time: z.string(),
+    days: z.array(z.number()),
+  }).optional(),
+  streakAlert: z.object({
+    enabled: z.boolean(),
+    time: z.string(),
+  }).optional(),
+  lastScheduledId: z.string().optional(),
+  lastStreakAlertId: z.string().optional(),
+  updatedAt: z.string().optional(),
+});
 
 /**
  * NotificationService
@@ -197,8 +217,12 @@ class NotificationService {
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEYS.NOTIFICATION_SETTINGS);
       if (stored) {
-        const parsed = JSON.parse(stored) as Partial<NotificationSettings>;
-        this.settings = { ...DEFAULT_NOTIFICATION_SETTINGS, ...parsed };
+        const parsed = NotificationSettingsSchema.safeParse(JSON.parse(stored));
+        if (!parsed.success) {
+          logger.warn('Invalid notification settings in storage, using defaults');
+        } else {
+          this.settings = { ...DEFAULT_NOTIFICATION_SETTINGS, ...parsed.data } as NotificationSettings;
+        }
       }
     } catch (error) {
       logger.error('Failed to load notification settings:', error);

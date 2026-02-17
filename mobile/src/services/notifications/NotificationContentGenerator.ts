@@ -8,8 +8,14 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { NotificationContent, NotificationContentCategory } from '../../types/notifications';
 import { STORAGE_KEYS } from './constants';
+
+/**
+ * Zod schema dla walidacji content index z AsyncStorage
+ */
+const ContentIndexSchema = z.record(z.string(), z.number());
 
 /**
  * Content pools organized by language
@@ -224,7 +230,11 @@ export class NotificationContentGenerator {
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEYS.CONTENT_INDEX);
       if (stored) {
-        this.lastUsedIndex = JSON.parse(stored);
+        const parsed = ContentIndexSchema.safeParse(JSON.parse(stored));
+        if (parsed.success) {
+          this.lastUsedIndex = parsed.data;
+        }
+        // W przypadku nieprawidlowych danych zaczynamy od nowa (domyslny pusty obiekt)
       }
     } catch {
       // Ignore errors, start fresh

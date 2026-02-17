@@ -37,6 +37,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { NotificationSettingsCard } from '../components/NotificationSettingsCard';
@@ -76,6 +77,23 @@ export interface CustomSoundsConfig {
     custom?: { uri: string; name: string };
   };
 }
+
+/**
+ * Zod schema dla walidacji CustomSoundsConfig z AsyncStorage
+ */
+const CustomSoundsConfigSchema = z.object({
+  customBellUri: z.string().optional(),
+  customBellName: z.string().optional(),
+  customAmbientUris: z.object({
+    nature: z.object({ uri: z.string(), name: z.string() }).optional(),
+    ocean: z.object({ uri: z.string(), name: z.string() }).optional(),
+    forest: z.object({ uri: z.string(), name: z.string() }).optional(),
+    rain: z.object({ uri: z.string(), name: z.string() }).optional(),
+    fire: z.object({ uri: z.string(), name: z.string() }).optional(),
+    wind: z.object({ uri: z.string(), name: z.string() }).optional(),
+    custom: z.object({ uri: z.string(), name: z.string() }).optional(),
+  }),
+});
 
 const LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -288,7 +306,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       try {
         const data = await AsyncStorage.getItem(CUSTOM_SOUNDS_STORAGE_KEY);
         if (data) {
-          setCustomSounds(JSON.parse(data));
+          const parsed = CustomSoundsConfigSchema.safeParse(JSON.parse(data));
+          if (parsed.success) {
+            setCustomSounds(parsed.data as CustomSoundsConfig);
+          } else {
+            logger.warn('Invalid custom sounds config in storage, using defaults');
+          }
         }
       } catch (error) {
         logger.error('Failed to load custom sounds:', error);

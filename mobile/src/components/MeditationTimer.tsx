@@ -24,6 +24,7 @@ import { BreathingPattern, BreathingTiming } from '../services/customSessionStor
 import { backgroundTimer } from '../services/backgroundTimer';
 import { liveActivityService } from '../services/liveActivityService';
 import { androidWidgetService } from '../services/androidWidgetService';
+import { androidForegroundService } from '../services/androidForegroundService';
 import { notificationService } from '../services/notifications/NotificationService';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -536,17 +537,19 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             setRemainingSeconds(remaining);
             if (remaining <= 0) {
               setIsRunning(false);
-              // Zakończ Live Activity i Android widget z komunikatem sukcesu
+              // Zakoncz Live Activity, Android widget i foreground service
               liveActivityService.endActivity(true);
               androidWidgetService.endSession();
+              androidForegroundService.stopSession();
               onCompleteRef.current();
             }
           },
           async () => {
             setIsRunning(false);
-            // Zakończ Live Activity i Android widget z komunikatem sukcesu
+            // Zakoncz Live Activity, Android widget i foreground service
             await liveActivityService.endActivity(true);
             await androidWidgetService.endSession();
+            await androidForegroundService.stopSession();
             onCompleteRef.current();
           }
         );
@@ -566,6 +569,24 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         // Start Android widget
         await androidWidgetService.startSession(totalSeconds);
 
+        // Rejestruj callback PRZED startem serwisu (unika gap window)
+        androidForegroundService.setActionCallback((action) => {
+          if (action === 'pause') {
+            setIsRunning(false);
+          } else if (action === 'resume') {
+            setIsRunning(true);
+          } else if (action === 'stop') {
+            setIsRunning(false);
+            onCancelRef.current();
+          }
+        });
+
+        // Start Android foreground service (ongoing notification z timerem)
+        await androidForegroundService.startSession(
+          totalSeconds,
+          t('meditation.title', 'Meditation')
+        );
+
         // Schedule notification for session completion (plays sound when app in background)
         await notificationService.scheduleSessionCompletionNotification(totalSeconds);
       } catch (error) {
@@ -580,6 +601,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       backgroundTimer.stopSession();
       liveActivityService.endActivity(false);
       androidWidgetService.endSession();
+      androidForegroundService.setActionCallback(null);
+      androidForegroundService.stopSession();
       notificationService.cancelSessionCompletionNotification();
       sessionStartedRef.current = false;
       backgroundSessionIdRef.current = null;
@@ -596,12 +619,13 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       try {
         if (isRunning) {
           await backgroundTimer.resumeFromPause();
-          // Aktualizuj Live Activity z nowym czasem końca
+          // Aktualizuj Live Activity z nowym czasem konca
           if (liveActivityIdRef.current) {
             await liveActivityService.updateRemainingTime(remainingSeconds, false);
           }
-          // Aktualizuj Android widget
+          // Aktualizuj Android widget i foreground notification
           await androidWidgetService.resumeSession(remainingSeconds, totalSeconds);
+          await androidForegroundService.resumeSession(remainingSeconds);
           // Reschedule session completion notification
           await notificationService.rescheduleSessionCompletionNotification(remainingSeconds);
         } else {
@@ -610,8 +634,9 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           if (liveActivityIdRef.current) {
             await liveActivityService.updateRemainingTime(remainingSeconds, true);
           }
-          // Aktualizuj Android widget
+          // Aktualizuj Android widget i foreground notification
           await androidWidgetService.pauseSession(remainingSeconds, totalSeconds);
+          await androidForegroundService.pauseSession(remainingSeconds);
           // Cancel session completion notification when paused
           await notificationService.cancelSessionCompletionNotification();
         }
@@ -649,11 +674,12 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         setRemainingSeconds(actualRemaining);
         setIsRunning(!isPaused);
 
-        // Sprawdź czy sesja się skończyła w tle
+        // Sprawdz czy sesja sie zakonczyla w tle
         if (actualRemaining <= 0) {
           setIsRunning(false);
           liveActivityService.endActivity(true);
           androidWidgetService.endSession();
+          androidForegroundService.stopSession();
           onCompleteRef.current();
         } else {
           // KLUCZOWA NAPRAWA: Synchronizuj Live Activity z aktualnym czasem

@@ -4,6 +4,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { logger } from '../utils/logger';
 import {
   formatDateKey,
@@ -48,6 +49,29 @@ export interface ProgressStats {
 }
 
 /**
+ * Zod schemas dla walidacji danych z AsyncStorage
+ */
+const CompletedSessionSchema = z.object({
+  id: z.union([z.number(), z.string()]),
+  title: z.string(),
+  date: z.string(),
+  durationSeconds: z.number(),
+  languageCode: z.string(),
+  intention: z.string().optional(),
+  mood: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional(),
+  notes: z.string().optional(),
+});
+
+const CompletedSessionsArraySchema = z.array(CompletedSessionSchema);
+
+const ImportedStreakDataSchema = z.object({
+  days: z.number(),
+  importedAt: z.string(),
+  sourceApp: z.string().optional(),
+  originalStartDate: z.string().optional(),
+});
+
+/**
  * Save a completed meditation session
  */
 export const saveSessionCompletion = async (
@@ -61,9 +85,15 @@ export const saveSessionCompletion = async (
 ): Promise<void> => {
   try {
     const sessionsJson = await AsyncStorage.getItem(SESSIONS_KEY);
-    const sessions: CompletedSession[] = sessionsJson
-      ? JSON.parse(sessionsJson)
-      : [];
+    let sessions: CompletedSession[] = [];
+    if (sessionsJson) {
+      const parsed = CompletedSessionsArraySchema.safeParse(JSON.parse(sessionsJson));
+      if (parsed.success) {
+        sessions = parsed.data as CompletedSession[];
+      } else {
+        logger.warn('Invalid completed sessions data in storage, starting fresh');
+      }
+    }
 
     const newSession: CompletedSession = {
       id: sessionId,
@@ -90,7 +120,14 @@ export const saveSessionCompletion = async (
 export const getCompletedSessions = async (): Promise<CompletedSession[]> => {
   try {
     const sessionsJson = await AsyncStorage.getItem(SESSIONS_KEY);
-    return sessionsJson ? JSON.parse(sessionsJson) : [];
+    if (!sessionsJson) return [];
+
+    const parsed = CompletedSessionsArraySchema.safeParse(JSON.parse(sessionsJson));
+    if (!parsed.success) {
+      logger.warn('Invalid completed sessions data in storage, returning empty array');
+      return [];
+    }
+    return parsed.data as CompletedSession[];
   } catch (error) {
     logger.error('Error reading completed sessions:', error);
     return [];
@@ -288,7 +325,14 @@ export const saveImportedStreak = async (
 export const getImportedStreak = async (): Promise<ImportedStreakData | null> => {
   try {
     const data = await AsyncStorage.getItem(IMPORTED_STREAK_KEY);
-    return data ? JSON.parse(data) : null;
+    if (!data) return null;
+
+    const parsed = ImportedStreakDataSchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+      logger.warn('Invalid imported streak data in storage, returning null');
+      return null;
+    }
+    return parsed.data as ImportedStreakData;
   } catch (error) {
     logger.error('Error reading imported streak:', error);
     return null;

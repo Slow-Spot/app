@@ -4,6 +4,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { MeditationSession } from './api';
 import { logger } from '../utils/logger';
 
@@ -95,6 +96,68 @@ export interface CustomSoundsConfig {
 }
 
 // ============================================================================
+// Zod Schemas (walidacja danych z AsyncStorage)
+// ============================================================================
+
+const CustomSoundsConfigSchema = z.object({
+  customBellUri: z.string().optional(),
+  customBellName: z.string().optional(),
+  customAmbientUris: z.object({
+    nature: z.object({ uri: z.string(), name: z.string() }).optional(),
+    ocean: z.object({ uri: z.string(), name: z.string() }).optional(),
+    forest: z.object({ uri: z.string(), name: z.string() }).optional(),
+    rain: z.object({ uri: z.string(), name: z.string() }).optional(),
+    fire: z.object({ uri: z.string(), name: z.string() }).optional(),
+    wind: z.object({ uri: z.string(), name: z.string() }).optional(),
+    custom: z.object({ uri: z.string(), name: z.string() }).optional(),
+  }),
+});
+
+const CustomSessionSchema = z.object({
+  id: z.union([z.number(), z.string()]),
+  title: z.string(),
+  titleKey: z.string().optional(),
+  languageCode: z.string(),
+  durationSeconds: z.number(),
+  voiceUrl: z.unknown().optional(),
+  ambientUrl: z.unknown().optional(),
+  chimeUrl: z.unknown().optional(),
+  cultureTag: z.string().optional(),
+  purposeTag: z.string().optional(),
+  level: z.number(),
+  description: z.string().optional(),
+  descriptionKey: z.string().optional(),
+  createdAt: z.string(),
+  ambientFrequency: z.number().optional(),
+  chimeFrequency: z.number().optional(),
+  instructionId: z.string().optional(),
+  isCustom: z.literal(true),
+  config: z.object({
+    name: z.string(),
+    durationMinutes: z.number(),
+    ambientSound: z.string(),
+    breathingPattern: z.string(),
+    customBreathing: z.object({
+      inhale: z.number(),
+      hold1: z.number(),
+      exhale: z.number(),
+      hold2: z.number(),
+    }).optional(),
+    endChimeEnabled: z.boolean(),
+    intervalBellEnabled: z.boolean(),
+    intervalBellMinutes: z.number(),
+    hideTimer: z.boolean(),
+    haptics: z.object({
+      session: z.boolean(),
+      breathing: z.boolean(),
+      intervalBell: z.boolean(),
+    }),
+  }),
+});
+
+const CustomSessionsArraySchema = z.array(CustomSessionSchema);
+
+// ============================================================================
 // Audio Assets (Metro bundler requires static requires)
 // ============================================================================
 
@@ -169,7 +232,12 @@ export const getCustomSoundsConfig = async (): Promise<CustomSoundsConfig | null
   try {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.CUSTOM_SOUNDS);
     if (data) {
-      return JSON.parse(data) as CustomSoundsConfig;
+      const parsed = CustomSoundsConfigSchema.safeParse(JSON.parse(data));
+      if (!parsed.success) {
+        logger.warn('Invalid custom sounds config in storage, returning null');
+        return null;
+      }
+      return parsed.data as CustomSoundsConfig;
     }
     return null;
   } catch (error) {
@@ -235,7 +303,14 @@ export const createSessionFromConfig = (config: SessionConfig, id?: string): Cus
 export const getAllSessions = async (): Promise<CustomSession[]> => {
   try {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.SESSIONS);
-    return data ? JSON.parse(data) : [];
+    if (!data) return [];
+
+    const parsed = CustomSessionsArraySchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+      logger.warn('Invalid custom sessions data in storage, returning empty array');
+      return [];
+    }
+    return parsed.data as CustomSession[];
   } catch (error) {
     logger.error('Error loading sessions:', error);
     return [];
@@ -381,7 +456,13 @@ export const migrateOldSessions = async (): Promise<void> => {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.SESSIONS);
     if (!data) return;
 
-    const sessions = JSON.parse(data);
+    // Migracja - walidujemy tylko ze dane sa tablica obiektow
+    const rawParsed = z.array(z.record(z.string(), z.unknown())).safeParse(JSON.parse(data));
+    if (!rawParsed.success) {
+      logger.warn('Invalid sessions data for migration, skipping');
+      return;
+    }
+    const sessions = rawParsed.data;
     let hasChanges = false;
 
     for (const session of sessions) {

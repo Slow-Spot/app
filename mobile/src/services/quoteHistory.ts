@@ -4,6 +4,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { logger } from '../utils/logger';
 
 const STORAGE_KEY = 'shown_quotes';
@@ -13,6 +14,11 @@ export interface QuoteHistory {
 }
 
 /**
+ * Zod schema dla walidacji QuoteHistory z AsyncStorage
+ */
+const QuoteHistorySchema = z.record(z.string(), z.array(z.number()));
+
+/**
  * Get the history of shown quotes for a specific language
  */
 export const getShownQuotes = async (languageCode: string): Promise<number[]> => {
@@ -20,8 +26,12 @@ export const getShownQuotes = async (languageCode: string): Promise<number[]> =>
     const historyJson = await AsyncStorage.getItem(STORAGE_KEY);
     if (!historyJson) return [];
 
-    const history: QuoteHistory = JSON.parse(historyJson);
-    return history[languageCode] || [];
+    const parsed = QuoteHistorySchema.safeParse(JSON.parse(historyJson));
+    if (!parsed.success) {
+      logger.warn('Invalid quote history data in storage, returning empty array');
+      return [];
+    }
+    return parsed.data[languageCode] || [];
   } catch (error) {
     logger.error('Error reading quote history:', error);
     return [];
@@ -37,7 +47,15 @@ export const markQuoteAsShown = async (
 ): Promise<void> => {
   try {
     const historyJson = await AsyncStorage.getItem(STORAGE_KEY);
-    const history: QuoteHistory = historyJson ? JSON.parse(historyJson) : {};
+    let history: QuoteHistory = {};
+    if (historyJson) {
+      const parsed = QuoteHistorySchema.safeParse(JSON.parse(historyJson));
+      if (!parsed.success) {
+        logger.warn('Invalid quote history data in storage, resetting');
+      } else {
+        history = parsed.data;
+      }
+    }
 
     if (!history[languageCode]) {
       history[languageCode] = [];
@@ -62,7 +80,13 @@ export const resetQuoteHistory = async (languageCode: string): Promise<void> => 
     const historyJson = await AsyncStorage.getItem(STORAGE_KEY);
     if (!historyJson) return;
 
-    const history: QuoteHistory = JSON.parse(historyJson);
+    const parsed = QuoteHistorySchema.safeParse(JSON.parse(historyJson));
+    if (!parsed.success) {
+      logger.warn('Invalid quote history data in storage, clearing');
+      await AsyncStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+    const history = parsed.data;
     delete history[languageCode];
 
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(history));

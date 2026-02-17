@@ -9,7 +9,18 @@ import React from 'react';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { MeditationTimerWidget, MeditationTimerWidgetProps } from './MeditationTimerWidget';
+
+/**
+ * Zod schema dla walidacji MeditationTimerWidgetProps z AsyncStorage
+ */
+const WidgetStateSchema = z.object({
+  isActive: z.boolean(),
+  remainingSeconds: z.number().optional(),
+  isPaused: z.boolean().optional(),
+  totalSeconds: z.number().optional(),
+});
 
 // Klucz do persystencji stanu widgetu
 const WIDGET_STATE_KEY = '@slowspot/widget_state';
@@ -26,7 +37,11 @@ async function getWidgetState(): Promise<MeditationTimerWidgetProps> {
   try {
     const json = await AsyncStorage.getItem(WIDGET_STATE_KEY);
     if (json) {
-      return JSON.parse(json);
+      const parsed = WidgetStateSchema.safeParse(JSON.parse(json));
+      if (parsed.success) {
+        return parsed.data;
+      }
+      console.warn('Invalid widget state data in storage, using defaults');
     }
   } catch (error) {
     console.warn('Failed to get widget state:', error);

@@ -88,6 +88,42 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 };
 
 /**
+ * Zod schemas for runtime validation of AsyncStorage data
+ */
+const SessionConfigurationSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  durationMinutes: z.number(),
+  ambientSound: z.string().optional(),
+  intervalBellMinutes: z.number().optional(),
+  voiceGuidanceEnabled: z.boolean().optional(),
+  endChimeEnabled: z.boolean().optional(),
+  usageCount: z.number().optional(),
+  lastUsedAt: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+});
+
+const SessionConfigurationsArraySchema = z.array(SessionConfigurationSchema);
+
+const UserPreferencesSchema = z.object({
+  chimeVolume: z.number().optional(),
+  ambientVolume: z.number().optional(),
+  enableHaptics: z.boolean().optional(),
+  enableReminders: z.boolean().optional(),
+  reminderTime: z.string().optional(),
+  reminderDays: z.array(z.number()).optional(),
+  keepScreenOn: z.boolean().optional(),
+  displayMode: z.enum(['light', 'dark', 'auto']).optional(),
+  defaultDurationMinutes: z.number().optional(),
+  autoStartTimer: z.boolean().optional(),
+  showPreSessionScreen: z.boolean().optional(),
+  showPostSessionScreen: z.boolean().optional(),
+  collectAnonymousData: z.boolean().optional(),
+  lastUpdated: z.string().optional(),
+});
+
+/**
  * Zod schemas for import validation (security hardening)
  */
 // Maksymalny rozmiar importowanych danych (10 MB)
@@ -167,7 +203,12 @@ export const loadConfigurations = async (): Promise<SessionConfiguration[]> => {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.CONFIGURATIONS);
     if (!data) return [];
 
-    const configurations: SessionConfiguration[] = JSON.parse(data);
+    const parsed = SessionConfigurationsArraySchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+      logger.warn('Invalid configurations data in storage, returning empty array');
+      return [];
+    }
+    const configurations = parsed.data as SessionConfiguration[];
     return configurations.sort((a, b) => {
       // Sort by last used, then by usage count
       if (a.lastUsedAt && b.lastUsedAt) {
@@ -268,9 +309,13 @@ export const loadPreferences = async (): Promise<UserPreferences> => {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.PREFERENCES);
     if (!data) return DEFAULT_PREFERENCES;
 
-    const preferences: UserPreferences = JSON.parse(data);
+    const parsed = UserPreferencesSchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+      logger.warn('Invalid preferences data in storage, using defaults');
+      return DEFAULT_PREFERENCES;
+    }
     // Merge with defaults to ensure all fields are present
-    return { ...DEFAULT_PREFERENCES, ...preferences };
+    return { ...DEFAULT_PREFERENCES, ...parsed.data } as UserPreferences;
   } catch (error) {
     logger.error('Failed to load preferences:', error);
     return DEFAULT_PREFERENCES;

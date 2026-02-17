@@ -8,6 +8,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { logger } from '../utils/logger';
 import {
   useReducedMotion,
@@ -341,6 +342,26 @@ const DEFAULT_SETTINGS: PersonalizationSettings = {
   zenMode: false, // Show full UI by default
 };
 
+/**
+ * Zod schema dla walidacji PersonalizationSettings z AsyncStorage
+ */
+const PersonalizationSettingsSchema = z.object({
+  colorTheme: z.string().optional(),
+  customTheme: z.object({
+    name: z.string(),
+    primary: z.string(),
+    gradient: z.tuple([z.string(), z.string(), z.string()]),
+  }).optional(),
+  hapticEnabled: z.boolean().optional(),
+  soundEffectsEnabled: z.boolean().optional(),
+  animationsEnabled: z.boolean().optional(),
+  highContrastMode: z.boolean().optional(),
+  largerTextMode: z.boolean().optional(),
+  followSystemReduceMotion: z.boolean().optional(),
+  followSystemFontSize: z.boolean().optional(),
+  zenMode: z.boolean().optional(),
+});
+
 // Helper function to generate gradient from primary color
 export const generateGradientFromColor = (color: string): readonly [string, string, string] => {
   // Parse hex color
@@ -492,17 +513,21 @@ export const PersonalizationProvider: React.FC<{ children: React.ReactNode }> = 
       try {
         const stored = await AsyncStorage.getItem(PERSONALIZATION_STORAGE_KEY);
         if (stored) {
-          const parsed = JSON.parse(stored) as Partial<PersonalizationSettings>;
-          // Merge with defaults to handle new fields
-          const mergedSettings: PersonalizationSettings = {
-            ...DEFAULT_SETTINGS,
-            ...parsed,
-          };
-          // Validate that the stored theme exists or is custom
-          if (mergedSettings.colorTheme === 'custom' && mergedSettings.customTheme) {
-            setSettings(mergedSettings);
-          } else if (mergedSettings.colorTheme && mergedSettings.colorTheme !== 'custom' && COLOR_THEMES[mergedSettings.colorTheme as keyof typeof COLOR_THEMES]) {
-            setSettings(mergedSettings);
+          const zodResult = PersonalizationSettingsSchema.safeParse(JSON.parse(stored));
+          if (!zodResult.success) {
+            logger.warn('Invalid personalization settings in storage, using defaults');
+          } else {
+            // Merge with defaults to handle new fields
+            const mergedSettings: PersonalizationSettings = {
+              ...DEFAULT_SETTINGS,
+              ...zodResult.data,
+            } as PersonalizationSettings;
+            // Validate that the stored theme exists or is custom
+            if (mergedSettings.colorTheme === 'custom' && mergedSettings.customTheme) {
+              setSettings(mergedSettings);
+            } else if (mergedSettings.colorTheme && mergedSettings.colorTheme !== 'custom' && COLOR_THEMES[mergedSettings.colorTheme as keyof typeof COLOR_THEMES]) {
+              setSettings(mergedSettings);
+            }
           }
         }
       } catch (error) {

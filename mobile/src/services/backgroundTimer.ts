@@ -10,6 +10,7 @@
 
 import { createAudioPlayer, setAudioModeAsync, AudioPlayer } from 'expo-audio';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { AppState, AppStateStatus } from 'react-native';
 import { logger } from '../utils/logger';
 
@@ -31,6 +32,18 @@ export interface BackgroundSessionState {
   // Identyfikator sesji (do weryfikacji)
   sessionId: string;
 }
+
+/**
+ * Zod schema dla walidacji BackgroundSessionState z AsyncStorage
+ */
+const BackgroundSessionStateSchema = z.object({
+  startTime: z.number(),
+  totalDuration: z.number(),
+  elapsedBeforePause: z.number(),
+  isPaused: z.boolean(),
+  pausedAt: z.number().optional(),
+  sessionId: z.string(),
+});
 
 // Callback wywoływany co sekundę z aktualnym czasem
 export type TimerTickCallback = (remainingSeconds: number, elapsedSeconds: number) => void;
@@ -385,7 +398,13 @@ class BackgroundTimerService {
     try {
       const json = await AsyncStorage.getItem(SESSION_STATE_KEY);
       if (!json) return null;
-      return JSON.parse(json) as BackgroundSessionState;
+
+      const parsed = BackgroundSessionStateSchema.safeParse(JSON.parse(json));
+      if (!parsed.success) {
+        logger.warn('Invalid background session state in storage, returning null');
+        return null;
+      }
+      return parsed.data as BackgroundSessionState;
     } catch (error) {
       logger.error('Failed to load session state:', error);
       return null;
