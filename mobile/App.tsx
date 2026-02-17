@@ -38,6 +38,10 @@ import { ErrorBoundary } from './src/components/ErrorBoundary';
 
 type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile' | 'instructions' | 'personalization';
 
+const DEEP_LINK_SCREENS: Screen[] = ['home', 'meditation', 'quotes', 'settings', 'profile'];
+const isDeepLinkScreen = (s: string): s is Screen =>
+  DEEP_LINK_SCREENS.includes(s as Screen);
+
 // Meditation session state for persistence across navigation
 export interface ActiveMeditationState {
   session: MeditationSession;
@@ -122,31 +126,29 @@ function AppContent() {
       // Handle direct screen links: slowspot://meditation, slowspot://home, etc.
       // Used by Live Activity widget
       const directMatch = url.match(/slowspot:\/\/(\w+)$/);
-      if (directMatch) {
-        const screen = directMatch[1] as Screen;
-        if (['home', 'meditation', 'quotes', 'settings', 'profile'].includes(screen)) {
-          setCurrentScreen(screen);
-          logger.log('Deep link navigation (direct) to:', screen);
-          return;
-        }
+      if (directMatch && isDeepLinkScreen(directMatch[1])) {
+        setCurrentScreen(directMatch[1]);
+        logger.log('Deep link navigation (direct) to:', directMatch[1]);
+        return;
       }
 
       // Handle screen path links: slowspot://screen/home, slowspot://screen/meditation, etc.
       // Used for screenshots automation
       const screenMatch = url.match(/slowspot:\/\/screen\/(\w+)/);
-      if (screenMatch) {
-        const screen = screenMatch[1] as Screen;
-        if (['home', 'meditation', 'quotes', 'settings', 'profile'].includes(screen)) {
-          setCurrentScreen(screen);
-          logger.log('Deep link navigation (screen path) to:', screen);
-        }
+      if (screenMatch && isDeepLinkScreen(screenMatch[1])) {
+        setCurrentScreen(screenMatch[1]);
+        logger.log('Deep link navigation (screen path) to:', screenMatch[1]);
       }
     };
 
     // Handle initial URL
-    Linking.getInitialURL().then((url) => {
-      if (url) handleDeepLink({ url });
-    });
+    Linking.getInitialURL()
+      .then((url) => {
+        if (url) handleDeepLink({ url });
+      })
+      .catch((err) => {
+        logger.warn('Failed to get initial deep link URL', err);
+      });
 
     // Listen for URL events
     const subscription = Linking.addEventListener('url', handleDeepLink);

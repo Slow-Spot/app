@@ -209,7 +209,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
     buildingIntro: { color: colors.text.secondary },
     structureText: { color: colors.text.primary },
     // Scientific sources styles
-    optionBg: isDark ? colors.neutral.charcoal[100] : colors.neutral.gray[50],
+    optionBg: isDark ? colors.neutral.charcoal[100] : colors.neutral.gray[100],
     chevronColor: isDark ? colors.neutral.gray[400] : colors.neutral.gray[500],
   }), [colors, isDark, currentTheme]);
 
@@ -550,7 +550,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                         style={[
                           styles.patternCard,
                           {
-                            backgroundColor: isDark ? colors.neutral.charcoal[100] : colors.neutral.gray[50],
+                            backgroundColor: isDark ? colors.neutral.charcoal[100] : colors.neutral.gray[100],
                             borderColor: selectedPattern === pattern.id
                               ? currentTheme.primary
                               : isDark ? colors.neutral.charcoal[50] : colors.neutral.gray[200],
@@ -663,7 +663,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
   );
 };
 
-const styles = StyleSheet.create<any>({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },

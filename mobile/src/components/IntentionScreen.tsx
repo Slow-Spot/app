@@ -420,7 +420,7 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
                     style={[
                       modalStyles.patternCard,
                       {
-                        backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.gray[50],
+                        backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.gray[100],
                         borderWidth: 1.5,
                         borderColor: selectedPattern === pattern.id
                           ? currentTheme.primary

@@ -121,7 +121,11 @@ const MoodButton = React.memo<{
   isSelected: boolean;
   gradient: string[];
   onSelect: (mood: MoodRating) => void;
-  dynamicStyles: Record<string, unknown>;
+  dynamicStyles: {
+    moodCircle: ViewStyle;
+    moodLabel: TextStyle;
+    moodLabelSelected: TextStyle;
+  };
   animationsEnabled: boolean;
 }>(({ mood, label, isSelected, gradient, onSelect, dynamicStyles, animationsEnabled }) => {
   const scale = useSharedValue(1);

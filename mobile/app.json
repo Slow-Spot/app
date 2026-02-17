@@ -37,7 +37,10 @@
               "C617.1"
             ]
           }
-        ]
+        ],
+        "NSPrivacyCollectedDataTypes": [],
+        "NSPrivacyTracking": false,
+        "NSPrivacyTrackingDomains": []
       },
       "infoPlist": {
         "UIBackgroundModes": [
