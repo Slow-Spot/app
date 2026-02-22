@@ -9,6 +9,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { logger } from '../utils/logger';
 
 /**
@@ -50,6 +51,31 @@ export interface UserProfile {
 }
 
 /**
+ * Zod schema dla walidacji UserProfile z AsyncStorage
+ */
+const MilestoneIdSchema = z.enum([
+  'first_launch',
+  'first_session',
+  'sessions_10',
+  'sessions_25',
+  'sessions_50',
+  'sessions_100',
+  'streak_7',
+  'streak_14',
+  'streak_30',
+  'streak_100',
+]);
+
+const UserProfileSchema = z.object({
+  name: z.string().optional(),
+  lastUpdated: z.string(),
+  firstLaunchDate: z.string().optional(),
+  lastActiveDate: z.string().optional(),
+  totalAppOpens: z.number().optional(),
+  celebratedMilestones: z.array(MilestoneIdSchema).optional(),
+});
+
+/**
  * Default user profile
  */
 const DEFAULT_PROFILE: UserProfile = {
@@ -69,8 +95,12 @@ export const loadUserProfile = async (): Promise<UserProfile> => {
     const data = await AsyncStorage.getItem(USER_PROFILE_KEY);
     if (!data) return DEFAULT_PROFILE;
 
-    const profile: UserProfile = JSON.parse(data);
-    return { ...DEFAULT_PROFILE, ...profile };
+    const parsed = UserProfileSchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+      logger.warn('Invalid user profile data in storage, using defaults');
+      return DEFAULT_PROFILE;
+    }
+    return { ...DEFAULT_PROFILE, ...parsed.data } as UserProfile;
   } catch (error) {
     logger.error('Failed to load user profile:', error);
     return DEFAULT_PROFILE;

@@ -5,18 +5,19 @@
  * across the application with automatic persistence.
  */
 
+import type {
+  ReactNode} from 'react';
 import React, {
   createContext,
   useContext,
   useState,
   useEffect,
-  useCallback,
-  ReactNode,
+  useCallback
 } from 'react';
+import type {
+  UserProfile} from '../services/userProfileService';
 import {
-  UserProfile,
   loadUserProfile,
-  saveUserProfile,
   setUserName as setStoredUserName,
 } from '../services/userProfileService';
 import { logger } from '../utils/logger';

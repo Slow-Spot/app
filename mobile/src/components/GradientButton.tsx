@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * GradientButton Component
  *
@@ -7,17 +6,18 @@ import { logger } from '../utils/logger';
  */
 
 import React from 'react';
+import type {
+  ViewStyle,
+  TextStyle,
+  StyleProp} from 'react-native';
 import {
   StyleSheet,
   Text,
-  ViewStyle,
-  TextStyle,
-  StyleProp,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { GradientDefinition } from '../theme/gradients';
+import type { GradientDefinition } from '../theme/gradients';
 import theme from '../theme';
 
 interface GradientButtonProps {
@@ -29,7 +29,7 @@ interface GradientButtonProps {
   disabled?: boolean;
   loading?: boolean;
   size?: 'sm' | 'md' | 'lg';
-  icon?: any; // optional icon support when passed by callers
+  icon?: React.ReactNode;
   /** Accessibility label for screen readers. Defaults to title if not provided. */
   accessibilityLabel?: string;
   /** Accessibility hint describing what happens when the button is pressed. */

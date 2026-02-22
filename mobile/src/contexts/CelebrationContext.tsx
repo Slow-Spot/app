@@ -5,20 +5,21 @@
  * Handles confetti triggers, welcome modals, and milestone celebrations.
  */
 
+import type {
+  ReactNode} from 'react';
 import React, {
   createContext,
   useContext,
   useState,
   useCallback,
-  useEffect,
-  ReactNode,
+  useEffect
 } from 'react';
+import type {
+  MilestoneId} from '../services/userProfileService';
 import {
-  MilestoneId,
   recordAppOpen,
   hasCelebratedMilestone,
   markMilestoneCelebrated,
-  loadUserProfile,
 } from '../services/userProfileService';
 import { getProgressStats, getTotalStreak } from '../services/progressTracker';
 import { logger } from '../utils/logger';
@@ -179,6 +180,7 @@ export const CelebrationProvider: React.FC<CelebrationProviderProps> = ({
       // Check session milestones (in reverse order to get highest uncelebrated)
       for (let i = MILESTONE_THRESHOLDS.sessions.length - 1; i >= 0; i--) {
         const milestone = MILESTONE_THRESHOLDS.sessions[i];
+        if (!milestone) continue;
         if (stats.totalSessions >= milestone.count) {
           const alreadyCelebrated = await hasCelebratedMilestone(milestone.id);
           if (!alreadyCelebrated) {
@@ -195,6 +197,7 @@ export const CelebrationProvider: React.FC<CelebrationProviderProps> = ({
       // Check streak milestones
       for (let i = MILESTONE_THRESHOLDS.streak.length - 1; i >= 0; i--) {
         const milestone = MILESTONE_THRESHOLDS.streak[i];
+        if (!milestone) continue;
         if (streak >= milestone.days) {
           const alreadyCelebrated = await hasCelebratedMilestone(milestone.id);
           if (!alreadyCelebrated) {

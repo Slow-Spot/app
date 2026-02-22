@@ -9,6 +9,8 @@
  */
 
 import React, { useRef, useState, useCallback, useMemo } from 'react';
+import type {
+  ViewToken} from 'react-native';
 import {
   View,
   Text,
@@ -16,16 +18,15 @@ import {
   Dimensions,
   StatusBar,
   FlatList,
-  ViewToken,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   AccessibilityInfo,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
+import type {
+  SharedValue} from 'react-native-reanimated';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -39,12 +40,9 @@ import Animated, {
   Extrapolation,
   FadeIn,
   FadeInUp,
-  FadeInDown,
-  SharedValue,
+  FadeInDown
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import theme from '../theme';
-import { brandColors } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { useUserProfile } from '../contexts/UserProfileContext';
 import { AnimatedPressable } from '../components/AnimatedPressable';
@@ -53,7 +51,7 @@ import { logger } from '../utils/logger';
 import { saveImportedStreak } from '../services/progressTracker';
 import { markMilestoneCelebrated } from '../services/userProfileService';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const INTRO_COMPLETED_KEY = '@slow_spot_intro_completed';
 
@@ -179,7 +177,7 @@ const AnimatedIcon: React.FC<{
   animationsEnabled: boolean;
 }> = ({ icon, accentIcon, primaryColor, animationsEnabled }) => {
   const scale = useSharedValue(1);
-  const rotation = useSharedValue(0);
+  const _rotation = useSharedValue(0);
 
   React.useEffect(() => {
     if (animationsEnabled) {
@@ -385,6 +383,41 @@ const OnboardingSlide: React.FC<{
   );
 };
 
+// Single pagination dot (extracted to respect rules of hooks)
+const PaginationDot: React.FC<{
+  index: number;
+  scrollX: SharedValue<number>;
+  primaryColor: string;
+}> = ({ index, scrollX, primaryColor }) => {
+  const animatedDotStyle = useAnimatedStyle(() => {
+    const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
+
+    const dotWidth = interpolate(
+      scrollX.value,
+      inputRange,
+      [8, 32, 8],
+      Extrapolation.CLAMP
+    );
+
+    const opacity = interpolate(
+      scrollX.value,
+      inputRange,
+      [0.3, 1, 0.3],
+      Extrapolation.CLAMP
+    );
+
+    return {
+      width: dotWidth,
+      opacity,
+      backgroundColor: primaryColor,
+    };
+  });
+
+  return (
+    <Animated.View style={[styles.dot, animatedDotStyle]} />
+  );
+};
+
 // Pagination dots
 const PaginationDots: React.FC<{
   data: Slide[];
@@ -393,38 +426,14 @@ const PaginationDots: React.FC<{
 }> = ({ data, scrollX, primaryColor }) => {
   return (
     <View style={styles.pagination}>
-      {data.map((_, index) => {
-        const animatedDotStyle = useAnimatedStyle(() => {
-          const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
-
-          const dotWidth = interpolate(
-            scrollX.value,
-            inputRange,
-            [8, 32, 8],
-            Extrapolation.CLAMP
-          );
-
-          const opacity = interpolate(
-            scrollX.value,
-            inputRange,
-            [0.3, 1, 0.3],
-            Extrapolation.CLAMP
-          );
-
-          return {
-            width: dotWidth,
-            opacity,
-            backgroundColor: primaryColor,
-          };
-        });
-
-        return (
-          <Animated.View
-            key={index}
-            style={[styles.dot, animatedDotStyle]}
-          />
-        );
-      })}
+      {data.map((_, index) => (
+        <PaginationDot
+          key={index}
+          index={index}
+          scrollX={scrollX}
+          primaryColor={primaryColor}
+        />
+      ))}
     </View>
   );
 };
@@ -444,8 +453,8 @@ const SuccessCelebration: React.FC<{
   // Confetti colors based on theme
   const confettiColors = React.useMemo(() => [
     primaryColor,
-    gradient[0],
-    gradient[1],
+    gradient[0] ?? primaryColor,
+    gradient[1] ?? primaryColor,
     '#FFD700', // Gold
     '#FF6B6B', // Coral
     '#4ECDC4', // Teal
@@ -623,8 +632,9 @@ export const IntroScreen: React.FC<IntroScreenProps> = ({ onDone }) => {
   }, [settings.hapticEnabled, handleDone]);
 
   const onViewableItemsChanged = useCallback(({ viewableItems }: { viewableItems: ViewToken[] }) => {
-    if (viewableItems.length > 0 && viewableItems[0].index !== null) {
-      setCurrentIndex(viewableItems[0].index);
+    const firstItem = viewableItems[0];
+    if (viewableItems.length > 0 && firstItem && firstItem.index !== null && firstItem.index !== undefined) {
+      setCurrentIndex(firstItem.index);
     }
   }, []);
 

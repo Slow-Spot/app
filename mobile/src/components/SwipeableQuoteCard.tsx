@@ -16,7 +16,7 @@ import {
   Gesture,
   GestureDetector,
 } from 'react-native-gesture-handler';
-import { Quote } from '../services/api';
+import type { Quote } from '../services/api';
 import theme, { getThemeColors, getCardStyles } from '../theme';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import * as Haptics from 'expo-haptics';
@@ -70,7 +70,7 @@ export const SwipeableQuoteCard: React.FC<SwipeableQuoteCardProps> = ({
 
   const userLanguage = i18n.language;
   const isOriginalLanguage = quote.originalLanguage === userLanguage;
-  const translation = quote.translations?.[userLanguage] || quote.translations?.en || quote.text;
+  const translation = quote.translations?.[userLanguage] ?? quote.translations?.['en'] ?? quote.text;
   const showOriginal = !isOriginalLanguage && quote.originalLanguage !== 'en';
 
   const triggerHaptic = (type: 'light' | 'medium') => {
@@ -96,7 +96,7 @@ export const SwipeableQuoteCard: React.FC<SwipeableQuoteCardProps> = ({
       translateX.value = event.translationX;
       translateY.value = event.translationY * 0.3; // Reduce vertical movement
     })
-    .onEnd((event) => {
+    .onEnd((_event) => {
       const shouldSwipeRight = translateX.value > SWIPE_THRESHOLD;
       const shouldSwipeLeft = translateX.value < -SWIPE_THRESHOLD;
 

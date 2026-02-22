@@ -14,7 +14,6 @@ import Animated, {
   withSequence,
   withTiming,
   Easing,
-  interpolateColor,
 } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -34,7 +33,7 @@ export const StreakBadge: React.FC<StreakBadgeProps> = ({
   size = 'md',
   showLabel = true,
 }) => {
-  const { currentTheme, settings } = usePersonalization();
+  const { settings } = usePersonalization();
   const pulseAnim = useSharedValue(0);
 
   // Size configurations

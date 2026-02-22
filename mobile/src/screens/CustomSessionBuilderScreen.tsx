@@ -4,18 +4,20 @@ import { View, Text, ScrollView, StyleSheet, Switch, TextInput, Pressable, Alert
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { createAudioPlayer, AudioPlayer } from 'expo-audio';
+import type { AudioPlayer } from 'expo-audio';
+import { createAudioPlayer } from 'expo-audio';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { GradientButton } from '../components/GradientButton';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
-import { brandColors, primaryColor, featureColorPalettes } from '../theme/colors';
-import {
-  saveSession,
-  updateSession,
+import { featureColorPalettes } from '../theme/colors';
+import type {
   SessionConfig,
   BreathingPattern,
-  AmbientSound,
+  AmbientSound} from '../services/customSessionStorage';
+import {
+  saveSession,
+  updateSession
 } from '../services/customSessionStorage';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
@@ -137,6 +139,7 @@ export const CustomSessionBuilderScreen: React.FC<CustomSessionBuilderScreenProp
   const loadAudio = async () => {
     try {
       const player = createAudioPlayer(
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         require('../../assets/sounds/meditation_bell.mp3')
       );
       setChimeSound(player);

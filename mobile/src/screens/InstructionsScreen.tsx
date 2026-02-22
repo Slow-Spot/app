@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * Instructions Screen
  * Meditation techniques and session building guides
@@ -13,12 +12,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
-  Pressable,
   Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Reanimated, {
   useAnimatedStyle,
@@ -27,7 +26,7 @@ import Reanimated, {
   Easing,
 } from 'react-native-reanimated';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
-import { brandColors, primaryColor, neutralColors, backgrounds, getSectionColors } from '../theme/colors';
+import { primaryColor, neutralColors, backgrounds, getSectionColors } from '../theme/colors';
 import { MeditationIntroGuide } from '../components/MeditationIntroGuide';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 // Using primaryColor.transparent for consistent brand color opacity
@@ -85,7 +84,7 @@ const BREATHING_PATTERNS: BreathingPattern[] = [
 
 interface Props {
   isDark?: boolean;
-  navigation: any;
+  navigation: { goBack: () => void };
 }
 
 // Breathing techniques research - scientific evidence
@@ -132,10 +131,10 @@ const MEDITATION_SOURCES = [
   },
 ];
 
-const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => {
+const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation: _navigation }) => {
   const { t } = useTranslation();
-  const { currentTheme, settings } = usePersonalization();
-  const insets = useSafeAreaInsets();
+  const { currentTheme } = usePersonalization();
+  const _insets = useSafeAreaInsets();
 
   // Breathing exercise modal state
   const [breathingModalVisible, setBreathingModalVisible] = useState(false);
@@ -153,7 +152,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
   // Theme-aware colors and gradients
   const colors = useMemo(() => getThemeColors(isDark), [isDark]);
   const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
-  const sectionColors = useMemo(() => getSectionColors(isDark), [isDark]);
+  const _sectionColors = useMemo(() => getSectionColors(isDark), [isDark]);
 
   // Science section colors - use currentTheme primary color for consistency
   const scienceColors = useMemo(() => ({
@@ -208,7 +207,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
     buildingIntro: { color: colors.text.secondary },
     structureText: { color: colors.text.primary },
     // Scientific sources styles
-    optionBg: isDark ? colors.neutral.charcoal[100] : colors.neutral.gray[50],
+    optionBg: isDark ? colors.neutral.charcoal[100] : colors.neutral.gray[100],
     chevronColor: isDark ? colors.neutral.gray[400] : colors.neutral.gray[500],
   }), [colors, isDark, currentTheme]);
 
@@ -292,7 +291,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
               <View key={pattern.id} style={[styles.card, dynamicStyles.card]}>
                 <View style={styles.cardHeader}>
                   <View style={[styles.breathingIconBox, { backgroundColor: isDark ? `${currentTheme.primary}33` : `${currentTheme.primary}1A` }]}>
-                    <Ionicons name={pattern.icon as any} size={24} color={currentTheme.primary} />
+                    <Ionicons name={pattern.icon as keyof typeof Ionicons.glyphMap} size={24} color={currentTheme.primary} />
                   </View>
                   <View style={styles.breathingTitleContainer}>
                     <Text style={[styles.cardTitle, dynamicStyles.cardTitle]}>
@@ -549,7 +548,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                         style={[
                           styles.patternCard,
                           {
-                            backgroundColor: isDark ? colors.neutral.charcoal[100] : colors.neutral.gray[50],
+                            backgroundColor: isDark ? colors.neutral.charcoal[100] : colors.neutral.gray[100],
                             borderColor: selectedPattern === pattern.id
                               ? currentTheme.primary
                               : isDark ? colors.neutral.charcoal[50] : colors.neutral.gray[200],
@@ -563,7 +562,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
                           { backgroundColor: selectedPattern === pattern.id ? currentTheme.primary : (isDark ? `${currentTheme.primary}33` : `${currentTheme.primary}1A`) }
                         ]}>
                           <Ionicons
-                            name={pattern.icon as any}
+                            name={pattern.icon as keyof typeof Ionicons.glyphMap}
                             size={18}
                             color={selectedPattern === pattern.id ? neutralColors.white : currentTheme.primary}
                           />
@@ -662,7 +661,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
   );
 };
 
-const styles = StyleSheet.create<any>({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -1061,8 +1060,8 @@ const AnimatedBreathingCircle: React.FC<{
   isRunning: boolean;
   pattern: 'box' | '4-7-8' | 'equal' | 'calm';
   isDark?: boolean;
-  t: any;
-}> = ({ isRunning, pattern, isDark, t }) => {
+  t: TFunction;
+}> = ({ isRunning, pattern, isDark: _isDark, t }) => {
   const { currentTheme, settings } = usePersonalization();
   const scale = useSharedValue(1);
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'rest'>('inhale');
@@ -1106,8 +1105,8 @@ const AnimatedBreathingCircle: React.FC<{
       };
 
       const scheduleNextPhase = () => {
-        const currentPhase = config.phases[phaseIndex];
-        const currentPhaseDuration = config.durations[phaseIndex];
+        const currentPhase = config.phases[phaseIndex] ?? 'inhale';
+        const currentPhaseDuration = config.durations[phaseIndex] ?? 4000;
 
         setBreathingPhase(currentPhase);
         triggerBreathingHaptic(currentPhase);

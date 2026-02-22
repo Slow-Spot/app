@@ -41,10 +41,10 @@ export const appConfig = {
     web: false, // Landing page only, not a web app
   },
 
-  // Store links (update when apps are published)
+  // Store links
   storeLinks: {
-    appStore: '#', // TODO: Add App Store link
-    playStore: '#', // TODO: Add Google Play link
+    appStore: 'https://apps.apple.com/app/slow-spot-calm-meditate/id6757082765',
+    playStore: 'https://play.google.com/store/apps/details?id=com.slowspot.app',
   },
 
   // Supported languages (ISO 639-1 codes)

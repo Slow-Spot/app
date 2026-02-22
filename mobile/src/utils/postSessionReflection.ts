@@ -4,13 +4,13 @@
 // ══════════════════════════════════════════════════════════════
 
 import { v4 as uuidv4 } from 'uuid';
-import {
+import type {
   SessionCompletion,
   SessionNote,
   MoodEntry,
   MoodRating,
 } from '../types/userProgress';
-import { MeditationSession } from '../services/api';
+import type { MeditationSession } from '../services/api';
 
 // ══════════════════════════════════════════════════════════════
 // QUICK INSIGHTS
@@ -280,7 +280,7 @@ export const getSuggestedNextSession = (
     );
 
     if (similarSessions.length > 0) {
-      return similarSessions[Math.floor(Math.random() * similarSessions.length)];
+      return similarSessions[Math.floor(Math.random() * similarSessions.length)] ?? null;
     }
   }
 
@@ -294,7 +294,7 @@ export const getSuggestedNextSession = (
     );
 
     if (harderSessions.length > 0) {
-      return harderSessions[0];
+      return harderSessions[0] ?? null;
     }
   }
 
@@ -308,7 +308,7 @@ export const getSuggestedNextSession = (
     );
 
     if (easierSessions.length > 0) {
-      return easierSessions[0];
+      return easierSessions[0] ?? null;
     }
   }
 
@@ -346,7 +346,7 @@ export const calculateStreak = (completions: SessionCompletion[]): number => {
   );
 
   let streak = 0;
-  let currentDate = new Date();
+  const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
 
   for (const completion of sorted) {

@@ -7,8 +7,6 @@ import { Link } from '@/i18n/navigation';
 const COOKIE_CONSENT_KEY = 'slowspot_cookie_consent';
 const ANALYTICS_CONSENT_KEY = 'slowspot_analytics_consent';
 
-type ConsentState = 'pending' | 'accepted' | 'declined';
-
 export function CookieBanner() {
   const t = useTranslations('cookieBanner');
   const [isVisible, setIsVisible] = useState(false);

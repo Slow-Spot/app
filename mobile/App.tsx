@@ -34,8 +34,16 @@ import { SplashScreen as CustomSplashScreen } from './src/components/SplashScree
 import { ensureStorageSchema } from './src/services/storage';
 import { PersonalizationProvider, usePersonalization } from './src/contexts/PersonalizationContext';
 import { UserProfileProvider, useUserProfile } from './src/contexts/UserProfileContext';
+import { ErrorBoundary } from './src/components/ErrorBoundary';
+import { backgroundTimer } from './src/services/backgroundTimer';
+import { androidForegroundService } from './src/services/androidForegroundService';
+import { notificationService } from './src/services/notifications/NotificationService';
 
 type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile' | 'instructions' | 'personalization';
+
+const DEEP_LINK_SCREENS: Screen[] = ['home', 'meditation', 'quotes', 'settings', 'profile'];
+const isDeepLinkScreen = (s: string): s is Screen =>
+  DEEP_LINK_SCREENS.includes(s as Screen);
 
 // Meditation session state for persistence across navigation
 export interface ActiveMeditationState {
@@ -121,31 +129,31 @@ function AppContent() {
       // Handle direct screen links: slowspot://meditation, slowspot://home, etc.
       // Used by Live Activity widget
       const directMatch = url.match(/slowspot:\/\/(\w+)$/);
-      if (directMatch) {
-        const screen = directMatch[1] as Screen;
-        if (['home', 'meditation', 'quotes', 'settings', 'profile'].includes(screen)) {
-          setCurrentScreen(screen);
-          logger.log('Deep link navigation (direct) to:', screen);
-          return;
-        }
+      const directScreen = directMatch?.[1];
+      if (directScreen && isDeepLinkScreen(directScreen)) {
+        setCurrentScreen(directScreen);
+        logger.log('Deep link navigation (direct) to:', directScreen);
+        return;
       }
 
       // Handle screen path links: slowspot://screen/home, slowspot://screen/meditation, etc.
       // Used for screenshots automation
       const screenMatch = url.match(/slowspot:\/\/screen\/(\w+)/);
-      if (screenMatch) {
-        const screen = screenMatch[1] as Screen;
-        if (['home', 'meditation', 'quotes', 'settings', 'profile'].includes(screen)) {
-          setCurrentScreen(screen);
-          logger.log('Deep link navigation (screen path) to:', screen);
-        }
+      const screenPath = screenMatch?.[1];
+      if (screenPath && isDeepLinkScreen(screenPath)) {
+        setCurrentScreen(screenPath);
+        logger.log('Deep link navigation (screen path) to:', screenPath);
       }
     };
 
     // Handle initial URL
-    Linking.getInitialURL().then((url) => {
-      if (url) handleDeepLink({ url });
-    });
+    Linking.getInitialURL()
+      .then((url) => {
+        if (url) handleDeepLink({ url });
+      })
+      .catch((err) => {
+        logger.warn('Failed to get initial deep link URL', err);
+      });
 
     // Listen for URL events
     const subscription = Linking.addEventListener('url', handleDeepLink);
@@ -206,7 +214,15 @@ function AppContent() {
     setCurrentScreen(screen);
   };
 
-  const handleConfirmExitMeditation = () => {
+  const handleConfirmExitMeditation = async () => {
+    // Zatrzymaj serwisy przed odmontowaniem MeditationTimer
+    try {
+      await backgroundTimer.stopSession();
+      await androidForegroundService.stopSession();
+      await notificationService.cancelSessionCompletionNotification();
+    } catch (error) {
+      logger.error('Failed to stop meditation services on exit:', error);
+    }
     setActiveMeditationState(null);
     setShowExitMeditationModal(false);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -435,18 +451,18 @@ function AppContent() {
       {/* Exit Meditation Confirmation Modal */}
       <AppModal
         visible={showExitMeditationModal}
-        title={t('meditation.endSessionTitle', 'Zakończyć sesję?')}
-        message={t('meditation.endSessionMessage', 'Twój postęp zostanie zapisany. Czy na pewno chcesz zakończyć medytację?')}
+        title={t('meditation.endSessionTitle', 'End session?')}
+        message={t('meditation.endSessionMessage', 'Your progress will be saved. Are you sure you want to end meditation?')}
         icon="pause-circle-outline"
         onDismiss={handleCancelExitMeditation}
         buttons={[
           {
-            text: t('meditation.endSessionCancel', 'Kontynuuj'),
+            text: t('meditation.endSessionCancel', 'Continue'),
             style: 'cancel',
             onPress: handleCancelExitMeditation,
           },
           {
-            text: t('meditation.endSessionConfirm', 'Zakończ'),
+            text: t('meditation.endSessionConfirm', 'End'),
             style: 'destructive',
             onPress: handleConfirmExitMeditation,
           },
@@ -458,15 +474,17 @@ function AppContent() {
 
 export default function App() {
   return (
-    <GestureHandlerRootView style={styles.gestureRoot}>
-      <SafeAreaProvider>
-        <UserProfileProvider>
-          <PersonalizationProvider>
-            <AppContent />
-          </PersonalizationProvider>
-        </UserProfileProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <ErrorBoundary>
+      <GestureHandlerRootView style={styles.gestureRoot}>
+        <SafeAreaProvider>
+          <UserProfileProvider>
+            <PersonalizationProvider>
+              <AppContent />
+            </PersonalizationProvider>
+          </UserProfileProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </ErrorBoundary>
   );
 }
 

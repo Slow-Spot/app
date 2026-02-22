@@ -59,7 +59,11 @@ export const api = {
 
     getRandom: async (): Promise<Quote> => {
       const randomIndex = Math.floor(Math.random() * QUOTES.length);
-      return QUOTES[randomIndex];
+      const quote = QUOTES[randomIndex] ?? QUOTES[0];
+      if (!quote) {
+        throw new Error('No quotes available');
+      }
+      return quote;
     },
   },
 

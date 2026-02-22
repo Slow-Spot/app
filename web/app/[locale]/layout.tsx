@@ -6,6 +6,9 @@ import { CookieBanner } from './components/CookieBanner';
 import { GoogleAnalytics } from '../components/GoogleAnalytics';
 import '../globals.css';
 
+const isValidLocale = (s: string): s is Locale =>
+  (routing.locales as readonly string[]).includes(s);
+
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -18,8 +21,8 @@ export function generateStaticParams() {
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
-  // Validate locale
-  if (!routing.locales.includes(locale as Locale)) {
+  // Walidacja locale - type predicate zaweza typ po sprawdzeniu
+  if (!isValidLocale(locale)) {
     notFound();
   }
 

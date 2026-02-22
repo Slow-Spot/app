@@ -3,7 +3,7 @@
 // Gamification & motivation through achievements and rewards
 // ══════════════════════════════════════════════════════════════
 
-import { UserMeditationProgress } from './userProgress';
+import type { UserMeditationProgress } from './userProgress';
 
 export type AchievementCategory =
   | 'practice'      // Session completion milestones

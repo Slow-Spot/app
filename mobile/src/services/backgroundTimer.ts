@@ -8,9 +8,12 @@
  * - Czas liczony na podstawie timestamps (nie setInterval)
  */
 
-import { createAudioPlayer, setAudioModeAsync, AudioPlayer } from 'expo-audio';
+import type { AudioPlayer } from 'expo-audio';
+import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AppState, AppStateStatus } from 'react-native';
+import { z } from 'zod';
+import type { AppStateStatus } from 'react-native';
+import { AppState } from 'react-native';
 import { logger } from '../utils/logger';
 
 // Klucz do persystencji stanu sesji
@@ -31,6 +34,18 @@ export interface BackgroundSessionState {
   // Identyfikator sesji (do weryfikacji)
   sessionId: string;
 }
+
+/**
+ * Zod schema dla walidacji BackgroundSessionState z AsyncStorage
+ */
+const BackgroundSessionStateSchema = z.object({
+  startTime: z.number(),
+  totalDuration: z.number(),
+  elapsedBeforePause: z.number(),
+  isPaused: z.boolean(),
+  pausedAt: z.number().optional(),
+  sessionId: z.string(),
+});
 
 // Callback wywoływany co sekundę z aktualnym czasem
 export type TimerTickCallback = (remainingSeconds: number, elapsedSeconds: number) => void;
@@ -62,6 +77,7 @@ class BackgroundTimerService {
 
       // Ładowanie cichego pliku audio
       this.silentPlayer = createAudioPlayer(
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         require('../../assets/sounds/silent-1s.mp3')
       );
       this.silentPlayer.loop = true;
@@ -385,7 +401,13 @@ class BackgroundTimerService {
     try {
       const json = await AsyncStorage.getItem(SESSION_STATE_KEY);
       if (!json) return null;
-      return JSON.parse(json) as BackgroundSessionState;
+
+      const parsed = BackgroundSessionStateSchema.safeParse(JSON.parse(json));
+      if (!parsed.success) {
+        logger.warn('Invalid background session state in storage, returning null');
+        return null;
+      }
+      return parsed.data as BackgroundSessionState;
     } catch (error) {
       logger.error('Failed to load session state:', error);
       return null;

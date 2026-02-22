@@ -6,9 +6,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Achievement, AchievementProgress } from '../types/achievements';
+import type { Achievement, AchievementProgress } from '../types/achievements';
 import theme from '../theme';
-import { brandColors, primaryColor } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
 interface AchievementBadgeProps {

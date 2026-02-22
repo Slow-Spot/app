@@ -22,7 +22,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { notificationService } from '../services/notifications';
 import { logger } from '../utils/logger';
-import {
+import type {
   NotificationSettings,
   NotificationPermissionStatus,
   NotificationState,

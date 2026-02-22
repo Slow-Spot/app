@@ -1,8 +1,7 @@
-import { logger } from '../utils/logger';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Quote } from '../services/api';
+import type { Quote } from '../services/api';
 import theme from '../theme';
 
 interface QuoteCardProps {
@@ -17,7 +16,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({ quote, isDark = false }) =
   const isOriginalLanguage = quote.originalLanguage === userLanguage;
 
   // Get the translation for user's language, or fallback to English
-  const translation = quote.translations?.[userLanguage] || quote.translations?.en || quote.text;
+  const translation = quote.translations?.[userLanguage] ?? quote.translations?.['en'] ?? quote.text;
 
   // Show original + transliteration + translation only if quote is in different language
   const showOriginal = !isOriginalLanguage && quote.originalLanguage !== 'en';

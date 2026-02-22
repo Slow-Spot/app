@@ -122,6 +122,10 @@
     "start": "开始",
     "pause": "暂停",
     "resume": "继续",
+    "stop": "停止",
+    "paused": "已暂停",
+    "remaining": "剩余",
+    "notificationChannel": "冥想会话",
     "finish": "完成",
     "minutes": "{{count}} 分钟",
     "seconds": "{{count}} 秒",
@@ -163,8 +167,7 @@
     "minSession_one": "1分钟课程",
     "minSession_other": "{{count}}分钟课程",
     "minRemaining_one": "剩余1分钟",
-    "minRemaining_other": "剩余{{count}}分钟",
-    "paused": "已暂停"
+    "minRemaining_other": "剩余{{count}}分钟"
   },
   "instructions": {
     "timeOfDay": {
@@ -631,6 +634,7 @@
     "dataPrivacy": "数据与隐私",
     "dataPrivacyDescription": "所有数据都保存在此设备上",
     "exportData": "导出数据",
+    "backupTitle": "Slow Spot 备份 (JSON)",
     "clearData": "清除数据",
     "clearDataTitle": "清除本地数据？",
     "clearDataBody": "这将从此设备删除你的课程、进度、提醒和偏好设置。",
@@ -1521,5 +1525,25 @@
       "streak30": "连续30天 - 一个月里程碑！",
       "streak100": "连续100天 - 传奇！"
     }
+  },
+  "wellbeing": {
+    "preTitle": "开始之前",
+    "postTitle": "感觉如何？",
+    "preSubtitle": "花一点时间关注自己的感受",
+    "postSubtitle": "回顾你的冥想体验",
+    "missingAnswersTitle": "请回答所有问题",
+    "missingAnswersMessage": "部分必答问题尚未作答",
+    "errorTitle": "错误",
+    "errorSaveMessage": "保存评估失败",
+    "saving": "保存中...",
+    "continue": "继续",
+    "complete": "完成",
+    "skip": "跳过",
+    "placeholder": "你的想法..."
+  },
+  "errorBoundary": {
+    "title": "出现问题",
+    "message": "发生了意外错误",
+    "retry": "重试"
   }
 }

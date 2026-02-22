@@ -30,12 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 logs/
 
-# Environment variables
+# Environment variables (catch-all pattern)
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # IDE
 .vscode/

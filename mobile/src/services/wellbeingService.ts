@@ -4,9 +4,30 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { WellbeingAssessment, WellbeingAnswer } from '../types/wellbeing';
+import { z } from 'zod';
+import type { WellbeingAssessment, WellbeingAnswer } from '../types/wellbeing';
 import { logger } from '../utils/logger';
 import { formatDateKey, parseISO } from '../utils/dateUtils';
+
+/**
+ * Zod schema dla walidacji danych WellbeingAssessment z AsyncStorage
+ */
+const WellbeingAnswerSchema = z.object({
+  questionId: z.string(),
+  value: z.union([z.number(), z.string()]),
+  timestamp: z.string(),
+});
+
+const WellbeingAssessmentSchema = z.object({
+  id: z.string(),
+  sessionId: z.string().optional(),
+  customSessionId: z.string().optional(),
+  type: z.enum(['pre', 'post']),
+  answers: z.array(WellbeingAnswerSchema),
+  completedAt: z.string(),
+});
+
+const WellbeingAssessmentsArraySchema = z.array(WellbeingAssessmentSchema);
 
 const STORAGE_KEY = '@wellbeing_assessments';
 
@@ -49,7 +70,14 @@ export const saveAssessment = async (
 export const getAssessments = async (): Promise<WellbeingAssessment[]> => {
   try {
     const data = await AsyncStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+    if (!data) return [];
+
+    const parsed = WellbeingAssessmentsArraySchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+      logger.warn('Invalid wellbeing assessments data in storage, returning empty array');
+      return [];
+    }
+    return parsed.data as WellbeingAssessment[];
   } catch (error) {
     logger.error('Error loading assessments:', error);
     return [];

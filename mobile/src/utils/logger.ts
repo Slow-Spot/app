@@ -1,62 +1,93 @@
 /**
- * Production-safe logger
+ * Production-safe structured logger
  *
- * Automatically disables logs in production environment
- * to improve performance and prevent sensitive data leakage
+ * Outputs JSON format with required fields: level, env, timestamp.
+ * Automatically disables verbose logs in production.
+ * Never logs PII or sensitive data.
  */
 
-const isDevelopment = process.env.APP_ENV !== 'production';
+type LogLevel = 'debug' | 'info' | 'warn' | 'error';
+
+interface LogEntry {
+  level: LogLevel;
+  env: string;
+  timestamp: string;
+  message: string;
+  stack?: string;
+  context?: Record<string, unknown>;
+}
+
+const env = __DEV__ ? 'development' : 'production';
+const isDevelopment = __DEV__;
+
+const formatEntry = (level: LogLevel, args: unknown[]): LogEntry => {
+  let stack: string | undefined;
+
+  const message = args
+    .map((arg) => {
+      if (arg instanceof Error) {
+        if (!stack) stack = arg.stack;
+        return arg.message;
+      }
+      if (typeof arg === 'string') return arg;
+      if (typeof arg === 'number' || typeof arg === 'boolean') return String(arg);
+      return '[Object]';
+    })
+    .join(' ');
+
+  const entry: LogEntry = {
+    level,
+    env,
+    timestamp: new Date().toISOString(),
+    message,
+  };
+
+  // Dolacz stack trace dla error level
+  if (level === 'error' && stack) {
+    entry.stack = stack;
+  }
+
+  return entry;
+};
 
 export const logger = {
   /**
    * Log general information (disabled in production)
    */
-  log: (...args: any[]) => {
+  log: (...args: unknown[]) => {
     if (isDevelopment) {
-      console.log('[INFO]', ...args);
+      const entry = formatEntry('info', args);
+      console.log(JSON.stringify(entry));
     }
   },
 
   /**
    * Log warnings (disabled in production)
    */
-  warn: (...args: any[]) => {
+  warn: (...args: unknown[]) => {
     if (isDevelopment) {
-      console.warn('[WARN]', ...args);
+      const entry = formatEntry('warn', args);
+      console.warn(JSON.stringify(entry));
     }
   },
 
   /**
-   * Log errors (always enabled, but sanitized)
-   * Never log sensitive user data in errors
+   * Log errors (always enabled, includes stack trace)
    */
-  error: (...args: any[]) => {
-    // In production, only log error messages, not full objects
-    if (isDevelopment) {
-      console.error('[ERROR]', ...args);
-    } else {
-      // In production, only log error messages
-      const sanitizedArgs = args.map(arg => {
-        if (arg instanceof Error) {
-          return arg.message;
-        }
-        if (typeof arg === 'object') {
-          return '[Object]';
-        }
-        return arg;
-      });
-      console.error('[ERROR]', ...sanitizedArgs);
-    }
+  error: (...args: unknown[]) => {
+    const entry = formatEntry('error', args);
+    console.error(JSON.stringify(entry));
   },
 
   /**
    * Log debug information (only in development)
    */
-  debug: (...args: any[]) => {
+  debug: (...args: unknown[]) => {
     if (isDevelopment) {
-      console.debug('[DEBUG]', ...args);
+      const entry = formatEntry('debug', args);
+      console.debug(JSON.stringify(entry));
     }
-  }
+  },
 };
 
 export default logger;

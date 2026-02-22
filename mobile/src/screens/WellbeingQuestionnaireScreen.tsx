@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * Well-being Questionnaire Screen
  * Pre or post session well-being assessment
@@ -13,12 +12,13 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import theme from '../theme';
 import { brandColors } from '../theme/colors';
+import type {
+  WellbeingAnswer} from '../types/wellbeing';
 import {
-  WellbeingQuestion as QuestionType,
-  WellbeingAnswer,
   PRE_SESSION_QUESTIONS,
   POST_SESSION_QUESTIONS,
 } from '../types/wellbeing';
@@ -26,7 +26,7 @@ import { saveAssessment } from '../services/wellbeingService';
 import WellbeingQuestion from '../components/WellbeingQuestion';
 
 interface Props {
-  navigation: any;
+  navigation: { goBack: () => void };
   route: {
     params: {
       type: 'pre' | 'post';
@@ -38,6 +38,7 @@ interface Props {
 }
 
 const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const { type, sessionId, customSessionId, onComplete } = route.params;
   const questions = type === 'pre' ? PRE_SESSION_QUESTIONS : POST_SESSION_QUESTIONS;
 
@@ -54,7 +55,7 @@ const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) =>
     const missingAnswers = requiredQuestions.filter((q) => !answers[q.id]);
 
     if (missingAnswers.length > 0) {
-      Alert.alert('Please answer all questions', 'Some required questions are missing answers');
+      Alert.alert(t('wellbeing.missingAnswersTitle'), t('wellbeing.missingAnswersMessage'));
       return;
     }
 
@@ -75,8 +76,8 @@ const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) =>
       }
 
       navigation.goBack();
-    } catch (error) {
-      Alert.alert('Error', 'Failed to save assessment');
+    } catch {
+      Alert.alert(t('wellbeing.errorTitle'), t('wellbeing.errorSaveMessage'));
     } finally {
       setLoading(false);
     }
@@ -91,12 +92,12 @@ const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) =>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.header}>
             <Text style={styles.title}>
-              {type === 'pre' ? 'Before You Begin' : 'How Did It Go?'}
+              {type === 'pre' ? t('wellbeing.preTitle') : t('wellbeing.postTitle')}
             </Text>
             <Text style={styles.subtitle}>
               {type === 'pre'
-                ? 'Take a moment to check in with yourself'
-                : 'Reflect on your meditation experience'}
+                ? t('wellbeing.preSubtitle')
+                : t('wellbeing.postSubtitle')}
             </Text>
           </View>
 
@@ -116,7 +117,7 @@ const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) =>
               disabled={loading}
             >
               <Text style={styles.submitButtonText}>
-                {loading ? 'Saving...' : type === 'pre' ? 'Continue' : 'Complete'}
+                {loading ? t('wellbeing.saving') : type === 'pre' ? t('wellbeing.continue') : t('wellbeing.complete')}
               </Text>
             </TouchableOpacity>
 
@@ -130,7 +131,7 @@ const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) =>
                   navigation.goBack();
                 }}
               >
-                <Text style={styles.skipButtonText}>Skip</Text>
+                <Text style={styles.skipButtonText}>{t('wellbeing.skip')}</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -140,7 +141,7 @@ const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) =>
   );
 };
 
-const styles = StyleSheet.create<any>({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },

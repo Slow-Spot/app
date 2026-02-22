@@ -9,7 +9,8 @@ import React from 'react';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logger } from '../utils/logger';
-import { MeditationTimerWidget, MeditationTimerWidgetProps } from '../widgets/MeditationTimerWidget';
+import type { MeditationTimerWidgetProps } from '../widgets/MeditationTimerWidget';
+import { MeditationTimerWidget } from '../widgets/MeditationTimerWidget';
 
 // Klucz do persystencji stanu widgetu (musi być taki sam jak w widgetTaskHandler)
 const WIDGET_STATE_KEY = '@slowspot/widget_state';

@@ -9,7 +9,6 @@ import { logger } from '../utils/logger';
 import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ScrollView,
   View,
   Text,
   TouchableOpacity,
@@ -22,14 +21,12 @@ import {
   TextInput,
 } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
-import { Paths, Directory } from 'expo-file-system';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   withDelay,
   Easing,
-  runOnJS,
 } from 'react-native-reanimated';
 import { screenElementAnimation } from '../utils/animations';
 
@@ -37,20 +34,21 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { NotificationSettingsCard } from '../components/NotificationSettingsCard';
-import { AppModal, AppModalButton } from '../components/AppModal';
+import { AppModal } from '../components/AppModal';
 import { ResponsiveGrid } from '../components/ResponsiveGrid';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import { ErrorBanner, useErrorBanner } from '../components/ErrorBanner';
-import { ListItemSkeleton, SkeletonLoader } from '../components/SkeletonLoader';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import Constants from 'expo-constants';
-import { brandColors, primaryColor, featureColorPalettes, semanticColors, getFeatureIconColors } from '../theme/colors';
+import { primaryColor, featureColorPalettes, semanticColors, getFeatureIconColors } from '../theme/colors';
 import { exportAllData, clearAllData, resetOnboarding } from '../services/storage';
 import { clearAllSessions } from '../services/customSessionStorage';
-import { clearProgress, saveImportedStreak, getImportedStreak, clearImportedStreak, ImportedStreakData } from '../services/progressTracker';
+import type { ImportedStreakData } from '../services/progressTracker';
+import { clearProgress, saveImportedStreak, getImportedStreak, clearImportedStreak } from '../services/progressTracker';
 import { clearAllQuoteHistory } from '../services/quoteHistory';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
@@ -76,6 +74,23 @@ export interface CustomSoundsConfig {
     custom?: { uri: string; name: string };
   };
 }
+
+/**
+ * Zod schema dla walidacji CustomSoundsConfig z AsyncStorage
+ */
+const CustomSoundsConfigSchema = z.object({
+  customBellUri: z.string().optional(),
+  customBellName: z.string().optional(),
+  customAmbientUris: z.object({
+    nature: z.object({ uri: z.string(), name: z.string() }).optional(),
+    ocean: z.object({ uri: z.string(), name: z.string() }).optional(),
+    forest: z.object({ uri: z.string(), name: z.string() }).optional(),
+    rain: z.object({ uri: z.string(), name: z.string() }).optional(),
+    fire: z.object({ uri: z.string(), name: z.string() }).optional(),
+    wind: z.object({ uri: z.string(), name: z.string() }).optional(),
+    custom: z.object({ uri: z.string(), name: z.string() }).optional(),
+  }),
+});
 
 const LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -231,7 +246,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     return Array.from({ length: 50 }, (_, i) => ({
       id: i,
       delay: Math.random() * 300,
-      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)] ?? '#7C3AED',
       startX: Math.random() * SCREEN_WIDTH,
     }));
   }, [showConfetti]);
@@ -288,7 +303,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       try {
         const data = await AsyncStorage.getItem(CUSTOM_SOUNDS_STORAGE_KEY);
         if (data) {
-          setCustomSounds(JSON.parse(data));
+          const parsed = CustomSoundsConfigSchema.safeParse(JSON.parse(data));
+          if (parsed.success) {
+            setCustomSounds(parsed.data as CustomSoundsConfig);
+          } else {
+            logger.warn('Invalid custom sounds config in storage, using defaults');
+          }
         }
       } catch (error) {
         logger.error('Failed to load custom sounds:', error);
@@ -390,32 +410,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       const asset = result.assets[0];
 
-      // Copy file to permanent location using new expo-file-system API
-      const soundsDir = new Directory(Paths.document, 'custom_sounds');
-      await soundsDir.create();
-
-      const fileName = `${type}_${ambientKey || 'bell'}_${Date.now()}.${asset.name.split('.').pop()}`;
-      const destUri = `${soundsDir.uri}${fileName}`;
-
-      // Copy from source to destination
-      const response = await fetch(asset.uri);
-      const blob = await response.blob();
-      const reader = new FileReader();
-
-      await new Promise<void>((resolve, reject) => {
-        reader.onloadend = async () => {
-          try {
-            // For simplicity, store the URI directly - expo-document-picker already copies to cache
-            resolve();
-          } catch (e) {
-            reject(e);
-          }
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-
-      // Update config - use the cached URI from DocumentPicker
+      // DocumentPicker z copyToCacheDirectory=true kopiuje plik do cache
+      // URI z cache jest wystarczajace dla odtwarzania dzwieku
       const newConfig = { ...customSounds };
       if (type === 'bell') {
         newConfig.customBellUri = asset.uri;
@@ -525,7 +521,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const handleExportData = async () => {
     try {
       const payload = await exportAllData();
-      await Share.share({ message: payload, title: 'Slow Spot backup (JSON)' });
+      await Share.share({ message: payload, title: t('settings.backupTitle') });
     } catch (error) {
       logger.error('Failed to export data:', error);
       setShowExportErrorModal(true);

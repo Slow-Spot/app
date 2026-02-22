@@ -4,7 +4,7 @@ import { logger } from './logger';
 // Check, unlock, and track achievement progress
 // ══════════════════════════════════════════════════════════════
 
-import {
+import type {
   Achievement,
   UnlockedAchievement,
   AchievementProgress,
@@ -12,7 +12,7 @@ import {
   AchievementCategory,
   AchievementRarity,
 } from '../types/achievements';
-import { UserMeditationProgress } from '../types/userProgress';
+import type { UserMeditationProgress } from '../types/userProgress';
 import { ALL_ACHIEVEMENTS, ACHIEVEMENTS_MAP, ACHIEVEMENTS_BY_CATEGORY } from '../data/achievements';
 
 // ══════════════════════════════════════════════════════════════
@@ -194,8 +194,8 @@ export const getAchievementStats = (
   ];
 
   const byCategory = categories.reduce((stats, category) => {
-    const categoryAchievements = (ACHIEVEMENTS_BY_CATEGORY as any)[category] || [];
-    const unlockedInCategory = (categoryAchievements as any[]).filter((a: any) =>
+    const categoryAchievements = ACHIEVEMENTS_BY_CATEGORY[category as keyof typeof ACHIEVEMENTS_BY_CATEGORY] || [];
+    const unlockedInCategory = categoryAchievements.filter((a) =>
       unlockedIds.has(a.id)
     ).length;
 
@@ -342,7 +342,7 @@ export const getAchievementById = (achievementId: string): Achievement | null =>
 export const getAchievementsByCategory = (
   category: AchievementCategory
 ): Achievement[] => {
-  return (ACHIEVEMENTS_BY_CATEGORY as any)[category] || [];
+  return ACHIEVEMENTS_BY_CATEGORY[category as keyof typeof ACHIEVEMENTS_BY_CATEGORY] || [];
 };
 
 /**

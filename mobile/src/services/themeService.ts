@@ -49,15 +49,22 @@ export const CULTURE_THEMES: Record<string, CultureTheme> = {
   },
 };
 
+const DEFAULT_THEME: CultureTheme = {
+  name: 'Universal',
+  primary: '#607D8B',
+  ambient: '#ECEFF1',
+  accent: '#90A4AE',
+};
+
 /**
  * Get theme for a given culture tag
  * Falls back to universal theme if not found
  */
 export const getThemeForCulture = (cultureTag: string | null | undefined): CultureTheme => {
-  if (!cultureTag || !CULTURE_THEMES[cultureTag]) {
-    return CULTURE_THEMES.universal;
+  if (!cultureTag) {
+    return CULTURE_THEMES['universal'] ?? DEFAULT_THEME;
   }
-  return CULTURE_THEMES[cultureTag];
+  return CULTURE_THEMES[cultureTag] ?? CULTURE_THEMES['universal'] ?? DEFAULT_THEME;
 };
 
 /**

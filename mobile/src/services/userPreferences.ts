@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { z } from 'zod';
 import { logger } from '../utils/logger';
 
 const PREFERENCES_KEY = '@user_preferences';
@@ -10,6 +11,17 @@ export interface UserPreferences {
   language?: string;
   theme?: 'light' | 'dark' | 'system';
 }
+
+/**
+ * Zod schema dla walidacji UserPreferences z AsyncStorage
+ */
+const UserPreferencesSchema = z.object({
+  skipPreSessionIntro: z.boolean().optional(),
+  skipPreSessionInstructions: z.boolean().optional(),
+  skipIntentionScreen: z.boolean().optional(),
+  language: z.string().optional(),
+  theme: z.enum(['light', 'dark', 'system']).optional(),
+});
 
 const DEFAULT_PREFERENCES: UserPreferences = {
   skipPreSessionIntro: false,
@@ -26,7 +38,12 @@ export const userPreferences = {
     try {
       const stored = await AsyncStorage.getItem(PREFERENCES_KEY);
       if (stored) {
-        return { ...DEFAULT_PREFERENCES, ...JSON.parse(stored) };
+        const parsed = UserPreferencesSchema.safeParse(JSON.parse(stored));
+        if (!parsed.success) {
+          logger.warn('Invalid user preferences data in storage, using defaults');
+          return DEFAULT_PREFERENCES;
+        }
+        return { ...DEFAULT_PREFERENCES, ...parsed.data };
       }
       return DEFAULT_PREFERENCES;
     } catch (error) {

@@ -106,7 +106,7 @@ class WatchConnectivityService {
     try {
       const dateStr = await AsyncStorage.getItem(WATCH_SYNC_KEYS.lastSyncDate);
       return dateStr ? new Date(dateStr) : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }

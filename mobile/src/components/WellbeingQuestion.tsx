@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * Wellbeing Question Component
  * Displays a single question in well-being assessment
@@ -12,10 +11,9 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import theme from '../theme';
-import { brandColors, primaryColor } from '../theme/colors';
-import { WellbeingQuestion as QuestionType } from '../types/wellbeing';
-import { usePersonalization } from '../contexts/PersonalizationContext';
+import type { WellbeingQuestion as QuestionType } from '../types/wellbeing';
 
 interface Props {
   question: QuestionType;
@@ -24,7 +22,7 @@ interface Props {
 }
 
 export const WellbeingQuestion: React.FC<Props> = ({ question, value, onChange }) => {
-  const { currentTheme } = usePersonalization();
+  const { t } = useTranslation();
   const [textValue, setTextValue] = useState(typeof value === 'string' ? value : '');
 
   const renderScaleQuestion = () => {
@@ -106,7 +104,7 @@ export const WellbeingQuestion: React.FC<Props> = ({ question, value, onChange }
           setTextValue(text);
           onChange(text);
         }}
-        placeholder="Your thoughts..."
+        placeholder={t('wellbeing.placeholder')}
         placeholderTextColor={theme.colors.neutral.gray[400]}
         multiline
         numberOfLines={4}
@@ -126,7 +124,7 @@ export const WellbeingQuestion: React.FC<Props> = ({ question, value, onChange }
   );
 };
 
-const styles = StyleSheet.create<any>({
+const styles = StyleSheet.create({
   container: {
     marginBottom: theme.spacing.xl,
   },

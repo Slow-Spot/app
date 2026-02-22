@@ -481,8 +481,11 @@ export const calculateLongestStreak = (sortedDateKeys: string[]): number => {
   let currentStreak = 1;
 
   for (let i = 1; i < sortedDateKeys.length; i++) {
-    const prevDate = parseISO(sortedDateKeys[i - 1]);
-    const currDate = parseISO(sortedDateKeys[i]);
+    const prevDateStr = sortedDateKeys[i - 1];
+    const currDateStr = sortedDateKeys[i];
+    if (!prevDateStr || !currDateStr) continue;
+    const prevDate = parseISO(prevDateStr);
+    const currDate = parseISO(currDateStr);
 
     if (areConsecutiveDays(prevDate, currDate)) {
       currentStreak++;

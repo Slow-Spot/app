@@ -6,15 +6,17 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Dimensions, ScaledSize } from 'react-native';
+import type { ScaledSize } from 'react-native';
+import { Dimensions } from 'react-native';
+import type {
+  Breakpoint} from '../theme/responsive';
 import {
   breakpoints,
   contentWidths,
   gridColumns,
   screenPadding,
   getBreakpoint,
-  calculateItemWidth,
-  Breakpoint,
+  calculateItemWidth
 } from '../theme/responsive';
 
 export interface ResponsiveInfo {
@@ -122,7 +124,7 @@ export function useResponsive(): ResponsiveInfo {
 
       for (let i = startIndex; i < cascadeOrder.length; i++) {
         const bp = cascadeOrder[i];
-        if (options[bp] !== undefined) {
+        if (bp !== undefined && options[bp] !== undefined) {
           return options[bp] as T;
         }
       }

@@ -122,6 +122,10 @@
     "start": "शुरू करें",
     "pause": "रोकें",
     "resume": "फिर से शुरू करें",
+    "stop": "रोकें",
+    "paused": "रुका हुआ",
+    "remaining": "शेष",
+    "notificationChannel": "ध्यान सत्र",
     "finish": "समाप्त करें",
     "minutes": "{{count}} मिनट",
     "seconds": "{{count}} सेकंड",
@@ -163,8 +167,7 @@
     "minSession_one": "1 मिनट का सत्र",
     "minSession_other": "{{count}} मिनट का सत्र",
     "minRemaining_one": "1 मिनट शेष",
-    "minRemaining_other": "{{count}} मिनट शेष",
-    "paused": "रुका हुआ"
+    "minRemaining_other": "{{count}} मिनट शेष"
   },
   "quotes": {
     "title": "प्रेरक उद्धरण",
@@ -477,6 +480,7 @@
     "featurePrivacy": "कोई विज्ञापन या ट्रैकिंग नहीं",
     "featureLocal": "डेटा डिवाइस पर",
     "exportData": "डेटा निर्यात करें",
+    "backupTitle": "Slow Spot बैकअप (JSON)",
     "exportDataDescription": "ध्यान इतिहास निर्यात करें",
     "skipInstructions": "निर्देश छोड़ें",
     "skipInstructionsDescription": "अनुभवी ध्यानियों के लिए",
@@ -1521,5 +1525,25 @@
       "streak30": "30 दिन की स्ट्रीक - एक महीने का मील का पत्थर!",
       "streak100": "100 दिन की स्ट्रीक - महान!"
     }
+  },
+  "wellbeing": {
+    "preTitle": "शुरू करने से पहले",
+    "postTitle": "कैसा रहा?",
+    "preSubtitle": "एक पल रुककर अपनी भावनाओं को जानें",
+    "postSubtitle": "अपने ध्यान अनुभव पर विचार करें",
+    "missingAnswersTitle": "कृपया सभी प्रश्नों का उत्तर दें",
+    "missingAnswersMessage": "कुछ आवश्यक प्रश्नों के उत्तर छूट गए हैं",
+    "errorTitle": "त्रुटि",
+    "errorSaveMessage": "मूल्यांकन सहेजने में विफल",
+    "saving": "सहेज रहा है...",
+    "continue": "जारी रखें",
+    "complete": "पूरा करें",
+    "skip": "छोड़ें",
+    "placeholder": "आपके विचार..."
+  },
+  "errorBoundary": {
+    "title": "कुछ गलत हो गया",
+    "message": "एक अप्रत्याशित त्रुटि हुई",
+    "retry": "पुनः प्रयास करें"
   }
 }

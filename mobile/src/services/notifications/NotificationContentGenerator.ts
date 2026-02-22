@@ -8,8 +8,14 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NotificationContent, NotificationContentCategory } from '../../types/notifications';
+import { z } from 'zod';
+import type { NotificationContent, NotificationContentCategory } from '../../types/notifications';
 import { STORAGE_KEYS } from './constants';
+
+/**
+ * Zod schema dla walidacji content index z AsyncStorage
+ */
+const ContentIndexSchema = z.record(z.string(), z.number());
 
 /**
  * Content pools organized by language
@@ -224,7 +230,11 @@ export class NotificationContentGenerator {
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEYS.CONTENT_INDEX);
       if (stored) {
-        this.lastUsedIndex = JSON.parse(stored);
+        const parsed = ContentIndexSchema.safeParse(JSON.parse(stored));
+        if (parsed.success) {
+          this.lastUsedIndex = parsed.data;
+        }
+        // W przypadku nieprawidlowych danych zaczynamy od nowa (domyslny pusty obiekt)
       }
     } catch {
       // Ignore errors, start fresh
@@ -256,10 +266,14 @@ export class NotificationContentGenerator {
     }
 
     // Get language code (e.g., 'en' from 'en-US')
-    const langCode = language.split('-')[0].toLowerCase();
+    const langCode = language.split('-')[0]?.toLowerCase() ?? 'en';
 
     // Fallback to English if language not supported
-    const pool = CONTENT_POOLS[langCode] || CONTENT_POOLS['en'];
+    const pool = CONTENT_POOLS[langCode] ?? CONTENT_POOLS['en'];
+
+    if (!pool || pool.length === 0) {
+      return { title: 'Time to meditate', body: 'Take a moment for yourself today.', category: 'encouragement' };
+    }
 
     // Get next content (rotate through pool)
     const lastIndex = this.lastUsedIndex[langCode] ?? -1;
@@ -269,7 +283,7 @@ export class NotificationContentGenerator {
     // Save index for next time
     await this.saveContentIndex();
 
-    return pool[nextIndex];
+    return pool[nextIndex] ?? pool[0] ?? { title: 'Time to meditate', body: 'Take a moment for yourself today.', category: 'encouragement' };
   }
 
   /**
@@ -279,25 +293,26 @@ export class NotificationContentGenerator {
     language: string,
     category: NotificationContentCategory
   ): NotificationContent {
-    const langCode = language.split('-')[0].toLowerCase();
-    const pool = CONTENT_POOLS[langCode] || CONTENT_POOLS['en'];
+    const langCode = language.split('-')[0]?.toLowerCase() ?? 'en';
+    const pool = CONTENT_POOLS[langCode] ?? CONTENT_POOLS['en'] ?? [];
     const categoryPool = pool.filter((c) => c.category === category);
 
     if (categoryPool.length === 0) {
       // Fallback to any content
-      return pool[Math.floor(Math.random() * pool.length)];
+      const fallback = pool[Math.floor(Math.random() * pool.length)];
+      return fallback ?? { title: 'Time to meditate', body: 'Take a moment for yourself today.', category: 'encouragement' };
     }
 
-    return categoryPool[Math.floor(Math.random() * categoryPool.length)];
+    return categoryPool[Math.floor(Math.random() * categoryPool.length)] ?? { title: 'Time to meditate', body: 'Take a moment for yourself today.', category: 'encouragement' };
   }
 
   /**
    * Get a random content item for testing
    */
   getRandomContent(language: string): NotificationContent {
-    const langCode = language.split('-')[0].toLowerCase();
-    const pool = CONTENT_POOLS[langCode] || CONTENT_POOLS['en'];
-    return pool[Math.floor(Math.random() * pool.length)];
+    const langCode = language.split('-')[0]?.toLowerCase() ?? 'en';
+    const pool = CONTENT_POOLS[langCode] ?? CONTENT_POOLS['en'] ?? [];
+    return pool[Math.floor(Math.random() * pool.length)] ?? { title: 'Time to meditate', body: 'Take a moment for yourself today.', category: 'encouragement' };
   }
 
   /**
@@ -311,10 +326,14 @@ export class NotificationContentGenerator {
     }
 
     // Get language code (e.g., 'en' from 'en-US')
-    const langCode = language.split('-')[0].toLowerCase();
+    const langCode = language.split('-')[0]?.toLowerCase() ?? 'en';
 
     // Fallback to English if language not supported
-    const pool = STREAK_ALERT_POOLS[langCode] || STREAK_ALERT_POOLS['en'];
+    const pool = STREAK_ALERT_POOLS[langCode] ?? STREAK_ALERT_POOLS['en'];
+
+    if (!pool || pool.length === 0) {
+      return { title: 'Protect your streak!', body: "You haven't meditated today.", category: 'streak_protection' };
+    }
 
     // Get next content (rotate through pool with separate index)
     const indexKey = `streak_${langCode}`;
@@ -325,16 +344,16 @@ export class NotificationContentGenerator {
     // Save index for next time
     await this.saveContentIndex();
 
-    return pool[nextIndex];
+    return pool[nextIndex] ?? pool[0] ?? { title: 'Protect your streak!', body: "You haven't meditated today.", category: 'streak_protection' };
   }
 
   /**
    * Get a random streak alert content for testing
    */
   getRandomStreakAlertContent(language: string): NotificationContent {
-    const langCode = language.split('-')[0].toLowerCase();
-    const pool = STREAK_ALERT_POOLS[langCode] || STREAK_ALERT_POOLS['en'];
-    return pool[Math.floor(Math.random() * pool.length)];
+    const langCode = language.split('-')[0]?.toLowerCase() ?? 'en';
+    const pool = STREAK_ALERT_POOLS[langCode] ?? STREAK_ALERT_POOLS['en'] ?? [];
+    return pool[Math.floor(Math.random() * pool.length)] ?? { title: 'Protect your streak!', body: "You haven't meditated today.", category: 'streak_protection' };
   }
 }
 

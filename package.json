@@ -4,7 +4,10 @@
   "private": true,
   "description": "Slow Spot - Meditation App",
   "scripts": {
-    "prepare": "node -e \"if (process.env.CI !== 'true') { require('child_process').execSync('husky', {stdio: 'inherit'}) }\""
+    "prepare": "node -e \"if (process.env.CI !== 'true') { require('child_process').execSync('husky', {stdio: 'inherit'}) }\"",
+    "check:deps": "node scripts/check-deps.js",
+    "check:deps:audit": "node scripts/check-deps.js --audit",
+    "check:deps:ci": "node scripts/check-deps.js --ci"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",

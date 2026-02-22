@@ -3,9 +3,9 @@
 // Intelligently adjust instructions based on user experience
 // ══════════════════════════════════════════════════════════════
 
-import { MeditationSession } from '../services/api';
-import { UserMeditationProgress, SessionCompletion } from '../types/userProgress';
-import { PreSessionInstruction } from '../types/instructions';
+import type { MeditationSession } from '../services/api';
+import type { UserMeditationProgress } from '../types/userProgress';
+import type { PreSessionInstruction } from '../types/instructions';
 import { getInstructionWithFallback } from './instructionHelpers';
 
 // ══════════════════════════════════════════════════════════════

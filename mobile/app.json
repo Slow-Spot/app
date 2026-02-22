@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "scheme": "slowspot",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "runtimeVersion": {
       "policy": "appVersion"
@@ -37,7 +37,10 @@
               "C617.1"
             ]
           }
-        ]
+        ],
+        "NSPrivacyCollectedDataTypes": [],
+        "NSPrivacyTracking": false,
+        "NSPrivacyTrackingDomains": []
       },
       "infoPlist": {
         "UIBackgroundModes": [
@@ -61,7 +64,11 @@
         "backgroundColor": "#8B5CF6"
       },
       "edgeToEdgeEnabled": true,
-      "permissions": [],
+      "permissions": [
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.WAKE_LOCK"
+      ],
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.READ_EXTERNAL_STORAGE",
@@ -108,9 +115,11 @@
             "deploymentTarget": "15.1"
           },
           "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
             "enableProguardInReleaseBuilds": true,
             "enableShrinkResourcesInReleaseBuilds": true,
-            "extraProguardRules": "-keep class com.facebook.hermes.unicode.** { *; }\n-keep class com.facebook.jni.** { *; }\n-keep class com.swmansion.reanimated.** { *; }\n-keep class com.swmansion.gesturehandler.** { *; }\n-keep class com.swmansion.rnscreens.** { *; }\n-keep public class com.horcrux.svg.** { *; }\n-keep class expo.modules.** { *; }\n-keep class com.airbnb.lottie.** { *; }\n-keepattributes SourceFile,LineNumberTable\n-renamesourcefileattribute SourceFile"
+            "extraProguardRules": "-keep class com.facebook.hermes.unicode.** { *; }\n-keep class com.facebook.jni.** { *; }\n-keep class com.swmansion.reanimated.** { *; }\n-keep class com.swmansion.gesturehandler.** { *; }\n-keep class com.swmansion.rnscreens.** { *; }\n-keep public class com.horcrux.svg.** { *; }\n-keep class expo.modules.** { *; }\n-keep class com.airbnb.lottie.** { *; }\n-keep class app.notifee.core.** { *; }\n-keepattributes SourceFile,LineNumberTable\n-renamesourcefileattribute SourceFile"
           }
         }
       ],
@@ -135,7 +144,8 @@
         }
       ],
       "@bacons/apple-targets",
-      "./plugins/withAppGroups"
+      "./plugins/withAppGroups",
+      "./plugins/withForegroundService"
     ]
   }
 }

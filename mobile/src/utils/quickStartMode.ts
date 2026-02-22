@@ -3,8 +3,8 @@
 // Skip instructions for experienced users who know the session
 // ══════════════════════════════════════════════════════════════
 
-import { MeditationSession } from '../services/api';
-import { UserMeditationProgress } from '../types/userProgress';
+import type { MeditationSession } from '../services/api';
+import type { UserMeditationProgress } from '../types/userProgress';
 
 // ══════════════════════════════════════════════════════════════
 // ELIGIBILITY CHECKS

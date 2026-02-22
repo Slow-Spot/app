@@ -1,13 +1,14 @@
 import React, { useMemo, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated as RNAnimated } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import Animated from 'react-native-reanimated';
 import { screenElementAnimation } from '../utils/animations';
-import { MeditationSession } from '../services/api';
-import { CustomSession } from '../services/customSessionStorage';
+import type { MeditationSession } from '../services/api';
+import type { CustomSession } from '../services/customSessionStorage';
 import { AnimatedPressable } from './AnimatedPressable';
 import theme, { getThemeColors, getCardStyles, getSwipeActionColors } from '../theme';
 import { getSectionColors, featureColorPalettes } from '../theme/colors';
@@ -24,7 +25,7 @@ interface SessionCardProps {
   animationIndex?: number;
 }
 
-const formatDuration = (seconds: number, t: any): string => {
+const formatDuration = (seconds: number, t: TFunction): string => {
   const minutes = Math.floor(seconds / 60);
   return t('meditation.minutes', '{{count}} min', { count: minutes });
 };
@@ -32,7 +33,7 @@ const formatDuration = (seconds: number, t: any): string => {
 /**
  * Get breathing pattern display name
  */
-const getBreathingPatternName = (pattern: string | undefined, t: any): string => {
+const getBreathingPatternName = (pattern: string | undefined, t: TFunction): string => {
   if (!pattern || pattern === 'none') return '';
   const patterns: Record<string, string> = {
     'box': t('custom.breathingBox', 'Box Breathing'),
@@ -47,7 +48,7 @@ const getBreathingPatternName = (pattern: string | undefined, t: any): string =>
 /**
  * Get ambient sound display name
  */
-const getAmbientSoundName = (sound: string | undefined, t: any): string => {
+const getAmbientSoundName = (sound: string | undefined, t: TFunction): string => {
   if (!sound || sound === 'silence') return t('custom.ambientSilence', 'Silence');
   const sounds: Record<string, string> = {
     'nature': t('custom.ambientNature', 'Nature'),
@@ -72,7 +73,7 @@ export const SessionCard = React.memo<SessionCardProps>(({
   animationIndex = 0
 }) => {
   const { t } = useTranslation();
-  const { currentTheme, settings } = usePersonalization();
+  const { settings } = usePersonalization();
   const swipeableRef = useRef<Swipeable>(null);
 
   // Theme-aware colors and styles from global theme

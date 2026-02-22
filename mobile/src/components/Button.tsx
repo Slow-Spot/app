@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * Button Component
  *
@@ -7,12 +6,13 @@ import { logger } from '../utils/logger';
  */
 
 import React from 'react';
+import type {
+  ViewStyle,
+  TextStyle,
+  StyleProp} from 'react-native';
 import {
   StyleSheet,
   Text,
-  ViewStyle,
-  TextStyle,
-  StyleProp,
   TouchableOpacity,
   ActivityIndicator,
   View,

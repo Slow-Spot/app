@@ -122,6 +122,10 @@
     "start": "Démarrer",
     "pause": "Pause",
     "resume": "Reprendre",
+    "stop": "Arrêter",
+    "paused": "En pause",
+    "remaining": "Restant",
+    "notificationChannel": "Séance de méditation",
     "finish": "Terminer",
     "minutes": "{{count}} min",
     "seconds": "{{count}} sec",
@@ -163,8 +167,7 @@
     "minSession_one": "Séance de 1 minute",
     "minSession_other": "Séance de {{count}} minutes",
     "minRemaining_one": "1 minute restante",
-    "minRemaining_other": "{{count}} minutes restantes",
-    "paused": "En pause"
+    "minRemaining_other": "{{count}} minutes restantes"
   },
   "quotes": {
     "title": "Inspirations",
@@ -477,6 +480,7 @@
     "featurePrivacy": "Pas de publicités ni de suivi",
     "featureLocal": "Données sur l'appareil",
     "exportData": "Exporter les Données",
+    "backupTitle": "Sauvegarde Slow Spot (JSON)",
     "exportDataDescription": "Exporter l'historique de méditation",
     "skipInstructions": "Ignorer les Instructions",
     "skipInstructionsDescription": "Pour méditants expérimentés",
@@ -1521,5 +1525,25 @@
       "streak30": "Série de 30 jours - Jalon d'un mois !",
       "streak100": "Série de 100 jours - Légendaire !"
     }
+  },
+  "wellbeing": {
+    "preTitle": "Avant de commencer",
+    "postTitle": "Comment c'était ?",
+    "preSubtitle": "Prenez un moment pour vous connecter à vous-même",
+    "postSubtitle": "Réfléchissez à votre expérience de méditation",
+    "missingAnswersTitle": "Veuillez répondre à toutes les questions",
+    "missingAnswersMessage": "Certaines questions obligatoires n'ont pas de réponse",
+    "errorTitle": "Erreur",
+    "errorSaveMessage": "Impossible de sauvegarder l'évaluation",
+    "saving": "Enregistrement...",
+    "continue": "Continuer",
+    "complete": "Terminer",
+    "skip": "Passer",
+    "placeholder": "Vos pensées..."
+  },
+  "errorBoundary": {
+    "title": "Un problème est survenu",
+    "message": "Une erreur inattendue s'est produite",
+    "retry": "Réessayer"
   }
 }

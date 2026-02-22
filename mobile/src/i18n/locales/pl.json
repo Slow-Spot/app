@@ -123,6 +123,10 @@
     "start": "Start",
     "pause": "Pauza",
     "resume": "Wznów",
+    "stop": "Zatrzymaj",
+    "paused": "Wstrzymano",
+    "remaining": "Pozostało",
+    "notificationChannel": "Sesja medytacji",
     "finish": "Zakończ",
     "minutes": "{{count}} min",
     "seconds": "{{count}} sek",
@@ -167,8 +171,7 @@
     "minRemaining_one": "Pozostała 1 minuta",
     "minRemaining_few": "Pozostały {{count}} minuty",
     "minRemaining_many": "Pozostało {{count}} minut",
-    "minRemaining_other": "Pozostało {{count}} minut",
-    "paused": "Wstrzymano"
+    "minRemaining_other": "Pozostało {{count}} minut"
   },
   "instructions": {
     "timeOfDay": {
@@ -472,6 +475,7 @@
     "dataPrivacy": "Dane i prywatność",
     "dataPrivacyDescription": "Wszystkie dane pozostają na tym urządzeniu",
     "exportData": "Eksportuj dane",
+    "backupTitle": "Kopia zapasowa Slow Spot (JSON)",
     "clearData": "Wyczyść dane",
     "clearDataTitle": "Wyczyścić lokalne dane?",
     "clearDataBody": "Spowoduje to usunięcie Twoich sesji, postępu, przypomnień i preferencji z tego urządzenia.",
@@ -1525,5 +1529,25 @@
       "streak30": "30-dniowa seria - Miesiąc praktyki!",
       "streak100": "100-dniowa seria - Legenda!"
     }
+  },
+  "wellbeing": {
+    "preTitle": "Zanim zaczniesz",
+    "postTitle": "Jak poszło?",
+    "preSubtitle": "Poświęć chwilę, aby sprawdzić, jak się czujesz",
+    "postSubtitle": "Zastanów się nad swoim doświadczeniem medytacji",
+    "missingAnswersTitle": "Odpowiedz na wszystkie pytania",
+    "missingAnswersMessage": "Brakuje odpowiedzi na niektóre wymagane pytania",
+    "errorTitle": "Błąd",
+    "errorSaveMessage": "Nie udało się zapisać oceny",
+    "saving": "Zapisywanie...",
+    "continue": "Kontynuuj",
+    "complete": "Zakończ",
+    "skip": "Pomiń",
+    "placeholder": "Twoje przemyślenia..."
+  },
+  "errorBoundary": {
+    "title": "Coś poszło nie tak",
+    "message": "Wystąpił nieoczekiwany błąd",
+    "retry": "Spróbuj ponownie"
   }
 }

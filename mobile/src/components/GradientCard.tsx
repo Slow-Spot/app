@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * GradientCard Component
  *
@@ -7,9 +6,10 @@ import { logger } from '../utils/logger';
  */
 
 import React, { useMemo } from 'react';
-import { StyleSheet, ViewStyle, StyleProp, TouchableOpacity, View } from 'react-native';
+import type { ViewStyle, StyleProp} from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { GradientDefinition } from '../theme/gradients';
+import type { GradientDefinition } from '../theme/gradients';
 import theme from '../theme';
 
 interface GradientCardProps {

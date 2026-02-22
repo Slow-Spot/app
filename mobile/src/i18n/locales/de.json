@@ -122,6 +122,10 @@
     "start": "Start",
     "pause": "Pause",
     "resume": "Fortsetzen",
+    "stop": "Stopp",
+    "paused": "Pausiert",
+    "remaining": "Verbleibend",
+    "notificationChannel": "Meditationssitzung",
     "finish": "Beenden",
     "minutes": "{{count}} Min",
     "seconds": "{{count}} Sek",
@@ -163,8 +167,7 @@
     "minSession_one": "1 Minute Sitzung",
     "minSession_other": "{{count}} Minuten Sitzung",
     "minRemaining_one": "Noch 1 Minute",
-    "minRemaining_other": "Noch {{count}} Minuten",
-    "paused": "Pausiert"
+    "minRemaining_other": "Noch {{count}} Minuten"
   },
   "quotes": {
     "title": "Inspirierende Zitate",
@@ -468,6 +471,7 @@
     "dataPrivacy": "Daten & Datenschutz",
     "dataPrivacyDescription": "Alle Daten bleiben auf diesem Gerät",
     "exportData": "Daten exportieren",
+    "backupTitle": "Slow Spot Sicherung (JSON)",
     "clearData": "Daten löschen",
     "clearDataTitle": "Lokale Daten löschen?",
     "clearDataBody": "Dies entfernt deine Sitzungen, Fortschritt, Erinnerungen und Einstellungen von diesem Gerät.",
@@ -1521,5 +1525,25 @@
       "streak30": "30-Tage-Serie - Ein Monat Meilenstein!",
       "streak100": "100-Tage-Serie - Legendär!"
     }
+  },
+  "wellbeing": {
+    "preTitle": "Bevor du beginnst",
+    "postTitle": "Wie war es?",
+    "preSubtitle": "Nimm dir einen Moment, um in dich hineinzuhorchen",
+    "postSubtitle": "Reflektiere deine Meditationserfahrung",
+    "missingAnswersTitle": "Bitte beantworte alle Fragen",
+    "missingAnswersMessage": "Einige Pflichtfragen sind noch unbeantwortet",
+    "errorTitle": "Fehler",
+    "errorSaveMessage": "Bewertung konnte nicht gespeichert werden",
+    "saving": "Speichern...",
+    "continue": "Weiter",
+    "complete": "Abschließen",
+    "skip": "Überspringen",
+    "placeholder": "Deine Gedanken..."
+  },
+  "errorBoundary": {
+    "title": "Etwas ist schiefgelaufen",
+    "message": "Ein unerwarteter Fehler ist aufgetreten",
+    "retry": "Erneut versuchen"
   }
 }

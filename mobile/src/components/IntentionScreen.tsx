@@ -15,7 +15,6 @@ import {
   Platform,
   ScrollView,
   Modal,
-  Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -24,22 +23,18 @@ import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  withRepeat,
-  withSequence,
   Easing,
 } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import { GradientBackground } from './GradientBackground';
 import { GradientButton } from './GradientButton';
 import { GradientCard } from './GradientCard';
 import { MeditationIntroGuide } from './MeditationIntroGuide';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
-import { brandColors, backgrounds } from '../theme/colors';
+import { backgrounds } from '../theme/colors';
 import { userPreferences } from '../services/userPreferences';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface IntentionScreenProps {
   onBegin: (intention: string) => void;
@@ -61,7 +56,7 @@ interface AnimatedBreathingCircleProps {
 const AnimatedBreathingCircle: React.FC<AnimatedBreathingCircleProps> = ({
   isRunning,
   pattern,
-  isDark,
+  isDark: _isDark,
   hapticEnabled = true,
 }) => {
   const { t } = useTranslation();
@@ -133,8 +128,8 @@ const AnimatedBreathingCircle: React.FC<AnimatedBreathingCircleProps> = ({
       };
 
       const scheduleNextPhase = () => {
-        const currentPhase = config.phases[phaseIndex];
-        const currentPhaseDuration = config.durations[phaseIndex];
+        const currentPhase = config.phases[phaseIndex] ?? 'inhale';
+        const currentPhaseDuration = config.durations[phaseIndex] ?? 4000;
 
         setBreathingPhase(currentPhase);
         triggerBreathingHaptic(currentPhase);
@@ -227,7 +222,7 @@ const breathingStyles = StyleSheet.create({
 export const IntentionScreen: React.FC<IntentionScreenProps> = ({
   onBegin,
   isDark = false,
-  sessionName,
+  sessionName: _sessionName,
 }) => {
   const { t } = useTranslation();
   const { currentTheme } = usePersonalization();
@@ -302,7 +297,7 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
     onBegin('');
   };
 
-  const handleOpenBreathing = () => {
+  const _handleOpenBreathing = () => {
     setShowBreathingModal(true);
     setBreathingTime(60);
     setBreathingActive(false);
@@ -420,7 +415,7 @@ export const IntentionScreen: React.FC<IntentionScreenProps> = ({
                     style={[
                       modalStyles.patternCard,
                       {
-                        backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.gray[50],
+                        backgroundColor: isDark ? colors.neutral.charcoal[200] : colors.neutral.gray[100],
                         borderWidth: 1.5,
                         borderColor: selectedPattern === pattern.id
                           ? currentTheme.primary

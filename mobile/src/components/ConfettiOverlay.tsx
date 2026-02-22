@@ -11,7 +11,7 @@
  * - Auto-cleanup after animation completes
  */
 
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -19,7 +19,6 @@ import Animated, {
   withDelay,
   withTiming,
   Easing,
-  runOnJS,
 } from 'react-native-reanimated';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
@@ -166,7 +165,7 @@ export const ConfettiOverlay: React.FC<ConfettiOverlayProps> = ({
     return Array.from({ length: particleCount }, (_, i) => ({
       id: i,
       delay: Math.random() * 500,
-      color: colors[Math.floor(Math.random() * colors.length)],
+      color: colors[Math.floor(Math.random() * colors.length)] ?? colors[0] ?? '#FFD700',
       startX: Math.random() * width,
     }));
   }, [animationsEnabled, visible, particleCount, colors]);

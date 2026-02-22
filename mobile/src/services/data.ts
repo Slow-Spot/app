@@ -1,4 +1,4 @@
-import { Quote, MeditationSession } from './api';
+import type { Quote, MeditationSession } from './api';
 
 export const QUOTES: Quote[] = [
   // BUDDHIST WISDOM - Pali Canon (Dhammapada)

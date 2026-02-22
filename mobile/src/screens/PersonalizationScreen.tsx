@@ -26,7 +26,6 @@ import theme, { getThemeColors, getThemeGradients } from '../theme';
 import {
   usePersonalization,
   COLOR_THEMES,
-  ColorThemeKey,
   generateGradientFromColor,
 } from '../contexts/PersonalizationContext';
 

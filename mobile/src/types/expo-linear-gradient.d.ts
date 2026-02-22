@@ -9,7 +9,7 @@
  */
 declare module 'expo-linear-gradient' {
   import { Component } from 'react';
-  import { ColorValue, ViewProps } from 'react-native';
+  import type { ColorValue, ViewProps } from 'react-native';
 
   export type LinearGradientPoint = {
     x: number;

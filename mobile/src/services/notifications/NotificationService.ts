@@ -13,19 +13,40 @@
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import { z } from 'zod';
 import i18n from '../../i18n';
 import { logger } from '../../utils/logger';
-import {
+import type {
   NotificationSettings,
   NotificationPermissionStatus,
   ScheduleResult,
   PermissionResult,
-  NotificationState,
+  NotificationState} from '../../types/notifications';
+import {
   DEFAULT_NOTIFICATION_SETTINGS,
 } from '../../types/notifications';
 import { notificationContentGenerator } from './NotificationContentGenerator';
 import { STORAGE_KEYS, CHANNEL_ID, NOTIFICATION_ACCENT_COLOR } from './constants';
 import { getTodayMinutes, getTotalStreak } from '../progressTracker';
+
+/**
+ * Zod schema dla walidacji NotificationSettings z AsyncStorage
+ */
+const NotificationSettingsSchema = z.object({
+  enabled: z.boolean().optional(),
+  dailyReminder: z.object({
+    enabled: z.boolean(),
+    time: z.string(),
+    days: z.array(z.number()),
+  }).optional(),
+  streakAlert: z.object({
+    enabled: z.boolean(),
+    time: z.string(),
+  }).optional(),
+  lastScheduledId: z.string().optional(),
+  lastStreakAlertId: z.string().optional(),
+  updatedAt: z.string().optional(),
+});
 
 /**
  * NotificationService
@@ -197,8 +218,12 @@ class NotificationService {
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEYS.NOTIFICATION_SETTINGS);
       if (stored) {
-        const parsed = JSON.parse(stored) as Partial<NotificationSettings>;
-        this.settings = { ...DEFAULT_NOTIFICATION_SETTINGS, ...parsed };
+        const parsed = NotificationSettingsSchema.safeParse(JSON.parse(stored));
+        if (!parsed.success) {
+          logger.warn('Invalid notification settings in storage, using defaults');
+        } else {
+          this.settings = { ...DEFAULT_NOTIFICATION_SETTINGS, ...parsed.data } as NotificationSettings;
+        }
       }
     } catch (error) {
       logger.error('Failed to load notification settings:', error);
@@ -299,7 +324,9 @@ class NotificationService {
       await this.cancelDailyReminder();
 
       // Parse time
-      const [hours, minutes] = time.split(':').map(Number);
+      const [hours = 9, minutes = 0] = time.split(':').map(Number);
+      const parsedHours = hours ?? 9;
+      const parsedMinutes = minutes ?? 0;
 
       // Generate inspiring content
       const content = await notificationContentGenerator.generateDaily(i18n.language);
@@ -314,8 +341,8 @@ class NotificationService {
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DAILY,
-          hour: hours,
-          minute: minutes,
+          hour: parsedHours,
+          minute: parsedMinutes,
         },
       });
 
@@ -326,7 +353,7 @@ class NotificationService {
       await this.saveSettings();
 
       // Calculate next trigger date
-      const nextTrigger = this.calculateNextTriggerDate(hours, minutes);
+      const nextTrigger = this.calculateNextTriggerDate(parsedHours, parsedMinutes);
 
       logger.log(`Scheduled daily reminder at ${time}, ID: ${identifier}`);
       this.notifyListeners();
@@ -355,7 +382,9 @@ class NotificationService {
       await this.cancelStreakAlert();
 
       // Parse time
-      const [hours, minutes] = time.split(':').map(Number);
+      const [hours = 20, minutes = 0] = time.split(':').map(Number);
+      const parsedHours = hours ?? 20;
+      const parsedMinutes = minutes ?? 0;
 
       // Generate streak protection content
       const content = await notificationContentGenerator.generateStreakAlert(i18n.language);
@@ -370,8 +399,8 @@ class NotificationService {
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DAILY,
-          hour: hours,
-          minute: minutes,
+          hour: parsedHours,
+          minute: parsedMinutes,
         },
       });
 
@@ -382,7 +411,7 @@ class NotificationService {
       await this.saveSettings();
 
       // Calculate next trigger date
-      const nextTrigger = this.calculateNextTriggerDate(hours, minutes);
+      const nextTrigger = this.calculateNextTriggerDate(parsedHours, parsedMinutes);
 
       logger.log(`Scheduled streak alert at ${time}, ID: ${identifier}`);
       this.notifyListeners();
@@ -616,8 +645,8 @@ class NotificationService {
       return undefined;
     }
 
-    const [hours, minutes] = this.settings.dailyReminder.time.split(':').map(Number);
-    return this.calculateNextTriggerDate(hours, minutes);
+    const [hours = 9, minutes = 0] = this.settings.dailyReminder.time.split(':').map(Number);
+    return this.calculateNextTriggerDate(hours ?? 9, minutes ?? 0);
   }
 
   /**
@@ -628,8 +657,8 @@ class NotificationService {
       return undefined;
     }
 
-    const [hours, minutes] = this.settings.streakAlert.time.split(':').map(Number);
-    return this.calculateNextTriggerDate(hours, minutes);
+    const [hours = 20, minutes = 0] = this.settings.streakAlert.time.split(':').map(Number);
+    return this.calculateNextTriggerDate(hours ?? 20, minutes ?? 0);
   }
 
   /**

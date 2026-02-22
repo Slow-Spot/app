@@ -1,9 +1,11 @@
 import { logger } from '../utils/logger';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Pressable, AppState, AppStateStatus } from 'react-native';
+import type { AppStateStatus } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Pressable, AppState } from 'react-native';
 import { useKeepAwake } from 'expo-keep-awake';
 import { useTranslation } from 'react-i18next';
-import { createAudioPlayer, AudioPlayer } from 'expo-audio';
+import type { AudioPlayer } from 'expo-audio';
+import { createAudioPlayer } from 'expo-audio';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import Animated, {
@@ -16,14 +18,14 @@ import Animated, {
 import Svg, { Circle, G, Text as SvgText } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import theme, { getThemeColors } from '../theme';
-import { brandColors } from '../theme/colors';
-import { ChimePoint } from '../types/customSession';
+import type { ChimePoint } from '../types/customSession';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { ConfirmationModal } from './ConfirmationModal';
-import { BreathingPattern, BreathingTiming } from '../services/customSessionStorage';
+import type { BreathingPattern, BreathingTiming } from '../services/customSessionStorage';
 import { backgroundTimer } from '../services/backgroundTimer';
 import { liveActivityService } from '../services/liveActivityService';
 import { androidWidgetService } from '../services/androidWidgetService';
+import { androidForegroundService } from '../services/androidForegroundService';
 import { notificationService } from '../services/notifications/NotificationService';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -241,7 +243,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const [isRunning, setIsRunning] = useState(true);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'rest'>('inhale');
-  const [adjustableChimes, setAdjustableChimes] = useState<ChimePoint[]>(chimePoints);
+  const [adjustableChimes, _setAdjustableChimes] = useState<ChimePoint[]>(chimePoints);
   const [showEndConfirmation, setShowEndConfirmation] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(true);
   const playedChimes = useRef<Set<number>>(new Set());
@@ -338,6 +340,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         // Use custom chime URI if provided (from settings), otherwise use default
         const source = customChimeUri
           ? { uri: customChimeUri }
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
           : require('../../assets/sounds/meditation_bell.mp3');
 
         logger.log('Loading chime sound:', customChimeUri ? 'custom' : 'default');
@@ -353,6 +356,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
           try {
             logger.warn('Custom chime failed, falling back to default');
             const fallbackPlayer = createAudioPlayer(
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
               require('../../assets/sounds/meditation_bell.mp3')
             );
             fallbackPlayer.loop = false;
@@ -536,17 +540,19 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             setRemainingSeconds(remaining);
             if (remaining <= 0) {
               setIsRunning(false);
-              // Zakończ Live Activity i Android widget z komunikatem sukcesu
+              // Zakoncz Live Activity, Android widget i foreground service
               liveActivityService.endActivity(true);
               androidWidgetService.endSession();
+              androidForegroundService.stopSession();
               onCompleteRef.current();
             }
           },
           async () => {
             setIsRunning(false);
-            // Zakończ Live Activity i Android widget z komunikatem sukcesu
+            // Zakoncz Live Activity, Android widget i foreground service
             await liveActivityService.endActivity(true);
             await androidWidgetService.endSession();
+            await androidForegroundService.stopSession();
             onCompleteRef.current();
           }
         );
@@ -566,6 +572,24 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         // Start Android widget
         await androidWidgetService.startSession(totalSeconds);
 
+        // Rejestruj callback PRZED startem serwisu (unika gap window)
+        androidForegroundService.setActionCallback((action) => {
+          if (action === 'pause') {
+            setIsRunning(false);
+          } else if (action === 'resume') {
+            setIsRunning(true);
+          } else if (action === 'stop') {
+            setIsRunning(false);
+            onCancelRef.current();
+          }
+        });
+
+        // Start Android foreground service (ongoing notification z timerem)
+        await androidForegroundService.startSession(
+          totalSeconds,
+          t('meditation.title', 'Meditation')
+        );
+
         // Schedule notification for session completion (plays sound when app in background)
         await notificationService.scheduleSessionCompletionNotification(totalSeconds);
       } catch (error) {
@@ -580,39 +604,43 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       backgroundTimer.stopSession();
       liveActivityService.endActivity(false);
       androidWidgetService.endSession();
+      androidForegroundService.setActionCallback(null);
+      androidForegroundService.stopSession();
       notificationService.cancelSessionCompletionNotification();
       sessionStartedRef.current = false;
       backgroundSessionIdRef.current = null;
       liveActivityIdRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- onComplete/onCancel through refs
+   
   }, [totalSeconds, t]);
 
-  // Obsługa pause/resume z background timer, Live Activity i Android widget
+  // Ref do remainingSeconds - uzywany w useEffect bez dodawania do deps
+  const remainingSecondsRef = useRef(remainingSeconds);
+  remainingSecondsRef.current = remainingSeconds;
+
+  // Obsluga pause/resume z background timer, Live Activity i Android widget
+  // Zalezy TYLKO od isRunning - remainingSeconds jest odczytywany przez ref
   useEffect(() => {
     const handlePauseResume = async () => {
       if (!sessionStartedRef.current) return;
+      const currentRemaining = remainingSecondsRef.current;
 
       try {
         if (isRunning) {
           await backgroundTimer.resumeFromPause();
-          // Aktualizuj Live Activity z nowym czasem końca
           if (liveActivityIdRef.current) {
-            await liveActivityService.updateRemainingTime(remainingSeconds, false);
+            await liveActivityService.updateRemainingTime(currentRemaining, false);
           }
-          // Aktualizuj Android widget
-          await androidWidgetService.resumeSession(remainingSeconds, totalSeconds);
-          // Reschedule session completion notification
-          await notificationService.rescheduleSessionCompletionNotification(remainingSeconds);
+          await androidWidgetService.resumeSession(currentRemaining, totalSeconds);
+          await androidForegroundService.resumeSession(currentRemaining);
+          await notificationService.rescheduleSessionCompletionNotification(currentRemaining);
         } else {
           await backgroundTimer.pauseSession();
-          // Aktualizuj Live Activity jako spauzowane
           if (liveActivityIdRef.current) {
-            await liveActivityService.updateRemainingTime(remainingSeconds, true);
+            await liveActivityService.updateRemainingTime(currentRemaining, true);
           }
-          // Aktualizuj Android widget
-          await androidWidgetService.pauseSession(remainingSeconds, totalSeconds);
-          // Cancel session completion notification when paused
+          await androidWidgetService.pauseSession(currentRemaining, totalSeconds);
+          await androidForegroundService.pauseSession(currentRemaining);
           await notificationService.cancelSessionCompletionNotification();
         }
       } catch (error) {
@@ -620,11 +648,11 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       }
     };
 
-    // Pomijamy pierwszą inicjalizację (isRunning=true na starcie)
+    // Pomijamy pierwsza inicjalizacje (isRunning=true na starcie)
     if (backgroundSessionIdRef.current) {
       handlePauseResume();
     }
-  }, [isRunning, remainingSeconds]);
+  }, [isRunning, totalSeconds]);
 
   // Synchronizacja stanu przy powrocie z background
   // Naprawia problem gdy użytkownik klika w Live Activity widget
@@ -649,11 +677,12 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         setRemainingSeconds(actualRemaining);
         setIsRunning(!isPaused);
 
-        // Sprawdź czy sesja się skończyła w tle
+        // Sprawdz czy sesja sie zakonczyla w tle
         if (actualRemaining <= 0) {
           setIsRunning(false);
           liveActivityService.endActivity(true);
           androidWidgetService.endSession();
+          androidForegroundService.stopSession();
           onCompleteRef.current();
         } else {
           // KLUCZOWA NAPRAWA: Synchronizuj Live Activity z aktualnym czasem
@@ -673,7 +702,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
     const subscription = AppState.addEventListener('change', handleAppStateChange);
     return () => subscription.remove();
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- onComplete through ref
+   
   }, [sessionHaptics, settings.hapticEnabled]);
 
   const formatTime = (seconds: number) => {
@@ -692,7 +721,7 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const strokeDashoffset = circumference - (circumference * progress) / 100;
   // Extended size to fit chime markers outside the ring
   const svgSize = size + 50; // Extra space for markers
-  const svgOffset = 25; // Center offset
+  const _svgOffset = 25; // Center offset
 
   return (
     <Pressable style={styles.container} onPress={handleScreenTouch}>

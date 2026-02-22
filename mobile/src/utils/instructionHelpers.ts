@@ -4,8 +4,8 @@ import { logger } from './logger';
 // ══════════════════════════════════════════════════════════════
 
 import { PRE_SESSION_INSTRUCTIONS } from '../data/instructions';
-import { PreSessionInstruction, TechniqueType } from '../types/instructions';
-import { MeditationSession } from '../services/api';
+import type { PreSessionInstruction, TechniqueType } from '../types/instructions';
+import type { MeditationSession } from '../services/api';
 
 /**
  * Get instruction by ID with validation
@@ -40,7 +40,7 @@ export const getInstructionById = (
 export const getInstructionWithFallback = (
   instructionId?: string,
   sessionLevel: number = 1,
-  technique?: TechniqueType
+  _technique?: TechniqueType
 ): PreSessionInstruction => {
   // Try to get the specified instruction
   const instruction = getInstructionById(instructionId);
@@ -56,17 +56,21 @@ export const getInstructionWithFallback = (
   };
 
   // Try level-appropriate fallbacks
-  const fallbacks = levelFallbacks[sessionLevel] || levelFallbacks[1];
+  const fallbacks = levelFallbacks[sessionLevel] ?? levelFallbacks[1] ?? [];
   for (const fallbackId of fallbacks) {
     const fallbackInstruction = PRE_SESSION_INSTRUCTIONS[fallbackId];
     if (fallbackInstruction) {
-      logger.log(`✓ Using fallback instruction: ${fallbackId} for level ${sessionLevel}`);
+      logger.log(`Using fallback instruction: ${fallbackId} for level ${sessionLevel}`);
       return fallbackInstruction;
     }
   }
 
   // Ultimate fallback - always exists
-  return PRE_SESSION_INSTRUCTIONS['level1_breath'];
+  const ultimateFallback = PRE_SESSION_INSTRUCTIONS['level1_breath'];
+  if (!ultimateFallback) {
+    throw new Error('No fallback instruction found for level1_breath');
+  }
+  return ultimateFallback;
 };
 
 /**

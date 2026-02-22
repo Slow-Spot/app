@@ -1,6 +1,6 @@
 import { logger } from '../utils/logger';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
@@ -12,14 +12,14 @@ import { screenElementAnimation, secondaryElementAnimation } from '../utils/anim
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SwipeableQuoteCard } from '../components/SwipeableQuoteCard';
 import { AnimatedPressable } from '../components/AnimatedPressable';
-import { api, Quote } from '../services/api';
+import type { Quote } from '../services/api';
+import { api } from '../services/api';
 import { getUniqueRandomQuote, markQuoteAsShown } from '../services/quoteHistory';
 import { GradientBackground } from '../components/GradientBackground';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface QuotesScreenProps {
   isDark?: boolean;

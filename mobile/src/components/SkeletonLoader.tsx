@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle, useColorScheme, DimensionValue } from 'react-native';
+import type { StyleProp, ViewStyle, DimensionValue } from 'react-native';
+import { View, StyleSheet, useColorScheme } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,

@@ -4,7 +4,7 @@ import { logger } from './logger';
 // Manage all user settings and preferences
 // ══════════════════════════════════════════════════════════════
 
-import {
+import type {
   UserMeditationProgress,
   InstructionStyle,
   ExperienceLevel,
@@ -421,23 +421,20 @@ export const deserializePreferences = (data: string): UserPreferences => {
  * Migrate old preferences to new format
  */
 export const migratePreferences = (
-  oldPrefs: any,
-  version: string
+  oldPrefs: Partial<Record<string, unknown>>,
+  _version: string
 ): UserPreferences => {
-  // Start with defaults
-  let migrated = { ...DEFAULT_PREFERENCES };
+  // Wyciagamy tylko klucze istniejace w DEFAULT_PREFERENCES
+  const validKeys = Object.keys(DEFAULT_PREFERENCES) as (keyof UserPreferences)[];
+  const filtered: Partial<UserPreferences> = {};
 
-  // Apply old preferences that are still valid
   if (oldPrefs) {
-    Object.keys(DEFAULT_PREFERENCES).forEach(key => {
+    for (const key of validKeys) {
       if (oldPrefs[key] !== undefined) {
-        (migrated as any)[key] = oldPrefs[key];
+        (filtered as Record<string, unknown>)[key] = oldPrefs[key];
       }
-    });
+    }
   }
 
-  // Version-specific migrations can go here
-  // if (version === '1.0') { ... }
-
-  return migrated;
+  return mergeWithDefaults(filtered);
 };

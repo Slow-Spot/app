@@ -1,4 +1,4 @@
-import { Locale } from './config';
+import type { Locale } from './config';
 
 // Import all translation files
 import en from './locales/en.json';
@@ -14,7 +14,7 @@ const translations: Partial<Record<Locale, Translations>> = {
 // Load translation function
 export async function loadTranslation(locale: Locale): Promise<Translations> {
   if (translations[locale]) {
-    return translations[locale]!;
+    return translations[locale] ?? en;
   }
 
   try {
@@ -23,7 +23,8 @@ export async function loadTranslation(locale: Locale): Promise<Translations> {
     translations[locale] = translation.default;
     return translation.default;
   } catch (error) {
-    console.warn(`Translation for ${locale} not found, falling back to English`);
+    // Fallback do angielskiego - brak dostepnego tlumaczenia dla locale
+    void error;
     return en;
   }
 }
@@ -34,6 +35,12 @@ export function getTranslation(locale: Locale): Translations {
 }
 
 // Helper to get nested translation values
-export function getNestedTranslation(obj: any, path: string): string {
-  return path.split('.').reduce((acc, part) => acc?.[part], obj) ?? '';
+export function getNestedTranslation(obj: Record<string, unknown>, path: string): string {
+  const result = path.split('.').reduce<unknown>((acc, part) => {
+    if (acc && typeof acc === 'object' && part in acc) {
+      return (acc as Record<string, unknown>)[part];
+    }
+    return undefined;
+  }, obj);
+  return typeof result === 'string' ? result : '';
 }

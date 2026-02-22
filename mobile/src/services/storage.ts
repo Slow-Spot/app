@@ -11,7 +11,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
-import { SessionConfiguration } from '../types/meditation';
+import type { SessionConfiguration } from '../types/meditation';
 import { logger } from '../utils/logger';
 import {
   getCompletedSessions,
@@ -60,9 +60,6 @@ export interface UserPreferences {
   showPreSessionScreen: boolean;
   showPostSessionScreen: boolean;
 
-  // Privacy
-  collectAnonymousData: boolean;
-
   // Updated timestamp
   lastUpdated: string;
 }
@@ -82,41 +79,117 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   autoStartTimer: false,
   showPreSessionScreen: true,
   showPostSessionScreen: true,
-  // Default to no analytics collection to avoid mismatch with store privacy declarations
-  collectAnonymousData: false,
   lastUpdated: new Date().toISOString(),
 };
 
 /**
- * Zod schemas for import validation (security hardening)
+ * Zod schemas for runtime validation of AsyncStorage data
  */
-const ImportDataSchema = z.object({
-  version: z.string().optional(),
-  schemaVersion: z.number().int().positive().optional(),
-  exportDate: z.string().optional(),
-  configurations: z.array(z.object({
-    id: z.string(),
-    name: z.string(),
-    totalDuration: z.number().min(0).max(86400), // max 24h in seconds
-    phases: z.array(z.any()).optional(),
-  }).passthrough()).optional(),
-  preferences: z.object({
-    chimeVolume: z.number().min(0).max(1).optional(),
-    ambientVolume: z.number().min(0).max(1).optional(),
-    enableHaptics: z.boolean().optional(),
-    enableReminders: z.boolean().optional(),
-    reminderTime: z.string().optional(),
-    reminderDays: z.array(z.number().int().min(0).max(6)).optional(),
-    keepScreenOn: z.boolean().optional(),
-    displayMode: z.enum(['light', 'dark', 'auto']).optional(),
-    defaultDurationMinutes: z.number().int().min(1).max(240).optional(),
-    autoStartTimer: z.boolean().optional(),
-    showPreSessionScreen: z.boolean().optional(),
-    showPostSessionScreen: z.boolean().optional(),
-    collectAnonymousData: z.boolean().optional(),
-    lastUpdated: z.string().optional(),
-  }).passthrough().optional(),
+const SessionConfigurationSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  durationMinutes: z.number(),
+  ambientSound: z.string().optional(),
+  intervalBellMinutes: z.number().optional(),
+  voiceGuidanceEnabled: z.boolean().optional(),
+  endChimeEnabled: z.boolean().optional(),
+  usageCount: z.number().optional(),
+  lastUsedAt: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
+
+const SessionConfigurationsArraySchema = z.array(SessionConfigurationSchema);
+
+const UserPreferencesSchema = z.object({
+  chimeVolume: z.number().optional(),
+  ambientVolume: z.number().optional(),
+  enableHaptics: z.boolean().optional(),
+  enableReminders: z.boolean().optional(),
+  reminderTime: z.string().optional(),
+  reminderDays: z.array(z.number()).optional(),
+  keepScreenOn: z.boolean().optional(),
+  displayMode: z.enum(['light', 'dark', 'auto']).optional(),
+  defaultDurationMinutes: z.number().optional(),
+  autoStartTimer: z.boolean().optional(),
+  showPreSessionScreen: z.boolean().optional(),
+  showPostSessionScreen: z.boolean().optional(),
+  lastUpdated: z.string().optional(),
+});
+
+/**
+ * Zod schemas for import validation (security hardening)
+ *
+ * WAZNE: ImportDataSchema MUSI byc zsynchronizowany z exportAllData().
+ * Export produkuje configurations z polami SessionConfiguration (durationMinutes),
+ * oraz sessions, progressStats, importedStreak.
+ */
+// Maksymalny rozmiar importowanych danych (10 MB)
+const MAX_IMPORT_SIZE = 10 * 1024 * 1024;
+
+const ImportConfigurationSchema = z.object({
+  id: z.string().max(100),
+  name: z.string().max(200),
+  durationMinutes: z.number().min(0).max(1440), // max 24h w minutach
+  ambientSound: z.string().max(100).optional(),
+  intervalBellMinutes: z.number().min(0).max(1440).optional(),
+  voiceGuidanceEnabled: z.boolean().optional(),
+  endChimeEnabled: z.boolean().optional(),
+  usageCount: z.number().int().min(0).max(100000).optional(),
+  lastUsedAt: z.string().max(50).optional(),
+  createdAt: z.string().max(50).optional(),
+  updatedAt: z.string().max(50).optional(),
+}).strict();
+
+const ImportSessionSchema = z.object({
+  id: z.union([z.number(), z.string().max(100)]),
+  title: z.string().max(200),
+  date: z.string().max(50),
+  durationSeconds: z.number().min(0).max(86400),
+  languageCode: z.string().max(10),
+}).strict();
+
+const ImportProgressStatsSchema = z.object({
+  totalSessions: z.number().int().min(0).optional(),
+  totalMinutes: z.number().int().min(0).optional(),
+  currentStreak: z.number().int().min(0).optional(),
+  longestStreak: z.number().int().min(0).optional(),
+  lastSessionDate: z.string().max(50).nullable().optional(),
+}).strict();
+
+const ImportedStreakSchema = z.object({
+  days: z.number().int().min(0).max(100000),
+  importedAt: z.string().max(50),
+  sourceApp: z.string().max(100).optional(),
+  originalStartDate: z.string().max(50).optional(),
+}).strict();
+
+const ImportPreferencesSchema = z.object({
+  chimeVolume: z.number().min(0).max(1).optional(),
+  ambientVolume: z.number().min(0).max(1).optional(),
+  enableHaptics: z.boolean().optional(),
+  enableReminders: z.boolean().optional(),
+  reminderTime: z.string().max(10).optional(),
+  reminderDays: z.array(z.number().int().min(0).max(6)).max(7).optional(),
+  keepScreenOn: z.boolean().optional(),
+  displayMode: z.enum(['light', 'dark', 'auto']).optional(),
+  defaultDurationMinutes: z.number().int().min(1).max(240).optional(),
+  autoStartTimer: z.boolean().optional(),
+  showPreSessionScreen: z.boolean().optional(),
+  showPostSessionScreen: z.boolean().optional(),
+  lastUpdated: z.string().max(50).optional(),
+}).strict();
+
+const ImportDataSchema = z.object({
+  version: z.string().max(20).optional(),
+  schemaVersion: z.number().int().positive().max(100).optional(),
+  exportDate: z.string().max(50).optional(),
+  configurations: z.array(ImportConfigurationSchema).max(100).optional(),
+  preferences: ImportPreferencesSchema.optional(),
+  sessions: z.array(ImportSessionSchema).max(100000).optional(),
+  progressStats: ImportProgressStatsSchema.optional(),
+  importedStreak: ImportedStreakSchema.nullable().optional(),
+}).strict();
 
 /**
  * Session Configurations Storage
@@ -158,7 +231,12 @@ export const loadConfigurations = async (): Promise<SessionConfiguration[]> => {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.CONFIGURATIONS);
     if (!data) return [];
 
-    const configurations: SessionConfiguration[] = JSON.parse(data);
+    const parsed = SessionConfigurationsArraySchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+      logger.warn('Invalid configurations data in storage, returning empty array');
+      return [];
+    }
+    const configurations = parsed.data as SessionConfiguration[];
     return configurations.sort((a, b) => {
       // Sort by last used, then by usage count
       if (a.lastUsedAt && b.lastUsedAt) {
@@ -259,9 +337,13 @@ export const loadPreferences = async (): Promise<UserPreferences> => {
     const data = await AsyncStorage.getItem(STORAGE_KEYS.PREFERENCES);
     if (!data) return DEFAULT_PREFERENCES;
 
-    const preferences: UserPreferences = JSON.parse(data);
+    const parsed = UserPreferencesSchema.safeParse(JSON.parse(data));
+    if (!parsed.success) {
+      logger.warn('Invalid preferences data in storage, using defaults');
+      return DEFAULT_PREFERENCES;
+    }
     // Merge with defaults to ensure all fields are present
-    return { ...DEFAULT_PREFERENCES, ...preferences };
+    return { ...DEFAULT_PREFERENCES, ...parsed.data } as UserPreferences;
   } catch (error) {
     logger.error('Failed to load preferences:', error);
     return DEFAULT_PREFERENCES;
@@ -406,6 +488,11 @@ export const exportAllData = async (): Promise<string> => {
  */
 export const importData = async (jsonData: string): Promise<void> => {
   try {
+    // Walidacja rozmiaru danych wejsciowych
+    if (jsonData.length > MAX_IMPORT_SIZE) {
+      throw new Error('Import data exceeds maximum allowed size (10 MB)');
+    }
+
     // Parse JSON first
     let rawData: unknown;
     try {
@@ -423,27 +510,35 @@ export const importData = async (jsonData: string): Promise<void> => {
 
     const data = parseResult.data;
 
-    // Honor version in backup if provided
+    // Atomowy zapis - przygotuj wszystkie pary klucz-wartosc
+    const pairs: [string, string][] = [];
+
     if (data.schemaVersion) {
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.SCHEMA_VERSION,
-        data.schemaVersion.toString()
-      );
+      pairs.push([STORAGE_KEYS.SCHEMA_VERSION, data.schemaVersion.toString()]);
     }
 
     if (data.configurations) {
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.CONFIGURATIONS,
-        JSON.stringify(data.configurations)
-      );
+      pairs.push([STORAGE_KEYS.CONFIGURATIONS, JSON.stringify(data.configurations)]);
     }
 
     if (data.preferences) {
-      await AsyncStorage.setItem(
-        STORAGE_KEYS.PREFERENCES,
-        JSON.stringify(data.preferences)
-      );
+      pairs.push([STORAGE_KEYS.PREFERENCES, JSON.stringify(data.preferences)]);
     }
+
+    if (data.sessions) {
+      pairs.push(['completed_sessions', JSON.stringify(data.sessions)]);
+    }
+
+    if (data.importedStreak) {
+      pairs.push(['imported_streak', JSON.stringify(data.importedStreak)]);
+    }
+
+    if (pairs.length === 0) {
+      throw new Error('No valid data found in import file');
+    }
+
+    // Atomowy multiSet zamiast sekwencyjnych setItem
+    await AsyncStorage.multiSet(pairs);
 
     logger.log('Data imported successfully');
   } catch (error) {

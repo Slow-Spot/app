@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * ScheduleReminderModal - Modal for scheduling daily meditation reminders
  *
@@ -16,12 +15,12 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
+import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { GradientCard } from './GradientCard';
 import { GradientButton } from './GradientButton';
 import theme, { gradients } from '../theme';
-import { brandColors, primaryColor } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
 interface ScheduleReminderModalProps {
@@ -45,8 +44,8 @@ export const ScheduleReminderModal: React.FC<ScheduleReminderModalProps> = ({
   const getInitialDate = () => {
     const now = new Date();
     if (initialTime) {
-      const [hours, minutes] = initialTime.split(':').map(Number);
-      now.setHours(hours, minutes, 0, 0);
+      const [hours = 9, minutes = 0] = initialTime.split(':').map(Number);
+      now.setHours(hours ?? 9, minutes ?? 0, 0, 0);
     } else {
       now.setHours(9, 0, 0, 0); // Default 9:00 AM
     }
@@ -59,7 +58,7 @@ export const ScheduleReminderModal: React.FC<ScheduleReminderModalProps> = ({
   /**
    * Handle time change from picker
    */
-  const handleTimeChange = (event: any, date?: Date) => {
+  const handleTimeChange = (_event: DateTimePickerEvent, date?: Date) => {
     if (Platform.OS === 'android') {
       setShowPicker(false);
     }

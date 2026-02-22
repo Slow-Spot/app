@@ -1,8 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Locale, i18nConfig } from './config';
-import { Translations, loadTranslation, getTranslation } from './translations';
+import { i18nConfig } from './config';
+import type { Locale } from './config';
+import { loadTranslation, getTranslation } from './translations';
+import type { Translations } from './translations';
 
 interface LanguageContextType {
   locale: Locale;
