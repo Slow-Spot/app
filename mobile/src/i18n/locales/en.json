@@ -122,6 +122,10 @@
     "start": "Start",
     "pause": "Pause",
     "resume": "Resume",
+    "stop": "Stop",
+    "paused": "Paused",
+    "remaining": "Remaining",
+    "notificationChannel": "Meditation Session",
     "finish": "Finish",
     "minutes": "{{count}} min",
     "seconds": "{{count}} sec",
@@ -1537,5 +1541,10 @@
     "complete": "Complete",
     "skip": "Skip",
     "placeholder": "Your thoughts..."
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "message": "An unexpected error occurred",
+    "retry": "Try Again"
   }
 }

@@ -9,6 +9,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { logger } from '../utils/logger';
+import i18n from '../i18n';
 
 interface Props {
   children: ReactNode;
@@ -51,18 +52,18 @@ export class ErrorBoundary extends Component<Props, State> {
             <View style={styles.iconContainer}>
               <Ionicons name="warning-outline" size={48} color="#F59E0B" />
             </View>
-            <Text style={styles.title}>Something went wrong</Text>
+            <Text style={styles.title}>{i18n.t('errorBoundary.title')}</Text>
             <Text style={styles.message}>
-              {this.state.error?.message || 'An unexpected error occurred'}
+              {this.state.error?.message || i18n.t('errorBoundary.message')}
             </Text>
             <TouchableOpacity
               style={styles.retryButton}
               onPress={this.handleRetry}
               accessibilityRole="button"
-              accessibilityLabel="Try again"
+              accessibilityLabel={i18n.t('errorBoundary.retry')}
             >
               <Ionicons name="refresh" size={20} color="#FFFFFF" />
-              <Text style={styles.retryText}>Try Again</Text>
+              <Text style={styles.retryText}>{i18n.t('errorBoundary.retry')}</Text>
             </TouchableOpacity>
           </View>
         </View>

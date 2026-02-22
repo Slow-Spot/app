@@ -20,7 +20,6 @@ import i18n from '../i18n';
 
 // Stale konfiguracji kanalu
 const CHANNEL_ID = 'meditation-session';
-const CHANNEL_NAME = 'Meditation Session';
 const NOTIFICATION_ID = 'meditation-foreground';
 
 // Brand color
@@ -83,7 +82,7 @@ class AndroidForegroundServiceManager {
     try {
       await notifee.default.createChannel({
         id: CHANNEL_ID,
-        name: CHANNEL_NAME,
+        name: i18n.t('meditation.notificationChannel', 'Meditation Session'),
         importance: notifee.AndroidImportance.LOW,
         vibration: false,
         sound: '',

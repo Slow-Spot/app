@@ -10,6 +10,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   default: {
     getItem: jest.fn().mockResolvedValue(null),
     setItem: jest.fn().mockResolvedValue(undefined),
+    multiSet: jest.fn().mockResolvedValue(undefined),
     removeItem: jest.fn().mockResolvedValue(undefined),
     multiRemove: jest.fn().mockResolvedValue(undefined),
   },
@@ -42,11 +43,9 @@ describe('storage - importData validation', () => {
         {
           id: 'config-1',
           name: 'Morning Meditation',
-          totalDuration: 600,
-          phases: [
-            { type: 'breathing', duration: 120 },
-            { type: 'meditation', duration: 480 },
-          ],
+          durationMinutes: 10,
+          ambientSound: 'rain',
+          endChimeEnabled: true,
         },
       ],
       preferences: {
@@ -58,7 +57,48 @@ describe('storage - importData validation', () => {
     });
 
     await expect(importData(validData)).resolves.not.toThrow();
-    expect(AsyncStorage.setItem).toHaveBeenCalled();
+    expect(AsyncStorage.multiSet).toHaveBeenCalled();
+  });
+
+  it('importuje pelny backup z sessions i importedStreak', async () => {
+    const fullBackup = JSON.stringify({
+      version: '1.1',
+      schemaVersion: 1,
+      exportDate: '2026-02-20T12:00:00.000Z',
+      configurations: [
+        { id: 'c1', name: 'Quick', durationMinutes: 5 },
+      ],
+      preferences: { chimeVolume: 0.5 },
+      sessions: [
+        {
+          id: 1,
+          title: 'Morning session',
+          date: '2026-02-20T08:00:00.000Z',
+          durationSeconds: 600,
+          languageCode: 'pl',
+        },
+      ],
+      progressStats: {
+        totalSessions: 10,
+        totalMinutes: 100,
+        currentStreak: 3,
+        longestStreak: 7,
+        lastSessionDate: '2026-02-20T08:00:00.000Z',
+      },
+      importedStreak: {
+        days: 30,
+        importedAt: '2026-01-15T10:00:00.000Z',
+        sourceApp: 'Headspace',
+      },
+    });
+
+    await expect(importData(fullBackup)).resolves.not.toThrow();
+    const pairs = (AsyncStorage.multiSet as jest.Mock).mock.calls[0][0] as [string, string][];
+    const keys = pairs.map(([k]: [string, string]) => k);
+    expect(keys).toContain('@meditation:configurations');
+    expect(keys).toContain('@meditation:preferences');
+    expect(keys).toContain('completed_sessions');
+    expect(keys).toContain('imported_streak');
   });
 
   it('odrzuca dane z nieoczekiwanymi polami (strict mode)', async () => {
@@ -78,7 +118,7 @@ describe('storage - importData validation', () => {
         {
           id: 'config-1',
           name: 'Test',
-          totalDuration: 600,
+          durationMinutes: 10,
           hackField: true,
         },
       ],
@@ -116,13 +156,13 @@ describe('storage - importData validation', () => {
     );
   });
 
-  it('odrzuca totalDuration > 86400 (24h)', async () => {
+  it('odrzuca durationMinutes > 1440 (24h)', async () => {
     const data = JSON.stringify({
       configurations: [
         {
           id: 'test',
           name: 'Test',
-          totalDuration: 100000,
+          durationMinutes: 2000,
         },
       ],
     });
@@ -156,10 +196,12 @@ describe('storage - importData validation', () => {
     );
   });
 
-  it('akceptuje minimalne poprawne dane (pusty obiekt)', async () => {
+  it('odrzuca pusty obiekt (brak danych do importu)', async () => {
     const minimalData = JSON.stringify({});
 
-    await expect(importData(minimalData)).resolves.not.toThrow();
+    await expect(importData(minimalData)).rejects.toThrow(
+      'No valid data found in import file'
+    );
   });
 
   it('akceptuje dane tylko z preferencjami', async () => {
@@ -171,19 +213,18 @@ describe('storage - importData validation', () => {
     });
 
     await expect(importData(data)).resolves.not.toThrow();
-    expect(AsyncStorage.setItem).toHaveBeenCalled();
+    expect(AsyncStorage.multiSet).toHaveBeenCalled();
   });
 
-  it('odrzuca phases z duration ujemna', async () => {
+  it('odrzuca sessions z ujemnym durationSeconds', async () => {
     const data = JSON.stringify({
-      configurations: [
+      sessions: [
         {
-          id: 'test',
-          name: 'Test',
-          totalDuration: 600,
-          phases: [
-            { type: 'breathing', duration: -10 },
-          ],
+          id: 1,
+          title: 'Test',
+          date: '2026-01-01T00:00:00.000Z',
+          durationSeconds: -100,
+          languageCode: 'pl',
         },
       ],
     });
@@ -197,7 +238,7 @@ describe('storage - importData validation', () => {
     const configs = Array.from({ length: 101 }, (_, i) => ({
       id: `config-${i}`,
       name: `Config ${i}`,
-      totalDuration: 600,
+      durationMinutes: 10,
     }));
 
     const data = JSON.stringify({

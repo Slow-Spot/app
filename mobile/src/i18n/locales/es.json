@@ -122,6 +122,10 @@
     "start": "Comenzar",
     "pause": "Pausa",
     "resume": "Reanudar",
+    "stop": "Detener",
+    "paused": "En pausa",
+    "remaining": "Restante",
+    "notificationChannel": "Sesión de meditación",
     "finish": "Terminar",
     "minutes": "{{count}} min",
     "seconds": "{{count}} seg",
@@ -163,8 +167,7 @@
     "minSession_one": "Sesión de 1 minuto",
     "minSession_other": "Sesión de {{count}} minutos",
     "minRemaining_one": "Queda 1 minuto",
-    "minRemaining_other": "Quedan {{count}} minutos",
-    "paused": "Pausado"
+    "minRemaining_other": "Quedan {{count}} minutos"
   },
   "instructions": {
     "timeOfDay": {
@@ -1537,5 +1540,10 @@
     "complete": "Completar",
     "skip": "Omitir",
     "placeholder": "Tus pensamientos..."
+  },
+  "errorBoundary": {
+    "title": "Algo salió mal",
+    "message": "Se produjo un error inesperado",
+    "retry": "Intentar de nuevo"
   }
 }

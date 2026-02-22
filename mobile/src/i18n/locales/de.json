@@ -122,6 +122,10 @@
     "start": "Start",
     "pause": "Pause",
     "resume": "Fortsetzen",
+    "stop": "Stopp",
+    "paused": "Pausiert",
+    "remaining": "Verbleibend",
+    "notificationChannel": "Meditationssitzung",
     "finish": "Beenden",
     "minutes": "{{count}} Min",
     "seconds": "{{count}} Sek",
@@ -163,8 +167,7 @@
     "minSession_one": "1 Minute Sitzung",
     "minSession_other": "{{count}} Minuten Sitzung",
     "minRemaining_one": "Noch 1 Minute",
-    "minRemaining_other": "Noch {{count}} Minuten",
-    "paused": "Pausiert"
+    "minRemaining_other": "Noch {{count}} Minuten"
   },
   "quotes": {
     "title": "Inspirierende Zitate",
@@ -1537,5 +1540,10 @@
     "complete": "Abschließen",
     "skip": "Überspringen",
     "placeholder": "Deine Gedanken..."
+  },
+  "errorBoundary": {
+    "title": "Etwas ist schiefgelaufen",
+    "message": "Ein unerwarteter Fehler ist aufgetreten",
+    "retry": "Erneut versuchen"
   }
 }

@@ -122,6 +122,10 @@
     "start": "Démarrer",
     "pause": "Pause",
     "resume": "Reprendre",
+    "stop": "Arrêter",
+    "paused": "En pause",
+    "remaining": "Restant",
+    "notificationChannel": "Séance de méditation",
     "finish": "Terminer",
     "minutes": "{{count}} min",
     "seconds": "{{count}} sec",
@@ -163,8 +167,7 @@
     "minSession_one": "Séance de 1 minute",
     "minSession_other": "Séance de {{count}} minutes",
     "minRemaining_one": "1 minute restante",
-    "minRemaining_other": "{{count}} minutes restantes",
-    "paused": "En pause"
+    "minRemaining_other": "{{count}} minutes restantes"
   },
   "quotes": {
     "title": "Inspirations",
@@ -1537,5 +1540,10 @@
     "complete": "Terminer",
     "skip": "Passer",
     "placeholder": "Vos pensées..."
+  },
+  "errorBoundary": {
+    "title": "Un problème est survenu",
+    "message": "Une erreur inattendue s'est produite",
+    "retry": "Réessayer"
   }
 }

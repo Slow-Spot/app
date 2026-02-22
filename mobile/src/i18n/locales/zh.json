@@ -122,6 +122,10 @@
     "start": "开始",
     "pause": "暂停",
     "resume": "继续",
+    "stop": "停止",
+    "paused": "已暂停",
+    "remaining": "剩余",
+    "notificationChannel": "冥想会话",
     "finish": "完成",
     "minutes": "{{count}} 分钟",
     "seconds": "{{count}} 秒",
@@ -163,8 +167,7 @@
     "minSession_one": "1分钟课程",
     "minSession_other": "{{count}}分钟课程",
     "minRemaining_one": "剩余1分钟",
-    "minRemaining_other": "剩余{{count}}分钟",
-    "paused": "已暂停"
+    "minRemaining_other": "剩余{{count}}分钟"
   },
   "instructions": {
     "timeOfDay": {
@@ -1537,5 +1540,10 @@
     "complete": "完成",
     "skip": "跳过",
     "placeholder": "你的想法..."
+  },
+  "errorBoundary": {
+    "title": "出现问题",
+    "message": "发生了意外错误",
+    "retry": "重试"
   }
 }
