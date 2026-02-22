@@ -422,14 +422,14 @@ export default function HomePage() {
 
             {/* Store Buttons */}
             <div className="flex flex-wrap justify-center gap-4 pt-4">
-              <a href="#" className="store-btn cta-store-btn">
+              <a href={appConfig.storeLinks.appStore} target="_blank" rel="noopener noreferrer" className="store-btn cta-store-btn">
                 {Icons.apple}
                 <div className="text-left">
                   <div className="text-xs cta-label">{t('download.appStore.label')}</div>
                   <div className="font-semibold">{t('download.appStore.name')}</div>
                 </div>
               </a>
-              <a href="#" className="store-btn cta-store-btn">
+              <a href={appConfig.storeLinks.playStore} target="_blank" rel="noopener noreferrer" className="store-btn cta-store-btn">
                 {Icons.playStore}
                 <div className="text-left">
                   <div className="text-xs cta-label">{t('download.googlePlay.label')}</div>
