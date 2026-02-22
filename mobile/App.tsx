@@ -35,6 +35,9 @@ import { ensureStorageSchema } from './src/services/storage';
 import { PersonalizationProvider, usePersonalization } from './src/contexts/PersonalizationContext';
 import { UserProfileProvider, useUserProfile } from './src/contexts/UserProfileContext';
 import { ErrorBoundary } from './src/components/ErrorBoundary';
+import { backgroundTimer } from './src/services/backgroundTimer';
+import { androidForegroundService } from './src/services/androidForegroundService';
+import { notificationService } from './src/services/notifications/NotificationService';
 
 type Screen = 'home' | 'meditation' | 'quotes' | 'settings' | 'custom' | 'profile' | 'instructions' | 'personalization';
 
@@ -211,7 +214,15 @@ function AppContent() {
     setCurrentScreen(screen);
   };
 
-  const handleConfirmExitMeditation = () => {
+  const handleConfirmExitMeditation = async () => {
+    // Zatrzymaj serwisy przed odmontowaniem MeditationTimer
+    try {
+      await backgroundTimer.stopSession();
+      await androidForegroundService.stopSession();
+      await notificationService.cancelSessionCompletionNotification();
+    } catch (error) {
+      logger.error('Failed to stop meditation services on exit:', error);
+    }
     setActiveMeditationState(null);
     setShowExitMeditationModal(false);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -440,18 +451,18 @@ function AppContent() {
       {/* Exit Meditation Confirmation Modal */}
       <AppModal
         visible={showExitMeditationModal}
-        title={t('meditation.endSessionTitle', 'Zakończyć sesję?')}
-        message={t('meditation.endSessionMessage', 'Twój postęp zostanie zapisany. Czy na pewno chcesz zakończyć medytację?')}
+        title={t('meditation.endSessionTitle', 'End session?')}
+        message={t('meditation.endSessionMessage', 'Your progress will be saved. Are you sure you want to end meditation?')}
         icon="pause-circle-outline"
         onDismiss={handleCancelExitMeditation}
         buttons={[
           {
-            text: t('meditation.endSessionCancel', 'Kontynuuj'),
+            text: t('meditation.endSessionCancel', 'Continue'),
             style: 'cancel',
             onPress: handleCancelExitMeditation,
           },
           {
-            text: t('meditation.endSessionConfirm', 'Zakończ'),
+            text: t('meditation.endSessionConfirm', 'End'),
             style: 'destructive',
             onPress: handleConfirmExitMeditation,
           },

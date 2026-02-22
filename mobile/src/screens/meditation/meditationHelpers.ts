@@ -27,6 +27,8 @@ export const getChimePointsFromSession = (session: MeditationSession | CustomSes
   }
 
   const { intervalBellMinutes, durationMinutes } = customSession.config;
+  if (!intervalBellMinutes || intervalBellMinutes <= 0) return [];
+
   const chimePoints: ChimePoint[] = [];
 
   for (let minutes = intervalBellMinutes; minutes < durationMinutes; minutes += intervalBellMinutes) {

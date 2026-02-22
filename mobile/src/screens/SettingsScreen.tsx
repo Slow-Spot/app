@@ -21,7 +21,6 @@ import {
   TextInput,
 } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
-import { Paths, Directory } from 'expo-file-system';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -411,32 +410,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       const asset = result.assets[0];
 
-      // Copy file to permanent location using new expo-file-system API
-      const soundsDir = new Directory(Paths.document, 'custom_sounds');
-      await soundsDir.create();
-
-      const fileName = `${type}_${ambientKey || 'bell'}_${Date.now()}.${asset.name.split('.').pop()}`;
-      const _destUri = `${soundsDir.uri}${fileName}`;
-
-      // Copy from source to destination
-      const response = await fetch(asset.uri);
-      const blob = await response.blob();
-      const reader = new FileReader();
-
-      await new Promise<void>((resolve, reject) => {
-        reader.onloadend = async () => {
-          try {
-            // For simplicity, store the URI directly - expo-document-picker already copies to cache
-            resolve();
-          } catch (e) {
-            reject(e);
-          }
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-
-      // Update config - use the cached URI from DocumentPicker
+      // DocumentPicker z copyToCacheDirectory=true kopiuje plik do cache
+      // URI z cache jest wystarczajace dla odtwarzania dzwieku
       const newConfig = { ...customSounds };
       if (type === 'bell') {
         newConfig.customBellUri = asset.uri;

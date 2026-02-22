@@ -614,33 +614,33 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
    
   }, [totalSeconds, t]);
 
-  // Obsługa pause/resume z background timer, Live Activity i Android widget
+  // Ref do remainingSeconds - uzywany w useEffect bez dodawania do deps
+  const remainingSecondsRef = useRef(remainingSeconds);
+  remainingSecondsRef.current = remainingSeconds;
+
+  // Obsluga pause/resume z background timer, Live Activity i Android widget
+  // Zalezy TYLKO od isRunning - remainingSeconds jest odczytywany przez ref
   useEffect(() => {
     const handlePauseResume = async () => {
       if (!sessionStartedRef.current) return;
+      const currentRemaining = remainingSecondsRef.current;
 
       try {
         if (isRunning) {
           await backgroundTimer.resumeFromPause();
-          // Aktualizuj Live Activity z nowym czasem konca
           if (liveActivityIdRef.current) {
-            await liveActivityService.updateRemainingTime(remainingSeconds, false);
+            await liveActivityService.updateRemainingTime(currentRemaining, false);
           }
-          // Aktualizuj Android widget i foreground notification
-          await androidWidgetService.resumeSession(remainingSeconds, totalSeconds);
-          await androidForegroundService.resumeSession(remainingSeconds);
-          // Reschedule session completion notification
-          await notificationService.rescheduleSessionCompletionNotification(remainingSeconds);
+          await androidWidgetService.resumeSession(currentRemaining, totalSeconds);
+          await androidForegroundService.resumeSession(currentRemaining);
+          await notificationService.rescheduleSessionCompletionNotification(currentRemaining);
         } else {
           await backgroundTimer.pauseSession();
-          // Aktualizuj Live Activity jako spauzowane
           if (liveActivityIdRef.current) {
-            await liveActivityService.updateRemainingTime(remainingSeconds, true);
+            await liveActivityService.updateRemainingTime(currentRemaining, true);
           }
-          // Aktualizuj Android widget i foreground notification
-          await androidWidgetService.pauseSession(remainingSeconds, totalSeconds);
-          await androidForegroundService.pauseSession(remainingSeconds);
-          // Cancel session completion notification when paused
+          await androidWidgetService.pauseSession(currentRemaining, totalSeconds);
+          await androidForegroundService.pauseSession(currentRemaining);
           await notificationService.cancelSessionCompletionNotification();
         }
       } catch (error) {
@@ -648,11 +648,11 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       }
     };
 
-    // Pomijamy pierwszą inicjalizację (isRunning=true na starcie)
+    // Pomijamy pierwsza inicjalizacje (isRunning=true na starcie)
     if (backgroundSessionIdRef.current) {
       handlePauseResume();
     }
-  }, [isRunning, remainingSeconds]);
+  }, [isRunning, totalSeconds]);
 
   // Synchronizacja stanu przy powrocie z background
   // Naprawia problem gdy użytkownik klika w Live Activity widget

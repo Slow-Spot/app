@@ -13,6 +13,7 @@ interface LogEntry {
   env: string;
   timestamp: string;
   message: string;
+  stack?: string;
   context?: Record<string, unknown>;
 }
 
@@ -20,21 +21,33 @@ const env = __DEV__ ? 'development' : 'production';
 const isDevelopment = __DEV__;
 
 const formatEntry = (level: LogLevel, args: unknown[]): LogEntry => {
+  let stack: string | undefined;
+
   const message = args
     .map((arg) => {
-      if (arg instanceof Error) return arg.message;
+      if (arg instanceof Error) {
+        if (!stack) stack = arg.stack;
+        return arg.message;
+      }
       if (typeof arg === 'string') return arg;
       if (typeof arg === 'number' || typeof arg === 'boolean') return String(arg);
       return '[Object]';
     })
     .join(' ');
 
-  return {
+  const entry: LogEntry = {
     level,
     env,
     timestamp: new Date().toISOString(),
     message,
   };
+
+  // Dolacz stack trace dla error level
+  if (level === 'error' && stack) {
+    entry.stack = stack;
+  }
+
+  return entry;
 };
 
 export const logger = {
@@ -59,16 +72,11 @@ export const logger = {
   },
 
   /**
-   * Log errors (always enabled, sanitized in production)
+   * Log errors (always enabled, includes stack trace)
    */
   error: (...args: unknown[]) => {
     const entry = formatEntry('error', args);
-    if (isDevelopment) {
-      console.error(JSON.stringify(entry));
-    } else {
-      // Produkcja: tylko bezpieczne dane
-      console.error(JSON.stringify(entry));
-    }
+    console.error(JSON.stringify(entry));
   },
 
   /**
