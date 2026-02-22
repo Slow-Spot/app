@@ -1,3 +1,9 @@
+## [1.16.12](https://github.com/Slow-Spot/app/compare/v1.16.11...v1.16.12) (2026-02-22)
+
+### Bug Fixes
+
+* security audit phase 1 - hardening, bug fixes, i18n, ESLint cleanup ([#15](https://github.com/Slow-Spot/app/issues/15)) ([92caa09](https://github.com/Slow-Spot/app/commit/92caa0969a47fe9dfc0c83a2345e91172c5605e4))
+
 ## [1.16.11](https://github.com/Slow-Spot/app/compare/v1.16.10...v1.16.11) (2026-02-02)
 
 ### Bug Fixes
