@@ -383,6 +383,41 @@ const OnboardingSlide: React.FC<{
   );
 };
 
+// Single pagination dot (extracted to respect rules of hooks)
+const PaginationDot: React.FC<{
+  index: number;
+  scrollX: SharedValue<number>;
+  primaryColor: string;
+}> = ({ index, scrollX, primaryColor }) => {
+  const animatedDotStyle = useAnimatedStyle(() => {
+    const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
+
+    const dotWidth = interpolate(
+      scrollX.value,
+      inputRange,
+      [8, 32, 8],
+      Extrapolation.CLAMP
+    );
+
+    const opacity = interpolate(
+      scrollX.value,
+      inputRange,
+      [0.3, 1, 0.3],
+      Extrapolation.CLAMP
+    );
+
+    return {
+      width: dotWidth,
+      opacity,
+      backgroundColor: primaryColor,
+    };
+  });
+
+  return (
+    <Animated.View style={[styles.dot, animatedDotStyle]} />
+  );
+};
+
 // Pagination dots
 const PaginationDots: React.FC<{
   data: Slide[];
@@ -391,38 +426,14 @@ const PaginationDots: React.FC<{
 }> = ({ data, scrollX, primaryColor }) => {
   return (
     <View style={styles.pagination}>
-      {data.map((_, index) => {
-        const animatedDotStyle = useAnimatedStyle(() => {
-          const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
-
-          const dotWidth = interpolate(
-            scrollX.value,
-            inputRange,
-            [8, 32, 8],
-            Extrapolation.CLAMP
-          );
-
-          const opacity = interpolate(
-            scrollX.value,
-            inputRange,
-            [0.3, 1, 0.3],
-            Extrapolation.CLAMP
-          );
-
-          return {
-            width: dotWidth,
-            opacity,
-            backgroundColor: primaryColor,
-          };
-        });
-
-        return (
-          <Animated.View
-            key={index}
-            style={[styles.dot, animatedDotStyle]}
-          />
-        );
-      })}
+      {data.map((_, index) => (
+        <PaginationDot
+          key={index}
+          index={index}
+          scrollX={scrollX}
+          primaryColor={primaryColor}
+        />
+      ))}
     </View>
   );
 };
