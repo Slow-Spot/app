@@ -87,6 +87,7 @@ export const resetQuoteHistory = async (languageCode: string): Promise<void> => 
       return;
     }
     const history = parsed.data;
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete history[languageCode];
 
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(history));

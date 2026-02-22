@@ -11,13 +11,14 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import type {
+  AppStateStatus} from 'react-native';
 import {
   AccessibilityInfo,
   Appearance,
   PixelRatio,
   I18nManager,
   AppState,
-  AppStateStatus,
   useColorScheme,
 } from 'react-native';
 import * as Localization from 'expo-localization';

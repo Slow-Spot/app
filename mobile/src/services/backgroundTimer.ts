@@ -8,10 +8,12 @@
  * - Czas liczony na podstawie timestamps (nie setInterval)
  */
 
-import { createAudioPlayer, setAudioModeAsync, AudioPlayer } from 'expo-audio';
+import type { AudioPlayer } from 'expo-audio';
+import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
-import { AppState, AppStateStatus } from 'react-native';
+import type { AppStateStatus } from 'react-native';
+import { AppState } from 'react-native';
 import { logger } from '../utils/logger';
 
 // Klucz do persystencji stanu sesji
@@ -75,6 +77,7 @@ class BackgroundTimerService {
 
       // Ładowanie cichego pliku audio
       this.silentPlayer = createAudioPlayer(
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         require('../../assets/sounds/silent-1s.mp3')
       );
       this.silentPlayer.loop = true;

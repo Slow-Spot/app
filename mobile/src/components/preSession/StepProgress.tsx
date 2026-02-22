@@ -13,7 +13,7 @@ interface StepProgressProps {
   isDark?: boolean;
 }
 
-export const StepProgress: React.FC<StepProgressProps> = ({ currentStep, t, isDark }) => {
+export const StepProgress: React.FC<StepProgressProps> = ({ currentStep, t: _t, isDark }) => {
   const { currentTheme } = usePersonalization();
   const steps = ['overview', 'setup', 'breathing', 'intention'];
   const currentIndex = steps.indexOf(currentStep);

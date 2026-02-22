@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { TFunction } from 'i18next';
-import theme, { getThemeGradients } from '../../theme';
-import { PreSessionInstruction } from '../../types/instructions';
+import type { getThemeGradients } from '../../theme';
+import theme from '../../theme';
+import type { PreSessionInstruction } from '../../types/instructions';
 import { GradientCard } from '../GradientCard';
 import { GradientButton } from '../GradientButton';
 import { Icon } from './PreSessionIcon';
@@ -26,7 +27,7 @@ interface IntentionStepProps {
 }
 
 export const IntentionStep: React.FC<IntentionStepProps> = ({
-  instructionId, mentalPrep, sessionTips, intention, onIntentionChange, onBegin, alwaysSkip, onToggleSkip,
+  instructionId, mentalPrep: _mentalPrep, sessionTips: _sessionTips, intention, onIntentionChange, onBegin, alwaysSkip, onToggleSkip,
   t, isDark, themeGradients, dynamicStyles,
 }) => {
   return (

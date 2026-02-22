@@ -182,7 +182,7 @@ export interface Insight {
   descriptionKey: string; // Translation key
 
   // Data backing the insight
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 
   // User interaction
   acknowledged: boolean;

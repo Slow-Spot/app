@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,

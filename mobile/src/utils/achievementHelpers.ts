@@ -4,7 +4,7 @@ import { logger } from './logger';
 // Check, unlock, and track achievement progress
 // ══════════════════════════════════════════════════════════════
 
-import {
+import type {
   Achievement,
   UnlockedAchievement,
   AchievementProgress,
@@ -12,7 +12,7 @@ import {
   AchievementCategory,
   AchievementRarity,
 } from '../types/achievements';
-import { UserMeditationProgress } from '../types/userProgress';
+import type { UserMeditationProgress } from '../types/userProgress';
 import { ALL_ACHIEVEMENTS, ACHIEVEMENTS_MAP, ACHIEVEMENTS_BY_CATEGORY } from '../data/achievements';
 
 // ══════════════════════════════════════════════════════════════

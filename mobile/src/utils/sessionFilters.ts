@@ -3,15 +3,15 @@
 // Advanced filtering, sorting, and searching for meditation sessions
 // ══════════════════════════════════════════════════════════════
 
-import { MeditationSession } from '../services/api';
-import { UserMeditationProgress } from '../types/userProgress';
-import {
+import type { MeditationSession } from '../services/api';
+import type { UserMeditationProgress } from '../types/userProgress';
+import type {
   SessionFilters,
   SortBy,
   SortOrder,
   AvailableFilters,
-  FILTER_PRESETS,
 } from '../types/filters';
+import { FILTER_PRESETS } from '../types/filters';
 
 // ══════════════════════════════════════════════════════════════
 // FILTERING FUNCTIONS
@@ -43,9 +43,10 @@ export const filterSessions = (
 
   // Duration filters
   if (filters.durations && filters.durations.length > 0) {
+    const durationsFilter = filters.durations;
     filtered = filtered.filter(session => {
       const durationMinutes = Math.round(toNumber(session.durationSeconds) / 60);
-      return filters.durations!.includes(durationMinutes);
+      return durationsFilter.includes(durationMinutes);
     });
   }
 
@@ -61,22 +62,25 @@ export const filterSessions = (
 
   // Level filters
   if (filters.levels && filters.levels.length > 0) {
+    const levelsFilter = filters.levels;
     filtered = filtered.filter(session =>
-      filters.levels!.includes(session.level)
+      levelsFilter.includes(session.level)
     );
   }
 
   // Culture tags
   if (filters.cultureTags && filters.cultureTags.length > 0) {
+    const cultureFilter = filters.cultureTags;
     filtered = filtered.filter(session =>
-      session.cultureTag && filters.cultureTags!.includes(session.cultureTag)
+      session.cultureTag && cultureFilter.includes(session.cultureTag)
     );
   }
 
   // Purpose tags
   if (filters.purposes && filters.purposes.length > 0) {
+    const purposeFilter = filters.purposes;
     filtered = filtered.filter(session =>
-      session.purposeTag && filters.purposes!.includes(session.purposeTag)
+      session.purposeTag && purposeFilter.includes(session.purposeTag)
     );
   }
 
@@ -121,8 +125,9 @@ export const filterSessions = (
   }
 
   if (filters.instructionTypes && filters.instructionTypes.length > 0) {
+    const instructionFilter = filters.instructionTypes;
     filtered = filtered.filter(session =>
-      session.instructionId && filters.instructionTypes!.includes(session.instructionId)
+      session.instructionId && instructionFilter.includes(session.instructionId)
     );
   }
 

@@ -4,13 +4,13 @@
 // ══════════════════════════════════════════════════════════════
 
 import { v4 as uuidv4 } from 'uuid';
-import {
+import type {
   SessionCompletion,
   SessionNote,
   MoodEntry,
   MoodRating,
 } from '../types/userProgress';
-import { MeditationSession } from '../services/api';
+import type { MeditationSession } from '../services/api';
 
 // ══════════════════════════════════════════════════════════════
 // QUICK INSIGHTS
@@ -346,7 +346,7 @@ export const calculateStreak = (completions: SessionCompletion[]): number => {
   );
 
   let streak = 0;
-  let currentDate = new Date();
+  const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
 
   for (const completion of sorted) {

@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * ScheduleReminderModal - Modal for scheduling daily meditation reminders
  *
@@ -16,12 +15,12 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { GradientCard } from './GradientCard';
 import { GradientButton } from './GradientButton';
 import theme, { gradients } from '../theme';
-import { brandColors, primaryColor } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
 interface ScheduleReminderModalProps {

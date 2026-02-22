@@ -6,13 +6,15 @@
  * layouts across all device sizes.
  */
 
-import React, { ReactNode, useMemo } from 'react';
+import type { ReactNode} from 'react';
+import React, { useMemo } from 'react';
+import type {
+  ViewStyle,
+  ScrollViewProps} from 'react-native';
 import {
   View,
   ScrollView,
-  ViewStyle,
-  StyleSheet,
-  ScrollViewProps,
+  StyleSheet
 } from 'react-native';
 import { useResponsive } from '../hooks/useResponsive';
 

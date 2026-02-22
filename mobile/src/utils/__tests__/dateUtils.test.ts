@@ -30,8 +30,6 @@ const JAN_1 = new Date(2026, 0, 1, 10, 30, 0); // czwartek
 const JAN_2 = new Date(2026, 0, 2, 14, 0, 0);  // piatek
 const JAN_3 = new Date(2026, 0, 3, 8, 0, 0);   // sobota
 const JAN_5 = new Date(2026, 0, 5, 19, 0, 0);   // poniedzialek
-const JAN_6 = new Date(2026, 0, 6, 23, 30, 0);  // wtorek
-const JAN_7 = new Date(2026, 0, 7, 3, 0, 0);    // sroda
 
 describe('dateUtils', () => {
   // ════════════════════════════════════════════════════════

@@ -9,7 +9,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
-import { NotificationContent, NotificationContentCategory } from '../../types/notifications';
+import type { NotificationContent, NotificationContentCategory } from '../../types/notifications';
 import { STORAGE_KEYS } from './constants';
 
 /**

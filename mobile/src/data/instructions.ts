@@ -3,7 +3,7 @@
 // Structural data only - all text comes from i18n translations
 // ══════════════════════════════════════════════════════════════
 
-import { PreSessionInstruction } from '../types/instructions';
+import type { PreSessionInstruction } from '../types/instructions';
 
 export const PRE_SESSION_INSTRUCTIONS: Record<string, PreSessionInstruction> = {
   // ══════════════════════════════════════════════════════════════

@@ -5,7 +5,7 @@
  * Designed to create a peaceful, clean, and modern aesthetic.
  */
 
-import { neutralColors, accentColors, darkBackgrounds, brandColors, primaryColor } from './colors';
+import { neutralColors, accentColors, darkBackgrounds, brandColors } from './colors';
 
 export interface GradientDefinition {
   colors: string[];

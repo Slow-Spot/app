@@ -3,7 +3,7 @@
 // Advanced analytics, patterns, and insights from meditation data
 // ══════════════════════════════════════════════════════════════
 
-import {
+import type {
   UserMeditationProgress,
   SessionCompletion,
   MoodEntry,
@@ -65,7 +65,7 @@ export const calculateOverallStats = (
   const daysSinceStart =
     completions.length > 0
       ? Math.ceil(
-          (Date.now() - new Date(completions[0]!.completedAt).getTime()) /
+          (Date.now() - new Date(completions[0]?.completedAt ?? Date.now()).getTime()) /
             (1000 * 60 * 60 * 24)
         )
       : 0;
@@ -82,7 +82,7 @@ export const calculateOverallStats = (
 
   const moodImprovements = completions
     .filter(c => c.moodBefore && c.moodAfter)
-    .map(c => (c.moodAfter! - c.moodBefore!));
+    .map(c => ((c.moodAfter ?? 0) - (c.moodBefore ?? 0)));
   const averageMoodImprovement =
     moodImprovements.length > 0
       ? moodImprovements.reduce((sum, i) => sum + i, 0) / moodImprovements.length
@@ -179,10 +179,12 @@ export const calculateMoodTrends = (
     const entryDate = parseISO(entry.date);
     if (entryDate >= startDate) {
       const dateKey = formatDateKey(entryDate);
-      if (!dailyData.has(dateKey)) {
-        dailyData.set(dateKey, []);
+      const existing = dailyData.get(dateKey);
+      if (existing) {
+        existing.push(entry);
+      } else {
+        dailyData.set(dateKey, [entry]);
       }
-      dailyData.get(dateKey)!.push(entry);
     }
   });
 
@@ -228,10 +230,12 @@ export const analyzeTimePatterns = (
 
   completions.forEach(completion => {
     const hour = new Date(completion.completedAt).getHours();
-    if (!hourlyData.has(hour)) {
-      hourlyData.set(hour, []);
+    const existing = hourlyData.get(hour);
+    if (existing) {
+      existing.push(completion);
+    } else {
+      hourlyData.set(hour, [completion]);
     }
-    hourlyData.get(hour)!.push(completion);
   });
 
   const patterns: TimePattern[] = [];
@@ -243,7 +247,7 @@ export const analyzeTimePatterns = (
 
     const moodImprovements = sessions
       .filter(s => s.moodBefore && s.moodAfter)
-      .map(s => s.moodAfter! - s.moodBefore!);
+      .map(s => (s.moodAfter ?? 0) - (s.moodBefore ?? 0));
     const avgMoodImprovement =
       moodImprovements.length > 0
         ? moodImprovements.reduce((sum, i) => sum + i, 0) / moodImprovements.length
@@ -281,10 +285,12 @@ export const analyzeWeeklyPatterns = (
 
   completions.forEach(completion => {
     const dayOfWeek = new Date(completion.completedAt).getDay();
-    if (!weeklyData.has(dayOfWeek)) {
-      weeklyData.set(dayOfWeek, []);
+    const existing = weeklyData.get(dayOfWeek);
+    if (existing) {
+      existing.push(completion);
+    } else {
+      weeklyData.set(dayOfWeek, [completion]);
     }
-    weeklyData.get(dayOfWeek)!.push(completion);
   });
 
   const patterns: WeeklyPattern[] = [];
@@ -308,7 +314,7 @@ export const analyzeWeeklyPatterns = (
 
     const moodImprovements = sessions
       .filter(s => s.moodBefore && s.moodAfter)
-      .map(s => s.moodAfter! - s.moodBefore!);
+      .map(s => (s.moodAfter ?? 0) - (s.moodBefore ?? 0));
     const avgMoodImprovement =
       moodImprovements.length > 0
         ? moodImprovements.reduce((sum, i) => sum + i, 0) / moodImprovements.length
@@ -335,7 +341,7 @@ export interface GeneratedInsight {
   titleKey: string;
   descriptionKey: string;
   priority: 'high' | 'medium' | 'low';
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
 }
 
 /**
@@ -478,18 +484,19 @@ export const calculateProgressOverTime = (
     const date = parseISO(completion.completedAt);
     if (date >= startDate) {
       const weekKeyValue = getWeekKey(date);
-
-      if (!weeklyGroups.has(weekKeyValue)) {
-        weeklyGroups.set(weekKeyValue, []);
+      const existing = weeklyGroups.get(weekKeyValue);
+      if (existing) {
+        existing.push(completion);
+      } else {
+        weeklyGroups.set(weekKeyValue, [completion]);
       }
-      weeklyGroups.get(weekKeyValue)!.push(completion);
     }
   });
 
   const sortedWeeks = Array.from(weeklyGroups.keys()).sort();
 
   sortedWeeks.forEach(weekKey => {
-    const weekCompletions = weeklyGroups.get(weekKey)!;
+    const weekCompletions = weeklyGroups.get(weekKey) ?? [];
 
     weekCompletions.forEach(c => {
       cumulativeMinutes += c.actualDurationSeconds / 60;

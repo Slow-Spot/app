@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * Instructions Screen
  * Meditation techniques and session building guides
@@ -13,7 +12,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
-  Pressable,
   Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -28,7 +26,7 @@ import Reanimated, {
   Easing,
 } from 'react-native-reanimated';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
-import { brandColors, primaryColor, neutralColors, backgrounds, getSectionColors } from '../theme/colors';
+import { primaryColor, neutralColors, backgrounds, getSectionColors } from '../theme/colors';
 import { MeditationIntroGuide } from '../components/MeditationIntroGuide';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 // Using primaryColor.transparent for consistent brand color opacity
@@ -133,10 +131,10 @@ const MEDITATION_SOURCES = [
   },
 ];
 
-const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => {
+const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation: _navigation }) => {
   const { t } = useTranslation();
-  const { currentTheme, settings } = usePersonalization();
-  const insets = useSafeAreaInsets();
+  const { currentTheme } = usePersonalization();
+  const _insets = useSafeAreaInsets();
 
   // Breathing exercise modal state
   const [breathingModalVisible, setBreathingModalVisible] = useState(false);
@@ -154,7 +152,7 @@ const InstructionsScreen: React.FC<Props> = ({ isDark = false, navigation }) => 
   // Theme-aware colors and gradients
   const colors = useMemo(() => getThemeColors(isDark), [isDark]);
   const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
-  const sectionColors = useMemo(() => getSectionColors(isDark), [isDark]);
+  const _sectionColors = useMemo(() => getSectionColors(isDark), [isDark]);
 
   // Science section colors - use currentTheme primary color for consistency
   const scienceColors = useMemo(() => ({
@@ -1063,7 +1061,7 @@ const AnimatedBreathingCircle: React.FC<{
   pattern: 'box' | '4-7-8' | 'equal' | 'calm';
   isDark?: boolean;
   t: TFunction;
-}> = ({ isRunning, pattern, isDark, t }) => {
+}> = ({ isRunning, pattern, isDark: _isDark, t }) => {
   const { currentTheme, settings } = usePersonalization();
   const scale = useSharedValue(1);
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'rest'>('inhale');

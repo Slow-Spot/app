@@ -96,6 +96,7 @@ describe('meditationHelpers', () => {
       const points = getChimePointsFromSession(session as any);
 
       expect(points).toHaveLength(1); // tylko 5min, nie 10min
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       expect(points[0]!.timeInSeconds).toBe(300);
     });
   });

@@ -23,7 +23,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  withDelay,
   withSpring,
   Easing,
   runOnJS,
@@ -34,7 +33,8 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { useUserProfile } from '../contexts/UserProfileContext';
-import { getTimeOfDay, TimeOfDay } from '../utils/greetings';
+import type { TimeOfDay } from '../utils/greetings';
+import { getTimeOfDay } from '../utils/greetings';
 
 const { width } = Dimensions.get('window');
 

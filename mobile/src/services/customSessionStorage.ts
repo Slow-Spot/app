@@ -5,7 +5,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
-import { MeditationSession } from './api';
+import type { MeditationSession } from './api';
 import { logger } from '../utils/logger';
 
 // ============================================================================
@@ -161,6 +161,7 @@ const CustomSessionsArraySchema = z.array(CustomSessionSchema);
 // Audio Assets (Metro bundler requires static requires)
 // ============================================================================
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const AUDIO = {
   BELL: require('../../assets/sounds/meditation_bell.mp3'),
   AMBIENT: {
@@ -173,6 +174,7 @@ const AUDIO = {
     // 'custom' is handled separately via user's custom sound URI
   },
 } as const;
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 // ============================================================================
 // Default Configuration
@@ -428,10 +430,12 @@ export const initializeDefaultSession = async (): Promise<void> => {
     // Ensure default session exists in the list
     const existingIndex = sessions.findIndex((s) => s.id === DEFAULT_SESSION_ID);
 
-    if (existingIndex >= 0) {
-      // Update existing default session to latest config
+    const existingSession = existingIndex >= 0 ? sessions[existingIndex] : undefined;
+    if (existingSession) {
+      // Update existing default session to latest config, preserving original createdAt
+      const originalCreatedAt = existingSession.createdAt;
       sessions[existingIndex] = createSessionFromConfig(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);
-      sessions[existingIndex].createdAt = sessions[existingIndex].createdAt;
+      sessions[existingIndex].createdAt = originalCreatedAt;
     } else {
       // Add default session at the beginning
       const defaultSession = createSessionFromConfig(DEFAULT_SESSION_CONFIG, DEFAULT_SESSION_ID);

@@ -1,4 +1,4 @@
-import { Locale } from './config';
+import type { Locale } from './config';
 
 // Import all translation files
 import en from './locales/en.json';
@@ -14,7 +14,7 @@ const translations: Partial<Record<Locale, Translations>> = {
 // Load translation function
 export async function loadTranslation(locale: Locale): Promise<Translations> {
   if (translations[locale]) {
-    return translations[locale]!;
+    return translations[locale] ?? en;
   }
 
   try {

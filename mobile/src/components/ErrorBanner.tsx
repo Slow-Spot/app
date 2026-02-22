@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -21,8 +21,6 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { spacing, borderRadius, typography } from '../theme';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface ErrorBannerProps {
   /** Error message to display */

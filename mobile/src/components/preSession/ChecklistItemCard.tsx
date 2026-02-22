@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { TFunction } from 'i18next';
-import { getThemeGradients } from '../../theme';
+import type { getThemeGradients } from '../../theme';
 import { GradientCard } from '../GradientCard';
 import { Icon } from './PreSessionIcon';
 import { styles } from './preSessionStyles';

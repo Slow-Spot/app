@@ -1,6 +1,5 @@
-import { logger } from '../utils/logger';
 import React, { useMemo, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,7 +13,7 @@ import Animated, {
   Easing,
   interpolate,
 } from 'react-native-reanimated';
-import { screenElementAnimation, DURATION_STANDARD, DELAY_FIRST, DELAY_SECOND, DELAY_STAGGER } from '../utils/animations';
+import { screenElementAnimation } from '../utils/animations';
 import { GradientBackground } from '../components/GradientBackground';
 import { AnimatedPressable } from '../components/AnimatedPressable';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';

@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import type { TFunction } from 'i18next';
-import { getThemeGradients } from '../../theme';
-import { PreSessionInstruction } from '../../types/instructions';
+import type { getThemeGradients } from '../../theme';
+import type { PreSessionInstruction } from '../../types/instructions';
 import { GradientCard } from '../GradientCard';
 import { GradientButton } from '../GradientButton';
 import { Icon } from './PreSessionIcon';

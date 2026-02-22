@@ -5,7 +5,8 @@
  * i wyswietla przyjazny ekran bledu zamiast crashowac cala aplikacje.
  */
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
+import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { logger } from '../utils/logger';

@@ -15,11 +15,11 @@ import { GradientBackground } from '../../components/GradientBackground';
 import { ResponsiveContainer } from '../../components/ResponsiveContainer';
 import { SessionCardSkeleton } from '../../components/SkeletonLoader';
 import { ErrorBanner, useErrorBanner } from '../../components/ErrorBanner';
-import { useResponsive } from '../../hooks/useResponsive';
-import { MeditationSession } from '../../services/api';
+import type { MeditationSession } from '../../services/api';
 import { audioEngine } from '../../services/audio';
 import { saveSessionCompletion } from '../../services/progressTracker';
-import { getAllSessions, deleteSession, CustomSession, initializeDefaultSession, getCustomAmbientUri, getCustomBellUri, createSessionFromConfig } from '../../services/customSessionStorage';
+import type { CustomSession} from '../../services/customSessionStorage';
+import { getAllSessions, deleteSession, initializeDefaultSession, getCustomAmbientUri, getCustomBellUri, createSessionFromConfig } from '../../services/customSessionStorage';
 import { userPreferences } from '../../services/userPreferences';
 import theme, { getThemeColors, getThemeGradients, getCardStyles } from '../../theme';
 import { getSectionColors } from '../../theme/colors';
@@ -28,9 +28,10 @@ import { usePersonalization } from '../../contexts/PersonalizationContext';
 
 import { SessionActionModal } from './SessionActionModal';
 import { styles } from './meditationScreenStyles';
-import {
+import type {
   FlowState,
-  MeditationScreenProps,
+  MeditationScreenProps} from './meditationHelpers';
+import {
   getChimePointsFromSession,
   getSessionHaptics,
   getBreathingHaptics,
@@ -45,21 +46,20 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   isDark = false,
   onEditSession,
   onNavigateToCustom,
-  activeMeditationState,
+  activeMeditationState: _activeMeditationState,
   onMeditationStateChange,
   pendingSessionConfig,
   onClearPendingSession
 }) => {
   const { t, i18n } = useTranslation();
   const { currentTheme, settings } = usePersonalization();
-  const { select, screenPadding } = useResponsive();
   const errorBanner = useErrorBanner();
 
   const numColumns = 1;
 
   const colors = useMemo(() => getThemeColors(isDark), [isDark]);
   const themeGradients = useMemo(() => getThemeGradients(isDark), [isDark]);
-  const sectionColors = useMemo(() => getSectionColors(isDark), [isDark]);
+  const _sectionColors = useMemo(() => getSectionColors(isDark), [isDark]);
   const globalCardStyles = useMemo(() => getCardStyles(isDark), [isDark]);
 
   const dynamicStyles = useMemo(() => ({
@@ -80,7 +80,7 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
   const [flowState, setFlowState] = useState<FlowState>('list');
   const [activeCustomChimeUri, setActiveCustomChimeUri] = useState<string | undefined>(undefined);
   const [userIntention, setUserIntention] = useState('');
-  const [sessionMood, setSessionMood] = useState<1 | 2 | 3 | 4 | 5 | undefined>();
+  const [_sessionMood, setSessionMood] = useState<1 | 2 | 3 | 4 | 5 | undefined>();
   const [actionModalSession, setActionModalSession] = useState<CustomSession | null>(null);
 
   const selectedSessionRef = useRef<MeditationSession | CustomSession | null>(null);

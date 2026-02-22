@@ -1,4 +1,5 @@
-import { createAudioPlayer, setAudioModeAsync, AudioPlayer } from 'expo-audio';
+import type { AudioPlayer } from 'expo-audio';
+import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
 import { logger } from '../utils/logger';
 
 export type AudioLayer = 'voice' | 'ambient' | 'chime';

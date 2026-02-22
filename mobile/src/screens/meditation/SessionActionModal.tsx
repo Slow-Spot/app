@@ -4,8 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import type { TFunction } from 'i18next';
 import { GradientButton } from '../../components/GradientButton';
-import { getThemeGradients, getThemeColors } from '../../theme';
-import { CustomSession } from '../../services/customSessionStorage';
+import type { getThemeGradients, getThemeColors } from '../../theme';
+import type { CustomSession } from '../../services/customSessionStorage';
 import { styles } from './meditationScreenStyles';
 
 interface SessionActionModalProps {

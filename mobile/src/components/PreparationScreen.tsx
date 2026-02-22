@@ -4,7 +4,8 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { GradientBackground } from './GradientBackground';
 import { GradientButton } from './GradientButton';
-import { api, Quote } from '../services/api';
+import type { Quote } from '../services/api';
+import { api } from '../services/api';
 import theme, { gradients } from '../theme';
 
 interface PreparationScreenProps {
@@ -12,7 +13,7 @@ interface PreparationScreenProps {
 }
 
 export const PreparationScreen: React.FC<PreparationScreenProps> = ({ onReady }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [quote, setQuote] = useState<Quote | null>(null);
   const [loading, setLoading] = useState(true);
 

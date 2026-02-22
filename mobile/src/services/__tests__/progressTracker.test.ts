@@ -22,10 +22,11 @@ jest.mock('../../utils/logger', () => ({
   },
 }));
 
+import type {
+  CompletedSession} from '../progressTracker';
 import {
   calculateCurrentStreak,
-  calculateLongestStreak,
-  CompletedSession,
+  calculateLongestStreak
 } from '../progressTracker';
 import { subDays } from 'date-fns';
 

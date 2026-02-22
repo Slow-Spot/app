@@ -3,8 +3,7 @@
 // 30+ achievements across all categories
 // ══════════════════════════════════════════════════════════════
 
-import { Achievement } from '../types/achievements';
-import { UserMeditationProgress } from '../types/userProgress';
+import type { Achievement } from '../types/achievements';
 
 // ══════════════════════════════════════════════════════════════
 // PRACTICE ACHIEVEMENTS - Session completion milestones

@@ -1,8 +1,8 @@
 import type { TFunction } from 'i18next';
-import { MeditationSession } from '../../services/api';
-import { CustomSession, BreathingPattern, BreathingTiming } from '../../services/customSessionStorage';
-import { ChimePoint } from '../../types/customSession';
-import { ActiveMeditationState } from '../../../App';
+import type { MeditationSession } from '../../services/api';
+import type { CustomSession, BreathingPattern, BreathingTiming } from '../../services/customSessionStorage';
+import type { ChimePoint } from '../../types/customSession';
+import type { ActiveMeditationState } from '../../../App';
 
 export type FlowState = 'list' | 'intention' | 'meditation' | 'celebration';
 

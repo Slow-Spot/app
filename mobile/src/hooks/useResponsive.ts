@@ -6,15 +6,17 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Dimensions, ScaledSize } from 'react-native';
+import type { ScaledSize } from 'react-native';
+import { Dimensions } from 'react-native';
+import type {
+  Breakpoint} from '../theme/responsive';
 import {
   breakpoints,
   contentWidths,
   gridColumns,
   screenPadding,
   getBreakpoint,
-  calculateItemWidth,
-  Breakpoint,
+  calculateItemWidth
 } from '../theme/responsive';
 
 export interface ResponsiveInfo {

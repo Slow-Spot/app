@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { PreSessionInstruction, ChecklistItem } from '../../types/instructions';
+import type { PreSessionInstruction, ChecklistItem } from '../../types/instructions';
 import { GradientBackground } from '../GradientBackground';
 import theme, { getThemeColors, getThemeGradients } from '../../theme';
 import { userPreferences } from '../../services/userPreferences';
@@ -29,7 +29,7 @@ interface PreSessionInstructionsProps {
 export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
   instruction,
   onComplete,
-  onSkip,
+  onSkip: _onSkip,
   isDark = false,
 }) => {
   const { t } = useTranslation();
@@ -88,7 +88,7 @@ export const PreSessionInstructions: React.FC<PreSessionInstructionsProps> = ({
 
   const [currentStep, setCurrentStep] = useState<'overview' | 'setup' | 'breathing' | 'intention'>('overview');
   const [setupChecklist, setSetupChecklist] = useState<ChecklistItem[]>([]);
-  const [breathingPrepComplete, setBreathingPrepComplete] = useState(false);
+  const [_breathingPrepComplete, setBreathingPrepComplete] = useState(false);
   const [userIntention, setUserIntention] = useState('');
   const [alwaysSkip, setAlwaysSkip] = useState(false);
   const [showSkipModal, setShowSkipModal] = useState(false);

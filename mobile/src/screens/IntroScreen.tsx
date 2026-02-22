@@ -9,6 +9,8 @@
  */
 
 import React, { useRef, useState, useCallback, useMemo } from 'react';
+import type {
+  ViewToken} from 'react-native';
 import {
   View,
   Text,
@@ -16,16 +18,15 @@ import {
   Dimensions,
   StatusBar,
   FlatList,
-  ViewToken,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   AccessibilityInfo,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
+import type {
+  SharedValue} from 'react-native-reanimated';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -39,12 +40,9 @@ import Animated, {
   Extrapolation,
   FadeIn,
   FadeInUp,
-  FadeInDown,
-  SharedValue,
+  FadeInDown
 } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
-import theme from '../theme';
-import { brandColors } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { useUserProfile } from '../contexts/UserProfileContext';
 import { AnimatedPressable } from '../components/AnimatedPressable';
@@ -53,7 +51,7 @@ import { logger } from '../utils/logger';
 import { saveImportedStreak } from '../services/progressTracker';
 import { markMilestoneCelebrated } from '../services/userProfileService';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const INTRO_COMPLETED_KEY = '@slow_spot_intro_completed';
 
@@ -179,7 +177,7 @@ const AnimatedIcon: React.FC<{
   animationsEnabled: boolean;
 }> = ({ icon, accentIcon, primaryColor, animationsEnabled }) => {
   const scale = useSharedValue(1);
-  const rotation = useSharedValue(0);
+  const _rotation = useSharedValue(0);
 
   React.useEffect(() => {
     if (animationsEnabled) {

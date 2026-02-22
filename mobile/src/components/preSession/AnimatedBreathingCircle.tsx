@@ -40,7 +40,7 @@ interface AnimatedBreathingCircleProps {
 }
 
 export const AnimatedBreathingCircle: React.FC<AnimatedBreathingCircleProps> = ({
-  isRunning, pattern, t, isDark, dynamicStyles,
+  isRunning, pattern, t, isDark: _isDark, dynamicStyles,
 }) => {
   const scale = useSharedValue(1);
   const [breathingPhase, setBreathingPhase] = useState<BreathingPhase>('inhale');

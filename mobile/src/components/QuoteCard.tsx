@@ -1,8 +1,7 @@
-import { logger } from '../utils/logger';
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Quote } from '../services/api';
+import type { Quote } from '../services/api';
 import theme from '../theme';
 
 interface QuoteCardProps {

@@ -5,7 +5,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
-import { WellbeingAssessment, WellbeingAnswer } from '../types/wellbeing';
+import type { WellbeingAssessment, WellbeingAnswer } from '../types/wellbeing';
 import { logger } from '../utils/logger';
 import { formatDateKey, parseISO } from '../utils/dateUtils';
 

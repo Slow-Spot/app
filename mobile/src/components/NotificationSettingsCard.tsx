@@ -16,7 +16,6 @@ import {
   TouchableOpacity,
   Switch,
   StyleSheet,
-  Platform,
   Linking,
   Alert,
 } from 'react-native';
@@ -49,15 +48,15 @@ interface NotificationSettingsCardProps {
  */
 export const NotificationSettingsCard: React.FC<NotificationSettingsCardProps> = ({
   isDark,
-  animationIndex = 0,
+  animationIndex: _animationIndex = 0,
 }) => {
   const { t, i18n } = useTranslation();
   const { currentTheme, effectiveAnimationsEnabled } = usePersonalization();
 
   // Notification state and actions
   const {
-    isInitialized,
-    permissionStatus,
+    isInitialized: _isInitialized,
+    permissionStatus: _permissionStatus,
     settings,
     nextReminder,
     nextStreakAlert,

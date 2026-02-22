@@ -6,10 +6,12 @@
  * custom column configurations per breakpoint.
  */
 
-import React, { ReactNode, Children, useMemo } from 'react';
-import { View, StyleSheet, ViewStyle } from 'react-native';
+import type { ReactNode} from 'react';
+import React, { Children, useMemo } from 'react';
+import type { ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { useResponsive } from '../hooks/useResponsive';
-import { Breakpoint } from '../theme/responsive';
+import type { Breakpoint } from '../theme/responsive';
 import { spacing } from '../theme';
 
 interface ResponsiveGridProps {
@@ -169,9 +171,5 @@ export function useGridItemWidth(
     return (containerWidth - totalGaps) / columnCount;
   }, [effectiveContentWidth, screenPadding, columnCount, gap]);
 }
-
-const styles = StyleSheet.create({
-  // Base styles if needed
-});
 
 export default ResponsiveGrid;

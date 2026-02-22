@@ -4,7 +4,7 @@ import { logger } from './logger';
 // Manage all user settings and preferences
 // ══════════════════════════════════════════════════════════════
 
-import {
+import type {
   UserMeditationProgress,
   InstructionStyle,
   ExperienceLevel,

@@ -11,7 +11,7 @@
  * - Auto-cleanup after animation completes
  */
 
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -19,7 +19,6 @@ import Animated, {
   withDelay,
   withTiming,
   Easing,
-  runOnJS,
 } from 'react-native-reanimated';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 

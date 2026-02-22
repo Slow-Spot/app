@@ -11,6 +11,9 @@
 
 import { logger } from '../utils/logger';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import type {
+  ViewStyle,
+  TextStyle} from 'react-native';
 import {
   View,
   Text,
@@ -19,9 +22,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
-  ViewStyle,
-  TextStyle,
+  Pressable
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,14 +32,10 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  withDelay,
   withSequence,
   withRepeat,
   Easing,
-  FadeIn,
   ZoomIn,
-  interpolate,
-  runOnJS,
 } from 'react-native-reanimated';
 import { celebrationAnimation, celebrationHeaderAnimation } from '../utils/animations';
 import * as Haptics from 'expo-haptics';
@@ -46,12 +43,14 @@ import { GradientBackground } from './GradientBackground';
 import { GradientCard } from './GradientCard';
 import { MoodIcon, getMoodColors } from './MoodIcon';
 import { ConfettiOverlay } from './ConfettiOverlay';
-import { api, Quote } from '../services/api';
+import type { Quote } from '../services/api';
+import { api } from '../services/api';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 import { AnimatedPressable } from './AnimatedPressable';
 import { StreakBadge } from './StreakBadge';
-import { getProgressStats, getTotalStreak, ProgressStats } from '../services/progressTracker';
+import type { ProgressStats } from '../services/progressTracker';
+import { getProgressStats, getTotalStreak } from '../services/progressTracker';
 
 interface CelebrationScreenProps {
   durationMinutes: number;
@@ -190,7 +189,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
   onContinue,
   isDark = false,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { currentTheme, settings } = usePersonalization();
 
   // Theme-aware colors and gradients
@@ -201,7 +200,7 @@ export const CelebrationScreen: React.FC<CelebrationScreenProps> = ({
   const [loading, setLoading] = useState(true);
   const [selectedMood, setSelectedMood] = useState<MoodRating | null>(null);
   const [notes, setNotes] = useState('');
-  const [stats, setStats] = useState<ProgressStats | null>(null);
+  const [_stats, setStats] = useState<ProgressStats | null>(null);
   const [totalStreak, setTotalStreak] = useState(0);
   const [showConfetti, setShowConfetti] = useState(true);
 

@@ -7,8 +7,8 @@ import { Swipeable } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import Animated from 'react-native-reanimated';
 import { screenElementAnimation } from '../utils/animations';
-import { MeditationSession } from '../services/api';
-import { CustomSession } from '../services/customSessionStorage';
+import type { MeditationSession } from '../services/api';
+import type { CustomSession } from '../services/customSessionStorage';
 import { AnimatedPressable } from './AnimatedPressable';
 import theme, { getThemeColors, getCardStyles, getSwipeActionColors } from '../theme';
 import { getSectionColors, featureColorPalettes } from '../theme/colors';
@@ -73,7 +73,7 @@ export const SessionCard = React.memo<SessionCardProps>(({
   animationIndex = 0
 }) => {
   const { t } = useTranslation();
-  const { currentTheme, settings } = usePersonalization();
+  const { settings } = usePersonalization();
   const swipeableRef = useRef<Swipeable>(null);
 
   // Theme-aware colors and styles from global theme

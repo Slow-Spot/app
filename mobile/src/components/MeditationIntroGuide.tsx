@@ -5,32 +5,26 @@
  */
 
 import React, { useState, useRef, useMemo, useCallback } from 'react';
+import type {
+  NativeSyntheticEvent,
+  NativeScrollEvent} from 'react-native';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  FlatList,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
+  FlatList
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  interpolate,
-  Extrapolation,
-} from 'react-native-reanimated';
 
 import { GradientBackground } from './GradientBackground';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
-import { brandColors, neutralColors, primaryColor } from '../theme/colors';
+import { brandColors, neutralColors } from '../theme/colors';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -58,10 +52,10 @@ interface MeditationIntroGuideProps {
 const getTimeBasedGreeting = (t: TFunction): { greeting: string; context: string } => {
   const now = new Date();
   const hour = now.getHours();
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const _timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   // Get localized time string for context
-  const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const _timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   if (hour >= 5 && hour < 12) {
     return {
@@ -158,7 +152,7 @@ export const MeditationIntroGuide: React.FC<MeditationIntroGuideProps> = ({
   }), [colors, isDark, currentTheme]);
 
   // Render slide content
-  const renderSlide = useCallback(({ item, index }: { item: SlideContent; index: number }) => {
+  const renderSlide = useCallback(({ item, index: _index }: { item: SlideContent; index: number }) => {
     const isWelcome = item.id === 'welcome';
     const isReady = item.id === 'ready';
 

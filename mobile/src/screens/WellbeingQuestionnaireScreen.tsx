@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * Well-being Questionnaire Screen
  * Pre or post session well-being assessment
@@ -17,9 +16,9 @@ import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import theme from '../theme';
 import { brandColors } from '../theme/colors';
+import type {
+  WellbeingAnswer} from '../types/wellbeing';
 import {
-  WellbeingQuestion as QuestionType,
-  WellbeingAnswer,
   PRE_SESSION_QUESTIONS,
   POST_SESSION_QUESTIONS,
 } from '../types/wellbeing';
@@ -77,7 +76,7 @@ const WellbeingQuestionnaireScreen: React.FC<Props> = ({ navigation, route }) =>
       }
 
       navigation.goBack();
-    } catch (error) {
+    } catch {
       Alert.alert(t('wellbeing.errorTitle'), t('wellbeing.errorSaveMessage'));
     } finally {
       setLoading(false);

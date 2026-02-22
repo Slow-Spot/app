@@ -19,27 +19,26 @@ import {
   Modal,
   TextInput,
   Keyboard,
-  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
-import { Badge } from '../components/Badge';
 import { MoodIcon, getMoodColors } from '../components/MoodIcon';
 import { ResponsiveGrid } from '../components/ResponsiveGrid';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import { StatCardSkeleton, SessionCardSkeleton, SkeletonLoader } from '../components/SkeletonLoader';
 import { ErrorBanner, useErrorBanner } from '../components/ErrorBanner';
-import theme, { gradients, getThemeColors, getThemeGradients } from '../theme';
-import { brandColors, primaryColor, featureColorPalettes, semanticColors } from '../theme/colors';
+import theme, { getThemeColors, getThemeGradients } from '../theme';
+import { brandColors, primaryColor, featureColorPalettes } from '../theme/colors';
+import type {
+  ProgressStats,
+  CompletedSession} from '../services/progressTracker';
 import {
   getProgressStats,
   getCompletedSessions,
   getSessionsInRange,
-  getTotalStreak,
-  ProgressStats,
-  CompletedSession,
+  getTotalStreak
 } from '../services/progressTracker';
 import { getAllSessions } from '../services/customSessionStorage';
 import { usePersonalization } from '../contexts/PersonalizationContext';
@@ -68,7 +67,7 @@ interface WeeklyActivityData {
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, onNavigateToCustom }) => {
   const { t, i18n } = useTranslation();
   const { currentTheme } = usePersonalization();
-  const { userName, setUserName, isLoading: isProfileLoading } = useUserProfile();
+  const { userName, setUserName } = useUserProfile();
   const currentLocale = i18n.language;
   const errorBanner = useErrorBanner();
 
@@ -324,7 +323,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ isDark = false, on
   /**
    * Format time ago (e.g., "2 hours ago")
    */
-  const formatTimeAgo = (dateString: string): string => {
+  const _formatTimeAgo = (dateString: string): string => {
     const now = new Date();
     const date = new Date(dateString);
     const diffMs = now.getTime() - date.getTime();

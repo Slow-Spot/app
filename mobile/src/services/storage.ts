@@ -11,7 +11,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
-import { SessionConfiguration } from '../types/meditation';
+import type { SessionConfiguration } from '../types/meditation';
 import { logger } from '../utils/logger';
 import {
   getCompletedSessions,

@@ -9,7 +9,6 @@ import { logger } from '../utils/logger';
 import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  ScrollView,
   View,
   Text,
   TouchableOpacity,
@@ -29,7 +28,6 @@ import Animated, {
   withTiming,
   withDelay,
   Easing,
-  runOnJS,
 } from 'react-native-reanimated';
 import { screenElementAnimation } from '../utils/animations';
 
@@ -41,17 +39,17 @@ import { z } from 'zod';
 import { GradientBackground } from '../components/GradientBackground';
 import { GradientCard } from '../components/GradientCard';
 import { NotificationSettingsCard } from '../components/NotificationSettingsCard';
-import { AppModal, AppModalButton } from '../components/AppModal';
+import { AppModal } from '../components/AppModal';
 import { ResponsiveGrid } from '../components/ResponsiveGrid';
 import { ResponsiveContainer } from '../components/ResponsiveContainer';
 import { ErrorBanner, useErrorBanner } from '../components/ErrorBanner';
-import { ListItemSkeleton, SkeletonLoader } from '../components/SkeletonLoader';
 import theme, { getThemeColors, getThemeGradients } from '../theme';
 import Constants from 'expo-constants';
-import { brandColors, primaryColor, featureColorPalettes, semanticColors, getFeatureIconColors } from '../theme/colors';
+import { primaryColor, featureColorPalettes, semanticColors, getFeatureIconColors } from '../theme/colors';
 import { exportAllData, clearAllData, resetOnboarding } from '../services/storage';
 import { clearAllSessions } from '../services/customSessionStorage';
-import { clearProgress, saveImportedStreak, getImportedStreak, clearImportedStreak, ImportedStreakData } from '../services/progressTracker';
+import type { ImportedStreakData } from '../services/progressTracker';
+import { clearProgress, saveImportedStreak, getImportedStreak, clearImportedStreak } from '../services/progressTracker';
 import { clearAllQuoteHistory } from '../services/quoteHistory';
 import { usePersonalization } from '../contexts/PersonalizationContext';
 
@@ -418,7 +416,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       await soundsDir.create();
 
       const fileName = `${type}_${ambientKey || 'bell'}_${Date.now()}.${asset.name.split('.').pop()}`;
-      const destUri = `${soundsDir.uri}${fileName}`;
+      const _destUri = `${soundsDir.uri}${fileName}`;
 
       // Copy from source to destination
       const response = await fetch(asset.uri);

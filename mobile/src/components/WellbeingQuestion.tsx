@@ -1,4 +1,3 @@
-import { logger } from '../utils/logger';
 /**
  * Wellbeing Question Component
  * Displays a single question in well-being assessment
@@ -14,9 +13,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import theme from '../theme';
-import { brandColors, primaryColor } from '../theme/colors';
-import { WellbeingQuestion as QuestionType } from '../types/wellbeing';
-import { usePersonalization } from '../contexts/PersonalizationContext';
+import type { WellbeingQuestion as QuestionType } from '../types/wellbeing';
 
 interface Props {
   question: QuestionType;
@@ -26,7 +23,6 @@ interface Props {
 
 export const WellbeingQuestion: React.FC<Props> = ({ question, value, onChange }) => {
   const { t } = useTranslation();
-  const { currentTheme } = usePersonalization();
   const [textValue, setTextValue] = useState(typeof value === 'string' ? value : '');
 
   const renderScaleQuestion = () => {

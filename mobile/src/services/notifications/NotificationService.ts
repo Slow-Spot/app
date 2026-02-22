@@ -16,12 +16,13 @@ import { Platform } from 'react-native';
 import { z } from 'zod';
 import i18n from '../../i18n';
 import { logger } from '../../utils/logger';
-import {
+import type {
   NotificationSettings,
   NotificationPermissionStatus,
   ScheduleResult,
   PermissionResult,
-  NotificationState,
+  NotificationState} from '../../types/notifications';
+import {
   DEFAULT_NOTIFICATION_SETTINGS,
 } from '../../types/notifications';
 import { notificationContentGenerator } from './NotificationContentGenerator';

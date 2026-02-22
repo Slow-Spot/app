@@ -4,8 +4,8 @@ import { logger } from './logger';
 // ══════════════════════════════════════════════════════════════
 
 import { PRE_SESSION_INSTRUCTIONS } from '../data/instructions';
-import { PreSessionInstruction, TechniqueType } from '../types/instructions';
-import { MeditationSession } from '../services/api';
+import type { PreSessionInstruction, TechniqueType } from '../types/instructions';
+import type { MeditationSession } from '../services/api';
 
 /**
  * Get instruction by ID with validation
@@ -40,7 +40,7 @@ export const getInstructionById = (
 export const getInstructionWithFallback = (
   instructionId?: string,
   sessionLevel: number = 1,
-  technique?: TechniqueType
+  _technique?: TechniqueType
 ): PreSessionInstruction => {
   // Try to get the specified instruction
   const instruction = getInstructionById(instructionId);

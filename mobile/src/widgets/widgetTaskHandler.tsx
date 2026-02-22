@@ -11,7 +11,8 @@ import { Linking } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { z } from 'zod';
 import { logger } from '../utils/logger';
-import { MeditationTimerWidget, MeditationTimerWidgetProps } from './MeditationTimerWidget';
+import type { MeditationTimerWidgetProps } from './MeditationTimerWidget';
+import { MeditationTimerWidget } from './MeditationTimerWidget';
 
 /**
  * Zod schema dla walidacji MeditationTimerWidgetProps z AsyncStorage

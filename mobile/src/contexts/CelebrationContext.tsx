@@ -5,20 +5,21 @@
  * Handles confetti triggers, welcome modals, and milestone celebrations.
  */
 
+import type {
+  ReactNode} from 'react';
 import React, {
   createContext,
   useContext,
   useState,
   useCallback,
-  useEffect,
-  ReactNode,
+  useEffect
 } from 'react';
+import type {
+  MilestoneId} from '../services/userProfileService';
 import {
-  MilestoneId,
   recordAppOpen,
   hasCelebratedMilestone,
   markMilestoneCelebrated,
-  loadUserProfile,
 } from '../services/userProfileService';
 import { getProgressStats, getTotalStreak } from '../services/progressTracker';
 import { logger } from '../utils/logger';

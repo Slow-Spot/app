@@ -66,7 +66,7 @@ const AnimatedRing: React.FC<{
   breatheAnim: Animated.Value;
   targetScale: number;
   targetOpacity: number;
-}> = ({ size, delay, color, breatheAnim, targetScale, targetOpacity }) => {
+}> = ({ size, delay, color, breatheAnim: _breatheAnim, targetScale, targetOpacity }) => {
   const ringOpacity = useRef(new Animated.Value(0)).current;
   const ringScale = useRef(new Animated.Value(1)).current;
 
