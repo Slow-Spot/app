@@ -1,3 +1,9 @@
+## [1.16.14](https://github.com/Slow-Spot/app/compare/v1.16.13...v1.16.14) (2026-02-27)
+
+### Bug Fixes
+
+* **mobile:** prevent notification tap from killing active meditation session ([12ea946](https://github.com/Slow-Spot/app/commit/12ea946301929ace88836100920481abcba2e4c7))
+
 ## [1.16.13](https://github.com/Slow-Spot/app/compare/v1.16.12...v1.16.13) (2026-02-27)
 
 ### Bug Fixes
