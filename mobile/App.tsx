@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, TouchableOpacity, Platform, useColorScheme, Linking } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -60,6 +60,12 @@ function AppContent() {
   const [editSessionConfig, setEditSessionConfig] = useState<SessionConfig | undefined>();
   const [activeMeditationState, setActiveMeditationState] = useState<ActiveMeditationState | null>(null);
   const [sessionRefreshKey, setSessionRefreshKey] = useState(0);
+
+  // Refs do aktualnego stanu - uzywane w deep link handlerze (stale closure workaround)
+  const activeMeditationStateRef = useRef(activeMeditationState);
+  activeMeditationStateRef.current = activeMeditationState;
+  const currentScreenRef = useRef(currentScreen);
+  currentScreenRef.current = currentScreen;
   const [appIsReady, setAppIsReady] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -121,7 +127,29 @@ function AppContent() {
   }, []);
 
   // Deep linking handler for Live Activity and screenshots automation
+  // Uzywa refs zamiast deps zeby uniknac stale closure i nie rebindowac listenera
   useEffect(() => {
+    const navigateFromDeepLink = (targetScreen: Screen) => {
+      const isMeditationActive = activeMeditationStateRef.current !== null;
+      const isOnMeditation = currentScreenRef.current === 'meditation';
+
+      // Jesli sesja medytacji jest aktywna i jestesmy na ekranie medytacji:
+      if (isMeditationActive && isOnMeditation) {
+        if (targetScreen === 'meditation') {
+          // Deep link do meditation gdy juz tam jestesmy - ignoruj (zapobiega remount)
+          logger.log('Deep link to meditation ignored - session already active');
+          return;
+        }
+        // Deep link do innego ekranu - pokaz modal potwierdzenia zakonczenia sesji
+        setPendingScreen(targetScreen);
+        setShowExitMeditationModal(true);
+        logger.log('Deep link blocked by active session, showing exit modal');
+        return;
+      }
+
+      setCurrentScreen(targetScreen);
+    };
+
     const handleDeepLink = (event: { url: string }) => {
       const url = event.url;
       logger.log('Deep link received:', url);
@@ -131,7 +159,7 @@ function AppContent() {
       const directMatch = url.match(/slowspot:\/\/(\w+)$/);
       const directScreen = directMatch?.[1];
       if (directScreen && isDeepLinkScreen(directScreen)) {
-        setCurrentScreen(directScreen);
+        navigateFromDeepLink(directScreen);
         logger.log('Deep link navigation (direct) to:', directScreen);
         return;
       }
@@ -141,7 +169,7 @@ function AppContent() {
       const screenMatch = url.match(/slowspot:\/\/screen\/(\w+)/);
       const screenPath = screenMatch?.[1];
       if (screenPath && isDeepLinkScreen(screenPath)) {
-        setCurrentScreen(screenPath);
+        navigateFromDeepLink(screenPath);
         logger.log('Deep link navigation (screen path) to:', screenPath);
       }
     };

@@ -519,6 +519,10 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const backgroundSessionIdRef = useRef<string | null>(null);
   const liveActivityIdRef = useRef<string | null>(null);
 
+  // Guard: zapobiega wielokrotnemu wywolaniu onComplete
+  // (race condition miedzy BackgroundTimerService a MeditationTimer AppState handler)
+  const completionFiredRef = useRef(false);
+
   // Stabilne referencje do callbacków - zapobiega restartowi background timera
   // przy re-renderach rodzica (race condition: stopSession async vs startSession)
   const onCompleteRef = useRef(onComplete);
@@ -532,13 +536,45 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
       if (sessionStartedRef.current) return;
       sessionStartedRef.current = true;
 
+      // Jesli background timer juz dziala (remount po deep linku), zsynchronizuj stan
+      // zamiast startowac nowa sesje (co zniszczyloby postep)
+      if (backgroundTimer.isSessionActive()) {
+        const actualRemaining = backgroundTimer.getRemainingSeconds();
+        const isPaused = backgroundTimer.isSessionPaused();
+        backgroundSessionIdRef.current = backgroundTimer.getSessionId();
+        setRemainingSeconds(actualRemaining);
+        setIsRunning(!isPaused);
+        logger.log(`MeditationTimer remounted, reusing active session: ${backgroundSessionIdRef.current}, remaining: ${actualRemaining}s`);
+
+        // Zarejestruj ponownie callback dla Android foreground service
+        androidForegroundService.setActionCallback((action) => {
+          if (action === 'pause') {
+            setIsRunning(false);
+          } else if (action === 'resume') {
+            setIsRunning(true);
+          } else if (action === 'stop') {
+            setIsRunning(false);
+            onCancelRef.current();
+          }
+        });
+
+        // Jesli sesja zakonczyla sie w tle przed remountem
+        if (actualRemaining <= 0 && !completionFiredRef.current) {
+          completionFiredRef.current = true;
+          setIsRunning(false);
+          onCompleteRef.current();
+        }
+        return;
+      }
+
       try {
         // Start background timer
         const sessionId = await backgroundTimer.startSession(
           totalSeconds,
           (remaining, _elapsed) => {
             setRemainingSeconds(remaining);
-            if (remaining <= 0) {
+            if (remaining <= 0 && !completionFiredRef.current) {
+              completionFiredRef.current = true;
               setIsRunning(false);
               // Zakoncz Live Activity, Android widget i foreground service
               liveActivityService.endActivity(true);
@@ -548,6 +584,8 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
             }
           },
           async () => {
+            if (completionFiredRef.current) return;
+            completionFiredRef.current = true;
             setIsRunning(false);
             // Zakoncz Live Activity, Android widget i foreground service
             await liveActivityService.endActivity(true);
@@ -599,14 +637,12 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
     startBackgroundTimer();
 
-    // Cleanup przy unmount
+    // Cleanup przy unmount - NIE zatrzymuj backgroundTimer/serwisow!
+    // Sesja moze trwac dalej w tle (np. deep link powoduje remount).
+    // Jawne zatrzymanie odbywa sie w: MeditationScreen.handleCancel,
+    // App.tsx.handleConfirmExitMeditation, lub BackgroundTimerService (natural completion).
     return () => {
-      backgroundTimer.stopSession();
-      liveActivityService.endActivity(false);
-      androidWidgetService.endSession();
       androidForegroundService.setActionCallback(null);
-      androidForegroundService.stopSession();
-      notificationService.cancelSessionCompletionNotification();
       sessionStartedRef.current = false;
       backgroundSessionIdRef.current = null;
       liveActivityIdRef.current = null;
@@ -678,13 +714,14 @@ export const MeditationTimer: React.FC<MeditationTimerProps> = ({
         setIsRunning(!isPaused);
 
         // Sprawdz czy sesja sie zakonczyla w tle
-        if (actualRemaining <= 0) {
+        if (actualRemaining <= 0 && !completionFiredRef.current) {
+          completionFiredRef.current = true;
           setIsRunning(false);
           liveActivityService.endActivity(true);
           androidWidgetService.endSession();
           androidForegroundService.stopSession();
           onCompleteRef.current();
-        } else {
+        } else if (actualRemaining > 0) {
           // KLUCZOWA NAPRAWA: Synchronizuj Live Activity z aktualnym czasem
           // To naprawia problem gdy Live Activity pokazuje inny czas niż ekran medytacji
           if (liveActivityIdRef.current) {

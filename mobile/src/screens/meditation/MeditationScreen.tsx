@@ -17,6 +17,11 @@ import { SessionCardSkeleton } from '../../components/SkeletonLoader';
 import { ErrorBanner, useErrorBanner } from '../../components/ErrorBanner';
 import type { MeditationSession } from '../../services/api';
 import { audioEngine } from '../../services/audio';
+import { backgroundTimer } from '../../services/backgroundTimer';
+import { liveActivityService } from '../../services/liveActivityService';
+import { androidWidgetService } from '../../services/androidWidgetService';
+import { androidForegroundService } from '../../services/androidForegroundService';
+import { notificationService } from '../../services/notifications/NotificationService';
 import { saveSessionCompletion } from '../../services/progressTracker';
 import type { CustomSession} from '../../services/customSessionStorage';
 import { getAllSessions, deleteSession, initializeDefaultSession, getCustomAmbientUri, getCustomBellUri, createSessionFromConfig } from '../../services/customSessionStorage';
@@ -76,15 +81,22 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   const [sessions, setSessions] = useState<MeditationSession[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSession, setSelectedSession] = useState<MeditationSession | CustomSession | null>(null);
-  const [flowState, setFlowState] = useState<FlowState>('list');
+  // Odtworzenie stanu sesji przy remount (np. po deep linku) z activeMeditationState
+  const [selectedSession, setSelectedSession] = useState<MeditationSession | CustomSession | null>(
+    () => _activeMeditationState?.session ?? null
+  );
+  const [flowState, setFlowState] = useState<FlowState>(
+    () => (_activeMeditationState?.flowState as FlowState) ?? 'list'
+  );
   const [activeCustomChimeUri, setActiveCustomChimeUri] = useState<string | undefined>(undefined);
-  const [userIntention, setUserIntention] = useState('');
+  const [userIntention, setUserIntention] = useState(_activeMeditationState?.userIntention ?? '');
   const [_sessionMood, setSessionMood] = useState<1 | 2 | 3 | 4 | 5 | undefined>();
   const [actionModalSession, setActionModalSession] = useState<CustomSession | null>(null);
 
   const selectedSessionRef = useRef<MeditationSession | CustomSession | null>(null);
   selectedSessionRef.current = selectedSession;
+  const flowStateRef = useRef(flowState);
+  flowStateRef.current = flowState;
 
   useEffect(() => {
     loadSessions();
@@ -107,12 +119,16 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   useEffect(() => {
     return () => {
-      audioEngine.stopAll().catch((error) => {
-        logger.error('Failed to stop audio on unmount:', error);
-      });
-      audioEngine.cleanup().catch((error) => {
-        logger.error('Failed to cleanup audio on unmount:', error);
-      });
+      // Zatrzymuj audio TYLKO gdy sesja nie jest aktywna (nie jest to remount w trakcie sesji)
+      const isInActiveSession = flowStateRef.current === 'meditation' && selectedSessionRef.current !== null;
+      if (!isInActiveSession) {
+        audioEngine.stopAll().catch((error) => {
+          logger.error('Failed to stop audio on unmount:', error);
+        });
+        audioEngine.cleanup().catch((error) => {
+          logger.error('Failed to cleanup audio on unmount:', error);
+        });
+      }
     };
   }, []);
 
@@ -298,6 +314,9 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
       setTimeout(() => {
         setFlowState('celebration');
+        // Wyczysc activeMeditationState - sesja jest zakonczona, serwisy zatrzymane.
+        // Pozwala to deep linkom nawigowac swobodnie bez modalu potwierdzenia.
+        onMeditationStateChange(null);
       }, 3000);
     } catch (error) {
       logger.error('Failed to complete session:', error);
@@ -306,6 +325,13 @@ export const MeditationScreen: React.FC<MeditationScreenProps> = ({
 
   const handleCancel = useCallback(async () => {
     try {
+      // Jawne zatrzymanie serwisow sesji (cleanup w MeditationTimer tego nie robi)
+      await backgroundTimer.stopSession();
+      await liveActivityService.endActivity(false);
+      await androidWidgetService.endSession();
+      await androidForegroundService.stopSession();
+      await notificationService.cancelSessionCompletionNotification();
+
       await audioEngine.stopAll();
       await audioEngine.cleanup();
       onMeditationStateChange(null);
