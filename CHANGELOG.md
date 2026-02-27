@@ -1,3 +1,9 @@
+## [1.16.13](https://github.com/Slow-Spot/app/compare/v1.16.12...v1.16.13) (2026-02-27)
+
+### Bug Fixes
+
+* **release:** add contents:write permission to notify-release job ([7b778c3](https://github.com/Slow-Spot/app/commit/7b778c3d6ff0dbaee28cd40e4b77d9bfae2b4edd))
+
 ## [1.16.12](https://github.com/Slow-Spot/app/compare/v1.16.11...v1.16.12) (2026-02-22)
 
 ### Bug Fixes
