@@ -523,6 +523,8 @@ jobs:
     name: Update GitHub Release
     needs: [prepare, build-ios, build-android, gate, submit]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: |
       always() &&
       needs.prepare.outputs.should_build == 'true' && (
